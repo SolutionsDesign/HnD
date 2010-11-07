@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -20,7 +20,6 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.HelperClasses;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.CollectionClasses
@@ -40,7 +39,7 @@ namespace SD.HnD.DAL.CollectionClasses
 
 		/// <summary> CTor</summary>
 		/// <param name="initialContents">The initial contents of this collection.</param>
-		public UserCollection(IList<UserEntity> initialContents):base(new UserEntityFactory())
+		public UserCollection(IEnumerable<UserEntity> initialContents):base(new UserEntityFactory())
 		{
 			AddRange(initialContents);
 		}
@@ -65,7 +64,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity userTitleInstance)
 		{
-			return GetMultiManyToOne(userTitleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, null, 0, 0);
+			return GetMultiManyToOne(userTitleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, null, 0, 0);
 		}
 
 		/// <summary> Retrieves in this UserCollection object all UserEntity objects which have data in common with the specified related Entities.
@@ -75,7 +74,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity userTitleInstance, IPredicateExpression filter)
 		{
-			return GetMultiManyToOne(userTitleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, filter, 0, 0);
+			return GetMultiManyToOne(userTitleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, filter, 0, 0);
 		}
 
 		/// <summary> Retrieves in this UserCollection object all UserEntity objects which have data in common with the specified related Entities.
@@ -107,12 +106,11 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				return GetMulti(filter, maxNumberOfItemsToReturn, sortClauses, null, pageNumber, pageSize);
 			}
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMulti(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, filter, userTitleInstance, pageNumber, pageSize);
+			return DAOFactory.CreateUserDAO().GetMulti(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, filter, userTitleInstance, pageNumber, pageSize);
 		}
 
 		/// <summary> Deletes from the persistent storage all User entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.</summary>
@@ -121,8 +119,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int DeleteMultiManyToOne(IEntity userTitleInstance)
 		{
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.DeleteMulti(base.Transaction, userTitleInstance);
+			return DAOFactory.CreateUserDAO().DeleteMulti(this.Transaction, userTitleInstance);
 		}
 
 		/// <summary> Updates in the persistent storage all User entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.
@@ -132,21 +129,18 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int UpdateMultiManyToOne(UserEntity entityWithNewValues, IEntity userTitleInstance)
 		{
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.UpdateMulti(entityWithNewValues, base.Transaction, userTitleInstance);
+			return DAOFactory.CreateUserDAO().UpdateMulti(entityWithNewValues, this.Transaction, userTitleInstance);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ForumEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ForumEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingStartedThreadsInForums(IEntity forumInstance)
 		{
-			return GetMultiManyToManyUsingStartedThreadsInForums(forumInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
+			return GetMultiManyToManyUsingStartedThreadsInForums(forumInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
 		}
 		
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -156,8 +150,16 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetMultiManyToManyUsingStartedThreadsInForums(forumInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ForumEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingStartedThreadsInForums(IEntity forumInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingStartedThreadsInForums(forumInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -166,26 +168,14 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public virtual bool GetMultiManyToManyUsingStartedThreadsInForums(IEntity forumInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingStartedThreadsInForums(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, forumInstance, pageNumber, pageSize);
+			return DAOFactory.CreateUserDAO().GetMultiUsingStartedThreadsInForums(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, forumInstance, null, pageNumber, pageSize);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ForumEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingStartedThreadsInForums(IEntity forumInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingStartedThreadsInForums(forumInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ForumEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="forumInstance">ForumEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -193,25 +183,22 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingStartedThreadsInForums(IEntity forumInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingStartedThreadsInForums(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, forumInstance, prefetchPathToUse);
+			return DAOFactory.CreateUserDAO().GetMultiUsingStartedThreadsInForums(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, forumInstance, prefetchPathToUse, 0, 0);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingRoles(IEntity roleInstance)
 		{
-			return GetMultiManyToManyUsingRoles(roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
+			return GetMultiManyToManyUsingRoles(roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
 		}
 		
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -221,8 +208,16 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetMultiManyToManyUsingRoles(roleInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingRoles(IEntity roleInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingRoles(roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -231,26 +226,14 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public virtual bool GetMultiManyToManyUsingRoles(IEntity roleInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingRoles(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, roleInstance, pageNumber, pageSize);
+			return DAOFactory.CreateUserDAO().GetMultiUsingRoles(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, roleInstance, null, pageNumber, pageSize);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingRoles(IEntity roleInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingRoles(roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -258,155 +241,22 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingRoles(IEntity roleInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingRoles(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, roleInstance, prefetchPathToUse);
+			return DAOFactory.CreateUserDAO().GetMultiUsingRoles(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, roleInstance, prefetchPathToUse, 0, 0);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance)
-		{
-			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
-		}
-		
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses)
-		{
-			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <param name="pageNumber">The page number to retrieve.</param>
-		/// <param name="pageSize">The page size of the page to retrieve.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public virtual bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
-		{
-			if(!base.SuppressClearInGetMulti)
-			{
-				this.Clear();
-			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingThreadCollectionViaThreadSubscription(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, pageNumber, pageSize);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
-		{
-			if(!base.SuppressClearInGetMulti)
-			{
-				this.Clear();
-			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingThreadCollectionViaThreadSubscription(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance)
-		{
-			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
-		}
-		
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses)
-		{
-			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <param name="pageNumber">The page number to retrieve.</param>
-		/// <param name="pageSize">The page size of the page to retrieve.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public virtual bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
-		{
-			if(!base.SuppressClearInGetMulti)
-			{
-				this.Clear();
-			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingPostedMessagesInThreads(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, pageNumber, pageSize);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
-		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
-		{
-			if(!base.SuppressClearInGetMulti)
-			{
-				this.Clear();
-			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingPostedMessagesInThreads(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingThreadsInBookmarks(IEntity threadInstance)
 		{
-			return GetMultiManyToManyUsingThreadsInBookmarks(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
+			return GetMultiManyToManyUsingThreadsInBookmarks(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
 		}
 		
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -416,8 +266,16 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetMultiManyToManyUsingThreadsInBookmarks(threadInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingThreadsInBookmarks(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingThreadsInBookmarks(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -426,26 +284,14 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public virtual bool GetMultiManyToManyUsingThreadsInBookmarks(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingThreadsInBookmarks(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, pageNumber, pageSize);
+			return DAOFactory.CreateUserDAO().GetMultiUsingThreadsInBookmarks(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, null, pageNumber, pageSize);
 		}
 
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingThreadsInBookmarks(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingThreadsInBookmarks(threadInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -453,14 +299,128 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingThreadsInBookmarks(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetMultiUsingThreadsInBookmarks(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, threadInstance, prefetchPathToUse);
+			return DAOFactory.CreateUserDAO().GetMultiUsingThreadsInBookmarks(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, prefetchPathToUse, 0, 0);
 		}
 
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance)
+		{
+			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses)
+		{
+			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
+		}
+
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingPostedMessagesInThreads(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <param name="pageNumber">The page number to retrieve.</param>
+		/// <param name="pageSize">The page size of the page to retrieve.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public virtual bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
+		{
+			if(!this.SuppressClearInGetMulti)
+			{
+				this.Clear();
+			}
+			return DAOFactory.CreateUserDAO().GetMultiUsingPostedMessagesInThreads(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, null, pageNumber, pageSize);
+		}
+
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingPostedMessagesInThreads(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
+		{
+			if(!this.SuppressClearInGetMulti)
+			{
+				this.Clear();
+			}
+			return DAOFactory.CreateUserDAO().GetMultiUsingPostedMessagesInThreads(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, prefetchPathToUse, 0, 0);
+		}
+
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance)
+		{
+			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses)
+		{
+			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
+		}
+
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a Relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(threadInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <param name="pageNumber">The page number to retrieve.</param>
+		/// <param name="pageSize">The page size of the page to retrieve.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public virtual bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
+		{
+			if(!this.SuppressClearInGetMulti)
+			{
+				this.Clear();
+			}
+			return DAOFactory.CreateUserDAO().GetMultiUsingThreadCollectionViaThreadSubscription(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, null, pageNumber, pageSize);
+		}
+
+		/// <summary> Retrieves in this UserCollection object all UserEntity objects which are related via a  relation of type 'm:n' with the passed in ThreadEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="threadInstance">ThreadEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
+		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingThreadCollectionViaThreadSubscription(IEntity threadInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
+		{
+			if(!this.SuppressClearInGetMulti)
+			{
+				this.Clear();
+			}
+			return DAOFactory.CreateUserDAO().GetMultiUsingThreadCollectionViaThreadSubscription(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, threadInstance, prefetchPathToUse, 0, 0);
+		}
 
 		/// <summary> Retrieves Entity rows in a datatable which match the specified filter. It will always create a new connection to the database.</summary>
 		/// <param name="selectFilter">A predicate or predicate expression which should be used as filter for the entities to retrieve.</param>
@@ -518,8 +478,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetScalar(fieldIndex, expressionToExecute, aggregateToApply, null, null, null);
 		}
 
-		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are
-		/// applied on.</summary>
+		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are applied on.</summary>
 		/// <param name="fieldIndex">Field index of field to which to apply the aggregate function and expression</param>
 		/// <param name="expressionToExecute">The expression to execute. Can be null</param>
 		/// <param name="aggregateToApply">Aggregate function to apply. </param>
@@ -562,8 +521,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				fields[0].AggregateFunctionToApply = aggregateToApply;
 			}
-			UserDAO dao = DAOFactory.CreateUserDAO();
-			return dao.GetScalar(fields, base.Transaction, filter, relations, groupByClause);
+			return DAOFactory.CreateUserDAO().GetScalar(fields, this.Transaction, filter, relations, groupByClause);
 		}
 		
 		/// <summary>Creats a new DAO instance so code which is in the base class can still use the proper DAO object.</summary>
@@ -579,7 +537,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		{
 			return new Transaction(levelOfIsolation, name);
 		}
-
 
 		#region Custom EntityCollection code
 		

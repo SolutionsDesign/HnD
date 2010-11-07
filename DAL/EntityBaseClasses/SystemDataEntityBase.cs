@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -34,37 +34,31 @@ namespace SD.HnD.DAL.EntityClasses
 	/// 
 	/// </summary>
 	[Serializable]
-	public abstract partial class SystemDataEntityBase : CommonEntityBase, ISerializable
+	public abstract partial class SystemDataEntityBase : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
 		#region Class Member Declarations
-
-
 		private RoleEntity _roleForAnonymous;
 		private bool	_alwaysFetchRoleForAnonymous, _alreadyFetchedRoleForAnonymous, _roleForAnonymousReturnsNewIfNotFound;
 		private RoleEntity _roleForNewUser;
 		private bool	_alwaysFetchRoleForNewUser, _alreadyFetchedRoleForNewUser, _roleForNewUserReturnsNewIfNotFound;
 
-		
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
 		#endregion
-		
+
 		#region Statics
 		private static Dictionary<string, string>	_customProperties;
 		private static Dictionary<string, Dictionary<string, string>>	_fieldsCustomProperties;
 
 		/// <summary>All names of fields mapped onto a relation. Usable for in-memory filtering</summary>
-		public static class MemberNames
+		public static partial class MemberNames
 		{
 			/// <summary>Member name RoleForAnonymous</summary>
 			public static readonly string RoleForAnonymous = "RoleForAnonymous";
 			/// <summary>Member name RoleForNewUser</summary>
 			public static readonly string RoleForNewUser = "RoleForNewUser";
-
-
-
 		}
 		#endregion
 		
@@ -75,15 +69,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		public SystemDataEntityBase()
+		protected SystemDataEntityBase() : base()
 		{
 			InitClassEmpty(null);
 		}
 
-	
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
-		public SystemDataEntityBase(System.Int32 iD)
+		protected SystemDataEntityBase(System.Int32 iD)
 		{
 			InitClassFetch(iD, null, null);
 		}
@@ -91,7 +84,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public SystemDataEntityBase(System.Int32 iD, IPrefetchPath prefetchPathToUse)
+		protected SystemDataEntityBase(System.Int32 iD, IPrefetchPath prefetchPathToUse)
 		{
 			InitClassFetch(iD, null, prefetchPathToUse);
 		}
@@ -99,19 +92,16 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="validator">The custom validator object for this SystemDataEntity</param>
-		public SystemDataEntityBase(System.Int32 iD, IValidator validator)
+		protected SystemDataEntityBase(System.Int32 iD, IValidator validator)
 		{
 			InitClassFetch(iD, validator, null);
 		}
-	
 
-		/// <summary>Protected CTor for deserialization</summary>
+		/// <summary>Private CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected SystemDataEntityBase(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-
-
 			_roleForAnonymous = (RoleEntity)info.GetValue("_roleForAnonymous", typeof(RoleEntity));
 			if(_roleForAnonymous!=null)
 			{
@@ -120,6 +110,7 @@ namespace SD.HnD.DAL.EntityClasses
 			_roleForAnonymousReturnsNewIfNotFound = info.GetBoolean("_roleForAnonymousReturnsNewIfNotFound");
 			_alwaysFetchRoleForAnonymous = info.GetBoolean("_alwaysFetchRoleForAnonymous");
 			_alreadyFetchedRoleForAnonymous = info.GetBoolean("_alreadyFetchedRoleForAnonymous");
+
 			_roleForNewUser = (RoleEntity)info.GetValue("_roleForNewUser", typeof(RoleEntity));
 			if(_roleForNewUser!=null)
 			{
@@ -128,13 +119,10 @@ namespace SD.HnD.DAL.EntityClasses
 			_roleForNewUserReturnsNewIfNotFound = info.GetBoolean("_roleForNewUserReturnsNewIfNotFound");
 			_alwaysFetchRoleForNewUser = info.GetBoolean("_alwaysFetchRoleForNewUser");
 			_alreadyFetchedRoleForNewUser = info.GetBoolean("_alreadyFetchedRoleForNewUser");
-
-			base.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
-			
+			this.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
-		}
-
+		}	
 		
 		/// <summary>Performs the desync setup when an FK field has been changed. The entity referenced based on the FK field will be dereferenced and sync info will be removed.</summary>
 		/// <param name="fieldIndex">The fieldindex.</param>
@@ -142,64 +130,50 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((SystemDataFieldIndex)fieldIndex)
 			{
-				case SystemDataFieldIndex.DefaultRoleNewUser:
-					DesetupSyncRoleForNewUser(true, false);
-					_alreadyFetchedRoleForNewUser = false;
-					break;
 				case SystemDataFieldIndex.AnonymousRole:
 					DesetupSyncRoleForAnonymous(true, false);
 					_alreadyFetchedRoleForAnonymous = false;
+					break;
+				case SystemDataFieldIndex.DefaultRoleNewUser:
+					DesetupSyncRoleForNewUser(true, false);
+					_alreadyFetchedRoleForNewUser = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
 					break;
 			}
 		}
-		
-		/// <summary>Gets the inheritance info provider instance of the project this entity instance is located in. </summary>
-		/// <returns>ready to use inheritance info provider instance.</returns>
-		protected override IInheritanceInfoProvider GetInheritanceInfoProvider()
-		{
-			return InheritanceInfoProviderSingleton.GetInstance();
-		}
-		
+
 		/// <summary> Will perform post-ReadXml actions</summary>
 		protected override void PostReadXmlFixups()
 		{
-
-
 			_alreadyFetchedRoleForAnonymous = (_roleForAnonymous != null);
 			_alreadyFetchedRoleForNewUser = (_roleForNewUser != null);
-
 		}
 				
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public override RelationCollection GetRelationsForFieldOfType(string fieldName)
+		protected override RelationCollection GetRelationsForFieldOfType(string fieldName)
 		{
-			return SystemDataEntity.GetRelationsForField(fieldName);
+			return GetRelationsForField(fieldName);
 		}
 
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public static RelationCollection GetRelationsForField(string fieldName)
+		internal static RelationCollection GetRelationsForField(string fieldName)
 		{
 			RelationCollection toReturn = new RelationCollection();
 			switch(fieldName)
 			{
 				case "RoleForAnonymous":
-					toReturn.Add(SystemDataEntity.Relations.RoleEntityUsingAnonymousRole);
+					toReturn.Add(Relations.RoleEntityUsingAnonymousRole);
 					break;
 				case "RoleForNewUser":
-					toReturn.Add(SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser);
+					toReturn.Add(Relations.RoleEntityUsingDefaultRoleNewUser);
 					break;
-
-
-
 				default:
-
 					break;				
 			}
 			return toReturn;
@@ -207,15 +181,12 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 
-		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.
-		/// Serializes members of this entity class and uses the base class' implementation to serialize the rest.</summary>
+		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		protected override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-
-
 			info.AddValue("_roleForAnonymous", (!this.MarkedForDeletion?_roleForAnonymous:null));
 			info.AddValue("_roleForAnonymousReturnsNewIfNotFound", _roleForAnonymousReturnsNewIfNotFound);
 			info.AddValue("_alwaysFetchRoleForAnonymous", _alwaysFetchRoleForAnonymous);
@@ -225,7 +196,6 @@ namespace SD.HnD.DAL.EntityClasses
 			info.AddValue("_alwaysFetchRoleForNewUser", _alwaysFetchRoleForNewUser);
 			info.AddValue("_alreadyFetchedRoleForNewUser", _alreadyFetchedRoleForNewUser);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			base.GetObjectData(info, context);
@@ -236,7 +206,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
 		{
 			switch(propertyName)
 			{
@@ -248,11 +218,8 @@ namespace SD.HnD.DAL.EntityClasses
 					_alreadyFetchedRoleForNewUser = true;
 					this.RoleForNewUser = (RoleEntity)entity;
 					break;
-
-
-
 				default:
-
+					this.OnSetRelatedEntityProperty(propertyName, entity);
 					break;
 			}
 		}
@@ -261,7 +228,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -271,10 +238,7 @@ namespace SD.HnD.DAL.EntityClasses
 				case "RoleForNewUser":
 					SetupSyncRoleForNewUser(relatedEntity);
 					break;
-
-
 				default:
-
 					break;
 			}
 		}
@@ -284,7 +248,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -294,29 +258,22 @@ namespace SD.HnD.DAL.EntityClasses
 				case "RoleForNewUser":
 					DesetupSyncRoleForNewUser(false, true);
 					break;
-
-
 				default:
-
 					break;
 			}
 		}
 
-		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These
-		/// entities will have to be persisted after this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These entities will have to be persisted after this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependingRelatedEntities()
+		protected override List<IEntity> GetDependingRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These
-		/// entities will have to be persisted before this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These entities will have to be persisted before this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependentRelatedEntities()
+		protected override List<IEntity> GetDependentRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
 			if(_roleForAnonymous!=null)
@@ -327,15 +284,12 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				toReturn.Add(_roleForNewUser);
 			}
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a List of all entity collections stored as member variables in this entity. The contents of the ArrayList is
-		/// used by the DataAccessAdapter to perform recursive saves. Only 1:n related collections are returned.</summary>
+		/// <summary> Gets a List of all entity collections stored as member variables in this entity. Only 1:n related collections are returned.</summary>
 		/// <returns>Collection with 0 or more IEntityCollection objects, referenced by this entity</returns>
-		public override List<IEntityCollection> GetMemberEntityCollections()
+		protected override List<IEntityCollection> GetMemberEntityCollections()
 		{
 			List<IEntityCollection> toReturn = new List<IEntityCollection>();
 
@@ -343,9 +297,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return toReturn;
 		}
 
-		
-
-		
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
@@ -371,7 +322,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>True if succeeded, false otherwise.</returns>
 		public bool FetchUsingPK(System.Int32 iD, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return Fetch(iD, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(iD, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
@@ -387,42 +338,21 @@ namespace SD.HnD.DAL.EntityClasses
 			return Fetch(iD, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
-		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. 
-		/// Refetching an empty Entity has no effect. </summary>
+		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
 			return Fetch(this.ID, null, null, null);
 		}
 
-		/// <summary> Returns true if the original value for the field with the fieldIndex passed in, read from the persistent storage was NULL, false otherwise.
-		/// Should not be used for testing if the current value is NULL, use <see cref="TestCurrentFieldValueForNull"/> for that.</summary>
-		/// <param name="fieldIndex">Index of the field to test if that field was NULL in the persistent storage</param>
-		/// <returns>true if the field with the passed in index was NULL in the persistent storage, false otherwise</returns>
-		public bool TestOriginalFieldValueForNull(SystemDataFieldIndex fieldIndex)
-		{
-			return base.Fields[(int)fieldIndex].IsNull;
-		}
-		
-		/// <summary>Returns true if the current value for the field with the fieldIndex passed in represents null/not defined, false otherwise.
-		/// Should not be used for testing if the original value (read from the db) is NULL</summary>
-		/// <param name="fieldIndex">Index of the field to test if its currentvalue is null/undefined</param>
-		/// <returns>true if the field's value isn't defined yet, false otherwise</returns>
-		public bool TestCurrentFieldValueForNull(SystemDataFieldIndex fieldIndex)
-		{
-			return base.CheckIfCurrentFieldValueIsNull((int)fieldIndex);
-		}
 
 				
 		/// <summary>Gets a list of all the EntityRelation objects the type of this instance has.</summary>
 		/// <returns>A list of all the EntityRelation objects the type of this instance has. Hierarchy relations are excluded.</returns>
-		public override List<IEntityRelation> GetAllRelations()
+		protected override List<IEntityRelation> GetAllRelations()
 		{
 			return new SystemDataRelations().GetAllRelations();
 		}
-
-
-
 
 		/// <summary> Retrieves the related entity of type 'RoleEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
@@ -436,50 +366,34 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
 		public virtual RoleEntity GetSingleRoleForAnonymous(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedRoleForAnonymous || forceFetch || _alwaysFetchRoleForAnonymous) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedRoleForAnonymous || forceFetch || _alwaysFetchRoleForAnonymous) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(SystemDataEntity.Relations.RoleEntityUsingAnonymousRole);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.RoleEntityUsingAnonymousRole);
 				RoleEntity newEntity = new RoleEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.AnonymousRole);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (RoleEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.RoleForAnonymous = newEntity;
+					newEntity = (RoleEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_roleForAnonymousReturnsNewIfNotFound)
+					if(!_roleForAnonymousReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_roleForAnonymous == null)))
-						{
-							this.RoleForAnonymous = newEntity;
-						}
-					}
-					else
-					{
-						this.RoleForAnonymous = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.RoleForAnonymous = newEntity;
 				_alreadyFetchedRoleForAnonymous = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _roleForAnonymous;
 		}
+
 
 		/// <summary> Retrieves the related entity of type 'RoleEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
@@ -493,165 +407,84 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
 		public virtual RoleEntity GetSingleRoleForNewUser(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedRoleForNewUser || forceFetch || _alwaysFetchRoleForNewUser) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedRoleForNewUser || forceFetch || _alwaysFetchRoleForNewUser) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.RoleEntityUsingDefaultRoleNewUser);
 				RoleEntity newEntity = new RoleEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.DefaultRoleNewUser);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (RoleEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.RoleForNewUser = newEntity;
+					newEntity = (RoleEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_roleForNewUserReturnsNewIfNotFound)
+					if(!_roleForNewUserReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_roleForNewUser == null)))
-						{
-							this.RoleForNewUser = newEntity;
-						}
-					}
-					else
-					{
-						this.RoleForNewUser = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.RoleForNewUser = newEntity;
 				_alreadyFetchedRoleForNewUser = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _roleForNewUser;
 		}
 
-
-		/// <summary> Performs the insert action of a new Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool InsertEntity()
-		{
-			SystemDataDAO dao = (SystemDataDAO)CreateDAOInstance();
-			return dao.AddNew(base.Fields, base.Transaction);
-		}
-		
 		/// <summary> Adds the internals to the active context. </summary>
 		protected override void AddInternalsToContext()
 		{
-
-
 			if(_roleForAnonymous!=null)
 			{
-				_roleForAnonymous.ActiveContext = base.ActiveContext;
+				_roleForAnonymous.ActiveContext = this.ActiveContext;
 			}
 			if(_roleForNewUser!=null)
 			{
-				_roleForNewUser.ActiveContext = base.ActiveContext;
+				_roleForNewUser.ActiveContext = this.ActiveContext;
 			}
-
-
 		}
 
-
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity()
-		{
-			SystemDataDAO dao = (SystemDataDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction);
-		}
-		
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <param name="updateRestriction">Predicate expression, meant for concurrency checks in an Update query</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity(IPredicate updateRestriction)
-		{
-			SystemDataDAO dao = (SystemDataDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction, updateRestriction);
-		}
-	
-		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
-		/// <param name="validatorToUse">Validator to use.</param>
-		protected virtual void InitClassEmpty(IValidator validatorToUse)
-		{
-			OnInitializing();
-			base.Fields = CreateFields();
-			base.IsNew=true;
-			base.Validator = validatorToUse;
-
-			InitClassMembers();
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
-			// __LLBLGENPRO_USER_CODE_REGION_END
-
-			OnInitialized();
-		}
-		
-		/// <summary>Creates entity fields object for this entity. Used in constructor to setup this entity in a polymorphic scenario.</summary>
-		protected virtual IEntityFields CreateFields()
-		{
-			return EntityFieldsFactory.CreateEntityFieldsObject(SD.HnD.DAL.EntityType.SystemDataEntity);
-		}
-		
-		/// <summary>Creates a new transaction object</summary>
-		/// <param name="levelOfIsolation">The level of isolation.</param>
-		/// <param name="name">The name.</param>
-		protected override ITransaction CreateTransaction( IsolationLevel levelOfIsolation, string name )
-		{
-			return new Transaction(levelOfIsolation, name);
-		}
-
-		/// <summary>
-		/// Creates the ITypeDefaultValue instance used to provide default values for value types which aren't of type nullable(of T)
-		/// </summary>
-		/// <returns></returns>
-		protected override ITypeDefaultValue CreateTypeDefaultValueProvider()
-		{
-			return new TypeDefaultValue();
-		}
-
-		/// <summary>
-		/// Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element. 
-		/// </summary>
+		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
-		public override Dictionary<string, object> GetRelatedData()
+		protected override Dictionary<string, object> GetRelatedData()
 		{
 			Dictionary<string, object> toReturn = new Dictionary<string, object>();
 			toReturn.Add("RoleForAnonymous", _roleForAnonymous);
 			toReturn.Add("RoleForNewUser", _roleForNewUser);
-
-
-
 			return toReturn;
 		}
-		
+	
+		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
+		/// <param name="validatorToUse">Validator to use.</param>
+		private void InitClassEmpty(IValidator validatorToUse)
+		{
+			OnInitializing();
+			this.Fields = CreateFields();
+			this.Validator = validatorToUse;
+			InitClassMembers();
+
+			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
+			// __LLBLGENPRO_USER_CODE_REGION_END
+
+			OnInitialized();
+		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="validator">The validator object for this SystemDataEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected virtual void InitClassFetch(System.Int32 iD, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 iD, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
-			base.Validator = validator;
-			InitClassMembers();
-			base.Fields = CreateFields();
-			bool wasSuccesful = Fetch(iD, prefetchPathToUse, null, null);
-			base.IsNew = !wasSuccesful;
+			this.Validator = validator;
+			this.Fields = CreateFields();
+			InitClassMembers();	
+			Fetch(iD, prefetchPathToUse, null, null);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -660,21 +493,10 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{
-
-
-			_roleForAnonymous = null;
-			_roleForAnonymousReturnsNewIfNotFound = true;
-			_alwaysFetchRoleForAnonymous = false;
-			_alreadyFetchedRoleForAnonymous = false;
-			_roleForNewUser = null;
+		{			_roleForAnonymousReturnsNewIfNotFound = true;
 			_roleForNewUserReturnsNewIfNotFound = true;
-			_alwaysFetchRoleForNewUser = false;
-			_alreadyFetchedRoleForNewUser = false;
-
-
 			PerformDependencyInjection();
-			
+
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			OnInitClassMembersComplete();
@@ -686,45 +508,34 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			_customProperties = new Dictionary<string, string>();
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
-
-			Dictionary<string, string> fieldHashtable = null;
+			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("DefaultRoleNewUser", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("AnonymousRole", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
+			_fieldsCustomProperties.Add("DefaultRoleNewUser", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("DefaultUserTitleNewUser", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("HoursThresholdForActiveThreads", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("PageSizeSearchResults", fieldHashtable);
+			_fieldsCustomProperties.Add("ID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("MinNumberOfThreadsToFetch", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("MinNumberOfNonStickyVisibleThreads", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
+			_fieldsCustomProperties.Add("MinNumberOfThreadsToFetch", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("PageSizeSearchResults", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("SendReplyNotifications", fieldHashtable);
 		}
 		#endregion
-
 
 		/// <summary> Removes the sync logic for member _roleForAnonymous</summary>
 		/// <param name="signalRelatedEntity">If set to true, it will call the related entity's UnsetRelatedEntity method</param>
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncRoleForAnonymous(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _roleForAnonymous, new PropertyChangedEventHandler( OnRoleForAnonymousPropertyChanged ), "RoleForAnonymous", SystemDataEntity.Relations.RoleEntityUsingAnonymousRole, true, signalRelatedEntity, "SystemDataAnonymousRole", resetFKFields, new int[] { (int)SystemDataFieldIndex.AnonymousRole } );		
+			this.PerformDesetupSyncRelatedEntity( _roleForAnonymous, new PropertyChangedEventHandler( OnRoleForAnonymousPropertyChanged ), "RoleForAnonymous", SystemDataEntity.Relations.RoleEntityUsingAnonymousRole, true, signalRelatedEntity, "SystemDataAnonymousRole", resetFKFields, new int[] { (int)SystemDataFieldIndex.AnonymousRole } );		
 			_roleForAnonymous = null;
 		}
 		
@@ -736,7 +547,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncRoleForAnonymous(true, true);
 				_roleForAnonymous = (RoleEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _roleForAnonymous, new PropertyChangedEventHandler( OnRoleForAnonymousPropertyChanged ), "RoleForAnonymous", SystemDataEntity.Relations.RoleEntityUsingAnonymousRole, true, ref _alreadyFetchedRoleForAnonymous, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _roleForAnonymous, new PropertyChangedEventHandler( OnRoleForAnonymousPropertyChanged ), "RoleForAnonymous", SystemDataEntity.Relations.RoleEntityUsingAnonymousRole, true, ref _alreadyFetchedRoleForAnonymous, new string[] {  } );
 			}
 		}
 
@@ -757,7 +568,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncRoleForNewUser(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _roleForNewUser, new PropertyChangedEventHandler( OnRoleForNewUserPropertyChanged ), "RoleForNewUser", SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser, true, signalRelatedEntity, "SystemDataDefaultRoleNewUser", resetFKFields, new int[] { (int)SystemDataFieldIndex.DefaultRoleNewUser } );		
+			this.PerformDesetupSyncRelatedEntity( _roleForNewUser, new PropertyChangedEventHandler( OnRoleForNewUserPropertyChanged ), "RoleForNewUser", SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser, true, signalRelatedEntity, "SystemDataDefaultRoleNewUser", resetFKFields, new int[] { (int)SystemDataFieldIndex.DefaultRoleNewUser } );		
 			_roleForNewUser = null;
 		}
 		
@@ -769,7 +580,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncRoleForNewUser(true, true);
 				_roleForNewUser = (RoleEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _roleForNewUser, new PropertyChangedEventHandler( OnRoleForNewUserPropertyChanged ), "RoleForNewUser", SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser, true, ref _alreadyFetchedRoleForNewUser, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _roleForNewUser, new PropertyChangedEventHandler( OnRoleForNewUserPropertyChanged ), "RoleForNewUser", SystemDataEntity.Relations.RoleEntityUsingDefaultRoleNewUser, true, ref _alreadyFetchedRoleForNewUser, new string[] {  } );
 			}
 		}
 
@@ -785,7 +596,6 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
-
 		/// <summary> Fetches the entity from the persistent storage. Fetch simply reads the entity into an EntityFields object. </summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
@@ -799,17 +609,15 @@ namespace SD.HnD.DAL.EntityClasses
 			try
 			{
 				OnFetch();
-				IDao dao = this.CreateDAOInstance();
-				base.Fields[(int)SystemDataFieldIndex.ID].ForcedCurrentValueWrite(iD);
-				dao.FetchExisting(this, base.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
-				return (base.Fields.State == EntityState.Fetched);
+				this.Fields[(int)SystemDataFieldIndex.ID].ForcedCurrentValueWrite(iD);
+				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
+				return (this.Fields.State == EntityState.Fetched);
 			}
 			finally
 			{
 				OnFetchComplete();
 			}
 		}
-
 
 		/// <summary> Creates the DAO instance for this type</summary>
 		/// <returns></returns>
@@ -839,37 +647,23 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return _customProperties;}
 		}
 
-
-
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathRoleForAnonymous
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(),
-					(IEntityRelation)GetRelationsForField("RoleForAnonymous")[0], (int)SD.HnD.DAL.EntityType.SystemDataEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "RoleForAnonymous", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(), (IEntityRelation)GetRelationsForField("RoleForAnonymous")[0], (int)SD.HnD.DAL.EntityType.SystemDataEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "RoleForAnonymous", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathRoleForNewUser
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(),
-					(IEntityRelation)GetRelationsForField("RoleForNewUser")[0], (int)SD.HnD.DAL.EntityType.SystemDataEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "RoleForNewUser", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(), (IEntityRelation)GetRelationsForField("RoleForNewUser")[0], (int)SD.HnD.DAL.EntityType.SystemDataEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "RoleForNewUser", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
-
 
 		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override string LLBLGenProEntityName
+		protected override string LLBLGenProEntityName
 		{
 			get { return "SystemDataEntity";}
 		}
@@ -877,9 +671,9 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, string> CustomPropertiesOfType
+		protected override Dictionary<string, string> CustomPropertiesOfType
 		{
-			get { return SystemDataEntity.CustomProperties;}
+			get { return CustomProperties;}
 		}
 
 		/// <summary> The custom properties for the fields of this entity type. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
@@ -892,33 +686,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the fields of the type of this entity instance. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
+		protected override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
 		{
-			get { return SystemDataEntity.FieldsCustomProperties;}
+			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ID property of the Entity SystemData<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "SystemData"."ID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ID
-		{
-			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.ID, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.ID, value, true); }
-		}
-		/// <summary> The DefaultRoleNewUser property of the Entity SystemData<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "SystemData"."DefaultRoleNewUser"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 DefaultRoleNewUser
-		{
-			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, value, true); }
-		}
-		/// <summary> The AnonymousRole property of the Entity SystemData<br/><br/>
-		/// </summary>
+		/// <summary> The AnonymousRole property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."AnonymousRole"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -927,8 +700,18 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.AnonymousRole, true); }
 			set	{ SetValue((int)SystemDataFieldIndex.AnonymousRole, value, true); }
 		}
-		/// <summary> The DefaultUserTitleNewUser property of the Entity SystemData<br/><br/>
-		/// </summary>
+
+		/// <summary> The DefaultRoleNewUser property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."DefaultRoleNewUser"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 DefaultRoleNewUser
+		{
+			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, value, true); }
+		}
+
+		/// <summary> The DefaultUserTitleNewUser property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."DefaultUserTitleNewUser"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -937,8 +720,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultUserTitleNewUser, true); }
 			set	{ SetValue((int)SystemDataFieldIndex.DefaultUserTitleNewUser, value, true); }
 		}
-		/// <summary> The HoursThresholdForActiveThreads property of the Entity SystemData<br/><br/>
-		/// </summary>
+
+		/// <summary> The HoursThresholdForActiveThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."HoursThresholdForActiveThreads"<br/>
 		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -947,28 +730,18 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.HoursThresholdForActiveThreads, true); }
 			set	{ SetValue((int)SystemDataFieldIndex.HoursThresholdForActiveThreads, value, true); }
 		}
-		/// <summary> The PageSizeSearchResults property of the Entity SystemData<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 PageSizeSearchResults
+
+		/// <summary> The ID property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."ID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ID
 		{
-			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.PageSizeSearchResults, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.PageSizeSearchResults, value, true); }
+			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.ID, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.ID, value, true); }
 		}
-		/// <summary> The MinNumberOfThreadsToFetch property of the Entity SystemData<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfThreadsToFetch"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 MinNumberOfThreadsToFetch
-		{
-			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, value, true); }
-		}
-		/// <summary> The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/>
-		/// </summary>
+
+		/// <summary> The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfNonStickyVisibleThreads"<br/>
 		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -977,10 +750,30 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, true); }
 			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, value, true); }
 		}
-		/// <summary> The SendReplyNotifications property of the Entity SystemData<br/><br/>
-		/// </summary>
+
+		/// <summary> The MinNumberOfThreadsToFetch property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfThreadsToFetch"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int16 MinNumberOfThreadsToFetch
+		{
+			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, value, true); }
+		}
+
+		/// <summary> The PageSizeSearchResults property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int16 PageSizeSearchResults
+		{
+			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.PageSizeSearchResults, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.PageSizeSearchResults, value, true); }
+		}
+
+		/// <summary> The SendReplyNotifications property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."SendReplyNotifications"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 1, 0, 0<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		public virtual System.Boolean SendReplyNotifications
 		{
@@ -989,46 +782,32 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 
-
 		/// <summary> Gets / sets related entity of type 'RoleEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleRoleForAnonymous()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual RoleEntity RoleForAnonymous
 		{
 			get	{ return GetSingleRoleForAnonymous(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncRoleForAnonymous(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_roleForAnonymous != null)
-						{
-							_roleForAnonymous.UnsetRelatedEntity(this, "SystemDataAnonymousRole");
-						}
-					}
-					else
-					{
-						if(_roleForAnonymous!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "SystemDataAnonymousRole");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "SystemDataAnonymousRole", "RoleForAnonymous", _roleForAnonymous, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for RoleForAnonymous. When set to true, RoleForAnonymous is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time RoleForAnonymous is accessed. You can always execute
-		/// a forced fetch by calling GetSingleRoleForAnonymous(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time RoleForAnonymous is accessed. You can always execute a forced fetch by calling GetSingleRoleForAnonymous(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchRoleForAnonymous
 		{
@@ -1061,45 +840,33 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return _roleForAnonymousReturnsNewIfNotFound; }
 			set { _roleForAnonymousReturnsNewIfNotFound = value; }	
 		}
+
 		/// <summary> Gets / sets related entity of type 'RoleEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleRoleForNewUser()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual RoleEntity RoleForNewUser
 		{
 			get	{ return GetSingleRoleForNewUser(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncRoleForNewUser(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_roleForNewUser != null)
-						{
-							_roleForNewUser.UnsetRelatedEntity(this, "SystemDataDefaultRoleNewUser");
-						}
-					}
-					else
-					{
-						if(_roleForNewUser!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "SystemDataDefaultRoleNewUser");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "SystemDataDefaultRoleNewUser", "RoleForNewUser", _roleForNewUser, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for RoleForNewUser. When set to true, RoleForNewUser is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time RoleForNewUser is accessed. You can always execute
-		/// a forced fetch by calling GetSingleRoleForNewUser(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time RoleForNewUser is accessed. You can always execute a forced fetch by calling GetSingleRoleForNewUser(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchRoleForNewUser
 		{
@@ -1134,7 +901,6 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 
-
 		/// <summary> Gets or sets a value indicating whether this entity is a subtype</summary>
 		protected override bool LLBLGenProIsSubType
 		{
@@ -1150,10 +916,11 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary>Returns the SD.HnD.DAL.EntityType enum value for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override int LLBLGenProEntityTypeValue 
+		protected override int LLBLGenProEntityTypeValue 
 		{ 
 			get { return (int)SD.HnD.DAL.EntityType.SystemDataEntity; }
 		}
+
 		#endregion
 
 		

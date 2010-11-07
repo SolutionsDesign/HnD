@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -22,41 +22,28 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.EntityClasses
 {
-	
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 
-	/// <summary>
-	/// Entity class which represents the entity 'Message'. <br/>
-	/// This class is used for Business Logic or for framework extension code. 
-	/// </summary>
+	/// <summary>Entity class which represents the entity 'Message'. This class is used for Business Logic or for framework extension code.</summary>
 	[Serializable]
 	public partial class MessageEntity : MessageEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
-		#region Constructors
-		/// <summary>
-		/// CTor
-		/// </summary>
+		/// <summary>CTor</summary>
 		public MessageEntity():base()
 		{
 		}
 
-	
-		/// <summary>
-		/// CTor
-		/// </summary>
+		/// <summary>CTor</summary>
 		/// <param name="messageID">PK value for Message which data should be fetched into this Message object</param>
 		public MessageEntity(System.Int32 messageID):
 			base(messageID)
 		{
 		}
 
-
-		/// <summary>
-		/// CTor
-		/// </summary>
+		/// <summary>CTor</summary>
 		/// <param name="messageID">PK value for Message which data should be fetched into this Message object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		public MessageEntity(System.Int32 messageID, IPrefetchPath prefetchPathToUse):
@@ -64,30 +51,22 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 		}
 
-
-		/// <summary>
-		/// CTor
-		/// </summary>
+		/// <summary>CTor</summary>
 		/// <param name="messageID">PK value for Message which data should be fetched into this Message object</param>
 		/// <param name="validator">The custom validator object for this MessageEntity</param>
 		public MessageEntity(System.Int32 messageID, IValidator validator):
 			base(messageID, validator)
 		{
 		}
-	
 		
-		/// <summary>
-		/// Private CTor for deserialization
-		/// </summary>
+		/// <summary>CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected MessageEntity(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
 		}
-		#endregion
 
 		#region Custom Entity code
 		

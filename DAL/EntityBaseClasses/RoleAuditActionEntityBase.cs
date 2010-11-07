@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -34,37 +34,31 @@ namespace SD.HnD.DAL.EntityClasses
 	/// 
 	/// </summary>
 	[Serializable]
-	public abstract partial class RoleAuditActionEntityBase : CommonEntityBase, ISerializable
+	public abstract partial class RoleAuditActionEntityBase : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
 		#region Class Member Declarations
-
-
 		private AuditActionEntity _auditAction;
 		private bool	_alwaysFetchAuditAction, _alreadyFetchedAuditAction, _auditActionReturnsNewIfNotFound;
 		private RoleEntity _role;
 		private bool	_alwaysFetchRole, _alreadyFetchedRole, _roleReturnsNewIfNotFound;
 
-		
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
 		#endregion
-		
+
 		#region Statics
 		private static Dictionary<string, string>	_customProperties;
 		private static Dictionary<string, Dictionary<string, string>>	_fieldsCustomProperties;
 
 		/// <summary>All names of fields mapped onto a relation. Usable for in-memory filtering</summary>
-		public static class MemberNames
+		public static partial class MemberNames
 		{
 			/// <summary>Member name AuditAction</summary>
 			public static readonly string AuditAction = "AuditAction";
 			/// <summary>Member name Role</summary>
 			public static readonly string Role = "Role";
-
-
-
 		}
 		#endregion
 		
@@ -75,16 +69,15 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		public RoleAuditActionEntityBase()
+		protected RoleAuditActionEntityBase() : base()
 		{
 			InitClassEmpty(null);
 		}
 
-	
 		/// <summary>CTor</summary>
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="roleID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
-		public RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID)
+		protected RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID)
 		{
 			InitClassFetch(auditActionID, roleID, null, null);
 		}
@@ -93,7 +86,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="roleID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID, IPrefetchPath prefetchPathToUse)
+		protected RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID, IPrefetchPath prefetchPathToUse)
 		{
 			InitClassFetch(auditActionID, roleID, null, prefetchPathToUse);
 		}
@@ -102,19 +95,16 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="roleID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="validator">The custom validator object for this RoleAuditActionEntity</param>
-		public RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID, IValidator validator)
+		protected RoleAuditActionEntityBase(System.Int32 auditActionID, System.Int32 roleID, IValidator validator)
 		{
 			InitClassFetch(auditActionID, roleID, validator, null);
 		}
-	
 
-		/// <summary>Protected CTor for deserialization</summary>
+		/// <summary>Private CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected RoleAuditActionEntityBase(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-
-
 			_auditAction = (AuditActionEntity)info.GetValue("_auditAction", typeof(AuditActionEntity));
 			if(_auditAction!=null)
 			{
@@ -123,6 +113,7 @@ namespace SD.HnD.DAL.EntityClasses
 			_auditActionReturnsNewIfNotFound = info.GetBoolean("_auditActionReturnsNewIfNotFound");
 			_alwaysFetchAuditAction = info.GetBoolean("_alwaysFetchAuditAction");
 			_alreadyFetchedAuditAction = info.GetBoolean("_alreadyFetchedAuditAction");
+
 			_role = (RoleEntity)info.GetValue("_role", typeof(RoleEntity));
 			if(_role!=null)
 			{
@@ -131,13 +122,10 @@ namespace SD.HnD.DAL.EntityClasses
 			_roleReturnsNewIfNotFound = info.GetBoolean("_roleReturnsNewIfNotFound");
 			_alwaysFetchRole = info.GetBoolean("_alwaysFetchRole");
 			_alreadyFetchedRole = info.GetBoolean("_alreadyFetchedRole");
-
-			base.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
-			
+			this.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
-		}
-
+		}	
 		
 		/// <summary>Performs the desync setup when an FK field has been changed. The entity referenced based on the FK field will be dereferenced and sync info will be removed.</summary>
 		/// <param name="fieldIndex">The fieldindex.</param>
@@ -158,51 +146,37 @@ namespace SD.HnD.DAL.EntityClasses
 					break;
 			}
 		}
-		
-		/// <summary>Gets the inheritance info provider instance of the project this entity instance is located in. </summary>
-		/// <returns>ready to use inheritance info provider instance.</returns>
-		protected override IInheritanceInfoProvider GetInheritanceInfoProvider()
-		{
-			return InheritanceInfoProviderSingleton.GetInstance();
-		}
-		
+
 		/// <summary> Will perform post-ReadXml actions</summary>
 		protected override void PostReadXmlFixups()
 		{
-
-
 			_alreadyFetchedAuditAction = (_auditAction != null);
 			_alreadyFetchedRole = (_role != null);
-
 		}
 				
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public override RelationCollection GetRelationsForFieldOfType(string fieldName)
+		protected override RelationCollection GetRelationsForFieldOfType(string fieldName)
 		{
-			return RoleAuditActionEntity.GetRelationsForField(fieldName);
+			return GetRelationsForField(fieldName);
 		}
 
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public static RelationCollection GetRelationsForField(string fieldName)
+		internal static RelationCollection GetRelationsForField(string fieldName)
 		{
 			RelationCollection toReturn = new RelationCollection();
 			switch(fieldName)
 			{
 				case "AuditAction":
-					toReturn.Add(RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID);
+					toReturn.Add(Relations.AuditActionEntityUsingAuditActionID);
 					break;
 				case "Role":
-					toReturn.Add(RoleAuditActionEntity.Relations.RoleEntityUsingRoleID);
+					toReturn.Add(Relations.RoleEntityUsingRoleID);
 					break;
-
-
-
 				default:
-
 					break;				
 			}
 			return toReturn;
@@ -210,15 +184,12 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 
-		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.
-		/// Serializes members of this entity class and uses the base class' implementation to serialize the rest.</summary>
+		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		protected override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
-
-
 			info.AddValue("_auditAction", (!this.MarkedForDeletion?_auditAction:null));
 			info.AddValue("_auditActionReturnsNewIfNotFound", _auditActionReturnsNewIfNotFound);
 			info.AddValue("_alwaysFetchAuditAction", _alwaysFetchAuditAction);
@@ -228,7 +199,6 @@ namespace SD.HnD.DAL.EntityClasses
 			info.AddValue("_alwaysFetchRole", _alwaysFetchRole);
 			info.AddValue("_alreadyFetchedRole", _alreadyFetchedRole);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			base.GetObjectData(info, context);
@@ -239,7 +209,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
 		{
 			switch(propertyName)
 			{
@@ -251,11 +221,8 @@ namespace SD.HnD.DAL.EntityClasses
 					_alreadyFetchedRole = true;
 					this.Role = (RoleEntity)entity;
 					break;
-
-
-
 				default:
-
+					this.OnSetRelatedEntityProperty(propertyName, entity);
 					break;
 			}
 		}
@@ -264,7 +231,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -274,10 +241,7 @@ namespace SD.HnD.DAL.EntityClasses
 				case "Role":
 					SetupSyncRole(relatedEntity);
 					break;
-
-
 				default:
-
 					break;
 			}
 		}
@@ -287,7 +251,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -297,29 +261,22 @@ namespace SD.HnD.DAL.EntityClasses
 				case "Role":
 					DesetupSyncRole(false, true);
 					break;
-
-
 				default:
-
 					break;
 			}
 		}
 
-		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These
-		/// entities will have to be persisted after this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These entities will have to be persisted after this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependingRelatedEntities()
+		protected override List<IEntity> GetDependingRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These
-		/// entities will have to be persisted before this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These entities will have to be persisted before this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependentRelatedEntities()
+		protected override List<IEntity> GetDependentRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
 			if(_auditAction!=null)
@@ -330,15 +287,12 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				toReturn.Add(_role);
 			}
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a List of all entity collections stored as member variables in this entity. The contents of the ArrayList is
-		/// used by the DataAccessAdapter to perform recursive saves. Only 1:n related collections are returned.</summary>
+		/// <summary> Gets a List of all entity collections stored as member variables in this entity. Only 1:n related collections are returned.</summary>
 		/// <returns>Collection with 0 or more IEntityCollection objects, referenced by this entity</returns>
-		public override List<IEntityCollection> GetMemberEntityCollections()
+		protected override List<IEntityCollection> GetMemberEntityCollections()
 		{
 			List<IEntityCollection> toReturn = new List<IEntityCollection>();
 
@@ -346,9 +300,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return toReturn;
 		}
 
-		
-
-		
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
@@ -377,7 +328,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>True if succeeded, false otherwise.</returns>
 		public bool FetchUsingPK(System.Int32 auditActionID, System.Int32 roleID, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return Fetch(auditActionID, roleID, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(auditActionID, roleID, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
@@ -394,42 +345,21 @@ namespace SD.HnD.DAL.EntityClasses
 			return Fetch(auditActionID, roleID, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
-		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. 
-		/// Refetching an empty Entity has no effect. </summary>
+		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
 			return Fetch(this.AuditActionID, this.RoleID, null, null, null);
 		}
 
-		/// <summary> Returns true if the original value for the field with the fieldIndex passed in, read from the persistent storage was NULL, false otherwise.
-		/// Should not be used for testing if the current value is NULL, use <see cref="TestCurrentFieldValueForNull"/> for that.</summary>
-		/// <param name="fieldIndex">Index of the field to test if that field was NULL in the persistent storage</param>
-		/// <returns>true if the field with the passed in index was NULL in the persistent storage, false otherwise</returns>
-		public bool TestOriginalFieldValueForNull(RoleAuditActionFieldIndex fieldIndex)
-		{
-			return base.Fields[(int)fieldIndex].IsNull;
-		}
-		
-		/// <summary>Returns true if the current value for the field with the fieldIndex passed in represents null/not defined, false otherwise.
-		/// Should not be used for testing if the original value (read from the db) is NULL</summary>
-		/// <param name="fieldIndex">Index of the field to test if its currentvalue is null/undefined</param>
-		/// <returns>true if the field's value isn't defined yet, false otherwise</returns>
-		public bool TestCurrentFieldValueForNull(RoleAuditActionFieldIndex fieldIndex)
-		{
-			return base.CheckIfCurrentFieldValueIsNull((int)fieldIndex);
-		}
 
 				
 		/// <summary>Gets a list of all the EntityRelation objects the type of this instance has.</summary>
 		/// <returns>A list of all the EntityRelation objects the type of this instance has. Hierarchy relations are excluded.</returns>
-		public override List<IEntityRelation> GetAllRelations()
+		protected override List<IEntityRelation> GetAllRelations()
 		{
 			return new RoleAuditActionRelations().GetAllRelations();
 		}
-
-
-
 
 		/// <summary> Retrieves the related entity of type 'AuditActionEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'AuditActionEntity' which is related to this entity.</returns>
@@ -443,50 +373,34 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'AuditActionEntity' which is related to this entity.</returns>
 		public virtual AuditActionEntity GetSingleAuditAction(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedAuditAction || forceFetch || _alwaysFetchAuditAction) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedAuditAction || forceFetch || _alwaysFetchAuditAction) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.AuditActionEntityUsingAuditActionID);
 				AuditActionEntity newEntity = new AuditActionEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.AuditActionID);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (AuditActionEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.AuditAction = newEntity;
+					newEntity = (AuditActionEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_auditActionReturnsNewIfNotFound)
+					if(!_auditActionReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_auditAction == null)))
-						{
-							this.AuditAction = newEntity;
-						}
-					}
-					else
-					{
-						this.AuditAction = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.AuditAction = newEntity;
 				_alreadyFetchedAuditAction = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _auditAction;
 		}
+
 
 		/// <summary> Retrieves the related entity of type 'RoleEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
@@ -500,166 +414,85 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'RoleEntity' which is related to this entity.</returns>
 		public virtual RoleEntity GetSingleRole(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedRole || forceFetch || _alwaysFetchRole) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedRole || forceFetch || _alwaysFetchRole) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(RoleAuditActionEntity.Relations.RoleEntityUsingRoleID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.RoleEntityUsingRoleID);
 				RoleEntity newEntity = new RoleEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.RoleID);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (RoleEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.Role = newEntity;
+					newEntity = (RoleEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_roleReturnsNewIfNotFound)
+					if(!_roleReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_role == null)))
-						{
-							this.Role = newEntity;
-						}
-					}
-					else
-					{
-						this.Role = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.Role = newEntity;
 				_alreadyFetchedRole = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _role;
 		}
 
-
-		/// <summary> Performs the insert action of a new Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool InsertEntity()
-		{
-			RoleAuditActionDAO dao = (RoleAuditActionDAO)CreateDAOInstance();
-			return dao.AddNew(base.Fields, base.Transaction);
-		}
-		
 		/// <summary> Adds the internals to the active context. </summary>
 		protected override void AddInternalsToContext()
 		{
-
-
 			if(_auditAction!=null)
 			{
-				_auditAction.ActiveContext = base.ActiveContext;
+				_auditAction.ActiveContext = this.ActiveContext;
 			}
 			if(_role!=null)
 			{
-				_role.ActiveContext = base.ActiveContext;
+				_role.ActiveContext = this.ActiveContext;
 			}
-
-
 		}
 
-
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity()
-		{
-			RoleAuditActionDAO dao = (RoleAuditActionDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction);
-		}
-		
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <param name="updateRestriction">Predicate expression, meant for concurrency checks in an Update query</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity(IPredicate updateRestriction)
-		{
-			RoleAuditActionDAO dao = (RoleAuditActionDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction, updateRestriction);
-		}
-	
-		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
-		/// <param name="validatorToUse">Validator to use.</param>
-		protected virtual void InitClassEmpty(IValidator validatorToUse)
-		{
-			OnInitializing();
-			base.Fields = CreateFields();
-			base.IsNew=true;
-			base.Validator = validatorToUse;
-
-			InitClassMembers();
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
-			// __LLBLGENPRO_USER_CODE_REGION_END
-
-			OnInitialized();
-		}
-		
-		/// <summary>Creates entity fields object for this entity. Used in constructor to setup this entity in a polymorphic scenario.</summary>
-		protected virtual IEntityFields CreateFields()
-		{
-			return EntityFieldsFactory.CreateEntityFieldsObject(SD.HnD.DAL.EntityType.RoleAuditActionEntity);
-		}
-		
-		/// <summary>Creates a new transaction object</summary>
-		/// <param name="levelOfIsolation">The level of isolation.</param>
-		/// <param name="name">The name.</param>
-		protected override ITransaction CreateTransaction( IsolationLevel levelOfIsolation, string name )
-		{
-			return new Transaction(levelOfIsolation, name);
-		}
-
-		/// <summary>
-		/// Creates the ITypeDefaultValue instance used to provide default values for value types which aren't of type nullable(of T)
-		/// </summary>
-		/// <returns></returns>
-		protected override ITypeDefaultValue CreateTypeDefaultValueProvider()
-		{
-			return new TypeDefaultValue();
-		}
-
-		/// <summary>
-		/// Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element. 
-		/// </summary>
+		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
-		public override Dictionary<string, object> GetRelatedData()
+		protected override Dictionary<string, object> GetRelatedData()
 		{
 			Dictionary<string, object> toReturn = new Dictionary<string, object>();
 			toReturn.Add("AuditAction", _auditAction);
 			toReturn.Add("Role", _role);
-
-
-
 			return toReturn;
 		}
-		
+	
+		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
+		/// <param name="validatorToUse">Validator to use.</param>
+		private void InitClassEmpty(IValidator validatorToUse)
+		{
+			OnInitializing();
+			this.Fields = CreateFields();
+			this.Validator = validatorToUse;
+			InitClassMembers();
+
+			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
+			// __LLBLGENPRO_USER_CODE_REGION_END
+
+			OnInitialized();
+		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="roleID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="validator">The validator object for this RoleAuditActionEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected virtual void InitClassFetch(System.Int32 auditActionID, System.Int32 roleID, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 auditActionID, System.Int32 roleID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
-			base.Validator = validator;
-			InitClassMembers();
-			base.Fields = CreateFields();
-			bool wasSuccesful = Fetch(auditActionID, roleID, prefetchPathToUse, null, null);
-			base.IsNew = !wasSuccesful;
+			this.Validator = validator;
+			this.Fields = CreateFields();
+			InitClassMembers();	
+			Fetch(auditActionID, roleID, prefetchPathToUse, null, null);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -668,21 +501,10 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{
-
-
-			_auditAction = null;
-			_auditActionReturnsNewIfNotFound = true;
-			_alwaysFetchAuditAction = false;
-			_alreadyFetchedAuditAction = false;
-			_role = null;
+		{			_auditActionReturnsNewIfNotFound = true;
 			_roleReturnsNewIfNotFound = true;
-			_alwaysFetchRole = false;
-			_alreadyFetchedRole = false;
-
-
 			PerformDependencyInjection();
-			
+
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			OnInitClassMembersComplete();
@@ -694,24 +516,20 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			_customProperties = new Dictionary<string, string>();
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
-
-			Dictionary<string, string> fieldHashtable = null;
+			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("AuditActionID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("RoleID", fieldHashtable);
 		}
 		#endregion
-
 
 		/// <summary> Removes the sync logic for member _auditAction</summary>
 		/// <param name="signalRelatedEntity">If set to true, it will call the related entity's UnsetRelatedEntity method</param>
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncAuditAction(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID, true, signalRelatedEntity, "RoleAuditActions", resetFKFields, new int[] { (int)RoleAuditActionFieldIndex.AuditActionID } );		
+			this.PerformDesetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID, true, signalRelatedEntity, "RoleAuditActions", resetFKFields, new int[] { (int)RoleAuditActionFieldIndex.AuditActionID } );		
 			_auditAction = null;
 		}
 		
@@ -723,7 +541,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncAuditAction(true, true);
 				_auditAction = (AuditActionEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID, true, ref _alreadyFetchedAuditAction, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", RoleAuditActionEntity.Relations.AuditActionEntityUsingAuditActionID, true, ref _alreadyFetchedAuditAction, new string[] {  } );
 			}
 		}
 
@@ -744,7 +562,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncRole(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", RoleAuditActionEntity.Relations.RoleEntityUsingRoleID, true, signalRelatedEntity, "RoleAuditAction", resetFKFields, new int[] { (int)RoleAuditActionFieldIndex.RoleID } );		
+			this.PerformDesetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", RoleAuditActionEntity.Relations.RoleEntityUsingRoleID, true, signalRelatedEntity, "RoleAuditAction", resetFKFields, new int[] { (int)RoleAuditActionFieldIndex.RoleID } );		
 			_role = null;
 		}
 		
@@ -756,7 +574,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncRole(true, true);
 				_role = (RoleEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", RoleAuditActionEntity.Relations.RoleEntityUsingRoleID, true, ref _alreadyFetchedRole, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", RoleAuditActionEntity.Relations.RoleEntityUsingRoleID, true, ref _alreadyFetchedRole, new string[] {  } );
 			}
 		}
 
@@ -772,7 +590,6 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
-
 		/// <summary> Fetches the entity from the persistent storage. Fetch simply reads the entity into an EntityFields object. </summary>
 		/// <param name="auditActionID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
 		/// <param name="roleID">PK value for RoleAuditAction which data should be fetched into this RoleAuditAction object</param>
@@ -787,18 +604,16 @@ namespace SD.HnD.DAL.EntityClasses
 			try
 			{
 				OnFetch();
-				IDao dao = this.CreateDAOInstance();
-				base.Fields[(int)RoleAuditActionFieldIndex.AuditActionID].ForcedCurrentValueWrite(auditActionID);
-				base.Fields[(int)RoleAuditActionFieldIndex.RoleID].ForcedCurrentValueWrite(roleID);
-				dao.FetchExisting(this, base.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
-				return (base.Fields.State == EntityState.Fetched);
+				this.Fields[(int)RoleAuditActionFieldIndex.AuditActionID].ForcedCurrentValueWrite(auditActionID);
+				this.Fields[(int)RoleAuditActionFieldIndex.RoleID].ForcedCurrentValueWrite(roleID);
+				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
+				return (this.Fields.State == EntityState.Fetched);
 			}
 			finally
 			{
 				OnFetchComplete();
 			}
 		}
-
 
 		/// <summary> Creates the DAO instance for this type</summary>
 		/// <returns></returns>
@@ -828,37 +643,23 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return _customProperties;}
 		}
 
-
-
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'AuditAction' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'AuditAction'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathAuditAction
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.AuditActionCollection(),
-					(IEntityRelation)GetRelationsForField("AuditAction")[0], (int)SD.HnD.DAL.EntityType.RoleAuditActionEntity, (int)SD.HnD.DAL.EntityType.AuditActionEntity, 0, null, null, null, "AuditAction", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.AuditActionCollection(), (IEntityRelation)GetRelationsForField("AuditAction")[0], (int)SD.HnD.DAL.EntityType.RoleAuditActionEntity, (int)SD.HnD.DAL.EntityType.AuditActionEntity, 0, null, null, null, "AuditAction", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Role'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathRole
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(),
-					(IEntityRelation)GetRelationsForField("Role")[0], (int)SD.HnD.DAL.EntityType.RoleAuditActionEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "Role", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(), (IEntityRelation)GetRelationsForField("Role")[0], (int)SD.HnD.DAL.EntityType.RoleAuditActionEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "Role", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
-
 
 		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override string LLBLGenProEntityName
+		protected override string LLBLGenProEntityName
 		{
 			get { return "RoleAuditActionEntity";}
 		}
@@ -866,9 +667,9 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, string> CustomPropertiesOfType
+		protected override Dictionary<string, string> CustomPropertiesOfType
 		{
-			get { return RoleAuditActionEntity.CustomProperties;}
+			get { return CustomProperties;}
 		}
 
 		/// <summary> The custom properties for the fields of this entity type. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
@@ -881,13 +682,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the fields of the type of this entity instance. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
+		protected override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
 		{
-			get { return RoleAuditActionEntity.FieldsCustomProperties;}
+			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AuditActionID property of the Entity RoleAuditAction<br/><br/>
-		/// </summary>
+		/// <summary> The AuditActionID property of the Entity RoleAuditAction<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "RoleAuditAction"."AuditActionID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
@@ -896,8 +696,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int32)GetValue((int)RoleAuditActionFieldIndex.AuditActionID, true); }
 			set	{ SetValue((int)RoleAuditActionFieldIndex.AuditActionID, value, true); }
 		}
-		/// <summary> The RoleID property of the Entity RoleAuditAction<br/><br/>
-		/// </summary>
+
+		/// <summary> The RoleID property of the Entity RoleAuditAction<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "RoleAuditAction"."RoleID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
@@ -908,46 +708,32 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 
-
 		/// <summary> Gets / sets related entity of type 'AuditActionEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleAuditAction()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual AuditActionEntity AuditAction
 		{
 			get	{ return GetSingleAuditAction(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncAuditAction(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_auditAction != null)
-						{
-							_auditAction.UnsetRelatedEntity(this, "RoleAuditActions");
-						}
-					}
-					else
-					{
-						if(_auditAction!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "RoleAuditActions");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "RoleAuditActions", "AuditAction", _auditAction, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for AuditAction. When set to true, AuditAction is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time AuditAction is accessed. You can always execute
-		/// a forced fetch by calling GetSingleAuditAction(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time AuditAction is accessed. You can always execute a forced fetch by calling GetSingleAuditAction(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchAuditAction
 		{
@@ -980,45 +766,33 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return _auditActionReturnsNewIfNotFound; }
 			set { _auditActionReturnsNewIfNotFound = value; }	
 		}
+
 		/// <summary> Gets / sets related entity of type 'RoleEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleRole()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual RoleEntity Role
 		{
 			get	{ return GetSingleRole(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncRole(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_role != null)
-						{
-							_role.UnsetRelatedEntity(this, "RoleAuditAction");
-						}
-					}
-					else
-					{
-						if(_role!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "RoleAuditAction");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "RoleAuditAction", "Role", _role, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for Role. When set to true, Role is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time Role is accessed. You can always execute
-		/// a forced fetch by calling GetSingleRole(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time Role is accessed. You can always execute a forced fetch by calling GetSingleRole(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchRole
 		{
@@ -1053,7 +827,6 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 
-
 		/// <summary> Gets or sets a value indicating whether this entity is a subtype</summary>
 		protected override bool LLBLGenProIsSubType
 		{
@@ -1069,10 +842,11 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary>Returns the SD.HnD.DAL.EntityType enum value for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override int LLBLGenProEntityTypeValue 
+		protected override int LLBLGenProEntityTypeValue 
 		{ 
 			get { return (int)SD.HnD.DAL.EntityType.RoleAuditActionEntity; }
 		}
+
 		#endregion
 
 		

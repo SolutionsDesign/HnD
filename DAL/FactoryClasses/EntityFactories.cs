@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -19,23 +19,19 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.FactoryClasses
 {
-	
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
-	
 	/// <summary>general base class for the generated factories</summary>
 	[Serializable]
 	public partial class EntityFactoryBase : EntityFactoryCore
 	{
-		private string _entityName;
-		private SD.HnD.DAL.EntityType _typeOfEntity;
+		private readonly SD.HnD.DAL.EntityType _typeOfEntity;
 		
 		/// <summary>CTor</summary>
 		/// <param name="entityName">Name of the entity.</param>
 		/// <param name="typeOfEntity">The type of entity.</param>
-		public EntityFactoryBase(string entityName, SD.HnD.DAL.EntityType typeOfEntity)
+		public EntityFactoryBase(string entityName, SD.HnD.DAL.EntityType typeOfEntity) : base(entityName)
 		{
-			_entityName = entityName;
 			_typeOfEntity = typeOfEntity;
 		}
 
@@ -59,7 +55,7 @@ namespace SD.HnD.DAL.FactoryClasses
 		/// <returns>null if the entity isn't in a hierarchy of type TargetPerEntity, otherwise the relations collection needed to join all targets together to fetch all subtypes of this entity and this entity itself</returns>
 		public override IRelationCollection CreateHierarchyRelations(string objectAlias) 
 		{
-			return InheritanceInfoProviderSingleton.GetInstance().GetHierarchyRelations(_entityName, objectAlias);
+			return InheritanceInfoProviderSingleton.GetInstance().GetHierarchyRelations(ForEntityName, objectAlias);
 		}
 
 		/// <summary>This method retrieves, using the InheritanceInfoprovider, the factory for the entity represented by the values passed in.</summary>
@@ -68,12 +64,7 @@ namespace SD.HnD.DAL.FactoryClasses
 		/// <returns>the factory for the entity which is represented by the values passed in.</returns>
 		public override IEntityFactory GetEntityFactory(object[] fieldValues, Dictionary<string, int> entityFieldStartIndexesPerEntity)
 		{
-			IEntityFactory toReturn = (IEntityFactory)InheritanceInfoProviderSingleton.GetInstance().GetEntityFactory(_entityName, fieldValues, entityFieldStartIndexesPerEntity);
-			if(toReturn == null)
-			{
-				toReturn = this;
-			}
-			return toReturn;
+			return (IEntityFactory)InheritanceInfoProviderSingleton.GetInstance().GetEntityFactory(ForEntityName, fieldValues, entityFieldStartIndexesPerEntity) ?? this;
 		}
 						
 		/// <summary>Creates a new entity collection for the entity of this factory.</summary>
@@ -81,12 +72,6 @@ namespace SD.HnD.DAL.FactoryClasses
 		public override IEntityCollection CreateEntityCollection()
 		{
 			return GeneralEntityCollectionFactory.Create(_typeOfEntity);
-		}
-		
-		/// <summary>returns the name of the entity this factory is for, e.g. "EmployeeEntity"</summary>
-		public override string ForEntityName 
-		{ 
-			get { return _entityName; }
 		}
 	}
 	
@@ -105,18 +90,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new ActionRightEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewActionRightUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -138,18 +112,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new AttachmentEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAttachmentUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -171,18 +134,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new AuditActionEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditActionUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -204,24 +156,14 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new AuditDataCoreEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataCoreUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 		/// <summary>Creates the hierarchy fields for the entity to which this factory belongs.</summary>
 		/// <returns>IEntityFields object with the fields of all the entities in teh hierarchy of this entity or the fields of this entity if the entity isn't in a hierarchy.</returns>
 		public override IEntityFields CreateHierarchyFields()
 		{
 			return new EntityFields(InheritanceInfoProviderSingleton.GetInstance().GetHierarchyFields("AuditDataCoreEntity"), InheritanceInfoProviderSingleton.GetInstance(), null);
 		}
+
 		#region Included Code
 
 		#endregion
@@ -242,24 +184,14 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new AuditDataMessageRelatedEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataMessageRelatedUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 		/// <summary>Creates the hierarchy fields for the entity to which this factory belongs.</summary>
 		/// <returns>IEntityFields object with the fields of all the entities in teh hierarchy of this entity or the fields of this entity if the entity isn't in a hierarchy.</returns>
 		public override IEntityFields CreateHierarchyFields()
 		{
 			return new EntityFields(InheritanceInfoProviderSingleton.GetInstance().GetHierarchyFields("AuditDataMessageRelatedEntity"), InheritanceInfoProviderSingleton.GetInstance(), null);
 		}
+
 		#region Included Code
 
 		#endregion
@@ -280,24 +212,14 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new AuditDataThreadRelatedEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataThreadRelatedUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 		/// <summary>Creates the hierarchy fields for the entity to which this factory belongs.</summary>
 		/// <returns>IEntityFields object with the fields of all the entities in teh hierarchy of this entity or the fields of this entity if the entity isn't in a hierarchy.</returns>
 		public override IEntityFields CreateHierarchyFields()
 		{
 			return new EntityFields(InheritanceInfoProviderSingleton.GetInstance().GetHierarchyFields("AuditDataThreadRelatedEntity"), InheritanceInfoProviderSingleton.GetInstance(), null);
 		}
+
 		#region Included Code
 
 		#endregion
@@ -318,18 +240,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new BookmarkEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewBookmarkUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -351,18 +262,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new ForumEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewForumUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -384,18 +284,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new ForumRoleForumActionRightEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewForumRoleForumActionRightUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -417,18 +306,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new IPBanEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewIPBanUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -450,18 +328,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new MessageEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewMessageUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -483,18 +350,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new RoleEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -516,18 +372,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new RoleAuditActionEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleAuditActionUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -549,18 +394,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new RoleSystemActionRightEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleSystemActionRightUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -582,18 +416,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new RoleUserEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleUserUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -615,18 +438,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new SectionEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSectionUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -648,18 +460,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new SupportQueueEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSupportQueueUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -681,18 +482,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new SupportQueueThreadEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSupportQueueThreadUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -714,18 +504,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new SystemDataEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSystemDataUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -747,18 +526,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new ThreadEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewThreadUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -780,18 +548,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new ThreadSubscriptionEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewThreadSubscriptionUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -813,18 +570,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new UserEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewUserUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -846,18 +592,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			return toReturn;
 		}
-		
-		/// <summary>Creates a new UserTitleEntity instance and will set the Fields object of the new IEntity instance to the passed in fields object.</summary>
-		/// <param name="fields">Populated IEntityFields object for the new IEntity to create</param>
-		/// <returns>Fully created and populated (due to the IEntityFields object) IEntity object</returns>
-		public override IEntity Create(IEntityFields fields) {
-			IEntity toReturn = Create();
-			toReturn.Fields = fields;
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewUserTitleUsingFields
-			// __LLBLGENPRO_USER_CODE_REGION_END
-			return toReturn;
-		}
+
 
 		#region Included Code
 
@@ -1031,7 +766,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			return GeneralEntityFactory.Create(typeOfEntity).GetEntityFactory();
 		}
 #else
-		private static Dictionary<Type, IEntityFactory> _factoryPerType = new Dictionary<Type, IEntityFactory>();
+		private static readonly Dictionary<Type, IEntityFactory> _factoryPerType = new Dictionary<Type, IEntityFactory>();
 
 		/// <summary>Initializes the <see cref="EntityFactoryFactory"/> class.</summary>
 		static EntityFactoryFactory()

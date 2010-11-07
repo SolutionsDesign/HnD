@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -14,29 +14,19 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.HelperClasses
 {
-	
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	
-	/// <summary>
-	/// Singleton implementation of the inheritanceInfoProvider. This class is the singleton wrapper through which the actual instance is retrieved.
-	/// </summary>
+	/// <summary>Singleton implementation of the inheritanceInfoProvider. This class is the singleton wrapper through which the actual instance is retrieved.</summary>
 	/// <remarks>It uses a single instance of an internal class. The access isn't marked with locks as the InheritanceInfoProviderBase class is threadsafe.</remarks>
-	public sealed class InheritanceInfoProviderSingleton
+	public static class InheritanceInfoProviderSingleton
 	{
 		#region Class Member Declarations
 		private static readonly IInheritanceInfoProvider _providerInstance = new InheritanceInfoProviderCore();
 		#endregion
 		
-		/// <summary>private ctor to prevent instances of this class.</summary>
-		private InheritanceInfoProviderSingleton()
-		{
-		}
-
 		/// <summary>Dummy static constructor to make sure threadsafe initialization is performed.</summary>
-		static InheritanceInfoProviderSingleton()
-		{
-		}
+		static InheritanceInfoProviderSingleton() { }
 
 		/// <summary>Gets the singleton instance of the InheritanceInfoProviderCore</summary>
 		/// <returns>Instance of the InheritanceInfoProvider.</returns>
@@ -52,7 +42,6 @@ namespace SD.HnD.DAL.HelperClasses
 		#endregion
 	}
 
-
 	/// <summary>Actual implementation of the InheritanceInfoProvider. Used by singleton wrapper.</summary>
 	internal class InheritanceInfoProviderCore : InheritanceInfoProviderBase
 	{
@@ -65,9 +54,9 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Method which initializes the internal datastores with the structure of hierarchical types.</summary>
 		private void Init()
 		{
-			base.AddEntityInfo("AuditDataCoreEntity", string.Empty, new AuditDataCoreRelations(), new AuditDataCoreEntityFactory());
-			base.AddEntityInfo("AuditDataMessageRelatedEntity", "AuditDataCoreEntity", new AuditDataMessageRelatedRelations(), new AuditDataMessageRelatedEntityFactory(),  (4-4));
-			base.AddEntityInfo("AuditDataThreadRelatedEntity", "AuditDataCoreEntity", new AuditDataThreadRelatedRelations(), new AuditDataThreadRelatedEntityFactory(),  (4-4));
+			this.AddEntityInfo("AuditDataCoreEntity", string.Empty, new AuditDataCoreRelations(), new AuditDataCoreEntityFactory());
+			this.AddEntityInfo("AuditDataMessageRelatedEntity", "AuditDataCoreEntity", new AuditDataMessageRelatedRelations(), new AuditDataMessageRelatedEntityFactory(), 1-1);
+			this.AddEntityInfo("AuditDataThreadRelatedEntity", "AuditDataCoreEntity", new AuditDataThreadRelatedRelations(), new AuditDataThreadRelatedEntityFactory(), 1-1);
 			base.BuildHierarchyInfoStore();
 		}
 

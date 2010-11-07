@@ -1,34 +1,26 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SqlServerSpecific.NET20
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
 // Templates version: 
 //////////////////////////////////////////////////////////////
 using System;
 using System.Collections;
 using System.Data;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.HelperClasses
 {
-	/// <summary>
-	/// Singleton implementation of the PersistenceInfoProvider. This class is the singleton wrapper through which the actual instance is retrieved.
-	/// </summary>
+	/// <summary>Singleton implementation of the PersistenceInfoProvider. This class is the singleton wrapper through which the actual instance is retrieved.</summary>
 	/// <remarks>It uses a single instance of an internal class. The access isn't marked with locks as the PersistenceInfoProviderBase class is threadsafe.</remarks>
-	internal sealed class PersistenceInfoProviderSingleton
+	internal static class PersistenceInfoProviderSingleton
 	{
 		#region Class Member Declarations
 		private static readonly IPersistenceInfoProvider _providerInstance = new PersistenceInfoProviderCore();
 		#endregion
-		
-		/// <summary>private ctor to prevent instances of this class.</summary>
-		private PersistenceInfoProviderSingleton()
-		{
-		}
 
 		/// <summary>Dummy static constructor to make sure threadsafe initialization is performed.</summary>
 		static PersistenceInfoProviderSingleton()
@@ -55,7 +47,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Method which initializes the internal datastores with the structure of hierarchical types.</summary>
 		private void Init()
 		{
-			base.InitClass((23 + 0));
+			this.InitClass((23 + 0));
 			InitActionRightEntityMappings();
 			InitAttachmentEntityMappings();
 			InitAuditActionEntityMappings();
@@ -86,239 +78,239 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits ActionRightEntity's mappings</summary>
 		private void InitActionRightEntityMappings()
 		{
-			base.AddElementMapping( "ActionRightEntity", "HnD", @"dbo", "ActionRight", 4 );
-			base.AddElementFieldMapping( "ActionRightEntity", "ActionRightID", "ActionRightID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "ActionRightEntity", "ActionRightDescription", "ActionRightDescription", false, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
-			base.AddElementFieldMapping( "ActionRightEntity", "AppliesToForum", "AppliesToForum", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 2 );
-			base.AddElementFieldMapping( "ActionRightEntity", "AppliesToSystem", "AppliesToSystem", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 3 );
+			this.AddElementMapping( "ActionRightEntity", "HnD", @"dbo", "ActionRight", 4 );
+			this.AddElementFieldMapping( "ActionRightEntity", "ActionRightDescription", "ActionRightDescription", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 0 );
+			this.AddElementFieldMapping( "ActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "ActionRightEntity", "AppliesToForum", "AppliesToForum", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 2 );
+			this.AddElementFieldMapping( "ActionRightEntity", "AppliesToSystem", "AppliesToSystem", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 3 );
 		}
 		/// <summary>Inits AttachmentEntity's mappings</summary>
 		private void InitAttachmentEntityMappings()
 		{
-			base.AddElementMapping( "AttachmentEntity", "HnD", @"dbo", "Attachment", 7 );
-			base.AddElementFieldMapping( "AttachmentEntity", "AttachmentID", "AttachmentID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "AttachmentEntity", "MessageID", "MessageID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "AttachmentEntity", "Filename", "Filename", true, (int)SqlDbType.NVarChar, 255, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "AttachmentEntity", "Approved", "Approved", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 3 );
-			base.AddElementFieldMapping( "AttachmentEntity", "Filecontents", "Filecontents", false, (int)SqlDbType.Image, 2147483647, 0, 0, false, "", null, typeof(System.Byte[]), 4 );
-			base.AddElementFieldMapping( "AttachmentEntity", "Filesize", "Filesize", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 5 );
-			base.AddElementFieldMapping( "AttachmentEntity", "AddedOn", "AddedOn", false, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 6 );
+			this.AddElementMapping( "AttachmentEntity", "HnD", @"dbo", "Attachment", 7 );
+			this.AddElementFieldMapping( "AttachmentEntity", "AddedOn", "AddedOn", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 0 );
+			this.AddElementFieldMapping( "AttachmentEntity", "Approved", "Approved", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 1 );
+			this.AddElementFieldMapping( "AttachmentEntity", "AttachmentID", "AttachmentID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 2 );
+			this.AddElementFieldMapping( "AttachmentEntity", "Filecontents", "Filecontents", false, "Image", 2147483647, 0, 0, false, "", null, typeof(System.Byte[]), 3 );
+			this.AddElementFieldMapping( "AttachmentEntity", "Filename", "Filename", true, "NVarChar", 255, 0, 0, false, "", null, typeof(System.String), 4 );
+			this.AddElementFieldMapping( "AttachmentEntity", "Filesize", "Filesize", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 5 );
+			this.AddElementFieldMapping( "AttachmentEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 6 );
 		}
 		/// <summary>Inits AuditActionEntity's mappings</summary>
 		private void InitAuditActionEntityMappings()
 		{
-			base.AddElementMapping( "AuditActionEntity", "HnD", @"dbo", "AuditAction", 2 );
-			base.AddElementFieldMapping( "AuditActionEntity", "AuditActionID", "AuditActionID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "AuditActionEntity", "AuditActionDescription", "AuditActionDescription", true, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
+			this.AddElementMapping( "AuditActionEntity", "HnD", @"dbo", "AuditAction", 2 );
+			this.AddElementFieldMapping( "AuditActionEntity", "AuditActionDescription", "AuditActionDescription", true, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 0 );
+			this.AddElementFieldMapping( "AuditActionEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits AuditDataCoreEntity's mappings</summary>
 		private void InitAuditDataCoreEntityMappings()
 		{
-			base.AddElementMapping( "AuditDataCoreEntity", "HnD", @"dbo", "AuditDataCore", 4 );
-			base.AddElementFieldMapping( "AuditDataCoreEntity", "AuditDataID", "AuditDataID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "AuditDataCoreEntity", "AuditActionID", "AuditActionID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "AuditDataCoreEntity", "UserID", "UserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
-			base.AddElementFieldMapping( "AuditDataCoreEntity", "AuditedOn", "AuditedOn", false, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 3 );
+			this.AddElementMapping( "AuditDataCoreEntity", "HnD", @"dbo", "AuditDataCore", 4 );
+			this.AddElementFieldMapping( "AuditDataCoreEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "AuditDataCoreEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "AuditDataCoreEntity", "AuditedOn", "AuditedOn", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 2 );
+			this.AddElementFieldMapping( "AuditDataCoreEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 3 );
 		}
 		/// <summary>Inits AuditDataMessageRelatedEntity's mappings</summary>
 		private void InitAuditDataMessageRelatedEntityMappings()
 		{
-			base.AddElementMapping( "AuditDataMessageRelatedEntity", "HnD", @"dbo", "AuditDataMessageRelated", 2 );
-			base.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "AuditDataID", "AuditDataID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "MessageID", "MessageID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "AuditDataMessageRelatedEntity", "HnD", @"dbo", "AuditDataMessageRelated", 2 );
+			this.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits AuditDataThreadRelatedEntity's mappings</summary>
 		private void InitAuditDataThreadRelatedEntityMappings()
 		{
-			base.AddElementMapping( "AuditDataThreadRelatedEntity", "HnD", @"dbo", "AuditDataThreadRelated", 2 );
-			base.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "AuditDataID", "AuditDataID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "AuditDataThreadRelatedEntity", "HnD", @"dbo", "AuditDataThreadRelated", 2 );
+			this.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits BookmarkEntity's mappings</summary>
 		private void InitBookmarkEntityMappings()
 		{
-			base.AddElementMapping( "BookmarkEntity", "HnD", @"dbo", "Bookmark", 2 );
-			base.AddElementFieldMapping( "BookmarkEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "BookmarkEntity", "UserID", "UserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "BookmarkEntity", "HnD", @"dbo", "Bookmark", 2 );
+			this.AddElementFieldMapping( "BookmarkEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "BookmarkEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits ForumEntity's mappings</summary>
 		private void InitForumEntityMappings()
 		{
-			base.AddElementMapping( "ForumEntity", "HnD", @"dbo", "Forum", 13 );
-			base.AddElementFieldMapping( "ForumEntity", "ForumID", "ForumID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "ForumEntity", "SectionID", "SectionID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "ForumEntity", "ForumName", "ForumName", false, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "ForumEntity", "ForumDescription", "ForumDescription", false, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 3 );
-			base.AddElementFieldMapping( "ForumEntity", "ForumLastPostingDate", "ForumLastPostingDate", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 4 );
-			base.AddElementFieldMapping( "ForumEntity", "HasRSSFeed", "HasRSSFeed", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 5 );
-			base.AddElementFieldMapping( "ForumEntity", "DefaultSupportQueueID", "DefaultSupportQueueID", true, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 6 );
-			base.AddElementFieldMapping( "ForumEntity", "DefaultThreadListInterval", "DefaultThreadListInterval", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 7 );
-			base.AddElementFieldMapping( "ForumEntity", "OrderNo", "OrderNo", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 8 );
-			base.AddElementFieldMapping( "ForumEntity", "MaxAttachmentSize", "MaxAttachmentSize", true, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 9 );
-			base.AddElementFieldMapping( "ForumEntity", "MaxNoOfAttachmentsPerMessage", "MaxNoOfAttachmentsPerMessage", true, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 10 );
-			base.AddElementFieldMapping( "ForumEntity", "NewThreadWelcomeText", "NewThreadWelcomeText", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 11 );
-			base.AddElementFieldMapping( "ForumEntity", "NewThreadWelcomeTextAsHTML", "NewThreadWelcomeTextAsHTML", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 12 );
+			this.AddElementMapping( "ForumEntity", "HnD", @"dbo", "Forum", 13 );
+			this.AddElementFieldMapping( "ForumEntity", "DefaultSupportQueueID", "DefaultSupportQueueID", true, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "ForumEntity", "DefaultThreadListInterval", "DefaultThreadListInterval", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 1 );
+			this.AddElementFieldMapping( "ForumEntity", "ForumDescription", "ForumDescription", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 2 );
+			this.AddElementFieldMapping( "ForumEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 3 );
+			this.AddElementFieldMapping( "ForumEntity", "ForumLastPostingDate", "ForumLastPostingDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 4 );
+			this.AddElementFieldMapping( "ForumEntity", "ForumName", "ForumName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 5 );
+			this.AddElementFieldMapping( "ForumEntity", "HasRSSFeed", "HasRSSFeed", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 6 );
+			this.AddElementFieldMapping( "ForumEntity", "MaxAttachmentSize", "MaxAttachmentSize", true, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 7 );
+			this.AddElementFieldMapping( "ForumEntity", "MaxNoOfAttachmentsPerMessage", "MaxNoOfAttachmentsPerMessage", true, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 8 );
+			this.AddElementFieldMapping( "ForumEntity", "NewThreadWelcomeText", "NewThreadWelcomeText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 9 );
+			this.AddElementFieldMapping( "ForumEntity", "NewThreadWelcomeTextAsHTML", "NewThreadWelcomeTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 10 );
+			this.AddElementFieldMapping( "ForumEntity", "OrderNo", "OrderNo", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 11 );
+			this.AddElementFieldMapping( "ForumEntity", "SectionID", "SectionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 12 );
 		}
 		/// <summary>Inits ForumRoleForumActionRightEntity's mappings</summary>
 		private void InitForumRoleForumActionRightEntityMappings()
 		{
-			base.AddElementMapping( "ForumRoleForumActionRightEntity", "HnD", @"dbo", "ForumRoleForumActionRight", 3 );
-			base.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ForumID", "ForumID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "RoleID", "RoleID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ActionRightID", "ActionRightID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
+			this.AddElementMapping( "ForumRoleForumActionRightEntity", "HnD", @"dbo", "ForumRoleForumActionRight", 3 );
+			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
 		}
 		/// <summary>Inits IPBanEntity's mappings</summary>
 		private void InitIPBanEntityMappings()
 		{
-			base.AddElementMapping( "IPBanEntity", "HnD", @"dbo", "IPBan", 9 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPBanID", "IPBanID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPSegment1", "IPSegment1", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 1 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPSegment2", "IPSegment2", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 2 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPSegment3", "IPSegment3", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 3 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPSegment4", "IPSegment4", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 4 );
-			base.AddElementFieldMapping( "IPBanEntity", "Range", "Range", false, (int)SqlDbType.TinyInt, 0, 0, 3, false, "", null, typeof(System.Byte), 5 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPBanSetByUserID", "IPBanSetByUserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 6 );
-			base.AddElementFieldMapping( "IPBanEntity", "IPBanSetOn", "IPBanSetOn", false, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 7 );
-			base.AddElementFieldMapping( "IPBanEntity", "Reason", "Reason", false, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 8 );
+			this.AddElementMapping( "IPBanEntity", "HnD", @"dbo", "IPBan", 9 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPBanID", "IPBanID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPBanSetByUserID", "IPBanSetByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPBanSetOn", "IPBanSetOn", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 2 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPSegment1", "IPSegment1", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 3 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPSegment2", "IPSegment2", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 4 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPSegment3", "IPSegment3", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 5 );
+			this.AddElementFieldMapping( "IPBanEntity", "IPSegment4", "IPSegment4", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 6 );
+			this.AddElementFieldMapping( "IPBanEntity", "Range", "Range", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 7 );
+			this.AddElementFieldMapping( "IPBanEntity", "Reason", "Reason", false, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 8 );
 		}
 		/// <summary>Inits MessageEntity's mappings</summary>
 		private void InitMessageEntityMappings()
 		{
-			base.AddElementMapping( "MessageEntity", "HnD", @"dbo", "Message", 9 );
-			base.AddElementFieldMapping( "MessageEntity", "MessageID", "MessageID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "MessageEntity", "PostingDate", "PostingDate", false, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 1 );
-			base.AddElementFieldMapping( "MessageEntity", "PostedByUserID", "PostedByUserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
-			base.AddElementFieldMapping( "MessageEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 3 );
-			base.AddElementFieldMapping( "MessageEntity", "PostedFromIP", "PostedFromIP", false, (int)SqlDbType.VarChar, 25, 0, 0, false, "", null, typeof(System.String), 4 );
-			base.AddElementFieldMapping( "MessageEntity", "ChangeTrackerStamp", "ChangeTrackerStamp", false, (int)SqlDbType.Timestamp, 8, 0, 0, false, "", null, typeof(System.Byte[]), 5 );
-			base.AddElementFieldMapping( "MessageEntity", "MessageText", "MessageText", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 6 );
-			base.AddElementFieldMapping( "MessageEntity", "MessageTextAsHTML", "MessageTextAsHTML", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 7 );
-			base.AddElementFieldMapping( "MessageEntity", "MessageTextAsXml", "MessageTextAsXml", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 8 );
+			this.AddElementMapping( "MessageEntity", "HnD", @"dbo", "Message", 9 );
+			this.AddElementFieldMapping( "MessageEntity", "ChangeTrackerStamp", "ChangeTrackerStamp", false, "Timestamp", 8, 0, 0, false, "", null, typeof(System.Byte[]), 0 );
+			this.AddElementFieldMapping( "MessageEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "MessageEntity", "MessageText", "MessageText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 2 );
+			this.AddElementFieldMapping( "MessageEntity", "MessageTextAsHTML", "MessageTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 3 );
+			this.AddElementFieldMapping( "MessageEntity", "MessageTextAsXml", "MessageTextAsXml", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 4 );
+			this.AddElementFieldMapping( "MessageEntity", "PostedByUserID", "PostedByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 5 );
+			this.AddElementFieldMapping( "MessageEntity", "PostedFromIP", "PostedFromIP", false, "VarChar", 25, 0, 0, false, "", null, typeof(System.String), 6 );
+			this.AddElementFieldMapping( "MessageEntity", "PostingDate", "PostingDate", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 7 );
+			this.AddElementFieldMapping( "MessageEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 8 );
 		}
 		/// <summary>Inits RoleEntity's mappings</summary>
 		private void InitRoleEntityMappings()
 		{
-			base.AddElementMapping( "RoleEntity", "HnD", @"dbo", "Role", 2 );
-			base.AddElementFieldMapping( "RoleEntity", "RoleID", "RoleID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "RoleEntity", "RoleDescription", "RoleDescription", false, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
+			this.AddElementMapping( "RoleEntity", "HnD", @"dbo", "Role", 2 );
+			this.AddElementFieldMapping( "RoleEntity", "RoleDescription", "RoleDescription", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 0 );
+			this.AddElementFieldMapping( "RoleEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits RoleAuditActionEntity's mappings</summary>
 		private void InitRoleAuditActionEntityMappings()
 		{
-			base.AddElementMapping( "RoleAuditActionEntity", "HnD", @"dbo", "RoleAuditAction", 2 );
-			base.AddElementFieldMapping( "RoleAuditActionEntity", "AuditActionID", "AuditActionID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "RoleAuditActionEntity", "RoleID", "RoleID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "RoleAuditActionEntity", "HnD", @"dbo", "RoleAuditAction", 2 );
+			this.AddElementFieldMapping( "RoleAuditActionEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "RoleAuditActionEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits RoleSystemActionRightEntity's mappings</summary>
 		private void InitRoleSystemActionRightEntityMappings()
 		{
-			base.AddElementMapping( "RoleSystemActionRightEntity", "HnD", @"dbo", "RoleSystemActionRight", 2 );
-			base.AddElementFieldMapping( "RoleSystemActionRightEntity", "RoleID", "RoleID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "RoleSystemActionRightEntity", "ActionRightID", "ActionRightID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "RoleSystemActionRightEntity", "HnD", @"dbo", "RoleSystemActionRight", 2 );
+			this.AddElementFieldMapping( "RoleSystemActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "RoleSystemActionRightEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits RoleUserEntity's mappings</summary>
 		private void InitRoleUserEntityMappings()
 		{
-			base.AddElementMapping( "RoleUserEntity", "HnD", @"dbo", "RoleUser", 2 );
-			base.AddElementFieldMapping( "RoleUserEntity", "RoleID", "RoleID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "RoleUserEntity", "UserID", "UserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "RoleUserEntity", "HnD", @"dbo", "RoleUser", 2 );
+			this.AddElementFieldMapping( "RoleUserEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "RoleUserEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits SectionEntity's mappings</summary>
 		private void InitSectionEntityMappings()
 		{
-			base.AddElementMapping( "SectionEntity", "HnD", @"dbo", "Section", 4 );
-			base.AddElementFieldMapping( "SectionEntity", "SectionID", "SectionID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "SectionEntity", "SectionName", "SectionName", false, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
-			base.AddElementFieldMapping( "SectionEntity", "SectionDescription", "SectionDescription", false, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "SectionEntity", "OrderNo", "OrderNo", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 3 );
+			this.AddElementMapping( "SectionEntity", "HnD", @"dbo", "Section", 4 );
+			this.AddElementFieldMapping( "SectionEntity", "OrderNo", "OrderNo", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 0 );
+			this.AddElementFieldMapping( "SectionEntity", "SectionDescription", "SectionDescription", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 1 );
+			this.AddElementFieldMapping( "SectionEntity", "SectionID", "SectionID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 2 );
+			this.AddElementFieldMapping( "SectionEntity", "SectionName", "SectionName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 3 );
 		}
 		/// <summary>Inits SupportQueueEntity's mappings</summary>
 		private void InitSupportQueueEntityMappings()
 		{
-			base.AddElementMapping( "SupportQueueEntity", "HnD", @"dbo", "SupportQueue", 4 );
-			base.AddElementFieldMapping( "SupportQueueEntity", "QueueID", "QueueID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "SupportQueueEntity", "QueueName", "QueueName", true, (int)SqlDbType.NVarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
-			base.AddElementFieldMapping( "SupportQueueEntity", "QueueDescription", "QueueDescription", true, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "SupportQueueEntity", "OrderNo", "OrderNo", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 3 );
+			this.AddElementMapping( "SupportQueueEntity", "HnD", @"dbo", "SupportQueue", 4 );
+			this.AddElementFieldMapping( "SupportQueueEntity", "OrderNo", "OrderNo", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 0 );
+			this.AddElementFieldMapping( "SupportQueueEntity", "QueueDescription", "QueueDescription", true, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 1 );
+			this.AddElementFieldMapping( "SupportQueueEntity", "QueueID", "QueueID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 2 );
+			this.AddElementFieldMapping( "SupportQueueEntity", "QueueName", "QueueName", true, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 3 );
 		}
 		/// <summary>Inits SupportQueueThreadEntity's mappings</summary>
 		private void InitSupportQueueThreadEntityMappings()
 		{
-			base.AddElementMapping( "SupportQueueThreadEntity", "HnD", @"dbo", "SupportQueueThread", 6 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "QueueID", "QueueID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "PlacedInQueueByUserID", "PlacedInQueueByUserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "PlacedInQueueOn", "PlacedInQueueOn", false, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 3 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "ClaimedByUserID", "ClaimedByUserID", true, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 4 );
-			base.AddElementFieldMapping( "SupportQueueThreadEntity", "ClaimedOn", "ClaimedOn", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 5 );
+			this.AddElementMapping( "SupportQueueThreadEntity", "HnD", @"dbo", "SupportQueueThread", 6 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "ClaimedByUserID", "ClaimedByUserID", true, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "ClaimedOn", "ClaimedOn", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 1 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "PlacedInQueueByUserID", "PlacedInQueueByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "PlacedInQueueOn", "PlacedInQueueOn", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 3 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "QueueID", "QueueID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 4 );
+			this.AddElementFieldMapping( "SupportQueueThreadEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 5 );
 		}
 		/// <summary>Inits SystemDataEntity's mappings</summary>
 		private void InitSystemDataEntityMappings()
 		{
-			base.AddElementMapping( "SystemDataEntity", "HnD", @"dbo", "SystemData", 9 );
-			base.AddElementFieldMapping( "SystemDataEntity", "ID", "ID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "SystemDataEntity", "DefaultRoleNewUser", "DefaultRoleNewUser", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "SystemDataEntity", "AnonymousRole", "AnonymousRole", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
-			base.AddElementFieldMapping( "SystemDataEntity", "DefaultUserTitleNewUser", "DefaultUserTitleNewUser", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 3 );
-			base.AddElementFieldMapping( "SystemDataEntity", "HoursThresholdForActiveThreads", "HoursThresholdForActiveThreads", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 4 );
-			base.AddElementFieldMapping( "SystemDataEntity", "PageSizeSearchResults", "PageSizeSearchResults", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 5 );
-			base.AddElementFieldMapping( "SystemDataEntity", "MinNumberOfThreadsToFetch", "MinNumberOfThreadsToFetch", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 6 );
-			base.AddElementFieldMapping( "SystemDataEntity", "MinNumberOfNonStickyVisibleThreads", "MinNumberOfNonStickyVisibleThreads", false, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 7 );
-			base.AddElementFieldMapping( "SystemDataEntity", "SendReplyNotifications", "SendReplyNotifications", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 8 );
+			this.AddElementMapping( "SystemDataEntity", "HnD", @"dbo", "SystemData", 9 );
+			this.AddElementFieldMapping( "SystemDataEntity", "AnonymousRole", "AnonymousRole", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "SystemDataEntity", "DefaultRoleNewUser", "DefaultRoleNewUser", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementFieldMapping( "SystemDataEntity", "DefaultUserTitleNewUser", "DefaultUserTitleNewUser", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
+			this.AddElementFieldMapping( "SystemDataEntity", "HoursThresholdForActiveThreads", "HoursThresholdForActiveThreads", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 3 );
+			this.AddElementFieldMapping( "SystemDataEntity", "ID", "ID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 4 );
+			this.AddElementFieldMapping( "SystemDataEntity", "MinNumberOfNonStickyVisibleThreads", "MinNumberOfNonStickyVisibleThreads", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 5 );
+			this.AddElementFieldMapping( "SystemDataEntity", "MinNumberOfThreadsToFetch", "MinNumberOfThreadsToFetch", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 6 );
+			this.AddElementFieldMapping( "SystemDataEntity", "PageSizeSearchResults", "PageSizeSearchResults", false, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 7 );
+			this.AddElementFieldMapping( "SystemDataEntity", "SendReplyNotifications", "SendReplyNotifications", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 8 );
 		}
 		/// <summary>Inits ThreadEntity's mappings</summary>
 		private void InitThreadEntityMappings()
 		{
-			base.AddElementMapping( "ThreadEntity", "HnD", @"dbo", "Thread", 10 );
-			base.AddElementFieldMapping( "ThreadEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "ThreadEntity", "ForumID", "ForumID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
-			base.AddElementFieldMapping( "ThreadEntity", "Subject", "Subject", false, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "ThreadEntity", "StartedByUserID", "StartedByUserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 3 );
-			base.AddElementFieldMapping( "ThreadEntity", "ThreadLastPostingDate", "ThreadLastPostingDate", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 4 );
-			base.AddElementFieldMapping( "ThreadEntity", "IsSticky", "IsSticky", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 5 );
-			base.AddElementFieldMapping( "ThreadEntity", "IsClosed", "IsClosed", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 6 );
-			base.AddElementFieldMapping( "ThreadEntity", "MarkedAsDone", "MarkedAsDone", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 7 );
-			base.AddElementFieldMapping( "ThreadEntity", "NumberOfViews", "NumberOfViews", true, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 8 );
-			base.AddElementFieldMapping( "ThreadEntity", "Memo", "Memo", true, (int)SqlDbType.NText, 1073741823, 0, 0, false, "", null, typeof(System.String), 9 );
+			this.AddElementMapping( "ThreadEntity", "HnD", @"dbo", "Thread", 10 );
+			this.AddElementFieldMapping( "ThreadEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "ThreadEntity", "IsClosed", "IsClosed", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 1 );
+			this.AddElementFieldMapping( "ThreadEntity", "IsSticky", "IsSticky", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 2 );
+			this.AddElementFieldMapping( "ThreadEntity", "MarkedAsDone", "MarkedAsDone", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 3 );
+			this.AddElementFieldMapping( "ThreadEntity", "Memo", "Memo", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 4 );
+			this.AddElementFieldMapping( "ThreadEntity", "NumberOfViews", "NumberOfViews", true, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 5 );
+			this.AddElementFieldMapping( "ThreadEntity", "StartedByUserID", "StartedByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 6 );
+			this.AddElementFieldMapping( "ThreadEntity", "Subject", "Subject", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 7 );
+			this.AddElementFieldMapping( "ThreadEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 8 );
+			this.AddElementFieldMapping( "ThreadEntity", "ThreadLastPostingDate", "ThreadLastPostingDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 9 );
 		}
 		/// <summary>Inits ThreadSubscriptionEntity's mappings</summary>
 		private void InitThreadSubscriptionEntityMappings()
 		{
-			base.AddElementMapping( "ThreadSubscriptionEntity", "HnD", @"dbo", "ThreadSubscription", 2 );
-			base.AddElementFieldMapping( "ThreadSubscriptionEntity", "UserID", "UserID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "ThreadSubscriptionEntity", "ThreadID", "ThreadID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
+			this.AddElementMapping( "ThreadSubscriptionEntity", "HnD", @"dbo", "ThreadSubscription", 2 );
+			this.AddElementFieldMapping( "ThreadSubscriptionEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "ThreadSubscriptionEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits UserEntity's mappings</summary>
 		private void InitUserEntityMappings()
 		{
-			base.AddElementMapping( "UserEntity", "HnD", @"dbo", "User", 20 );
-			base.AddElementFieldMapping( "UserEntity", "UserID", "UserID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "UserEntity", "NickName", "NickName", false, (int)SqlDbType.NVarChar, 20, 0, 0, false, "", null, typeof(System.String), 1 );
-			base.AddElementFieldMapping( "UserEntity", "Password", "Password", false, (int)SqlDbType.NVarChar, 30, 0, 0, false, "", null, typeof(System.String), 2 );
-			base.AddElementFieldMapping( "UserEntity", "IsBanned", "IsBanned", false, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 3 );
-			base.AddElementFieldMapping( "UserEntity", "IPNumber", "IPNumber", false, (int)SqlDbType.VarChar, 25, 0, 0, false, "", null, typeof(System.String), 4 );
-			base.AddElementFieldMapping( "UserEntity", "Signature", "Signature", true, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 5 );
-			base.AddElementFieldMapping( "UserEntity", "IconURL", "IconURL", true, (int)SqlDbType.NVarChar, 250, 0, 0, false, "", null, typeof(System.String), 6 );
-			base.AddElementFieldMapping( "UserEntity", "EmailAddress", "EmailAddress", true, (int)SqlDbType.NVarChar, 200, 0, 0, false, "", null, typeof(System.String), 7 );
-			base.AddElementFieldMapping( "UserEntity", "UserTitleID", "UserTitleID", false, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 8 );
-			base.AddElementFieldMapping( "UserEntity", "DateOfBirth", "DateOfBirth", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 9 );
-			base.AddElementFieldMapping( "UserEntity", "Occupation", "Occupation", true, (int)SqlDbType.NVarChar, 100, 0, 0, false, "", null, typeof(System.String), 10 );
-			base.AddElementFieldMapping( "UserEntity", "Location", "Location", true, (int)SqlDbType.NVarChar, 100, 0, 0, false, "", null, typeof(System.String), 11 );
-			base.AddElementFieldMapping( "UserEntity", "Website", "Website", true, (int)SqlDbType.NVarChar, 200, 0, 0, false, "", null, typeof(System.String), 12 );
-			base.AddElementFieldMapping( "UserEntity", "SignatureAsHTML", "SignatureAsHTML", true, (int)SqlDbType.NVarChar, 1024, 0, 0, false, "", null, typeof(System.String), 13 );
-			base.AddElementFieldMapping( "UserEntity", "JoinDate", "JoinDate", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 14 );
-			base.AddElementFieldMapping( "UserEntity", "AmountOfPostings", "AmountOfPostings", true, (int)SqlDbType.Int, 0, 0, 10, false, "", null, typeof(System.Int32), 15 );
-			base.AddElementFieldMapping( "UserEntity", "EmailAddressIsPublic", "EmailAddressIsPublic", true, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 16 );
-			base.AddElementFieldMapping( "UserEntity", "LastVisitedDate", "LastVisitedDate", true, (int)SqlDbType.DateTime, 0, 3, 23, false, "", null, typeof(System.DateTime), 17 );
-			base.AddElementFieldMapping( "UserEntity", "AutoSubscribeToThread", "AutoSubscribeToThread", true, (int)SqlDbType.Bit, 0, 0, 1, false, "", null, typeof(System.Boolean), 18 );
-			base.AddElementFieldMapping( "UserEntity", "DefaultNumberOfMessagesPerPage", "DefaultNumberOfMessagesPerPage", true, (int)SqlDbType.SmallInt, 0, 0, 5, false, "", null, typeof(System.Int16), 19 );
+			this.AddElementMapping( "UserEntity", "HnD", @"dbo", "User", 20 );
+			this.AddElementFieldMapping( "UserEntity", "AmountOfPostings", "AmountOfPostings", true, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
+			this.AddElementFieldMapping( "UserEntity", "AutoSubscribeToThread", "AutoSubscribeToThread", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 1 );
+			this.AddElementFieldMapping( "UserEntity", "DateOfBirth", "DateOfBirth", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 2 );
+			this.AddElementFieldMapping( "UserEntity", "DefaultNumberOfMessagesPerPage", "DefaultNumberOfMessagesPerPage", true, "SmallInt", 0, 0, 5, false, "", null, typeof(System.Int16), 3 );
+			this.AddElementFieldMapping( "UserEntity", "EmailAddress", "EmailAddress", true, "NVarChar", 200, 0, 0, false, "", null, typeof(System.String), 4 );
+			this.AddElementFieldMapping( "UserEntity", "EmailAddressIsPublic", "EmailAddressIsPublic", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 5 );
+			this.AddElementFieldMapping( "UserEntity", "IconURL", "IconURL", true, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 6 );
+			this.AddElementFieldMapping( "UserEntity", "IPNumber", "IPNumber", false, "VarChar", 25, 0, 0, false, "", null, typeof(System.String), 7 );
+			this.AddElementFieldMapping( "UserEntity", "IsBanned", "IsBanned", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 8 );
+			this.AddElementFieldMapping( "UserEntity", "JoinDate", "JoinDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 9 );
+			this.AddElementFieldMapping( "UserEntity", "LastVisitedDate", "LastVisitedDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 10 );
+			this.AddElementFieldMapping( "UserEntity", "Location", "Location", true, "NVarChar", 100, 0, 0, false, "", null, typeof(System.String), 11 );
+			this.AddElementFieldMapping( "UserEntity", "NickName", "NickName", false, "NVarChar", 20, 0, 0, false, "", null, typeof(System.String), 12 );
+			this.AddElementFieldMapping( "UserEntity", "Occupation", "Occupation", true, "NVarChar", 100, 0, 0, false, "", null, typeof(System.String), 13 );
+			this.AddElementFieldMapping( "UserEntity", "Password", "Password", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 14 );
+			this.AddElementFieldMapping( "UserEntity", "Signature", "Signature", true, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 15 );
+			this.AddElementFieldMapping( "UserEntity", "SignatureAsHTML", "SignatureAsHTML", true, "NVarChar", 1024, 0, 0, false, "", null, typeof(System.String), 16 );
+			this.AddElementFieldMapping( "UserEntity", "UserID", "UserID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 17 );
+			this.AddElementFieldMapping( "UserEntity", "UserTitleID", "UserTitleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 18 );
+			this.AddElementFieldMapping( "UserEntity", "Website", "Website", true, "NVarChar", 200, 0, 0, false, "", null, typeof(System.String), 19 );
 		}
 		/// <summary>Inits UserTitleEntity's mappings</summary>
 		private void InitUserTitleEntityMappings()
 		{
-			base.AddElementMapping( "UserTitleEntity", "HnD", @"dbo", "UserTitle", 2 );
-			base.AddElementFieldMapping( "UserTitleEntity", "UserTitleID", "UserTitleID", false, (int)SqlDbType.Int, 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
-			base.AddElementFieldMapping( "UserTitleEntity", "UserTitleDescription", "UserTitleDescription", false, (int)SqlDbType.VarChar, 50, 0, 0, false, "", null, typeof(System.String), 1 );
+			this.AddElementMapping( "UserTitleEntity", "HnD", @"dbo", "UserTitle", 2 );
+			this.AddElementFieldMapping( "UserTitleEntity", "UserTitleDescription", "UserTitleDescription", false, "VarChar", 50, 0, 0, false, "", null, typeof(System.String), 0 );
+			this.AddElementFieldMapping( "UserTitleEntity", "UserTitleID", "UserTitleID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 1 );
 		}
 
 	}

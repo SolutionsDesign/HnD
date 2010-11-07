@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -20,7 +20,6 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.HelperClasses;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.CollectionClasses
@@ -40,7 +39,7 @@ namespace SD.HnD.DAL.CollectionClasses
 
 		/// <summary> CTor</summary>
 		/// <param name="initialContents">The initial contents of this collection.</param>
-		public ForumCollection(IList<ForumEntity> initialContents):base(new ForumEntityFactory())
+		public ForumCollection(IEnumerable<ForumEntity> initialContents):base(new ForumEntityFactory())
 		{
 			AddRange(initialContents);
 		}
@@ -66,7 +65,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity sectionInstance, IEntity defaultSupportQueueInstance)
 		{
-			return GetMultiManyToOne(sectionInstance, defaultSupportQueueInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, null, 0, 0);
+			return GetMultiManyToOne(sectionInstance, defaultSupportQueueInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, null, 0, 0);
 		}
 
 		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which have data in common with the specified related Entities.
@@ -77,7 +76,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity sectionInstance, IEntity defaultSupportQueueInstance, IPredicateExpression filter)
 		{
-			return GetMultiManyToOne(sectionInstance, defaultSupportQueueInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, filter, 0, 0);
+			return GetMultiManyToOne(sectionInstance, defaultSupportQueueInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, filter, 0, 0);
 		}
 
 		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which have data in common with the specified related Entities.
@@ -112,12 +111,11 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				return GetMulti(filter, maxNumberOfItemsToReturn, sortClauses, null, pageNumber, pageSize);
 			}
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.GetMulti(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, filter, sectionInstance, defaultSupportQueueInstance, pageNumber, pageSize);
+			return DAOFactory.CreateForumDAO().GetMulti(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, filter, sectionInstance, defaultSupportQueueInstance, pageNumber, pageSize);
 		}
 
 		/// <summary> Deletes from the persistent storage all Forum entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.</summary>
@@ -127,8 +125,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int DeleteMultiManyToOne(IEntity sectionInstance, IEntity defaultSupportQueueInstance)
 		{
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.DeleteMulti(base.Transaction, sectionInstance, defaultSupportQueueInstance);
+			return DAOFactory.CreateForumDAO().DeleteMulti(this.Transaction, sectionInstance, defaultSupportQueueInstance);
 		}
 
 		/// <summary> Updates in the persistent storage all Forum entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.
@@ -139,21 +136,18 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int UpdateMultiManyToOne(ForumEntity entityWithNewValues, IEntity sectionInstance, IEntity defaultSupportQueueInstance)
 		{
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.UpdateMulti(entityWithNewValues, base.Transaction, sectionInstance, defaultSupportQueueInstance);
+			return DAOFactory.CreateForumDAO().UpdateMulti(entityWithNewValues, this.Transaction, sectionInstance, defaultSupportQueueInstance);
 		}
 
-		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  Relation of type 'm:n' with the passed in UserEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  Relation of type 'm:n' with the passed in UserEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingUsersWhoStartedThreads(IEntity userInstance)
 		{
-			return GetMultiManyToManyUsingUsersWhoStartedThreads(userInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
+			return GetMultiManyToManyUsingUsersWhoStartedThreads(userInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
 		}
 		
-		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -163,8 +157,16 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetMultiManyToManyUsingUsersWhoStartedThreads(userInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
 		}
 
-		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a Relation of type 'm:n' with the passed in UserEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingUsersWhoStartedThreads(IEntity userInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingUsersWhoStartedThreads(userInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -173,26 +175,14 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public virtual bool GetMultiManyToManyUsingUsersWhoStartedThreads(IEntity userInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.GetMultiUsingUsersWhoStartedThreads(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, userInstance, pageNumber, pageSize);
+			return DAOFactory.CreateForumDAO().GetMultiUsingUsersWhoStartedThreads(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, userInstance, null, pageNumber, pageSize);
 		}
 
-		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a Relation of type 'm:n' with the passed in UserEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingUsersWhoStartedThreads(IEntity userInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingUsersWhoStartedThreads(userInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this ForumCollection object all ForumEntity objects which are related via a  relation of type 'm:n' with the passed in UserEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="userInstance">UserEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -200,14 +190,12 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingUsersWhoStartedThreads(IEntity userInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.GetMultiUsingUsersWhoStartedThreads(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, userInstance, prefetchPathToUse);
+			return DAOFactory.CreateForumDAO().GetMultiUsingUsersWhoStartedThreads(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, userInstance, prefetchPathToUse, 0, 0);
 		}
-
 
 		/// <summary> Retrieves Entity rows in a datatable which match the specified filter. It will always create a new connection to the database.</summary>
 		/// <param name="selectFilter">A predicate or predicate expression which should be used as filter for the entities to retrieve.</param>
@@ -265,8 +253,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetScalar(fieldIndex, expressionToExecute, aggregateToApply, null, null, null);
 		}
 
-		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are
-		/// applied on.</summary>
+		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are applied on.</summary>
 		/// <param name="fieldIndex">Field index of field to which to apply the aggregate function and expression</param>
 		/// <param name="expressionToExecute">The expression to execute. Can be null</param>
 		/// <param name="aggregateToApply">Aggregate function to apply. </param>
@@ -309,8 +296,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				fields[0].AggregateFunctionToApply = aggregateToApply;
 			}
-			ForumDAO dao = DAOFactory.CreateForumDAO();
-			return dao.GetScalar(fields, base.Transaction, filter, relations, groupByClause);
+			return DAOFactory.CreateForumDAO().GetScalar(fields, this.Transaction, filter, relations, groupByClause);
 		}
 		
 		/// <summary>Creats a new DAO instance so code which is in the base class can still use the proper DAO object.</summary>
@@ -326,7 +312,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		{
 			return new Transaction(levelOfIsolation, name);
 		}
-
 
 		#region Custom EntityCollection code
 		

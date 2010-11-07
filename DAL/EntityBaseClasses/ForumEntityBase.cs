@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -34,7 +34,7 @@ namespace SD.HnD.DAL.EntityClasses
 	/// 
 	/// </summary>
 	[Serializable]
-	public abstract partial class ForumEntityBase : CommonEntityBase, ISerializable
+	public abstract partial class ForumEntityBase : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
@@ -50,17 +50,16 @@ namespace SD.HnD.DAL.EntityClasses
 		private SupportQueueEntity _defaultSupportQueue;
 		private bool	_alwaysFetchDefaultSupportQueue, _alreadyFetchedDefaultSupportQueue, _defaultSupportQueueReturnsNewIfNotFound;
 
-		
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
 		#endregion
-		
+
 		#region Statics
 		private static Dictionary<string, string>	_customProperties;
 		private static Dictionary<string, Dictionary<string, string>>	_fieldsCustomProperties;
 
 		/// <summary>All names of fields mapped onto a relation. Usable for in-memory filtering</summary>
-		public static class MemberNames
+		public static partial class MemberNames
 		{
 			/// <summary>Member name Section</summary>
 			public static readonly string Section = "Section";
@@ -72,7 +71,6 @@ namespace SD.HnD.DAL.EntityClasses
 			public static readonly string Threads = "Threads";
 			/// <summary>Member name UsersWhoStartedThreads</summary>
 			public static readonly string UsersWhoStartedThreads = "UsersWhoStartedThreads";
-
 		}
 		#endregion
 		
@@ -83,15 +81,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		public ForumEntityBase()
+		protected ForumEntityBase() : base()
 		{
 			InitClassEmpty(null);
 		}
 
-	
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
-		public ForumEntityBase(System.Int32 forumID)
+		protected ForumEntityBase(System.Int32 forumID)
 		{
 			InitClassFetch(forumID, null, null);
 		}
@@ -99,7 +96,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public ForumEntityBase(System.Int32 forumID, IPrefetchPath prefetchPathToUse)
+		protected ForumEntityBase(System.Int32 forumID, IPrefetchPath prefetchPathToUse)
 		{
 			InitClassFetch(forumID, null, prefetchPathToUse);
 		}
@@ -107,13 +104,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="validator">The custom validator object for this ForumEntity</param>
-		public ForumEntityBase(System.Int32 forumID, IValidator validator)
+		protected ForumEntityBase(System.Int32 forumID, IValidator validator)
 		{
 			InitClassFetch(forumID, validator, null);
 		}
-	
 
-		/// <summary>Protected CTor for deserialization</summary>
+		/// <summary>Private CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected ForumEntityBase(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -121,6 +117,7 @@ namespace SD.HnD.DAL.EntityClasses
 			_forumRoleForumActionRights = (SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection)info.GetValue("_forumRoleForumActionRights", typeof(SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection));
 			_alwaysFetchForumRoleForumActionRights = info.GetBoolean("_alwaysFetchForumRoleForumActionRights");
 			_alreadyFetchedForumRoleForumActionRights = info.GetBoolean("_alreadyFetchedForumRoleForumActionRights");
+
 			_threads = (SD.HnD.DAL.CollectionClasses.ThreadCollection)info.GetValue("_threads", typeof(SD.HnD.DAL.CollectionClasses.ThreadCollection));
 			_alwaysFetchThreads = info.GetBoolean("_alwaysFetchThreads");
 			_alreadyFetchedThreads = info.GetBoolean("_alreadyFetchedThreads");
@@ -135,6 +132,7 @@ namespace SD.HnD.DAL.EntityClasses
 			_sectionReturnsNewIfNotFound = info.GetBoolean("_sectionReturnsNewIfNotFound");
 			_alwaysFetchSection = info.GetBoolean("_alwaysFetchSection");
 			_alreadyFetchedSection = info.GetBoolean("_alreadyFetchedSection");
+
 			_defaultSupportQueue = (SupportQueueEntity)info.GetValue("_defaultSupportQueue", typeof(SupportQueueEntity));
 			if(_defaultSupportQueue!=null)
 			{
@@ -143,13 +141,10 @@ namespace SD.HnD.DAL.EntityClasses
 			_defaultSupportQueueReturnsNewIfNotFound = info.GetBoolean("_defaultSupportQueueReturnsNewIfNotFound");
 			_alwaysFetchDefaultSupportQueue = info.GetBoolean("_alwaysFetchDefaultSupportQueue");
 			_alreadyFetchedDefaultSupportQueue = info.GetBoolean("_alreadyFetchedDefaultSupportQueue");
-
-			base.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
-			
+			this.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
-		}
-
+		}	
 		
 		/// <summary>Performs the desync setup when an FK field has been changed. The entity referenced based on the FK field will be dereferenced and sync info will be removed.</summary>
 		/// <param name="fieldIndex">The fieldindex.</param>
@@ -157,27 +152,20 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((ForumFieldIndex)fieldIndex)
 			{
-				case ForumFieldIndex.SectionID:
-					DesetupSyncSection(true, false);
-					_alreadyFetchedSection = false;
-					break;
 				case ForumFieldIndex.DefaultSupportQueueID:
 					DesetupSyncDefaultSupportQueue(true, false);
 					_alreadyFetchedDefaultSupportQueue = false;
+					break;
+				case ForumFieldIndex.SectionID:
+					DesetupSyncSection(true, false);
+					_alreadyFetchedSection = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
 					break;
 			}
 		}
-		
-		/// <summary>Gets the inheritance info provider instance of the project this entity instance is located in. </summary>
-		/// <returns>ready to use inheritance info provider instance.</returns>
-		protected override IInheritanceInfoProvider GetInheritanceInfoProvider()
-		{
-			return InheritanceInfoProviderSingleton.GetInstance();
-		}
-		
+
 		/// <summary> Will perform post-ReadXml actions</summary>
 		protected override void PostReadXmlFixups()
 		{
@@ -186,44 +174,41 @@ namespace SD.HnD.DAL.EntityClasses
 			_alreadyFetchedUsersWhoStartedThreads = (_usersWhoStartedThreads.Count > 0);
 			_alreadyFetchedSection = (_section != null);
 			_alreadyFetchedDefaultSupportQueue = (_defaultSupportQueue != null);
-
 		}
 				
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public override RelationCollection GetRelationsForFieldOfType(string fieldName)
+		protected override RelationCollection GetRelationsForFieldOfType(string fieldName)
 		{
-			return ForumEntity.GetRelationsForField(fieldName);
+			return GetRelationsForField(fieldName);
 		}
 
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public static RelationCollection GetRelationsForField(string fieldName)
+		internal static RelationCollection GetRelationsForField(string fieldName)
 		{
 			RelationCollection toReturn = new RelationCollection();
 			switch(fieldName)
 			{
 				case "Section":
-					toReturn.Add(ForumEntity.Relations.SectionEntityUsingSectionID);
+					toReturn.Add(Relations.SectionEntityUsingSectionID);
 					break;
 				case "DefaultSupportQueue":
-					toReturn.Add(ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID);
+					toReturn.Add(Relations.SupportQueueEntityUsingDefaultSupportQueueID);
 					break;
 				case "ForumRoleForumActionRights":
-					toReturn.Add(ForumEntity.Relations.ForumRoleForumActionRightEntityUsingForumID);
+					toReturn.Add(Relations.ForumRoleForumActionRightEntityUsingForumID);
 					break;
 				case "Threads":
-					toReturn.Add(ForumEntity.Relations.ThreadEntityUsingForumID);
+					toReturn.Add(Relations.ThreadEntityUsingForumID);
 					break;
 				case "UsersWhoStartedThreads":
-					toReturn.Add(ForumEntity.Relations.ThreadEntityUsingForumID, "ForumEntity__", "Thread_", JoinHint.None);
+					toReturn.Add(Relations.ThreadEntityUsingForumID, "ForumEntity__", "Thread_", JoinHint.None);
 					toReturn.Add(ThreadEntity.Relations.UserEntityUsingStartedByUserID, "Thread_", string.Empty, JoinHint.None);
 					break;
-
 				default:
-
 					break;				
 			}
 			return toReturn;
@@ -231,12 +216,11 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 
-		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.
-		/// Serializes members of this entity class and uses the base class' implementation to serialize the rest.</summary>
+		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		protected override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("_forumRoleForumActionRights", (!this.MarkedForDeletion?_forumRoleForumActionRights:null));
 			info.AddValue("_alwaysFetchForumRoleForumActionRights", _alwaysFetchForumRoleForumActionRights);
@@ -256,7 +240,6 @@ namespace SD.HnD.DAL.EntityClasses
 			info.AddValue("_alwaysFetchDefaultSupportQueue", _alwaysFetchDefaultSupportQueue);
 			info.AddValue("_alreadyFetchedDefaultSupportQueue", _alreadyFetchedDefaultSupportQueue);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			base.GetObjectData(info, context);
@@ -267,7 +250,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
 		{
 			switch(propertyName)
 			{
@@ -300,9 +283,8 @@ namespace SD.HnD.DAL.EntityClasses
 						this.UsersWhoStartedThreads.Add((UserEntity)entity);
 					}
 					break;
-
 				default:
-
+					this.OnSetRelatedEntityProperty(propertyName, entity);
 					break;
 			}
 		}
@@ -311,7 +293,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -327,9 +309,7 @@ namespace SD.HnD.DAL.EntityClasses
 				case "Threads":
 					_threads.Add((ThreadEntity)relatedEntity);
 					break;
-
 				default:
-
 					break;
 			}
 		}
@@ -339,7 +319,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -350,33 +330,27 @@ namespace SD.HnD.DAL.EntityClasses
 					DesetupSyncDefaultSupportQueue(false, true);
 					break;
 				case "ForumRoleForumActionRights":
-					base.PerformRelatedEntityRemoval(_forumRoleForumActionRights, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_forumRoleForumActionRights, relatedEntity, signalRelatedEntityManyToOne);
 					break;
 				case "Threads":
-					base.PerformRelatedEntityRemoval(_threads, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_threads, relatedEntity, signalRelatedEntityManyToOne);
 					break;
-
 				default:
-
 					break;
 			}
 		}
 
-		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These
-		/// entities will have to be persisted after this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These entities will have to be persisted after this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependingRelatedEntities()
+		protected override List<IEntity> GetDependingRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These
-		/// entities will have to be persisted before this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These entities will have to be persisted before this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependentRelatedEntities()
+		protected override List<IEntity> GetDependentRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
 			if(_section!=null)
@@ -387,15 +361,12 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				toReturn.Add(_defaultSupportQueue);
 			}
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a List of all entity collections stored as member variables in this entity. The contents of the ArrayList is
-		/// used by the DataAccessAdapter to perform recursive saves. Only 1:n related collections are returned.</summary>
+		/// <summary> Gets a List of all entity collections stored as member variables in this entity. Only 1:n related collections are returned.</summary>
 		/// <returns>Collection with 0 or more IEntityCollection objects, referenced by this entity</returns>
-		public override List<IEntityCollection> GetMemberEntityCollections()
+		protected override List<IEntityCollection> GetMemberEntityCollections()
 		{
 			List<IEntityCollection> toReturn = new List<IEntityCollection>();
 			toReturn.Add(_forumRoleForumActionRights);
@@ -404,9 +375,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return toReturn;
 		}
 
-		
-
-		
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
@@ -432,7 +400,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>True if succeeded, false otherwise.</returns>
 		public bool FetchUsingPK(System.Int32 forumID, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return Fetch(forumID, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(forumID, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
@@ -448,40 +416,21 @@ namespace SD.HnD.DAL.EntityClasses
 			return Fetch(forumID, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
-		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. 
-		/// Refetching an empty Entity has no effect. </summary>
+		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
 			return Fetch(this.ForumID, null, null, null);
 		}
 
-		/// <summary> Returns true if the original value for the field with the fieldIndex passed in, read from the persistent storage was NULL, false otherwise.
-		/// Should not be used for testing if the current value is NULL, use <see cref="TestCurrentFieldValueForNull"/> for that.</summary>
-		/// <param name="fieldIndex">Index of the field to test if that field was NULL in the persistent storage</param>
-		/// <returns>true if the field with the passed in index was NULL in the persistent storage, false otherwise</returns>
-		public bool TestOriginalFieldValueForNull(ForumFieldIndex fieldIndex)
-		{
-			return base.Fields[(int)fieldIndex].IsNull;
-		}
-		
-		/// <summary>Returns true if the current value for the field with the fieldIndex passed in represents null/not defined, false otherwise.
-		/// Should not be used for testing if the original value (read from the db) is NULL</summary>
-		/// <param name="fieldIndex">Index of the field to test if its currentvalue is null/undefined</param>
-		/// <returns>true if the field's value isn't defined yet, false otherwise</returns>
-		public bool TestCurrentFieldValueForNull(ForumFieldIndex fieldIndex)
-		{
-			return base.CheckIfCurrentFieldValueIsNull((int)fieldIndex);
-		}
 
 				
 		/// <summary>Gets a list of all the EntityRelation objects the type of this instance has.</summary>
 		/// <returns>A list of all the EntityRelation objects the type of this instance has. Hierarchy relations are excluded.</returns>
-		public override List<IEntityRelation> GetAllRelations()
+		protected override List<IEntityRelation> GetAllRelations()
 		{
 			return new ForumRelations().GetAllRelations();
 		}
-
 
 		/// <summary> Retrieves all related entities of type 'ForumRoleForumActionRightEntity' using a relation of type '1:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
@@ -516,20 +465,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection GetMultiForumRoleForumActionRights(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedForumRoleForumActionRights || forceFetch || _alwaysFetchForumRoleForumActionRights) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedForumRoleForumActionRights || forceFetch || _alwaysFetchForumRoleForumActionRights) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_forumRoleForumActionRights.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_forumRoleForumActionRights);
-					}
-				}
+				AddToTransactionIfNecessary(_forumRoleForumActionRights);
 				_forumRoleForumActionRights.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_forumRoleForumActionRights.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_forumRoleForumActionRights.EntityFactoryToUse = entityFactoryToUse;
 				_forumRoleForumActionRights.GetMultiManyToOne(null, this, null, filter);
 				_forumRoleForumActionRights.SuppressClearInGetMulti=false;
 				_alreadyFetchedForumRoleForumActionRights = true;
@@ -580,20 +520,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.ThreadCollection GetMultiThreads(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedThreads || forceFetch || _alwaysFetchThreads) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedThreads || forceFetch || _alwaysFetchThreads) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_threads.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_threads);
-					}
-				}
+				AddToTransactionIfNecessary(_threads);
 				_threads.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_threads.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_threads.EntityFactoryToUse = entityFactoryToUse;
 				_threads.GetMultiManyToOne(this, null, filter);
 				_threads.SuppressClearInGetMulti=false;
 				_alreadyFetchedThreads = true;
@@ -625,22 +556,13 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoStartedThreads(bool forceFetch, IEntityFactory entityFactoryToUse)
 		{
- 			if( ( !_alreadyFetchedUsersWhoStartedThreads || forceFetch || _alwaysFetchUsersWhoStartedThreads) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedUsersWhoStartedThreads || forceFetch || _alwaysFetchUsersWhoStartedThreads) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_usersWhoStartedThreads.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_usersWhoStartedThreads);
-					}
-				}
+				AddToTransactionIfNecessary(_usersWhoStartedThreads);
 				IPredicateExpression filter = new PredicateExpression();
 				filter.Add(new FieldCompareValuePredicate(ForumFields.ForumID, ComparisonOperator.Equal, this.ForumID, "ForumEntity__"));
 				_usersWhoStartedThreads.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_usersWhoStartedThreads.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_usersWhoStartedThreads.EntityFactoryToUse = entityFactoryToUse;
 				_usersWhoStartedThreads.GetMulti(filter, GetRelationsForField("UsersWhoStartedThreads"));
 				_usersWhoStartedThreads.SuppressClearInGetMulti=false;
 				_alreadyFetchedUsersWhoStartedThreads = true;
@@ -670,50 +592,34 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'SectionEntity' which is related to this entity.</returns>
 		public virtual SectionEntity GetSingleSection(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedSection || forceFetch || _alwaysFetchSection) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedSection || forceFetch || _alwaysFetchSection) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(ForumEntity.Relations.SectionEntityUsingSectionID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.SectionEntityUsingSectionID);
 				SectionEntity newEntity = new SectionEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.SectionID);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (SectionEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.Section = newEntity;
+					newEntity = (SectionEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_sectionReturnsNewIfNotFound)
+					if(!_sectionReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_section == null)))
-						{
-							this.Section = newEntity;
-						}
-					}
-					else
-					{
-						this.Section = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.Section = newEntity;
 				_alreadyFetchedSection = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _section;
 		}
+
 
 		/// <summary> Retrieves the related entity of type 'SupportQueueEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'SupportQueueEntity' which is related to this entity.</returns>
@@ -727,141 +633,53 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'SupportQueueEntity' which is related to this entity.</returns>
 		public virtual SupportQueueEntity GetSingleDefaultSupportQueue(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedDefaultSupportQueue || forceFetch || _alwaysFetchDefaultSupportQueue) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedDefaultSupportQueue || forceFetch || _alwaysFetchDefaultSupportQueue) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.SupportQueueEntityUsingDefaultSupportQueueID);
 				SupportQueueEntity newEntity = new SupportQueueEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.DefaultSupportQueueID.GetValueOrDefault());
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (SupportQueueEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.DefaultSupportQueue = newEntity;
+					newEntity = (SupportQueueEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_defaultSupportQueueReturnsNewIfNotFound)
+					if(!_defaultSupportQueueReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_defaultSupportQueue == null)))
-						{
-							this.DefaultSupportQueue = newEntity;
-						}
-					}
-					else
-					{
-						this.DefaultSupportQueue = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.DefaultSupportQueue = newEntity;
 				_alreadyFetchedDefaultSupportQueue = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _defaultSupportQueue;
 		}
 
-
-		/// <summary> Performs the insert action of a new Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool InsertEntity()
-		{
-			ForumDAO dao = (ForumDAO)CreateDAOInstance();
-			return dao.AddNew(base.Fields, base.Transaction);
-		}
-		
 		/// <summary> Adds the internals to the active context. </summary>
 		protected override void AddInternalsToContext()
 		{
-			_forumRoleForumActionRights.ActiveContext = base.ActiveContext;
-			_threads.ActiveContext = base.ActiveContext;
-			_usersWhoStartedThreads.ActiveContext = base.ActiveContext;
+			_forumRoleForumActionRights.ActiveContext = this.ActiveContext;
+			_threads.ActiveContext = this.ActiveContext;
+			_usersWhoStartedThreads.ActiveContext = this.ActiveContext;
 			if(_section!=null)
 			{
-				_section.ActiveContext = base.ActiveContext;
+				_section.ActiveContext = this.ActiveContext;
 			}
 			if(_defaultSupportQueue!=null)
 			{
-				_defaultSupportQueue.ActiveContext = base.ActiveContext;
+				_defaultSupportQueue.ActiveContext = this.ActiveContext;
 			}
-
-
 		}
 
-
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity()
-		{
-			ForumDAO dao = (ForumDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction);
-		}
-		
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <param name="updateRestriction">Predicate expression, meant for concurrency checks in an Update query</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity(IPredicate updateRestriction)
-		{
-			ForumDAO dao = (ForumDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction, updateRestriction);
-		}
-	
-		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
-		/// <param name="validatorToUse">Validator to use.</param>
-		protected virtual void InitClassEmpty(IValidator validatorToUse)
-		{
-			OnInitializing();
-			base.Fields = CreateFields();
-			base.IsNew=true;
-			base.Validator = validatorToUse;
-
-			InitClassMembers();
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
-			// __LLBLGENPRO_USER_CODE_REGION_END
-
-			OnInitialized();
-		}
-		
-		/// <summary>Creates entity fields object for this entity. Used in constructor to setup this entity in a polymorphic scenario.</summary>
-		protected virtual IEntityFields CreateFields()
-		{
-			return EntityFieldsFactory.CreateEntityFieldsObject(SD.HnD.DAL.EntityType.ForumEntity);
-		}
-		
-		/// <summary>Creates a new transaction object</summary>
-		/// <param name="levelOfIsolation">The level of isolation.</param>
-		/// <param name="name">The name.</param>
-		protected override ITransaction CreateTransaction( IsolationLevel levelOfIsolation, string name )
-		{
-			return new Transaction(levelOfIsolation, name);
-		}
-
-		/// <summary>
-		/// Creates the ITypeDefaultValue instance used to provide default values for value types which aren't of type nullable(of T)
-		/// </summary>
-		/// <returns></returns>
-		protected override ITypeDefaultValue CreateTypeDefaultValueProvider()
-		{
-			return new TypeDefaultValue();
-		}
-
-		/// <summary>
-		/// Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element. 
-		/// </summary>
+		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
-		public override Dictionary<string, object> GetRelatedData()
+		protected override Dictionary<string, object> GetRelatedData()
 		{
 			Dictionary<string, object> toReturn = new Dictionary<string, object>();
 			toReturn.Add("Section", _section);
@@ -869,25 +687,36 @@ namespace SD.HnD.DAL.EntityClasses
 			toReturn.Add("ForumRoleForumActionRights", _forumRoleForumActionRights);
 			toReturn.Add("Threads", _threads);
 			toReturn.Add("UsersWhoStartedThreads", _usersWhoStartedThreads);
-
 			return toReturn;
 		}
-		
+	
+		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
+		/// <param name="validatorToUse">Validator to use.</param>
+		private void InitClassEmpty(IValidator validatorToUse)
+		{
+			OnInitializing();
+			this.Fields = CreateFields();
+			this.Validator = validatorToUse;
+			InitClassMembers();
+
+			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
+			// __LLBLGENPRO_USER_CODE_REGION_END
+
+			OnInitialized();
+		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="validator">The validator object for this ForumEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected virtual void InitClassFetch(System.Int32 forumID, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 forumID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
-			base.Validator = validator;
-			InitClassMembers();
-			base.Fields = CreateFields();
-			bool wasSuccesful = Fetch(forumID, prefetchPathToUse, null, null);
-			base.IsNew = !wasSuccesful;
+			this.Validator = validator;
+			this.Fields = CreateFields();
+			InitClassMembers();	
+			Fetch(forumID, prefetchPathToUse, null, null);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -897,29 +726,16 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
-			_forumRoleForumActionRights = new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection(new ForumRoleForumActionRightEntityFactory());
+			_forumRoleForumActionRights = new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection();
 			_forumRoleForumActionRights.SetContainingEntityInfo(this, "Forum");
-			_alwaysFetchForumRoleForumActionRights = false;
-			_alreadyFetchedForumRoleForumActionRights = false;
-			_threads = new SD.HnD.DAL.CollectionClasses.ThreadCollection(new ThreadEntityFactory());
+
+			_threads = new SD.HnD.DAL.CollectionClasses.ThreadCollection();
 			_threads.SetContainingEntityInfo(this, "Forum");
-			_alwaysFetchThreads = false;
-			_alreadyFetchedThreads = false;
-			_usersWhoStartedThreads = new SD.HnD.DAL.CollectionClasses.UserCollection(new UserEntityFactory());
-			_alwaysFetchUsersWhoStartedThreads = false;
-			_alreadyFetchedUsersWhoStartedThreads = false;
-			_section = null;
+			_usersWhoStartedThreads = new SD.HnD.DAL.CollectionClasses.UserCollection();
 			_sectionReturnsNewIfNotFound = true;
-			_alwaysFetchSection = false;
-			_alreadyFetchedSection = false;
-			_defaultSupportQueue = null;
 			_defaultSupportQueueReturnsNewIfNotFound = true;
-			_alwaysFetchDefaultSupportQueue = false;
-			_alreadyFetchedDefaultSupportQueue = false;
-
-
 			PerformDependencyInjection();
-			
+
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			OnInitClassMembersComplete();
@@ -931,57 +747,42 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			_customProperties = new Dictionary<string, string>();
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
-
-			Dictionary<string, string> fieldHashtable = null;
+			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("SectionID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ForumName", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ForumDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ForumLastPostingDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("HasRSSFeed", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("DefaultSupportQueueID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("DefaultThreadListInterval", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
+			_fieldsCustomProperties.Add("ForumDescription", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
+			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumLastPostingDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumName", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("HasRSSFeed", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MaxAttachmentSize", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("MaxNoOfAttachmentsPerMessage", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("NewThreadWelcomeText", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("NewThreadWelcomeTextAsHTML", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("SectionID", fieldHashtable);
 		}
 		#endregion
-
 
 		/// <summary> Removes the sync logic for member _section</summary>
 		/// <param name="signalRelatedEntity">If set to true, it will call the related entity's UnsetRelatedEntity method</param>
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncSection(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, signalRelatedEntity, "Forums", resetFKFields, new int[] { (int)ForumFieldIndex.SectionID } );		
+			this.PerformDesetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, signalRelatedEntity, "Forums", resetFKFields, new int[] { (int)ForumFieldIndex.SectionID } );		
 			_section = null;
 		}
 		
@@ -993,7 +794,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncSection(true, true);
 				_section = (SectionEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, ref _alreadyFetchedSection, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, ref _alreadyFetchedSection, new string[] {  } );
 			}
 		}
 
@@ -1014,7 +815,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncDefaultSupportQueue(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, signalRelatedEntity, "DefaultForForums", resetFKFields, new int[] { (int)ForumFieldIndex.DefaultSupportQueueID } );		
+			this.PerformDesetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, signalRelatedEntity, "DefaultForForums", resetFKFields, new int[] { (int)ForumFieldIndex.DefaultSupportQueueID } );		
 			_defaultSupportQueue = null;
 		}
 		
@@ -1026,7 +827,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncDefaultSupportQueue(true, true);
 				_defaultSupportQueue = (SupportQueueEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, ref _alreadyFetchedDefaultSupportQueue, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, ref _alreadyFetchedDefaultSupportQueue, new string[] {  } );
 			}
 		}
 
@@ -1042,7 +843,6 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
-
 		/// <summary> Fetches the entity from the persistent storage. Fetch simply reads the entity into an EntityFields object. </summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
@@ -1056,17 +856,15 @@ namespace SD.HnD.DAL.EntityClasses
 			try
 			{
 				OnFetch();
-				IDao dao = this.CreateDAOInstance();
-				base.Fields[(int)ForumFieldIndex.ForumID].ForcedCurrentValueWrite(forumID);
-				dao.FetchExisting(this, base.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
-				return (base.Fields.State == EntityState.Fetched);
+				this.Fields[(int)ForumFieldIndex.ForumID].ForcedCurrentValueWrite(forumID);
+				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
+				return (this.Fields.State == EntityState.Fetched);
 			}
 			finally
 			{
 				OnFetchComplete();
 			}
 		}
-
 
 		/// <summary> Creates the DAO instance for this type</summary>
 		/// <returns></returns>
@@ -1096,73 +894,49 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return _customProperties;}
 		}
 
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'ForumRoleForumActionRight' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'ForumRoleForumActionRight' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathForumRoleForumActionRights
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection(),
-					(IEntityRelation)GetRelationsForField("ForumRoleForumActionRights")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.ForumRoleForumActionRightEntity, 0, null, null, null, "ForumRoleForumActionRights", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection(), (IEntityRelation)GetRelationsForField("ForumRoleForumActionRights")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.ForumRoleForumActionRightEntity, 0, null, null, null, "ForumRoleForumActionRights", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Thread' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Thread' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathThreads
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadCollection(),
-					(IEntityRelation)GetRelationsForField("Threads")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.ThreadEntity, 0, null, null, null, "Threads", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadCollection(), (IEntityRelation)GetRelationsForField("Threads")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.ThreadEntity, 0, null, null, null, "Threads", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathUsersWhoStartedThreads
 		{
 			get
 			{
-				IEntityRelation intermediateRelation = ForumEntity.Relations.ThreadEntityUsingForumID;
+				IEntityRelation intermediateRelation = Relations.ThreadEntityUsingForumID;
 				intermediateRelation.SetAliases(string.Empty, "Thread_");
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,
-					(int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoStartedThreads"), "UsersWhoStartedThreads", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
+				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,	(int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoStartedThreads"), "UsersWhoStartedThreads", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
 			}
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Section' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Section'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathSection
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SectionCollection(),
-					(IEntityRelation)GetRelationsForField("Section")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.SectionEntity, 0, null, null, null, "Section", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SectionCollection(), (IEntityRelation)GetRelationsForField("Section")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.SectionEntity, 0, null, null, null, "Section", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'SupportQueue' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'SupportQueue'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathDefaultSupportQueue
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SupportQueueCollection(),
-					(IEntityRelation)GetRelationsForField("DefaultSupportQueue")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.SupportQueueEntity, 0, null, null, null, "DefaultSupportQueue", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SupportQueueCollection(), (IEntityRelation)GetRelationsForField("DefaultSupportQueue")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.SupportQueueEntity, 0, null, null, null, "DefaultSupportQueue", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
-
 
 		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override string LLBLGenProEntityName
+		protected override string LLBLGenProEntityName
 		{
 			get { return "ForumEntity";}
 		}
@@ -1170,9 +944,9 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, string> CustomPropertiesOfType
+		protected override Dictionary<string, string> CustomPropertiesOfType
 		{
-			get { return ForumEntity.CustomProperties;}
+			get { return CustomProperties;}
 		}
 
 		/// <summary> The custom properties for the fields of this entity type. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
@@ -1185,73 +959,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the fields of the type of this entity instance. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
+		protected override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
 		{
-			get { return ForumEntity.FieldsCustomProperties;}
+			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ForumID property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ForumID
-		{
-			get { return (System.Int32)GetValue((int)ForumFieldIndex.ForumID, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumID, value, true); }
-		}
-		/// <summary> The SectionID property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."SectionID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 SectionID
-		{
-			get { return (System.Int32)GetValue((int)ForumFieldIndex.SectionID, true); }
-			set	{ SetValue((int)ForumFieldIndex.SectionID, value, true); }
-		}
-		/// <summary> The ForumName property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumName"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String ForumName
-		{
-			get { return (System.String)GetValue((int)ForumFieldIndex.ForumName, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumName, value, true); }
-		}
-		/// <summary> The ForumDescription property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String ForumDescription
-		{
-			get { return (System.String)GetValue((int)ForumFieldIndex.ForumDescription, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumDescription, value, true); }
-		}
-		/// <summary> The ForumLastPostingDate property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumLastPostingDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 23, 3, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> ForumLastPostingDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)ForumFieldIndex.ForumLastPostingDate, false); }
-			set	{ SetValue((int)ForumFieldIndex.ForumLastPostingDate, value, true); }
-		}
-		/// <summary> The HasRSSFeed property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."HasRSSFeed"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 1, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean HasRSSFeed
-		{
-			get { return (System.Boolean)GetValue((int)ForumFieldIndex.HasRSSFeed, true); }
-			set	{ SetValue((int)ForumFieldIndex.HasRSSFeed, value, true); }
-		}
-		/// <summary> The DefaultSupportQueueID property of the Entity Forum<br/><br/>
-		/// </summary>
+		/// <summary> The DefaultSupportQueueID property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."DefaultSupportQueueID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1260,8 +973,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (Nullable<System.Int32>)GetValue((int)ForumFieldIndex.DefaultSupportQueueID, false); }
 			set	{ SetValue((int)ForumFieldIndex.DefaultSupportQueueID, value, true); }
 		}
-		/// <summary> The DefaultThreadListInterval property of the Entity Forum<br/><br/>
-		/// </summary>
+
+		/// <summary> The DefaultThreadListInterval property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."DefaultThreadListInterval"<br/>
 		/// Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -1270,18 +983,58 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Byte)GetValue((int)ForumFieldIndex.DefaultThreadListInterval, true); }
 			set	{ SetValue((int)ForumFieldIndex.DefaultThreadListInterval, value, true); }
 		}
-		/// <summary> The OrderNo property of the Entity Forum<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Forum"."OrderNo"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+
+		/// <summary> The ForumDescription property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 OrderNo
+		public virtual System.String ForumDescription
 		{
-			get { return (System.Int16)GetValue((int)ForumFieldIndex.OrderNo, true); }
-			set	{ SetValue((int)ForumFieldIndex.OrderNo, value, true); }
+			get { return (System.String)GetValue((int)ForumFieldIndex.ForumDescription, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumDescription, value, true); }
 		}
-		/// <summary> The MaxAttachmentSize property of the Entity Forum<br/><br/>
-		/// </summary>
+
+		/// <summary> The ForumID property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ForumID
+		{
+			get { return (System.Int32)GetValue((int)ForumFieldIndex.ForumID, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumID, value, true); }
+		}
+
+		/// <summary> The ForumLastPostingDate property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumLastPostingDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> ForumLastPostingDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)ForumFieldIndex.ForumLastPostingDate, false); }
+			set	{ SetValue((int)ForumFieldIndex.ForumLastPostingDate, value, true); }
+		}
+
+		/// <summary> The ForumName property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumName"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String ForumName
+		{
+			get { return (System.String)GetValue((int)ForumFieldIndex.ForumName, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumName, value, true); }
+		}
+
+		/// <summary> The HasRSSFeed property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."HasRSSFeed"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean HasRSSFeed
+		{
+			get { return (System.Boolean)GetValue((int)ForumFieldIndex.HasRSSFeed, true); }
+			set	{ SetValue((int)ForumFieldIndex.HasRSSFeed, value, true); }
+		}
+
+		/// <summary> The MaxAttachmentSize property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."MaxAttachmentSize"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1290,8 +1043,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int32)GetValue((int)ForumFieldIndex.MaxAttachmentSize, true); }
 			set	{ SetValue((int)ForumFieldIndex.MaxAttachmentSize, value, true); }
 		}
-		/// <summary> The MaxNoOfAttachmentsPerMessage property of the Entity Forum<br/><br/>
-		/// </summary>
+
+		/// <summary> The MaxNoOfAttachmentsPerMessage property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."MaxNoOfAttachmentsPerMessage"<br/>
 		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1300,8 +1053,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int16)GetValue((int)ForumFieldIndex.MaxNoOfAttachmentsPerMessage, true); }
 			set	{ SetValue((int)ForumFieldIndex.MaxNoOfAttachmentsPerMessage, value, true); }
 		}
-		/// <summary> The NewThreadWelcomeText property of the Entity Forum<br/><br/>
-		/// </summary>
+
+		/// <summary> The NewThreadWelcomeText property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."NewThreadWelcomeText"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1310,8 +1063,8 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.String)GetValue((int)ForumFieldIndex.NewThreadWelcomeText, true); }
 			set	{ SetValue((int)ForumFieldIndex.NewThreadWelcomeText, value, true); }
 		}
-		/// <summary> The NewThreadWelcomeTextAsHTML property of the Entity Forum<br/><br/>
-		/// </summary>
+
+		/// <summary> The NewThreadWelcomeTextAsHTML property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."NewThreadWelcomeTextAsHTML"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1321,7 +1074,28 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)ForumFieldIndex.NewThreadWelcomeTextAsHTML, value, true); }
 		}
 
-		/// <summary> Retrieves all related entities of type 'ForumRoleForumActionRightEntity' using a relation of type '1:n'.</summary>
+		/// <summary> The OrderNo property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."OrderNo"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int16 OrderNo
+		{
+			get { return (System.Int16)GetValue((int)ForumFieldIndex.OrderNo, true); }
+			set	{ SetValue((int)ForumFieldIndex.OrderNo, value, true); }
+		}
+
+		/// <summary> The SectionID property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."SectionID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 SectionID
+		{
+			get { return (System.Int32)GetValue((int)ForumFieldIndex.SectionID, true); }
+			set	{ SetValue((int)ForumFieldIndex.SectionID, value, true); }
+		}
+
+		/// <summary> Retrieves all related entities of type 'ForumRoleForumActionRightEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiForumRoleForumActionRights()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection ForumRoleForumActionRights
@@ -1330,8 +1104,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for ForumRoleForumActionRights. When set to true, ForumRoleForumActionRights is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time ForumRoleForumActionRights is accessed. You can always execute
-		/// a forced fetch by calling GetMultiForumRoleForumActionRights(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time ForumRoleForumActionRights is accessed. You can always execute/ a forced fetch by calling GetMultiForumRoleForumActionRights(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchForumRoleForumActionRights
 		{
@@ -1354,7 +1127,8 @@ namespace SD.HnD.DAL.EntityClasses
 				_alreadyFetchedForumRoleForumActionRights = value;
 			}
 		}
-		/// <summary> Retrieves all related entities of type 'ThreadEntity' using a relation of type '1:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'ThreadEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiThreads()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.ThreadCollection Threads
@@ -1363,8 +1137,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for Threads. When set to true, Threads is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time Threads is accessed. You can always execute
-		/// a forced fetch by calling GetMultiThreads(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time Threads is accessed. You can always execute/ a forced fetch by calling GetMultiThreads(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchThreads
 		{
@@ -1388,7 +1161,8 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
-		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoStartedThreads()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoStartedThreads
@@ -1397,8 +1171,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for UsersWhoStartedThreads. When set to true, UsersWhoStartedThreads is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoStartedThreads is accessed. You can always execute
-		/// a forced fetch by calling GetMultiUsersWhoStartedThreads(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoStartedThreads is accessed. You can always execute a forced fetch by calling GetMultiUsersWhoStartedThreads(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchUsersWhoStartedThreads
 		{
@@ -1424,43 +1197,30 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Gets / sets related entity of type 'SectionEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleSection()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual SectionEntity Section
 		{
 			get	{ return GetSingleSection(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncSection(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_section != null)
-						{
-							_section.UnsetRelatedEntity(this, "Forums");
-						}
-					}
-					else
-					{
-						if(_section!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "Forums");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "Forums", "Section", _section, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for Section. When set to true, Section is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time Section is accessed. You can always execute
-		/// a forced fetch by calling GetSingleSection(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time Section is accessed. You can always execute a forced fetch by calling GetSingleSection(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchSection
 		{
@@ -1493,45 +1253,33 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return _sectionReturnsNewIfNotFound; }
 			set { _sectionReturnsNewIfNotFound = value; }	
 		}
+
 		/// <summary> Gets / sets related entity of type 'SupportQueueEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleDefaultSupportQueue()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual SupportQueueEntity DefaultSupportQueue
 		{
 			get	{ return GetSingleDefaultSupportQueue(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncDefaultSupportQueue(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_defaultSupportQueue != null)
-						{
-							_defaultSupportQueue.UnsetRelatedEntity(this, "DefaultForForums");
-						}
-					}
-					else
-					{
-						if(_defaultSupportQueue!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "DefaultForForums");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "DefaultForForums", "DefaultSupportQueue", _defaultSupportQueue, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for DefaultSupportQueue. When set to true, DefaultSupportQueue is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time DefaultSupportQueue is accessed. You can always execute
-		/// a forced fetch by calling GetSingleDefaultSupportQueue(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time DefaultSupportQueue is accessed. You can always execute a forced fetch by calling GetSingleDefaultSupportQueue(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchDefaultSupportQueue
 		{
@@ -1566,7 +1314,6 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 
-
 		/// <summary> Gets or sets a value indicating whether this entity is a subtype</summary>
 		protected override bool LLBLGenProIsSubType
 		{
@@ -1582,10 +1329,11 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary>Returns the SD.HnD.DAL.EntityType enum value for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override int LLBLGenProEntityTypeValue 
+		protected override int LLBLGenProEntityTypeValue 
 		{ 
 			get { return (int)SD.HnD.DAL.EntityType.ForumEntity; }
 		}
+
 		#endregion
 
 		

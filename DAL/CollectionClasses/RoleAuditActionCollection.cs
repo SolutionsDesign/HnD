@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -20,7 +20,6 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.HelperClasses;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.CollectionClasses
@@ -40,7 +39,7 @@ namespace SD.HnD.DAL.CollectionClasses
 
 		/// <summary> CTor</summary>
 		/// <param name="initialContents">The initial contents of this collection.</param>
-		public RoleAuditActionCollection(IList<RoleAuditActionEntity> initialContents):base(new RoleAuditActionEntityFactory())
+		public RoleAuditActionCollection(IEnumerable<RoleAuditActionEntity> initialContents):base(new RoleAuditActionEntityFactory())
 		{
 			AddRange(initialContents);
 		}
@@ -66,7 +65,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity auditActionInstance, IEntity roleInstance)
 		{
-			return GetMultiManyToOne(auditActionInstance, roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, null, 0, 0);
+			return GetMultiManyToOne(auditActionInstance, roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, null, 0, 0);
 		}
 
 		/// <summary> Retrieves in this RoleAuditActionCollection object all RoleAuditActionEntity objects which have data in common with the specified related Entities.
@@ -77,7 +76,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if succeeded, false otherwise</returns>
 		public bool GetMultiManyToOne(IEntity auditActionInstance, IEntity roleInstance, IPredicateExpression filter)
 		{
-			return GetMultiManyToOne(auditActionInstance, roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, filter, 0, 0);
+			return GetMultiManyToOne(auditActionInstance, roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, filter, 0, 0);
 		}
 
 		/// <summary> Retrieves in this RoleAuditActionCollection object all RoleAuditActionEntity objects which have data in common with the specified related Entities.
@@ -112,12 +111,11 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				return GetMulti(filter, maxNumberOfItemsToReturn, sortClauses, null, pageNumber, pageSize);
 			}
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			RoleAuditActionDAO dao = DAOFactory.CreateRoleAuditActionDAO();
-			return dao.GetMulti(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, filter, auditActionInstance, roleInstance, pageNumber, pageSize);
+			return DAOFactory.CreateRoleAuditActionDAO().GetMulti(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, filter, auditActionInstance, roleInstance, pageNumber, pageSize);
 		}
 
 		/// <summary> Deletes from the persistent storage all RoleAuditAction entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.</summary>
@@ -127,8 +125,7 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int DeleteMultiManyToOne(IEntity auditActionInstance, IEntity roleInstance)
 		{
-			RoleAuditActionDAO dao = DAOFactory.CreateRoleAuditActionDAO();
-			return dao.DeleteMulti(base.Transaction, auditActionInstance, roleInstance);
+			return DAOFactory.CreateRoleAuditActionDAO().DeleteMulti(this.Transaction, auditActionInstance, roleInstance);
 		}
 
 		/// <summary> Updates in the persistent storage all RoleAuditAction entities which have data in common with the specified related Entities. If one is omitted, that entity is not used as a filter.
@@ -139,10 +136,8 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>Amount of entities affected, if the used persistent storage has rowcounting enabled.</returns>
 		public int UpdateMultiManyToOne(RoleAuditActionEntity entityWithNewValues, IEntity auditActionInstance, IEntity roleInstance)
 		{
-			RoleAuditActionDAO dao = DAOFactory.CreateRoleAuditActionDAO();
-			return dao.UpdateMulti(entityWithNewValues, base.Transaction, auditActionInstance, roleInstance);
+			return DAOFactory.CreateRoleAuditActionDAO().UpdateMulti(entityWithNewValues, this.Transaction, auditActionInstance, roleInstance);
 		}
-
 
 
 		/// <summary> Retrieves Entity rows in a datatable which match the specified filter. It will always create a new connection to the database.</summary>
@@ -201,8 +196,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetScalar(fieldIndex, expressionToExecute, aggregateToApply, null, null, null);
 		}
 
-		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are
-		/// applied on.</summary>
+		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are applied on.</summary>
 		/// <param name="fieldIndex">Field index of field to which to apply the aggregate function and expression</param>
 		/// <param name="expressionToExecute">The expression to execute. Can be null</param>
 		/// <param name="aggregateToApply">Aggregate function to apply. </param>
@@ -245,8 +239,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				fields[0].AggregateFunctionToApply = aggregateToApply;
 			}
-			RoleAuditActionDAO dao = DAOFactory.CreateRoleAuditActionDAO();
-			return dao.GetScalar(fields, base.Transaction, filter, relations, groupByClause);
+			return DAOFactory.CreateRoleAuditActionDAO().GetScalar(fields, this.Transaction, filter, relations, groupByClause);
 		}
 		
 		/// <summary>Creats a new DAO instance so code which is in the base class can still use the proper DAO object.</summary>
@@ -262,7 +255,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		{
 			return new Transaction(levelOfIsolation, name);
 		}
-
 
 		#region Custom EntityCollection code
 		

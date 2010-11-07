@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -20,7 +20,6 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.HelperClasses;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.CollectionClasses
@@ -40,7 +39,7 @@ namespace SD.HnD.DAL.CollectionClasses
 
 		/// <summary> CTor</summary>
 		/// <param name="initialContents">The initial contents of this collection.</param>
-		public SectionCollection(IList<SectionEntity> initialContents):base(new SectionEntityFactory())
+		public SectionCollection(IEnumerable<SectionEntity> initialContents):base(new SectionEntityFactory())
 		{
 			AddRange(initialContents);
 		}
@@ -57,7 +56,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		protected SectionCollection(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 		}
-
 
 
 
@@ -118,8 +116,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetScalar(fieldIndex, expressionToExecute, aggregateToApply, null, null, null);
 		}
 
-		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are
-		/// applied on.</summary>
+		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are applied on.</summary>
 		/// <param name="fieldIndex">Field index of field to which to apply the aggregate function and expression</param>
 		/// <param name="expressionToExecute">The expression to execute. Can be null</param>
 		/// <param name="aggregateToApply">Aggregate function to apply. </param>
@@ -162,8 +159,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				fields[0].AggregateFunctionToApply = aggregateToApply;
 			}
-			SectionDAO dao = DAOFactory.CreateSectionDAO();
-			return dao.GetScalar(fields, base.Transaction, filter, relations, groupByClause);
+			return DAOFactory.CreateSectionDAO().GetScalar(fields, this.Transaction, filter, relations, groupByClause);
 		}
 		
 		/// <summary>Creats a new DAO instance so code which is in the base class can still use the proper DAO object.</summary>
@@ -179,7 +175,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		{
 			return new Transaction(levelOfIsolation, name);
 		}
-
 
 		#region Custom EntityCollection code
 		

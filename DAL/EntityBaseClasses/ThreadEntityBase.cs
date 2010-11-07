@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -34,7 +34,7 @@ namespace SD.HnD.DAL.EntityClasses
 	/// 
 	/// </summary>
 	[Serializable]
-	public abstract partial class ThreadEntityBase : CommonEntityBase, ISerializable
+	public abstract partial class ThreadEntityBase : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
@@ -47,29 +47,29 @@ namespace SD.HnD.DAL.EntityClasses
 		private bool	_alwaysFetchMessages, _alreadyFetchedMessages;
 		private SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection	_threadSubscription;
 		private bool	_alwaysFetchThreadSubscription, _alreadyFetchedThreadSubscription;
-		private SD.HnD.DAL.CollectionClasses.UserCollection _usersWhoSubscribedThread;
-		private bool	_alwaysFetchUsersWhoSubscribedThread, _alreadyFetchedUsersWhoSubscribedThread;
-		private SD.HnD.DAL.CollectionClasses.UserCollection _usersWhoPostedInThread;
-		private bool	_alwaysFetchUsersWhoPostedInThread, _alreadyFetchedUsersWhoPostedInThread;
 		private SD.HnD.DAL.CollectionClasses.UserCollection _usersWhoBookmarkedThread;
 		private bool	_alwaysFetchUsersWhoBookmarkedThread, _alreadyFetchedUsersWhoBookmarkedThread;
+		private SD.HnD.DAL.CollectionClasses.UserCollection _usersWhoPostedInThread;
+		private bool	_alwaysFetchUsersWhoPostedInThread, _alreadyFetchedUsersWhoPostedInThread;
+		private SD.HnD.DAL.CollectionClasses.UserCollection _usersWhoSubscribedThread;
+		private bool	_alwaysFetchUsersWhoSubscribedThread, _alreadyFetchedUsersWhoSubscribedThread;
 		private ForumEntity _forum;
 		private bool	_alwaysFetchForum, _alreadyFetchedForum, _forumReturnsNewIfNotFound;
 		private UserEntity _userWhoStartedThread;
 		private bool	_alwaysFetchUserWhoStartedThread, _alreadyFetchedUserWhoStartedThread, _userWhoStartedThreadReturnsNewIfNotFound;
 		private SupportQueueThreadEntity _supportQueueThread;
 		private bool	_alwaysFetchSupportQueueThread, _alreadyFetchedSupportQueueThread, _supportQueueThreadReturnsNewIfNotFound;
-		
+
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
 		#endregion
-		
+
 		#region Statics
 		private static Dictionary<string, string>	_customProperties;
 		private static Dictionary<string, Dictionary<string, string>>	_fieldsCustomProperties;
 
 		/// <summary>All names of fields mapped onto a relation. Usable for in-memory filtering</summary>
-		public static class MemberNames
+		public static partial class MemberNames
 		{
 			/// <summary>Member name Forum</summary>
 			public static readonly string Forum = "Forum";
@@ -83,12 +83,12 @@ namespace SD.HnD.DAL.EntityClasses
 			public static readonly string Messages = "Messages";
 			/// <summary>Member name ThreadSubscription</summary>
 			public static readonly string ThreadSubscription = "ThreadSubscription";
-			/// <summary>Member name UsersWhoSubscribedThread</summary>
-			public static readonly string UsersWhoSubscribedThread = "UsersWhoSubscribedThread";
-			/// <summary>Member name UsersWhoPostedInThread</summary>
-			public static readonly string UsersWhoPostedInThread = "UsersWhoPostedInThread";
 			/// <summary>Member name UsersWhoBookmarkedThread</summary>
 			public static readonly string UsersWhoBookmarkedThread = "UsersWhoBookmarkedThread";
+			/// <summary>Member name UsersWhoPostedInThread</summary>
+			public static readonly string UsersWhoPostedInThread = "UsersWhoPostedInThread";
+			/// <summary>Member name UsersWhoSubscribedThread</summary>
+			public static readonly string UsersWhoSubscribedThread = "UsersWhoSubscribedThread";
 			/// <summary>Member name SupportQueueThread</summary>
 			public static readonly string SupportQueueThread = "SupportQueueThread";
 		}
@@ -101,15 +101,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		public ThreadEntityBase()
+		protected ThreadEntityBase() : base()
 		{
 			InitClassEmpty(null);
 		}
 
-	
 		/// <summary>CTor</summary>
 		/// <param name="threadID">PK value for Thread which data should be fetched into this Thread object</param>
-		public ThreadEntityBase(System.Int32 threadID)
+		protected ThreadEntityBase(System.Int32 threadID)
 		{
 			InitClassFetch(threadID, null, null);
 		}
@@ -117,7 +116,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="threadID">PK value for Thread which data should be fetched into this Thread object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public ThreadEntityBase(System.Int32 threadID, IPrefetchPath prefetchPathToUse)
+		protected ThreadEntityBase(System.Int32 threadID, IPrefetchPath prefetchPathToUse)
 		{
 			InitClassFetch(threadID, null, prefetchPathToUse);
 		}
@@ -125,13 +124,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="threadID">PK value for Thread which data should be fetched into this Thread object</param>
 		/// <param name="validator">The custom validator object for this ThreadEntity</param>
-		public ThreadEntityBase(System.Int32 threadID, IValidator validator)
+		protected ThreadEntityBase(System.Int32 threadID, IValidator validator)
 		{
 			InitClassFetch(threadID, validator, null);
 		}
-	
 
-		/// <summary>Protected CTor for deserialization</summary>
+		/// <summary>Private CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected ThreadEntityBase(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -139,24 +137,29 @@ namespace SD.HnD.DAL.EntityClasses
 			_auditDataThreadRelated = (SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection)info.GetValue("_auditDataThreadRelated", typeof(SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection));
 			_alwaysFetchAuditDataThreadRelated = info.GetBoolean("_alwaysFetchAuditDataThreadRelated");
 			_alreadyFetchedAuditDataThreadRelated = info.GetBoolean("_alreadyFetchedAuditDataThreadRelated");
+
 			_presentInBookmarks = (SD.HnD.DAL.CollectionClasses.BookmarkCollection)info.GetValue("_presentInBookmarks", typeof(SD.HnD.DAL.CollectionClasses.BookmarkCollection));
 			_alwaysFetchPresentInBookmarks = info.GetBoolean("_alwaysFetchPresentInBookmarks");
 			_alreadyFetchedPresentInBookmarks = info.GetBoolean("_alreadyFetchedPresentInBookmarks");
+
 			_messages = (SD.HnD.DAL.CollectionClasses.MessageCollection)info.GetValue("_messages", typeof(SD.HnD.DAL.CollectionClasses.MessageCollection));
 			_alwaysFetchMessages = info.GetBoolean("_alwaysFetchMessages");
 			_alreadyFetchedMessages = info.GetBoolean("_alreadyFetchedMessages");
+
 			_threadSubscription = (SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection)info.GetValue("_threadSubscription", typeof(SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection));
 			_alwaysFetchThreadSubscription = info.GetBoolean("_alwaysFetchThreadSubscription");
 			_alreadyFetchedThreadSubscription = info.GetBoolean("_alreadyFetchedThreadSubscription");
-			_usersWhoSubscribedThread = (SD.HnD.DAL.CollectionClasses.UserCollection)info.GetValue("_usersWhoSubscribedThread", typeof(SD.HnD.DAL.CollectionClasses.UserCollection));
-			_alwaysFetchUsersWhoSubscribedThread = info.GetBoolean("_alwaysFetchUsersWhoSubscribedThread");
-			_alreadyFetchedUsersWhoSubscribedThread = info.GetBoolean("_alreadyFetchedUsersWhoSubscribedThread");
-			_usersWhoPostedInThread = (SD.HnD.DAL.CollectionClasses.UserCollection)info.GetValue("_usersWhoPostedInThread", typeof(SD.HnD.DAL.CollectionClasses.UserCollection));
-			_alwaysFetchUsersWhoPostedInThread = info.GetBoolean("_alwaysFetchUsersWhoPostedInThread");
-			_alreadyFetchedUsersWhoPostedInThread = info.GetBoolean("_alreadyFetchedUsersWhoPostedInThread");
 			_usersWhoBookmarkedThread = (SD.HnD.DAL.CollectionClasses.UserCollection)info.GetValue("_usersWhoBookmarkedThread", typeof(SD.HnD.DAL.CollectionClasses.UserCollection));
 			_alwaysFetchUsersWhoBookmarkedThread = info.GetBoolean("_alwaysFetchUsersWhoBookmarkedThread");
 			_alreadyFetchedUsersWhoBookmarkedThread = info.GetBoolean("_alreadyFetchedUsersWhoBookmarkedThread");
+
+			_usersWhoPostedInThread = (SD.HnD.DAL.CollectionClasses.UserCollection)info.GetValue("_usersWhoPostedInThread", typeof(SD.HnD.DAL.CollectionClasses.UserCollection));
+			_alwaysFetchUsersWhoPostedInThread = info.GetBoolean("_alwaysFetchUsersWhoPostedInThread");
+			_alreadyFetchedUsersWhoPostedInThread = info.GetBoolean("_alreadyFetchedUsersWhoPostedInThread");
+
+			_usersWhoSubscribedThread = (SD.HnD.DAL.CollectionClasses.UserCollection)info.GetValue("_usersWhoSubscribedThread", typeof(SD.HnD.DAL.CollectionClasses.UserCollection));
+			_alwaysFetchUsersWhoSubscribedThread = info.GetBoolean("_alwaysFetchUsersWhoSubscribedThread");
+			_alreadyFetchedUsersWhoSubscribedThread = info.GetBoolean("_alreadyFetchedUsersWhoSubscribedThread");
 			_forum = (ForumEntity)info.GetValue("_forum", typeof(ForumEntity));
 			if(_forum!=null)
 			{
@@ -165,6 +168,7 @@ namespace SD.HnD.DAL.EntityClasses
 			_forumReturnsNewIfNotFound = info.GetBoolean("_forumReturnsNewIfNotFound");
 			_alwaysFetchForum = info.GetBoolean("_alwaysFetchForum");
 			_alreadyFetchedForum = info.GetBoolean("_alreadyFetchedForum");
+
 			_userWhoStartedThread = (UserEntity)info.GetValue("_userWhoStartedThread", typeof(UserEntity));
 			if(_userWhoStartedThread!=null)
 			{
@@ -181,12 +185,10 @@ namespace SD.HnD.DAL.EntityClasses
 			_supportQueueThreadReturnsNewIfNotFound = info.GetBoolean("_supportQueueThreadReturnsNewIfNotFound");
 			_alwaysFetchSupportQueueThread = info.GetBoolean("_alwaysFetchSupportQueueThread");
 			_alreadyFetchedSupportQueueThread = info.GetBoolean("_alreadyFetchedSupportQueueThread");
-			base.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
-			
+			this.FixupDeserialization(FieldInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance());
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
-		}
-
+		}	
 		
 		/// <summary>Performs the desync setup when an FK field has been changed. The entity referenced based on the FK field will be dereferenced and sync info will be removed.</summary>
 		/// <param name="fieldIndex">The fieldindex.</param>
@@ -207,14 +209,7 @@ namespace SD.HnD.DAL.EntityClasses
 					break;
 			}
 		}
-		
-		/// <summary>Gets the inheritance info provider instance of the project this entity instance is located in. </summary>
-		/// <returns>ready to use inheritance info provider instance.</returns>
-		protected override IInheritanceInfoProvider GetInheritanceInfoProvider()
-		{
-			return InheritanceInfoProviderSingleton.GetInstance();
-		}
-		
+
 		/// <summary> Will perform post-ReadXml actions</summary>
 		protected override void PostReadXmlFixups()
 		{
@@ -222,9 +217,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_alreadyFetchedPresentInBookmarks = (_presentInBookmarks.Count > 0);
 			_alreadyFetchedMessages = (_messages.Count > 0);
 			_alreadyFetchedThreadSubscription = (_threadSubscription.Count > 0);
-			_alreadyFetchedUsersWhoSubscribedThread = (_usersWhoSubscribedThread.Count > 0);
-			_alreadyFetchedUsersWhoPostedInThread = (_usersWhoPostedInThread.Count > 0);
 			_alreadyFetchedUsersWhoBookmarkedThread = (_usersWhoBookmarkedThread.Count > 0);
+			_alreadyFetchedUsersWhoPostedInThread = (_usersWhoPostedInThread.Count > 0);
+			_alreadyFetchedUsersWhoSubscribedThread = (_usersWhoSubscribedThread.Count > 0);
 			_alreadyFetchedForum = (_forum != null);
 			_alreadyFetchedUserWhoStartedThread = (_userWhoStartedThread != null);
 			_alreadyFetchedSupportQueueThread = (_supportQueueThread != null);
@@ -233,54 +228,53 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public override RelationCollection GetRelationsForFieldOfType(string fieldName)
+		protected override RelationCollection GetRelationsForFieldOfType(string fieldName)
 		{
-			return ThreadEntity.GetRelationsForField(fieldName);
+			return GetRelationsForField(fieldName);
 		}
 
 		/// <summary>Gets the relation objects which represent the relation the fieldName specified is mapped on. </summary>
 		/// <param name="fieldName">Name of the field mapped onto the relation of which the relation objects have to be obtained.</param>
 		/// <returns>RelationCollection with relation object(s) which represent the relation the field is maped on</returns>
-		public static RelationCollection GetRelationsForField(string fieldName)
+		internal static RelationCollection GetRelationsForField(string fieldName)
 		{
 			RelationCollection toReturn = new RelationCollection();
 			switch(fieldName)
 			{
 				case "Forum":
-					toReturn.Add(ThreadEntity.Relations.ForumEntityUsingForumID);
+					toReturn.Add(Relations.ForumEntityUsingForumID);
 					break;
 				case "UserWhoStartedThread":
-					toReturn.Add(ThreadEntity.Relations.UserEntityUsingStartedByUserID);
+					toReturn.Add(Relations.UserEntityUsingStartedByUserID);
 					break;
 				case "AuditDataThreadRelated":
-					toReturn.Add(ThreadEntity.Relations.AuditDataThreadRelatedEntityUsingThreadID);
+					toReturn.Add(Relations.AuditDataThreadRelatedEntityUsingThreadID);
 					break;
 				case "PresentInBookmarks":
-					toReturn.Add(ThreadEntity.Relations.BookmarkEntityUsingThreadID);
+					toReturn.Add(Relations.BookmarkEntityUsingThreadID);
 					break;
 				case "Messages":
-					toReturn.Add(ThreadEntity.Relations.MessageEntityUsingThreadID);
+					toReturn.Add(Relations.MessageEntityUsingThreadID);
 					break;
 				case "ThreadSubscription":
-					toReturn.Add(ThreadEntity.Relations.ThreadSubscriptionEntityUsingThreadID);
-					break;
-				case "UsersWhoSubscribedThread":
-					toReturn.Add(ThreadEntity.Relations.ThreadSubscriptionEntityUsingThreadID, "ThreadEntity__", "ThreadSubscription_", JoinHint.None);
-					toReturn.Add(ThreadSubscriptionEntity.Relations.UserEntityUsingUserID, "ThreadSubscription_", string.Empty, JoinHint.None);
-					break;
-				case "UsersWhoPostedInThread":
-					toReturn.Add(ThreadEntity.Relations.MessageEntityUsingThreadID, "ThreadEntity__", "Message_", JoinHint.None);
-					toReturn.Add(MessageEntity.Relations.UserEntityUsingPostedByUserID, "Message_", string.Empty, JoinHint.None);
+					toReturn.Add(Relations.ThreadSubscriptionEntityUsingThreadID);
 					break;
 				case "UsersWhoBookmarkedThread":
-					toReturn.Add(ThreadEntity.Relations.BookmarkEntityUsingThreadID, "ThreadEntity__", "Bookmark_", JoinHint.None);
+					toReturn.Add(Relations.BookmarkEntityUsingThreadID, "ThreadEntity__", "Bookmark_", JoinHint.None);
 					toReturn.Add(BookmarkEntity.Relations.UserEntityUsingUserID, "Bookmark_", string.Empty, JoinHint.None);
 					break;
+				case "UsersWhoPostedInThread":
+					toReturn.Add(Relations.MessageEntityUsingThreadID, "ThreadEntity__", "Message_", JoinHint.None);
+					toReturn.Add(MessageEntity.Relations.UserEntityUsingPostedByUserID, "Message_", string.Empty, JoinHint.None);
+					break;
+				case "UsersWhoSubscribedThread":
+					toReturn.Add(Relations.ThreadSubscriptionEntityUsingThreadID, "ThreadEntity__", "ThreadSubscription_", JoinHint.None);
+					toReturn.Add(ThreadSubscriptionEntity.Relations.UserEntityUsingUserID, "ThreadSubscription_", string.Empty, JoinHint.None);
+					break;
 				case "SupportQueueThread":
-					toReturn.Add(ThreadEntity.Relations.SupportQueueThreadEntityUsingThreadID);
+					toReturn.Add(Relations.SupportQueueThreadEntityUsingThreadID);
 					break;
 				default:
-
 					break;				
 			}
 			return toReturn;
@@ -288,12 +282,11 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 
-		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.
-		/// Serializes members of this entity class and uses the base class' implementation to serialize the rest.</summary>
+		/// <summary> ISerializable member. Does custom serialization so event handlers do not get serialized.</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		protected override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("_auditDataThreadRelated", (!this.MarkedForDeletion?_auditDataThreadRelated:null));
 			info.AddValue("_alwaysFetchAuditDataThreadRelated", _alwaysFetchAuditDataThreadRelated);
@@ -307,15 +300,15 @@ namespace SD.HnD.DAL.EntityClasses
 			info.AddValue("_threadSubscription", (!this.MarkedForDeletion?_threadSubscription:null));
 			info.AddValue("_alwaysFetchThreadSubscription", _alwaysFetchThreadSubscription);
 			info.AddValue("_alreadyFetchedThreadSubscription", _alreadyFetchedThreadSubscription);
-			info.AddValue("_usersWhoSubscribedThread", (!this.MarkedForDeletion?_usersWhoSubscribedThread:null));
-			info.AddValue("_alwaysFetchUsersWhoSubscribedThread", _alwaysFetchUsersWhoSubscribedThread);
-			info.AddValue("_alreadyFetchedUsersWhoSubscribedThread", _alreadyFetchedUsersWhoSubscribedThread);
-			info.AddValue("_usersWhoPostedInThread", (!this.MarkedForDeletion?_usersWhoPostedInThread:null));
-			info.AddValue("_alwaysFetchUsersWhoPostedInThread", _alwaysFetchUsersWhoPostedInThread);
-			info.AddValue("_alreadyFetchedUsersWhoPostedInThread", _alreadyFetchedUsersWhoPostedInThread);
 			info.AddValue("_usersWhoBookmarkedThread", (!this.MarkedForDeletion?_usersWhoBookmarkedThread:null));
 			info.AddValue("_alwaysFetchUsersWhoBookmarkedThread", _alwaysFetchUsersWhoBookmarkedThread);
 			info.AddValue("_alreadyFetchedUsersWhoBookmarkedThread", _alreadyFetchedUsersWhoBookmarkedThread);
+			info.AddValue("_usersWhoPostedInThread", (!this.MarkedForDeletion?_usersWhoPostedInThread:null));
+			info.AddValue("_alwaysFetchUsersWhoPostedInThread", _alwaysFetchUsersWhoPostedInThread);
+			info.AddValue("_alreadyFetchedUsersWhoPostedInThread", _alreadyFetchedUsersWhoPostedInThread);
+			info.AddValue("_usersWhoSubscribedThread", (!this.MarkedForDeletion?_usersWhoSubscribedThread:null));
+			info.AddValue("_alwaysFetchUsersWhoSubscribedThread", _alwaysFetchUsersWhoSubscribedThread);
+			info.AddValue("_alreadyFetchedUsersWhoSubscribedThread", _alreadyFetchedUsersWhoSubscribedThread);
 			info.AddValue("_forum", (!this.MarkedForDeletion?_forum:null));
 			info.AddValue("_forumReturnsNewIfNotFound", _forumReturnsNewIfNotFound);
 			info.AddValue("_alwaysFetchForum", _alwaysFetchForum);
@@ -324,11 +317,12 @@ namespace SD.HnD.DAL.EntityClasses
 			info.AddValue("_userWhoStartedThreadReturnsNewIfNotFound", _userWhoStartedThreadReturnsNewIfNotFound);
 			info.AddValue("_alwaysFetchUserWhoStartedThread", _alwaysFetchUserWhoStartedThread);
 			info.AddValue("_alreadyFetchedUserWhoStartedThread", _alreadyFetchedUserWhoStartedThread);
+
 			info.AddValue("_supportQueueThread", (!this.MarkedForDeletion?_supportQueueThread:null));
 			info.AddValue("_supportQueueThreadReturnsNewIfNotFound", _supportQueueThreadReturnsNewIfNotFound);
 			info.AddValue("_alwaysFetchSupportQueueThread", _alwaysFetchSupportQueueThread);
 			info.AddValue("_alreadyFetchedSupportQueueThread", _alreadyFetchedSupportQueueThread);
-			
+
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			base.GetObjectData(info, context);
@@ -339,7 +333,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
 		{
 			switch(propertyName)
 			{
@@ -379,11 +373,11 @@ namespace SD.HnD.DAL.EntityClasses
 						this.ThreadSubscription.Add((ThreadSubscriptionEntity)entity);
 					}
 					break;
-				case "UsersWhoSubscribedThread":
-					_alreadyFetchedUsersWhoSubscribedThread = true;
+				case "UsersWhoBookmarkedThread":
+					_alreadyFetchedUsersWhoBookmarkedThread = true;
 					if(entity!=null)
 					{
-						this.UsersWhoSubscribedThread.Add((UserEntity)entity);
+						this.UsersWhoBookmarkedThread.Add((UserEntity)entity);
 					}
 					break;
 				case "UsersWhoPostedInThread":
@@ -393,11 +387,11 @@ namespace SD.HnD.DAL.EntityClasses
 						this.UsersWhoPostedInThread.Add((UserEntity)entity);
 					}
 					break;
-				case "UsersWhoBookmarkedThread":
-					_alreadyFetchedUsersWhoBookmarkedThread = true;
+				case "UsersWhoSubscribedThread":
+					_alreadyFetchedUsersWhoSubscribedThread = true;
 					if(entity!=null)
 					{
-						this.UsersWhoBookmarkedThread.Add((UserEntity)entity);
+						this.UsersWhoSubscribedThread.Add((UserEntity)entity);
 					}
 					break;
 				case "SupportQueueThread":
@@ -405,7 +399,7 @@ namespace SD.HnD.DAL.EntityClasses
 					this.SupportQueueThread = (SupportQueueThreadEntity)entity;
 					break;
 				default:
-
+					this.OnSetRelatedEntityProperty(propertyName, entity);
 					break;
 			}
 		}
@@ -414,7 +408,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -440,7 +434,6 @@ namespace SD.HnD.DAL.EntityClasses
 					SetupSyncSupportQueueThread(relatedEntity);
 					break;
 				default:
-
 					break;
 			}
 		}
@@ -450,7 +443,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		public override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -461,45 +454,40 @@ namespace SD.HnD.DAL.EntityClasses
 					DesetupSyncUserWhoStartedThread(false, true);
 					break;
 				case "AuditDataThreadRelated":
-					base.PerformRelatedEntityRemoval(_auditDataThreadRelated, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_auditDataThreadRelated, relatedEntity, signalRelatedEntityManyToOne);
 					break;
 				case "PresentInBookmarks":
-					base.PerformRelatedEntityRemoval(_presentInBookmarks, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_presentInBookmarks, relatedEntity, signalRelatedEntityManyToOne);
 					break;
 				case "Messages":
-					base.PerformRelatedEntityRemoval(_messages, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_messages, relatedEntity, signalRelatedEntityManyToOne);
 					break;
 				case "ThreadSubscription":
-					base.PerformRelatedEntityRemoval(_threadSubscription, relatedEntity, signalRelatedEntityManyToOne);
+					this.PerformRelatedEntityRemoval(_threadSubscription, relatedEntity, signalRelatedEntityManyToOne);
 					break;
 				case "SupportQueueThread":
 					DesetupSyncSupportQueueThread(false, true);
 					break;
 				default:
-
 					break;
 			}
 		}
 
-		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These
-		/// entities will have to be persisted after this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which depend on this entity (this entity is the PK side of their FK fields). These entities will have to be persisted after this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependingRelatedEntities()
+		protected override List<IEntity> GetDependingRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
-
 			if(_supportQueueThread!=null)
 			{
 				toReturn.Add(_supportQueueThread);
 			}
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These
-		/// entities will have to be persisted before this entity during a recursive save.</summary>
+		/// <summary> Gets a collection of related entities referenced by this entity which this entity depends on (this entity is the FK side of their PK fields). These entities will have to be persisted before this entity during a recursive save.</summary>
 		/// <returns>Collection with 0 or more IEntity objects, referenced by this entity</returns>
-		public override List<IEntity> GetDependentRelatedEntities()
+		protected override List<IEntity> GetDependentRelatedEntities()
 		{
 			List<IEntity> toReturn = new List<IEntity>();
 			if(_forum!=null)
@@ -510,16 +498,12 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				toReturn.Add(_userWhoStartedThread);
 			}
-
-
-
 			return toReturn;
 		}
 		
-		/// <summary> Gets a List of all entity collections stored as member variables in this entity. The contents of the ArrayList is
-		/// used by the DataAccessAdapter to perform recursive saves. Only 1:n related collections are returned.</summary>
+		/// <summary> Gets a List of all entity collections stored as member variables in this entity. Only 1:n related collections are returned.</summary>
 		/// <returns>Collection with 0 or more IEntityCollection objects, referenced by this entity</returns>
-		public override List<IEntityCollection> GetMemberEntityCollections()
+		protected override List<IEntityCollection> GetMemberEntityCollections()
 		{
 			List<IEntityCollection> toReturn = new List<IEntityCollection>();
 			toReturn.Add(_auditDataThreadRelated);
@@ -530,9 +514,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return toReturn;
 		}
 
-		
-
-		
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
 		/// <param name="threadID">PK value for Thread which data should be fetched into this Thread object</param>
@@ -558,7 +539,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>True if succeeded, false otherwise.</returns>
 		public bool FetchUsingPK(System.Int32 threadID, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return Fetch(threadID, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(threadID, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
@@ -574,40 +555,21 @@ namespace SD.HnD.DAL.EntityClasses
 			return Fetch(threadID, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
-		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. 
-		/// Refetching an empty Entity has no effect. </summary>
+		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
 			return Fetch(this.ThreadID, null, null, null);
 		}
 
-		/// <summary> Returns true if the original value for the field with the fieldIndex passed in, read from the persistent storage was NULL, false otherwise.
-		/// Should not be used for testing if the current value is NULL, use <see cref="TestCurrentFieldValueForNull"/> for that.</summary>
-		/// <param name="fieldIndex">Index of the field to test if that field was NULL in the persistent storage</param>
-		/// <returns>true if the field with the passed in index was NULL in the persistent storage, false otherwise</returns>
-		public bool TestOriginalFieldValueForNull(ThreadFieldIndex fieldIndex)
-		{
-			return base.Fields[(int)fieldIndex].IsNull;
-		}
-		
-		/// <summary>Returns true if the current value for the field with the fieldIndex passed in represents null/not defined, false otherwise.
-		/// Should not be used for testing if the original value (read from the db) is NULL</summary>
-		/// <param name="fieldIndex">Index of the field to test if its currentvalue is null/undefined</param>
-		/// <returns>true if the field's value isn't defined yet, false otherwise</returns>
-		public bool TestCurrentFieldValueForNull(ThreadFieldIndex fieldIndex)
-		{
-			return base.CheckIfCurrentFieldValueIsNull((int)fieldIndex);
-		}
 
 				
 		/// <summary>Gets a list of all the EntityRelation objects the type of this instance has.</summary>
 		/// <returns>A list of all the EntityRelation objects the type of this instance has. Hierarchy relations are excluded.</returns>
-		public override List<IEntityRelation> GetAllRelations()
+		protected override List<IEntityRelation> GetAllRelations()
 		{
 			return new ThreadRelations().GetAllRelations();
 		}
-
 
 		/// <summary> Retrieves all related entities of type 'AuditDataThreadRelatedEntity' using a relation of type '1:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
@@ -642,20 +604,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection GetMultiAuditDataThreadRelated(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedAuditDataThreadRelated || forceFetch || _alwaysFetchAuditDataThreadRelated) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedAuditDataThreadRelated || forceFetch || _alwaysFetchAuditDataThreadRelated) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_auditDataThreadRelated.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_auditDataThreadRelated);
-					}
-				}
+				AddToTransactionIfNecessary(_auditDataThreadRelated);
 				_auditDataThreadRelated.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_auditDataThreadRelated.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_auditDataThreadRelated.EntityFactoryToUse = entityFactoryToUse;
 				_auditDataThreadRelated.GetMultiManyToOne(null, this, null, filter);
 				_auditDataThreadRelated.SuppressClearInGetMulti=false;
 				_alreadyFetchedAuditDataThreadRelated = true;
@@ -706,20 +659,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.BookmarkCollection GetMultiPresentInBookmarks(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedPresentInBookmarks || forceFetch || _alwaysFetchPresentInBookmarks) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedPresentInBookmarks || forceFetch || _alwaysFetchPresentInBookmarks) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_presentInBookmarks.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_presentInBookmarks);
-					}
-				}
+				AddToTransactionIfNecessary(_presentInBookmarks);
 				_presentInBookmarks.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_presentInBookmarks.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_presentInBookmarks.EntityFactoryToUse = entityFactoryToUse;
 				_presentInBookmarks.GetMultiManyToOne(this, null, filter);
 				_presentInBookmarks.SuppressClearInGetMulti=false;
 				_alreadyFetchedPresentInBookmarks = true;
@@ -770,20 +714,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.MessageCollection GetMultiMessages(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedMessages || forceFetch || _alwaysFetchMessages) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedMessages || forceFetch || _alwaysFetchMessages) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_messages.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_messages);
-					}
-				}
+				AddToTransactionIfNecessary(_messages);
 				_messages.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_messages.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_messages.EntityFactoryToUse = entityFactoryToUse;
 				_messages.GetMultiManyToOne(this, null, filter);
 				_messages.SuppressClearInGetMulti=false;
 				_alreadyFetchedMessages = true;
@@ -834,20 +769,11 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public virtual SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection GetMultiThreadSubscription(bool forceFetch, IEntityFactory entityFactoryToUse, IPredicateExpression filter)
 		{
- 			if( ( !_alreadyFetchedThreadSubscription || forceFetch || _alwaysFetchThreadSubscription) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedThreadSubscription || forceFetch || _alwaysFetchThreadSubscription) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_threadSubscription.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_threadSubscription);
-					}
-				}
+				AddToTransactionIfNecessary(_threadSubscription);
 				_threadSubscription.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_threadSubscription.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_threadSubscription.EntityFactoryToUse = entityFactoryToUse;
 				_threadSubscription.GetMultiManyToOne(this, null, filter);
 				_threadSubscription.SuppressClearInGetMulti=false;
 				_alreadyFetchedThreadSubscription = true;
@@ -868,48 +794,39 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
 		/// <returns>Filled collection with all related entities of type 'UserEntity'</returns>
-		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoSubscribedThread(bool forceFetch)
+		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoBookmarkedThread(bool forceFetch)
 		{
-			return GetMultiUsersWhoSubscribedThread(forceFetch, _usersWhoSubscribedThread.EntityFactoryToUse);
+			return GetMultiUsersWhoBookmarkedThread(forceFetch, _usersWhoBookmarkedThread.EntityFactoryToUse);
 		}
 
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
 		/// <param name="entityFactoryToUse">The entity factory to use for the GetMultiManyToMany() routine.</param>
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
-		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoSubscribedThread(bool forceFetch, IEntityFactory entityFactoryToUse)
+		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoBookmarkedThread(bool forceFetch, IEntityFactory entityFactoryToUse)
 		{
- 			if( ( !_alreadyFetchedUsersWhoSubscribedThread || forceFetch || _alwaysFetchUsersWhoSubscribedThread) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedUsersWhoBookmarkedThread || forceFetch || _alwaysFetchUsersWhoBookmarkedThread) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_usersWhoSubscribedThread.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_usersWhoSubscribedThread);
-					}
-				}
+				AddToTransactionIfNecessary(_usersWhoBookmarkedThread);
 				IPredicateExpression filter = new PredicateExpression();
 				filter.Add(new FieldCompareValuePredicate(ThreadFields.ThreadID, ComparisonOperator.Equal, this.ThreadID, "ThreadEntity__"));
-				_usersWhoSubscribedThread.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_usersWhoSubscribedThread.EntityFactoryToUse = entityFactoryToUse;
-				}
-				_usersWhoSubscribedThread.GetMulti(filter, GetRelationsForField("UsersWhoSubscribedThread"));
-				_usersWhoSubscribedThread.SuppressClearInGetMulti=false;
-				_alreadyFetchedUsersWhoSubscribedThread = true;
+				_usersWhoBookmarkedThread.SuppressClearInGetMulti=!forceFetch;
+				_usersWhoBookmarkedThread.EntityFactoryToUse = entityFactoryToUse;
+				_usersWhoBookmarkedThread.GetMulti(filter, GetRelationsForField("UsersWhoBookmarkedThread"));
+				_usersWhoBookmarkedThread.SuppressClearInGetMulti=false;
+				_alreadyFetchedUsersWhoBookmarkedThread = true;
 			}
-			return _usersWhoSubscribedThread;
+			return _usersWhoBookmarkedThread;
 		}
 
-		/// <summary> Sets the collection parameters for the collection for 'UsersWhoSubscribedThread'. These settings will be taken into account
-		/// when the property UsersWhoSubscribedThread is requested or GetMultiUsersWhoSubscribedThread is called.</summary>
+		/// <summary> Sets the collection parameters for the collection for 'UsersWhoBookmarkedThread'. These settings will be taken into account
+		/// when the property UsersWhoBookmarkedThread is requested or GetMultiUsersWhoBookmarkedThread is called.</summary>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return. When set to 0, this parameter is ignored</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified (null), no sorting is applied.</param>
-		public virtual void SetCollectionParametersUsersWhoSubscribedThread(long maxNumberOfItemsToReturn, ISortExpression sortClauses)
+		public virtual void SetCollectionParametersUsersWhoBookmarkedThread(long maxNumberOfItemsToReturn, ISortExpression sortClauses)
 		{
-			_usersWhoSubscribedThread.SortClauses=sortClauses;
-			_usersWhoSubscribedThread.MaxNumberOfItemsToReturn=maxNumberOfItemsToReturn;
+			_usersWhoBookmarkedThread.SortClauses=sortClauses;
+			_usersWhoBookmarkedThread.MaxNumberOfItemsToReturn=maxNumberOfItemsToReturn;
 		}
 
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
@@ -926,22 +843,13 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
 		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoPostedInThread(bool forceFetch, IEntityFactory entityFactoryToUse)
 		{
- 			if( ( !_alreadyFetchedUsersWhoPostedInThread || forceFetch || _alwaysFetchUsersWhoPostedInThread) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedUsersWhoPostedInThread || forceFetch || _alwaysFetchUsersWhoPostedInThread) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_usersWhoPostedInThread.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_usersWhoPostedInThread);
-					}
-				}
+				AddToTransactionIfNecessary(_usersWhoPostedInThread);
 				IPredicateExpression filter = new PredicateExpression();
 				filter.Add(new FieldCompareValuePredicate(ThreadFields.ThreadID, ComparisonOperator.Equal, this.ThreadID, "ThreadEntity__"));
 				_usersWhoPostedInThread.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_usersWhoPostedInThread.EntityFactoryToUse = entityFactoryToUse;
-				}
+				_usersWhoPostedInThread.EntityFactoryToUse = entityFactoryToUse;
 				_usersWhoPostedInThread.GetMulti(filter, GetRelationsForField("UsersWhoPostedInThread"));
 				_usersWhoPostedInThread.SuppressClearInGetMulti=false;
 				_alreadyFetchedUsersWhoPostedInThread = true;
@@ -962,48 +870,39 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
 		/// <returns>Filled collection with all related entities of type 'UserEntity'</returns>
-		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoBookmarkedThread(bool forceFetch)
+		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoSubscribedThread(bool forceFetch)
 		{
-			return GetMultiUsersWhoBookmarkedThread(forceFetch, _usersWhoBookmarkedThread.EntityFactoryToUse);
+			return GetMultiUsersWhoSubscribedThread(forceFetch, _usersWhoSubscribedThread.EntityFactoryToUse);
 		}
 
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
 		/// <param name="forceFetch">if true, it will discard any changes currently in the collection and will rerun the complete query instead</param>
 		/// <param name="entityFactoryToUse">The entity factory to use for the GetMultiManyToMany() routine.</param>
 		/// <returns>Filled collection with all related entities of the type constructed by the passed in entity factory</returns>
-		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoBookmarkedThread(bool forceFetch, IEntityFactory entityFactoryToUse)
+		public SD.HnD.DAL.CollectionClasses.UserCollection GetMultiUsersWhoSubscribedThread(bool forceFetch, IEntityFactory entityFactoryToUse)
 		{
- 			if( ( !_alreadyFetchedUsersWhoBookmarkedThread || forceFetch || _alwaysFetchUsersWhoBookmarkedThread) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode)
+ 			if( ( !_alreadyFetchedUsersWhoSubscribedThread || forceFetch || _alwaysFetchUsersWhoSubscribedThread) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode)
 			{
-				if(base.ParticipatesInTransaction)
-				{
-					if(!_usersWhoBookmarkedThread.ParticipatesInTransaction)
-					{
-						base.Transaction.Add(_usersWhoBookmarkedThread);
-					}
-				}
+				AddToTransactionIfNecessary(_usersWhoSubscribedThread);
 				IPredicateExpression filter = new PredicateExpression();
 				filter.Add(new FieldCompareValuePredicate(ThreadFields.ThreadID, ComparisonOperator.Equal, this.ThreadID, "ThreadEntity__"));
-				_usersWhoBookmarkedThread.SuppressClearInGetMulti=!forceFetch;
-				if(entityFactoryToUse!=null)
-				{
-					_usersWhoBookmarkedThread.EntityFactoryToUse = entityFactoryToUse;
-				}
-				_usersWhoBookmarkedThread.GetMulti(filter, GetRelationsForField("UsersWhoBookmarkedThread"));
-				_usersWhoBookmarkedThread.SuppressClearInGetMulti=false;
-				_alreadyFetchedUsersWhoBookmarkedThread = true;
+				_usersWhoSubscribedThread.SuppressClearInGetMulti=!forceFetch;
+				_usersWhoSubscribedThread.EntityFactoryToUse = entityFactoryToUse;
+				_usersWhoSubscribedThread.GetMulti(filter, GetRelationsForField("UsersWhoSubscribedThread"));
+				_usersWhoSubscribedThread.SuppressClearInGetMulti=false;
+				_alreadyFetchedUsersWhoSubscribedThread = true;
 			}
-			return _usersWhoBookmarkedThread;
+			return _usersWhoSubscribedThread;
 		}
 
-		/// <summary> Sets the collection parameters for the collection for 'UsersWhoBookmarkedThread'. These settings will be taken into account
-		/// when the property UsersWhoBookmarkedThread is requested or GetMultiUsersWhoBookmarkedThread is called.</summary>
+		/// <summary> Sets the collection parameters for the collection for 'UsersWhoSubscribedThread'. These settings will be taken into account
+		/// when the property UsersWhoSubscribedThread is requested or GetMultiUsersWhoSubscribedThread is called.</summary>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return. When set to 0, this parameter is ignored</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified (null), no sorting is applied.</param>
-		public virtual void SetCollectionParametersUsersWhoBookmarkedThread(long maxNumberOfItemsToReturn, ISortExpression sortClauses)
+		public virtual void SetCollectionParametersUsersWhoSubscribedThread(long maxNumberOfItemsToReturn, ISortExpression sortClauses)
 		{
-			_usersWhoBookmarkedThread.SortClauses=sortClauses;
-			_usersWhoBookmarkedThread.MaxNumberOfItemsToReturn=maxNumberOfItemsToReturn;
+			_usersWhoSubscribedThread.SortClauses=sortClauses;
+			_usersWhoSubscribedThread.MaxNumberOfItemsToReturn=maxNumberOfItemsToReturn;
 		}
 
 		/// <summary> Retrieves the related entity of type 'ForumEntity', using a relation of type 'n:1'</summary>
@@ -1018,50 +917,34 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'ForumEntity' which is related to this entity.</returns>
 		public virtual ForumEntity GetSingleForum(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedForum || forceFetch || _alwaysFetchForum) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedForum || forceFetch || _alwaysFetchForum) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(ThreadEntity.Relations.ForumEntityUsingForumID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.ForumEntityUsingForumID);
 				ForumEntity newEntity = new ForumEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.ForumID);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (ForumEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.Forum = newEntity;
+					newEntity = (ForumEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_forumReturnsNewIfNotFound)
+					if(!_forumReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_forum == null)))
-						{
-							this.Forum = newEntity;
-						}
-					}
-					else
-					{
-						this.Forum = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.Forum = newEntity;
 				_alreadyFetchedForum = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _forum;
 		}
+
 
 		/// <summary> Retrieves the related entity of type 'UserEntity', using a relation of type 'n:1'</summary>
 		/// <returns>A fetched entity of type 'UserEntity' which is related to this entity.</returns>
@@ -1075,47 +958,30 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'UserEntity' which is related to this entity.</returns>
 		public virtual UserEntity GetSingleUserWhoStartedThread(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedUserWhoStartedThread || forceFetch || _alwaysFetchUserWhoStartedThread) && !base.IsSerializing && !base.IsDeserializing  && !base.InDesignMode)			
+			if( ( !_alreadyFetchedUserWhoStartedThread || forceFetch || _alwaysFetchUserWhoStartedThread) && !this.IsSerializing && !this.IsDeserializing  && !this.InDesignMode)			
 			{
-				bool performLazyLoading = base.CheckIfLazyLoadingShouldOccur(ThreadEntity.Relations.UserEntityUsingStartedByUserID);
-
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.UserEntityUsingStartedByUserID);
 				UserEntity newEntity = new UserEntity();
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
 				bool fetchResult = false;
 				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingPK(this.StartedByUserID);
 				}
 				if(fetchResult)
 				{
-					if(base.ActiveContext!=null)
-					{
-						newEntity = (UserEntity)base.ActiveContext.Get(newEntity);
-					}
-					this.UserWhoStartedThread = newEntity;
+					newEntity = (UserEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if(_userWhoStartedThreadReturnsNewIfNotFound)
+					if(!_userWhoStartedThreadReturnsNewIfNotFound)
 					{
-						if(performLazyLoading || (!performLazyLoading && (_userWhoStartedThread == null)))
-						{
-							this.UserWhoStartedThread = newEntity;
-						}
-					}
-					else
-					{
-						this.UserWhoStartedThread = null;
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
 				}
+				this.UserWhoStartedThread = newEntity;
 				_alreadyFetchedUserWhoStartedThread = fetchResult;
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
 			}
 			return _userWhoStartedThread;
 		}
@@ -1132,137 +998,61 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <returns>A fetched entity of type 'SupportQueueThreadEntity' which is related to this entity.</returns>
 		public virtual SupportQueueThreadEntity GetSingleSupportQueueThread(bool forceFetch)
 		{
-			if( ( !_alreadyFetchedSupportQueueThread || forceFetch || _alwaysFetchSupportQueueThread) && !base.IsSerializing && !base.IsDeserializing && !base.InDesignMode )
+			if( ( !_alreadyFetchedSupportQueueThread || forceFetch || _alwaysFetchSupportQueueThread) && !this.IsSerializing && !this.IsDeserializing && !this.InDesignMode )
 			{
+				bool performLazyLoading = this.CheckIfLazyLoadingShouldOccur(Relations.SupportQueueThreadEntityUsingThreadID);
 				SupportQueueThreadEntity newEntity = new SupportQueueThreadEntity();
-				IEntityRelation relation = ThreadEntity.Relations.SupportQueueThreadEntityUsingThreadID;
-				if(base.ParticipatesInTransaction)
-				{
-					base.Transaction.Add(newEntity);
-				}
-
 				bool fetchResult = false;
-				if(base.CheckIfLazyLoadingShouldOccur(relation))
+				if(performLazyLoading)
 				{
+					AddToTransactionIfNecessary(newEntity);
 					fetchResult = newEntity.FetchUsingUCThreadID(this.ThreadID);
 				}
-				if(!_supportQueueThreadReturnsNewIfNotFound && !fetchResult)
+				if(fetchResult)
 				{
-					this.SupportQueueThread = null;
+					newEntity = (SupportQueueThreadEntity)GetFromActiveContext(newEntity);
 				}
 				else
 				{
-					if((base.ActiveContext!=null)&&fetchResult)
+					if(!_supportQueueThreadReturnsNewIfNotFound)
 					{
-						newEntity = (SupportQueueThreadEntity)base.ActiveContext.Get(newEntity);
+						RemoveFromTransactionIfNecessary(newEntity);
+						newEntity = null;
 					}
-					this.SupportQueueThread = newEntity;
-					_alreadyFetchedSupportQueueThread = fetchResult;
 				}
-				if(base.ParticipatesInTransaction && !fetchResult)
-				{
-					base.Transaction.Remove(newEntity);
-				}
+				this.SupportQueueThread = newEntity;
+				_alreadyFetchedSupportQueueThread = fetchResult;
 			}
 			return _supportQueueThread;
 		}
 
-		/// <summary> Performs the insert action of a new Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool InsertEntity()
-		{
-			ThreadDAO dao = (ThreadDAO)CreateDAOInstance();
-			return dao.AddNew(base.Fields, base.Transaction);
-		}
-		
 		/// <summary> Adds the internals to the active context. </summary>
 		protected override void AddInternalsToContext()
 		{
-			_auditDataThreadRelated.ActiveContext = base.ActiveContext;
-			_presentInBookmarks.ActiveContext = base.ActiveContext;
-			_messages.ActiveContext = base.ActiveContext;
-			_threadSubscription.ActiveContext = base.ActiveContext;
-			_usersWhoSubscribedThread.ActiveContext = base.ActiveContext;
-			_usersWhoPostedInThread.ActiveContext = base.ActiveContext;
-			_usersWhoBookmarkedThread.ActiveContext = base.ActiveContext;
+			_auditDataThreadRelated.ActiveContext = this.ActiveContext;
+			_presentInBookmarks.ActiveContext = this.ActiveContext;
+			_messages.ActiveContext = this.ActiveContext;
+			_threadSubscription.ActiveContext = this.ActiveContext;
+			_usersWhoBookmarkedThread.ActiveContext = this.ActiveContext;
+			_usersWhoPostedInThread.ActiveContext = this.ActiveContext;
+			_usersWhoSubscribedThread.ActiveContext = this.ActiveContext;
 			if(_forum!=null)
 			{
-				_forum.ActiveContext = base.ActiveContext;
+				_forum.ActiveContext = this.ActiveContext;
 			}
 			if(_userWhoStartedThread!=null)
 			{
-				_userWhoStartedThread.ActiveContext = base.ActiveContext;
+				_userWhoStartedThread.ActiveContext = this.ActiveContext;
 			}
 			if(_supportQueueThread!=null)
 			{
-				_supportQueueThread.ActiveContext = base.ActiveContext;
+				_supportQueueThread.ActiveContext = this.ActiveContext;
 			}
-
 		}
 
-
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity()
-		{
-			ThreadDAO dao = (ThreadDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction);
-		}
-		
-		/// <summary> Performs the update action of an existing Entity to the persistent storage.</summary>
-		/// <param name="updateRestriction">Predicate expression, meant for concurrency checks in an Update query</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		protected override bool UpdateEntity(IPredicate updateRestriction)
-		{
-			ThreadDAO dao = (ThreadDAO)CreateDAOInstance();
-			return dao.UpdateExisting(base.Fields, base.Transaction, updateRestriction);
-		}
-	
-		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
-		/// <param name="validatorToUse">Validator to use.</param>
-		protected virtual void InitClassEmpty(IValidator validatorToUse)
-		{
-			OnInitializing();
-			base.Fields = CreateFields();
-			base.IsNew=true;
-			base.Validator = validatorToUse;
-
-			InitClassMembers();
-			
-			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
-			// __LLBLGENPRO_USER_CODE_REGION_END
-
-			OnInitialized();
-		}
-		
-		/// <summary>Creates entity fields object for this entity. Used in constructor to setup this entity in a polymorphic scenario.</summary>
-		protected virtual IEntityFields CreateFields()
-		{
-			return EntityFieldsFactory.CreateEntityFieldsObject(SD.HnD.DAL.EntityType.ThreadEntity);
-		}
-		
-		/// <summary>Creates a new transaction object</summary>
-		/// <param name="levelOfIsolation">The level of isolation.</param>
-		/// <param name="name">The name.</param>
-		protected override ITransaction CreateTransaction( IsolationLevel levelOfIsolation, string name )
-		{
-			return new Transaction(levelOfIsolation, name);
-		}
-
-		/// <summary>
-		/// Creates the ITypeDefaultValue instance used to provide default values for value types which aren't of type nullable(of T)
-		/// </summary>
-		/// <returns></returns>
-		protected override ITypeDefaultValue CreateTypeDefaultValueProvider()
-		{
-			return new TypeDefaultValue();
-		}
-
-		/// <summary>
-		/// Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element. 
-		/// </summary>
+		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
-		public override Dictionary<string, object> GetRelatedData()
+		protected override Dictionary<string, object> GetRelatedData()
 		{
 			Dictionary<string, object> toReturn = new Dictionary<string, object>();
 			toReturn.Add("Forum", _forum);
@@ -1271,28 +1061,40 @@ namespace SD.HnD.DAL.EntityClasses
 			toReturn.Add("PresentInBookmarks", _presentInBookmarks);
 			toReturn.Add("Messages", _messages);
 			toReturn.Add("ThreadSubscription", _threadSubscription);
-			toReturn.Add("UsersWhoSubscribedThread", _usersWhoSubscribedThread);
-			toReturn.Add("UsersWhoPostedInThread", _usersWhoPostedInThread);
 			toReturn.Add("UsersWhoBookmarkedThread", _usersWhoBookmarkedThread);
+			toReturn.Add("UsersWhoPostedInThread", _usersWhoPostedInThread);
+			toReturn.Add("UsersWhoSubscribedThread", _usersWhoSubscribedThread);
 			toReturn.Add("SupportQueueThread", _supportQueueThread);
 			return toReturn;
 		}
-		
+	
+		/// <summary> Initializes the class with empty data, as if it is a new Entity.</summary>
+		/// <param name="validatorToUse">Validator to use.</param>
+		private void InitClassEmpty(IValidator validatorToUse)
+		{
+			OnInitializing();
+			this.Fields = CreateFields();
+			this.Validator = validatorToUse;
+			InitClassMembers();
+
+			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
+			// __LLBLGENPRO_USER_CODE_REGION_END
+
+			OnInitialized();
+		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
 		/// <param name="threadID">PK value for Thread which data should be fetched into this Thread object</param>
 		/// <param name="validator">The validator object for this ThreadEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected virtual void InitClassFetch(System.Int32 threadID, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 threadID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
-			base.Validator = validator;
-			InitClassMembers();
-			base.Fields = CreateFields();
-			bool wasSuccesful = Fetch(threadID, prefetchPathToUse, null, null);
-			base.IsNew = !wasSuccesful;
+			this.Validator = validator;
+			this.Fields = CreateFields();
+			InitClassMembers();	
+			Fetch(threadID, prefetchPathToUse, null, null);
 
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -1302,46 +1104,25 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
-			_auditDataThreadRelated = new SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection(new AuditDataThreadRelatedEntityFactory());
+			_auditDataThreadRelated = new SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection();
 			_auditDataThreadRelated.SetContainingEntityInfo(this, "Thread");
-			_alwaysFetchAuditDataThreadRelated = false;
-			_alreadyFetchedAuditDataThreadRelated = false;
-			_presentInBookmarks = new SD.HnD.DAL.CollectionClasses.BookmarkCollection(new BookmarkEntityFactory());
-			_presentInBookmarks.SetContainingEntityInfo(this, "Thread");
-			_alwaysFetchPresentInBookmarks = false;
-			_alreadyFetchedPresentInBookmarks = false;
-			_messages = new SD.HnD.DAL.CollectionClasses.MessageCollection(new MessageEntityFactory());
-			_messages.SetContainingEntityInfo(this, "Thread");
-			_alwaysFetchMessages = false;
-			_alreadyFetchedMessages = false;
-			_threadSubscription = new SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection(new ThreadSubscriptionEntityFactory());
-			_threadSubscription.SetContainingEntityInfo(this, "Thread");
-			_alwaysFetchThreadSubscription = false;
-			_alreadyFetchedThreadSubscription = false;
-			_usersWhoSubscribedThread = new SD.HnD.DAL.CollectionClasses.UserCollection(new UserEntityFactory());
-			_alwaysFetchUsersWhoSubscribedThread = false;
-			_alreadyFetchedUsersWhoSubscribedThread = false;
-			_usersWhoPostedInThread = new SD.HnD.DAL.CollectionClasses.UserCollection(new UserEntityFactory());
-			_alwaysFetchUsersWhoPostedInThread = false;
-			_alreadyFetchedUsersWhoPostedInThread = false;
-			_usersWhoBookmarkedThread = new SD.HnD.DAL.CollectionClasses.UserCollection(new UserEntityFactory());
-			_alwaysFetchUsersWhoBookmarkedThread = false;
-			_alreadyFetchedUsersWhoBookmarkedThread = false;
-			_forum = null;
-			_forumReturnsNewIfNotFound = true;
-			_alwaysFetchForum = false;
-			_alreadyFetchedForum = false;
-			_userWhoStartedThread = null;
-			_userWhoStartedThreadReturnsNewIfNotFound = true;
-			_alwaysFetchUserWhoStartedThread = false;
-			_alreadyFetchedUserWhoStartedThread = false;
-			_supportQueueThread = null;
-			_supportQueueThreadReturnsNewIfNotFound = true;
-			_alwaysFetchSupportQueueThread = false;
-			_alreadyFetchedSupportQueueThread = false;
 
+			_presentInBookmarks = new SD.HnD.DAL.CollectionClasses.BookmarkCollection();
+			_presentInBookmarks.SetContainingEntityInfo(this, "Thread");
+
+			_messages = new SD.HnD.DAL.CollectionClasses.MessageCollection();
+			_messages.SetContainingEntityInfo(this, "Thread");
+
+			_threadSubscription = new SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection();
+			_threadSubscription.SetContainingEntityInfo(this, "Thread");
+			_usersWhoBookmarkedThread = new SD.HnD.DAL.CollectionClasses.UserCollection();
+			_usersWhoPostedInThread = new SD.HnD.DAL.CollectionClasses.UserCollection();
+			_usersWhoSubscribedThread = new SD.HnD.DAL.CollectionClasses.UserCollection();
+			_forumReturnsNewIfNotFound = true;
+			_userWhoStartedThreadReturnsNewIfNotFound = true;
+			_supportQueueThreadReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
-			
+
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			OnInitClassMembersComplete();
@@ -1353,48 +1134,36 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			_customProperties = new Dictionary<string, string>();
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
-
-			Dictionary<string, string> fieldHashtable = null;
+			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("Subject", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("StartedByUserID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("ThreadLastPostingDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("IsSticky", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-
 			_fieldsCustomProperties.Add("IsClosed", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
+			_fieldsCustomProperties.Add("IsSticky", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MarkedAsDone", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
+			_fieldsCustomProperties.Add("Memo", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("NumberOfViews", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-
-			_fieldsCustomProperties.Add("Memo", fieldHashtable);
+			_fieldsCustomProperties.Add("StartedByUserID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Subject", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ThreadLastPostingDate", fieldHashtable);
 		}
 		#endregion
-
 
 		/// <summary> Removes the sync logic for member _forum</summary>
 		/// <param name="signalRelatedEntity">If set to true, it will call the related entity's UnsetRelatedEntity method</param>
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncForum(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, signalRelatedEntity, "Threads", resetFKFields, new int[] { (int)ThreadFieldIndex.ForumID } );		
+			this.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, signalRelatedEntity, "Threads", resetFKFields, new int[] { (int)ThreadFieldIndex.ForumID } );		
 			_forum = null;
 		}
 		
@@ -1406,7 +1175,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncForum(true, true);
 				_forum = (ForumEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, ref _alreadyFetchedForum, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, ref _alreadyFetchedForum, new string[] {  } );
 			}
 		}
 
@@ -1427,7 +1196,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncUserWhoStartedThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, signalRelatedEntity, "StartedThreads", resetFKFields, new int[] { (int)ThreadFieldIndex.StartedByUserID } );		
+			this.PerformDesetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, signalRelatedEntity, "StartedThreads", resetFKFields, new int[] { (int)ThreadFieldIndex.StartedByUserID } );		
 			_userWhoStartedThread = null;
 		}
 		
@@ -1439,7 +1208,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncUserWhoStartedThread(true, true);
 				_userWhoStartedThread = (UserEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, ref _alreadyFetchedUserWhoStartedThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, ref _alreadyFetchedUserWhoStartedThread, new string[] {  } );
 			}
 		}
 
@@ -1460,7 +1229,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncSupportQueueThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			base.PerformDesetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", ThreadEntity.Relations.SupportQueueThreadEntityUsingThreadID, false, signalRelatedEntity, "Thread", false, new int[] { (int)ThreadFieldIndex.ThreadID } );
+			this.PerformDesetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", Relations.SupportQueueThreadEntityUsingThreadID, false, signalRelatedEntity, "Thread", false, new int[] { (int)ThreadFieldIndex.ThreadID } );
 			_supportQueueThread = null;
 		}
 	
@@ -1472,7 +1241,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				DesetupSyncSupportQueueThread(true, true);
 				_supportQueueThread = (SupportQueueThreadEntity)relatedEntity;
-				base.PerformSetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", ThreadEntity.Relations.SupportQueueThreadEntityUsingThreadID, false, ref _alreadyFetchedSupportQueueThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", Relations.SupportQueueThreadEntityUsingThreadID, false, ref _alreadyFetchedSupportQueueThread, new string[] {  } );
 			}
 		}
 		
@@ -1501,17 +1270,15 @@ namespace SD.HnD.DAL.EntityClasses
 			try
 			{
 				OnFetch();
-				IDao dao = this.CreateDAOInstance();
-				base.Fields[(int)ThreadFieldIndex.ThreadID].ForcedCurrentValueWrite(threadID);
-				dao.FetchExisting(this, base.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
-				return (base.Fields.State == EntityState.Fetched);
+				this.Fields[(int)ThreadFieldIndex.ThreadID].ForcedCurrentValueWrite(threadID);
+				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
+				return (this.Fields.State == EntityState.Fetched);
 			}
 			finally
 			{
 				OnFetchComplete();
 			}
 		}
-
 
 		/// <summary> Creates the DAO instance for this type</summary>
 		/// <returns></returns>
@@ -1541,136 +1308,94 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return _customProperties;}
 		}
 
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'AuditDataThreadRelated' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'AuditDataThreadRelated' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathAuditDataThreadRelated
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection(),
-					(IEntityRelation)GetRelationsForField("AuditDataThreadRelated")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.AuditDataThreadRelatedEntity, 0, null, null, null, "AuditDataThreadRelated", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection(), (IEntityRelation)GetRelationsForField("AuditDataThreadRelated")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.AuditDataThreadRelatedEntity, 0, null, null, null, "AuditDataThreadRelated", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Bookmark' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Bookmark' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathPresentInBookmarks
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.BookmarkCollection(),
-					(IEntityRelation)GetRelationsForField("PresentInBookmarks")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.BookmarkEntity, 0, null, null, null, "PresentInBookmarks", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.BookmarkCollection(), (IEntityRelation)GetRelationsForField("PresentInBookmarks")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.BookmarkEntity, 0, null, null, null, "PresentInBookmarks", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Message' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Message' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathMessages
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.MessageCollection(),
-					(IEntityRelation)GetRelationsForField("Messages")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.MessageEntity, 0, null, null, null, "Messages", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.MessageCollection(), (IEntityRelation)GetRelationsForField("Messages")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.MessageEntity, 0, null, null, null, "Messages", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'ThreadSubscription' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'ThreadSubscription' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathThreadSubscription
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection(),
-					(IEntityRelation)GetRelationsForField("ThreadSubscription")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.ThreadSubscriptionEntity, 0, null, null, null, "ThreadSubscription", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany);
-			}
+			get { return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection(), (IEntityRelation)GetRelationsForField("ThreadSubscription")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.ThreadSubscriptionEntity, 0, null, null, null, "ThreadSubscription", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToMany); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
-		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
-		public static IPrefetchPathElement PrefetchPathUsersWhoSubscribedThread
-		{
-			get
-			{
-				IEntityRelation intermediateRelation = ThreadEntity.Relations.ThreadSubscriptionEntityUsingThreadID;
-				intermediateRelation.SetAliases(string.Empty, "ThreadSubscription_");
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,
-					(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoSubscribedThread"), "UsersWhoSubscribedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
-			}
-		}
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
-		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
-		public static IPrefetchPathElement PrefetchPathUsersWhoPostedInThread
-		{
-			get
-			{
-				IEntityRelation intermediateRelation = ThreadEntity.Relations.MessageEntityUsingThreadID;
-				intermediateRelation.SetAliases(string.Empty, "Message_");
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,
-					(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoPostedInThread"), "UsersWhoPostedInThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
-			}
-		}
-
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathUsersWhoBookmarkedThread
 		{
 			get
 			{
-				IEntityRelation intermediateRelation = ThreadEntity.Relations.BookmarkEntityUsingThreadID;
+				IEntityRelation intermediateRelation = Relations.BookmarkEntityUsingThreadID;
 				intermediateRelation.SetAliases(string.Empty, "Bookmark_");
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,
-					(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoBookmarkedThread"), "UsersWhoBookmarkedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
+				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,	(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoBookmarkedThread"), "UsersWhoBookmarkedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
 			}
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Forum' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User'  for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
+		public static IPrefetchPathElement PrefetchPathUsersWhoPostedInThread
+		{
+			get
+			{
+				IEntityRelation intermediateRelation = Relations.MessageEntityUsingThreadID;
+				intermediateRelation.SetAliases(string.Empty, "Message_");
+				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,	(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoPostedInThread"), "UsersWhoPostedInThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
+			}
+		}
+
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User'  for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
+		public static IPrefetchPathElement PrefetchPathUsersWhoSubscribedThread
+		{
+			get
+			{
+				IEntityRelation intermediateRelation = Relations.ThreadSubscriptionEntityUsingThreadID;
+				intermediateRelation.SetAliases(string.Empty, "ThreadSubscription_");
+				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), intermediateRelation,	(int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, GetRelationsForField("UsersWhoSubscribedThread"), "UsersWhoSubscribedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToMany);
+			}
+		}
+
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'Forum'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathForum
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ForumCollection(),
-					(IEntityRelation)GetRelationsForField("Forum")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.ForumEntity, 0, null, null, null, "Forum", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ForumCollection(), (IEntityRelation)GetRelationsForField("Forum")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.ForumEntity, 0, null, null, null, "Forum", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'User'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathUserWhoStartedThread
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(),
-					(IEntityRelation)GetRelationsForField("UserWhoStartedThread")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, null, "UserWhoStartedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), (IEntityRelation)GetRelationsForField("UserWhoStartedThread")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, null, "UserWhoStartedThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'SupportQueueThread' 
-		/// for this entity. Add the object returned by this property to an existing PrefetchPath instance.</summary>
+		/// <summary> Creates a new PrefetchPathElement object which contains all the information to prefetch the related entities of type 'SupportQueueThread'  for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement implementation.</returns>
 		public static IPrefetchPathElement PrefetchPathSupportQueueThread
 		{
-			get
-			{
-				return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SupportQueueThreadCollection(),
-					(IEntityRelation)GetRelationsForField("SupportQueueThread")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.SupportQueueThreadEntity, 0, null, null, null, "SupportQueueThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToOne);
-			}
+			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SupportQueueThreadCollection(), (IEntityRelation)GetRelationsForField("SupportQueueThread")[0], (int)SD.HnD.DAL.EntityType.ThreadEntity, (int)SD.HnD.DAL.EntityType.SupportQueueThreadEntity, 0, null, null, null, "SupportQueueThread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToOne);	}
 		}
 
 		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override string LLBLGenProEntityName
+		protected override string LLBLGenProEntityName
 		{
 			get { return "ThreadEntity";}
 		}
@@ -1678,9 +1403,9 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, string> CustomPropertiesOfType
+		protected override Dictionary<string, string> CustomPropertiesOfType
 		{
-			get { return ThreadEntity.CustomProperties;}
+			get { return CustomProperties;}
 		}
 
 		/// <summary> The custom properties for the fields of this entity type. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
@@ -1693,23 +1418,12 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The custom properties for the fields of the type of this entity instance. The returned Hashtable contains per fieldname a hashtable of name-value pairs. </summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>
 		[Browsable(false), XmlIgnore]
-		public override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
+		protected override Dictionary<string, Dictionary<string, string>> FieldsCustomPropertiesOfType
 		{
-			get { return ThreadEntity.FieldsCustomProperties;}
+			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ThreadID property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."ThreadID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ThreadID
-		{
-			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ThreadID, true); }
-			set	{ SetValue((int)ThreadFieldIndex.ThreadID, value, true); }
-		}
-		/// <summary> The ForumID property of the Entity Thread<br/><br/>
-		/// </summary>
+		/// <summary> The ForumID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."ForumID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
@@ -1718,78 +1432,38 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ForumID, true); }
 			set	{ SetValue((int)ThreadFieldIndex.ForumID, value, true); }
 		}
-		/// <summary> The Subject property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."Subject"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String Subject
-		{
-			get { return (System.String)GetValue((int)ThreadFieldIndex.Subject, true); }
-			set	{ SetValue((int)ThreadFieldIndex.Subject, value, true); }
-		}
-		/// <summary> The StartedByUserID property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."StartedByUserID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 StartedByUserID
-		{
-			get { return (System.Int32)GetValue((int)ThreadFieldIndex.StartedByUserID, true); }
-			set	{ SetValue((int)ThreadFieldIndex.StartedByUserID, value, true); }
-		}
-		/// <summary> The ThreadLastPostingDate property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."ThreadLastPostingDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 23, 3, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> ThreadLastPostingDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)ThreadFieldIndex.ThreadLastPostingDate, false); }
-			set	{ SetValue((int)ThreadFieldIndex.ThreadLastPostingDate, value, true); }
-		}
-		/// <summary> The IsSticky property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."IsSticky"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 1, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean IsSticky
-		{
-			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsSticky, true); }
-			set	{ SetValue((int)ThreadFieldIndex.IsSticky, value, true); }
-		}
-		/// <summary> The IsClosed property of the Entity Thread<br/><br/>
-		/// </summary>
+
+		/// <summary> The IsClosed property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."IsClosed"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 1, 0, 0<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		public virtual System.Boolean IsClosed
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsClosed, true); }
 			set	{ SetValue((int)ThreadFieldIndex.IsClosed, value, true); }
 		}
-		/// <summary> The MarkedAsDone property of the Entity Thread<br/><br/>
-		/// </summary>
+
+		/// <summary> The IsSticky property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."IsSticky"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean IsSticky
+		{
+			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsSticky, true); }
+			set	{ SetValue((int)ThreadFieldIndex.IsSticky, value, true); }
+		}
+
+		/// <summary> The MarkedAsDone property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."MarkedAsDone"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 1, 0, 0<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		public virtual System.Boolean MarkedAsDone
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.MarkedAsDone, true); }
 			set	{ SetValue((int)ThreadFieldIndex.MarkedAsDone, value, true); }
 		}
-		/// <summary> The NumberOfViews property of the Entity Thread<br/><br/>
-		/// </summary>
-		/// <remarks>Mapped on  table field: "Thread"."NumberOfViews"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Int32> NumberOfViews
-		{
-			get { return (Nullable<System.Int32>)GetValue((int)ThreadFieldIndex.NumberOfViews, false); }
-			set	{ SetValue((int)ThreadFieldIndex.NumberOfViews, value, true); }
-		}
-		/// <summary> The Memo property of the Entity Thread<br/><br/>
-		/// </summary>
+
+		/// <summary> The Memo property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."Memo"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
@@ -1799,7 +1473,58 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)ThreadFieldIndex.Memo, value, true); }
 		}
 
-		/// <summary> Retrieves all related entities of type 'AuditDataThreadRelatedEntity' using a relation of type '1:n'.</summary>
+		/// <summary> The NumberOfViews property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."NumberOfViews"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> NumberOfViews
+		{
+			get { return (Nullable<System.Int32>)GetValue((int)ThreadFieldIndex.NumberOfViews, false); }
+			set	{ SetValue((int)ThreadFieldIndex.NumberOfViews, value, true); }
+		}
+
+		/// <summary> The StartedByUserID property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."StartedByUserID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 StartedByUserID
+		{
+			get { return (System.Int32)GetValue((int)ThreadFieldIndex.StartedByUserID, true); }
+			set	{ SetValue((int)ThreadFieldIndex.StartedByUserID, value, true); }
+		}
+
+		/// <summary> The Subject property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."Subject"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String Subject
+		{
+			get { return (System.String)GetValue((int)ThreadFieldIndex.Subject, true); }
+			set	{ SetValue((int)ThreadFieldIndex.Subject, value, true); }
+		}
+
+		/// <summary> The ThreadID property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."ThreadID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ThreadID
+		{
+			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ThreadID, true); }
+			set	{ SetValue((int)ThreadFieldIndex.ThreadID, value, true); }
+		}
+
+		/// <summary> The ThreadLastPostingDate property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."ThreadLastPostingDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> ThreadLastPostingDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)ThreadFieldIndex.ThreadLastPostingDate, false); }
+			set	{ SetValue((int)ThreadFieldIndex.ThreadLastPostingDate, value, true); }
+		}
+
+		/// <summary> Retrieves all related entities of type 'AuditDataThreadRelatedEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiAuditDataThreadRelated()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection AuditDataThreadRelated
@@ -1808,8 +1533,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for AuditDataThreadRelated. When set to true, AuditDataThreadRelated is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time AuditDataThreadRelated is accessed. You can always execute
-		/// a forced fetch by calling GetMultiAuditDataThreadRelated(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time AuditDataThreadRelated is accessed. You can always execute/ a forced fetch by calling GetMultiAuditDataThreadRelated(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchAuditDataThreadRelated
 		{
@@ -1832,7 +1556,8 @@ namespace SD.HnD.DAL.EntityClasses
 				_alreadyFetchedAuditDataThreadRelated = value;
 			}
 		}
-		/// <summary> Retrieves all related entities of type 'BookmarkEntity' using a relation of type '1:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'BookmarkEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiPresentInBookmarks()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.BookmarkCollection PresentInBookmarks
@@ -1841,8 +1566,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for PresentInBookmarks. When set to true, PresentInBookmarks is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time PresentInBookmarks is accessed. You can always execute
-		/// a forced fetch by calling GetMultiPresentInBookmarks(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time PresentInBookmarks is accessed. You can always execute/ a forced fetch by calling GetMultiPresentInBookmarks(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchPresentInBookmarks
 		{
@@ -1865,7 +1589,8 @@ namespace SD.HnD.DAL.EntityClasses
 				_alreadyFetchedPresentInBookmarks = value;
 			}
 		}
-		/// <summary> Retrieves all related entities of type 'MessageEntity' using a relation of type '1:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'MessageEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiMessages()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.MessageCollection Messages
@@ -1874,8 +1599,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for Messages. When set to true, Messages is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time Messages is accessed. You can always execute
-		/// a forced fetch by calling GetMultiMessages(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time Messages is accessed. You can always execute/ a forced fetch by calling GetMultiMessages(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchMessages
 		{
@@ -1898,7 +1622,8 @@ namespace SD.HnD.DAL.EntityClasses
 				_alreadyFetchedMessages = value;
 			}
 		}
-		/// <summary> Retrieves all related entities of type 'ThreadSubscriptionEntity' using a relation of type '1:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'ThreadSubscriptionEntity' using a relation of type '1:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiThreadSubscription()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.ThreadSubscriptionCollection ThreadSubscription
@@ -1907,8 +1632,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for ThreadSubscription. When set to true, ThreadSubscription is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time ThreadSubscription is accessed. You can always execute
-		/// a forced fetch by calling GetMultiThreadSubscription(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time ThreadSubscription is accessed. You can always execute/ a forced fetch by calling GetMultiThreadSubscription(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchThreadSubscription
 		{
@@ -1932,73 +1656,8 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
-		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
-		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoSubscribedThread()', because 
-		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
-		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoSubscribedThread
-		{
-			get { return GetMultiUsersWhoSubscribedThread(false); }
-		}
-
-		/// <summary> Gets / sets the lazy loading flag for UsersWhoSubscribedThread. When set to true, UsersWhoSubscribedThread is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoSubscribedThread is accessed. You can always execute
-		/// a forced fetch by calling GetMultiUsersWhoSubscribedThread(true).</summary>
-		[Browsable(false)]
-		public bool AlwaysFetchUsersWhoSubscribedThread
-		{
-			get	{ return _alwaysFetchUsersWhoSubscribedThread; }
-			set	{ _alwaysFetchUsersWhoSubscribedThread = value; }
-		}
-				
-		/// <summary>Gets / Sets the lazy loading flag if the property UsersWhoSubscribedThread already has been fetched. Setting this property to false when UsersWhoSubscribedThread has been fetched
-		/// will clear the UsersWhoSubscribedThread collection well. Setting this property to true while UsersWhoSubscribedThread hasn't been fetched disables lazy loading for UsersWhoSubscribedThread</summary>
-		[Browsable(false)]
-		public bool AlreadyFetchedUsersWhoSubscribedThread
-		{
-			get { return _alreadyFetchedUsersWhoSubscribedThread;}
-			set 
-			{
-				if(_alreadyFetchedUsersWhoSubscribedThread && !value && (_usersWhoSubscribedThread != null))
-				{
-					_usersWhoSubscribedThread.Clear();
-				}
-				_alreadyFetchedUsersWhoSubscribedThread = value;
-			}
-		}
-		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
-		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoPostedInThread()', because 
-		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
-		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoPostedInThread
-		{
-			get { return GetMultiUsersWhoPostedInThread(false); }
-		}
-
-		/// <summary> Gets / sets the lazy loading flag for UsersWhoPostedInThread. When set to true, UsersWhoPostedInThread is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoPostedInThread is accessed. You can always execute
-		/// a forced fetch by calling GetMultiUsersWhoPostedInThread(true).</summary>
-		[Browsable(false)]
-		public bool AlwaysFetchUsersWhoPostedInThread
-		{
-			get	{ return _alwaysFetchUsersWhoPostedInThread; }
-			set	{ _alwaysFetchUsersWhoPostedInThread = value; }
-		}
-				
-		/// <summary>Gets / Sets the lazy loading flag if the property UsersWhoPostedInThread already has been fetched. Setting this property to false when UsersWhoPostedInThread has been fetched
-		/// will clear the UsersWhoPostedInThread collection well. Setting this property to true while UsersWhoPostedInThread hasn't been fetched disables lazy loading for UsersWhoPostedInThread</summary>
-		[Browsable(false)]
-		public bool AlreadyFetchedUsersWhoPostedInThread
-		{
-			get { return _alreadyFetchedUsersWhoPostedInThread;}
-			set 
-			{
-				if(_alreadyFetchedUsersWhoPostedInThread && !value && (_usersWhoPostedInThread != null))
-				{
-					_usersWhoPostedInThread.Clear();
-				}
-				_alreadyFetchedUsersWhoPostedInThread = value;
-			}
-		}
-		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.</summary>
+		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoBookmarkedThread()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
 		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoBookmarkedThread
@@ -2007,8 +1666,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for UsersWhoBookmarkedThread. When set to true, UsersWhoBookmarkedThread is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoBookmarkedThread is accessed. You can always execute
-		/// a forced fetch by calling GetMultiUsersWhoBookmarkedThread(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoBookmarkedThread is accessed. You can always execute a forced fetch by calling GetMultiUsersWhoBookmarkedThread(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchUsersWhoBookmarkedThread
 		{
@@ -2032,45 +1690,100 @@ namespace SD.HnD.DAL.EntityClasses
 			}
 		}
 
+		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.<br/><br/>
+		/// </summary>
+		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoPostedInThread()', because 
+		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
+		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoPostedInThread
+		{
+			get { return GetMultiUsersWhoPostedInThread(false); }
+		}
+
+		/// <summary> Gets / sets the lazy loading flag for UsersWhoPostedInThread. When set to true, UsersWhoPostedInThread is always refetched from the 
+		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoPostedInThread is accessed. You can always execute a forced fetch by calling GetMultiUsersWhoPostedInThread(true).</summary>
+		[Browsable(false)]
+		public bool AlwaysFetchUsersWhoPostedInThread
+		{
+			get	{ return _alwaysFetchUsersWhoPostedInThread; }
+			set	{ _alwaysFetchUsersWhoPostedInThread = value; }
+		}
+				
+		/// <summary>Gets / Sets the lazy loading flag if the property UsersWhoPostedInThread already has been fetched. Setting this property to false when UsersWhoPostedInThread has been fetched
+		/// will clear the UsersWhoPostedInThread collection well. Setting this property to true while UsersWhoPostedInThread hasn't been fetched disables lazy loading for UsersWhoPostedInThread</summary>
+		[Browsable(false)]
+		public bool AlreadyFetchedUsersWhoPostedInThread
+		{
+			get { return _alreadyFetchedUsersWhoPostedInThread;}
+			set 
+			{
+				if(_alreadyFetchedUsersWhoPostedInThread && !value && (_usersWhoPostedInThread != null))
+				{
+					_usersWhoPostedInThread.Clear();
+				}
+				_alreadyFetchedUsersWhoPostedInThread = value;
+			}
+		}
+
+		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type 'm:n'.<br/><br/>
+		/// </summary>
+		/// <remarks>This property is added for databinding conveniance, however it is recommeded to use the method 'GetMultiUsersWhoSubscribedThread()', because 
+		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the same scope.</remarks>
+		public virtual SD.HnD.DAL.CollectionClasses.UserCollection UsersWhoSubscribedThread
+		{
+			get { return GetMultiUsersWhoSubscribedThread(false); }
+		}
+
+		/// <summary> Gets / sets the lazy loading flag for UsersWhoSubscribedThread. When set to true, UsersWhoSubscribedThread is always refetched from the 
+		/// persistent storage. When set to false, the data is only fetched the first time UsersWhoSubscribedThread is accessed. You can always execute a forced fetch by calling GetMultiUsersWhoSubscribedThread(true).</summary>
+		[Browsable(false)]
+		public bool AlwaysFetchUsersWhoSubscribedThread
+		{
+			get	{ return _alwaysFetchUsersWhoSubscribedThread; }
+			set	{ _alwaysFetchUsersWhoSubscribedThread = value; }
+		}
+				
+		/// <summary>Gets / Sets the lazy loading flag if the property UsersWhoSubscribedThread already has been fetched. Setting this property to false when UsersWhoSubscribedThread has been fetched
+		/// will clear the UsersWhoSubscribedThread collection well. Setting this property to true while UsersWhoSubscribedThread hasn't been fetched disables lazy loading for UsersWhoSubscribedThread</summary>
+		[Browsable(false)]
+		public bool AlreadyFetchedUsersWhoSubscribedThread
+		{
+			get { return _alreadyFetchedUsersWhoSubscribedThread;}
+			set 
+			{
+				if(_alreadyFetchedUsersWhoSubscribedThread && !value && (_usersWhoSubscribedThread != null))
+				{
+					_usersWhoSubscribedThread.Clear();
+				}
+				_alreadyFetchedUsersWhoSubscribedThread = value;
+			}
+		}
+
 		/// <summary> Gets / sets related entity of type 'ForumEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleForum()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual ForumEntity Forum
 		{
 			get	{ return GetSingleForum(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncForum(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_forum != null)
-						{
-							_forum.UnsetRelatedEntity(this, "Threads");
-						}
-					}
-					else
-					{
-						if(_forum!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "Threads");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "Threads", "Forum", _forum, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for Forum. When set to true, Forum is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time Forum is accessed. You can always execute
-		/// a forced fetch by calling GetSingleForum(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time Forum is accessed. You can always execute a forced fetch by calling GetSingleForum(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchForum
 		{
@@ -2103,45 +1816,33 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return _forumReturnsNewIfNotFound; }
 			set { _forumReturnsNewIfNotFound = value; }	
 		}
+
 		/// <summary> Gets / sets related entity of type 'UserEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/>
+		/// </summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleUserWhoStartedThread()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual UserEntity UserWhoStartedThread
 		{
 			get	{ return GetSingleUserWhoStartedThread(false); }
-			set
-			{
-				if(base.IsDeserializing)
+			set 
+			{ 
+				if(this.IsDeserializing)
 				{
 					SetupSyncUserWhoStartedThread(value);
 				}
 				else
 				{
-					if(value==null)
-					{
-						if(_userWhoStartedThread != null)
-						{
-							_userWhoStartedThread.UnsetRelatedEntity(this, "StartedThreads");
-						}
-					}
-					else
-					{
-						if(_userWhoStartedThread!=value)
-						{
-							((IEntity)value).SetRelatedEntity(this, "StartedThreads");
-						}
-					}
+					SetSingleRelatedEntityNavigator(value, "StartedThreads", "UserWhoStartedThread", _userWhoStartedThread, true); 
 				}
 			}
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for UserWhoStartedThread. When set to true, UserWhoStartedThread is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time UserWhoStartedThread is accessed. You can always execute
-		/// a forced fetch by calling GetSingleUserWhoStartedThread(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time UserWhoStartedThread is accessed. You can always execute a forced fetch by calling GetSingleUserWhoStartedThread(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchUserWhoStartedThread
 		{
@@ -2177,17 +1878,17 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Gets / sets related entity of type 'SupportQueueThreadEntity'. This property is not visible in databound grids.
 		/// Setting this property to a new object will make the load-on-demand feature to stop fetching data from the database, until you set this
-		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.</summary>
+		/// property to null. Setting this property to an entity will make sure that FK-PK relations are synchronized when appropriate.<br/><br/></summary>
 		/// <remarks>This property is added for conveniance, however it is recommeded to use the method 'GetSingleSupportQueueThread()', because 
 		/// this property is rather expensive and a method tells the user to cache the result when it has to be used more than once in the
 		/// same scope. The property is marked non-browsable to make it hidden in bound controls, f.e. datagrids.</remarks>
-		[Browsable(false)]
+		[Browsable(true)]
 		public virtual SupportQueueThreadEntity SupportQueueThread
 		{
 			get	{ return GetSingleSupportQueueThread(false); }
 			set
 			{
-				if(base.IsDeserializing)
+				if(this.IsDeserializing)
 				{
 					SetupSyncSupportQueueThread(value);
 				}
@@ -2195,15 +1896,19 @@ namespace SD.HnD.DAL.EntityClasses
 				{
 					if(value==null)
 					{
+						bool raisePropertyChanged = (_supportQueueThread !=null);
 						DesetupSyncSupportQueueThread(true, true);
+						if(raisePropertyChanged)
+						{
+							OnPropertyChanged("SupportQueueThread");
+						}
 					}
 					else
 					{
 						if(_supportQueueThread!=value)
 						{
-							IEntity relatedEntity = (IEntity)value;
-							relatedEntity.SetRelatedEntity(this, "Thread");
-							SetupSyncSupportQueueThread(relatedEntity);
+							((IEntity)value).SetRelatedEntity(this, "Thread");
+							SetupSyncSupportQueueThread(value);
 						}
 					}
 				}
@@ -2211,8 +1916,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Gets / sets the lazy loading flag for SupportQueueThread. When set to true, SupportQueueThread is always refetched from the 
-		/// persistent storage. When set to false, the data is only fetched the first time SupportQueueThread is accessed. You can always execute
-		/// a forced fetch by calling GetSingleSupportQueueThread(true).</summary>
+		/// persistent storage. When set to false, the data is only fetched the first time SupportQueueThread is accessed. You can always execute a forced fetch by calling GetSingleSupportQueueThread(true).</summary>
 		[Browsable(false)]
 		public bool AlwaysFetchSupportQueueThread
 		{
@@ -2246,7 +1950,6 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ _supportQueueThreadReturnsNewIfNotFound = value; }	
 		}
 
-
 		/// <summary> Gets or sets a value indicating whether this entity is a subtype</summary>
 		protected override bool LLBLGenProIsSubType
 		{
@@ -2262,10 +1965,11 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary>Returns the SD.HnD.DAL.EntityType enum value for this entity.</summary>
 		[Browsable(false), XmlIgnore]
-		public override int LLBLGenProEntityTypeValue 
+		protected override int LLBLGenProEntityTypeValue 
 		{ 
 			get { return (int)SD.HnD.DAL.EntityType.ThreadEntity; }
 		}
+
 		#endregion
 
 		

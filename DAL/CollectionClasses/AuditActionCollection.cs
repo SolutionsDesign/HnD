@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -20,7 +20,6 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.HelperClasses;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.CollectionClasses
@@ -40,7 +39,7 @@ namespace SD.HnD.DAL.CollectionClasses
 
 		/// <summary> CTor</summary>
 		/// <param name="initialContents">The initial contents of this collection.</param>
-		public AuditActionCollection(IList<AuditActionEntity> initialContents):base(new AuditActionEntityFactory())
+		public AuditActionCollection(IEnumerable<AuditActionEntity> initialContents):base(new AuditActionEntityFactory())
 		{
 			AddRange(initialContents);
 		}
@@ -60,17 +59,15 @@ namespace SD.HnD.DAL.CollectionClasses
 
 
 
-		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  Relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  Relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingRolesWithAuditAction(IEntity roleInstance)
 		{
-			return GetMultiManyToManyUsingRolesWithAuditAction(roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, 0, 0);
+			return GetMultiManyToManyUsingRolesWithAuditAction(roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, 0, 0);
 		}
 		
-		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -80,8 +77,16 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetMultiManyToManyUsingRolesWithAuditAction(roleInstance, maxNumberOfItemsToReturn, sortClauses, 0, 0);
 		}
 
-		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a Relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
+		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
+		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
+		/// <returns>true if the retrieval succeeded, false otherwise</returns>
+		public bool GetMultiManyToManyUsingRolesWithAuditAction(IEntity roleInstance, IPrefetchPath prefetchPathToUse)
+		{
+			return GetMultiManyToManyUsingRolesWithAuditAction(roleInstance, this.MaxNumberOfItemsToReturn, this.SortClauses, prefetchPathToUse);
+		}
+		
+		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -90,26 +95,14 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public virtual bool GetMultiManyToManyUsingRolesWithAuditAction(IEntity roleInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, int pageNumber, int pageSize)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			AuditActionDAO dao = DAOFactory.CreateAuditActionDAO();
-			return dao.GetMultiUsingRolesWithAuditAction(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, roleInstance, pageNumber, pageSize);
+			return DAOFactory.CreateAuditActionDAO().GetMultiUsingRolesWithAuditAction(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, roleInstance, null, pageNumber, pageSize);
 		}
 
-		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a Relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
-		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
-		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch.</param>
-		/// <returns>true if the retrieval succeeded, false otherwise</returns>
-		public bool GetMultiManyToManyUsingRolesWithAuditAction(IEntity roleInstance, IPrefetchPath prefetchPathToUse)
-		{
-			return GetMultiManyToManyUsingRolesWithAuditAction(roleInstance, base.MaxNumberOfItemsToReturn, base.SortClauses, prefetchPathToUse);
-		}
-
-		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. 
-		/// All current elements in the collection are removed from the collection.</summary>
+		/// <summary> Retrieves in this AuditActionCollection object all AuditActionEntity objects which are related via a  relation of type 'm:n' with the passed in RoleEntity. All current elements in the collection are removed from the collection.</summary>
 		/// <param name="roleInstance">RoleEntity object to be used as a filter in the m:n relation</param>
 		/// <param name="maxNumberOfItemsToReturn"> The maximum number of items to return with this retrieval query.</param>
 		/// <param name="sortClauses">The order by specifications for the sorting of the resultset. When not specified, no sorting is applied.</param>
@@ -117,14 +110,12 @@ namespace SD.HnD.DAL.CollectionClasses
 		/// <returns>true if the retrieval succeeded, false otherwise</returns>
 		public bool GetMultiManyToManyUsingRolesWithAuditAction(IEntity roleInstance, long maxNumberOfItemsToReturn, ISortExpression sortClauses, IPrefetchPath prefetchPathToUse)
 		{
-			if(!base.SuppressClearInGetMulti)
+			if(!this.SuppressClearInGetMulti)
 			{
 				this.Clear();
 			}
-			AuditActionDAO dao = DAOFactory.CreateAuditActionDAO();
-			return dao.GetMultiUsingRolesWithAuditAction(base.Transaction, this, maxNumberOfItemsToReturn, sortClauses, base.EntityFactoryToUse, roleInstance, prefetchPathToUse);
+			return DAOFactory.CreateAuditActionDAO().GetMultiUsingRolesWithAuditAction(this.Transaction, this, maxNumberOfItemsToReturn, sortClauses, this.EntityFactoryToUse, roleInstance, prefetchPathToUse, 0, 0);
 		}
-
 
 		/// <summary> Retrieves Entity rows in a datatable which match the specified filter. It will always create a new connection to the database.</summary>
 		/// <param name="selectFilter">A predicate or predicate expression which should be used as filter for the entities to retrieve.</param>
@@ -182,8 +173,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			return GetScalar(fieldIndex, expressionToExecute, aggregateToApply, null, null, null);
 		}
 
-		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are
-		/// applied on.</summary>
+		/// <summary> Gets a scalar value, calculated with the aggregate and expression specified. the field index specified is the field the expression and aggregate are applied on.</summary>
 		/// <param name="fieldIndex">Field index of field to which to apply the aggregate function and expression</param>
 		/// <param name="expressionToExecute">The expression to execute. Can be null</param>
 		/// <param name="aggregateToApply">Aggregate function to apply. </param>
@@ -226,8 +216,7 @@ namespace SD.HnD.DAL.CollectionClasses
 			{
 				fields[0].AggregateFunctionToApply = aggregateToApply;
 			}
-			AuditActionDAO dao = DAOFactory.CreateAuditActionDAO();
-			return dao.GetScalar(fields, base.Transaction, filter, relations, groupByClause);
+			return DAOFactory.CreateAuditActionDAO().GetScalar(fields, this.Transaction, filter, relations, groupByClause);
 		}
 		
 		/// <summary>Creats a new DAO instance so code which is in the base class can still use the proper DAO object.</summary>
@@ -243,7 +232,6 @@ namespace SD.HnD.DAL.CollectionClasses
 		{
 			return new Transaction(levelOfIsolation, name);
 		}
-
 
 		#region Custom EntityCollection code
 		

@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -15,11 +15,8 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 namespace SD.HnD.DAL.RelationClasses
 {
 
-	/// <summary>
-	/// Class to define dynamic relations for queries. 
-	/// </summary>
-	/// <remarks>Dynamic relations are only supported in ansi joins. If you're using Oracle on 8i, you can't use Dynamic Relations. In all other cases
-	/// you can. In the case of Oracle 9i: specify that you want to use Ansi joins (recommended) by setting the config file setting 'OracleAnsiJoins' to true</remarks>
+	/// <summary>Class to define dynamic relations for queries.</summary>
+	/// <remarks>Dynamic relations are only supported in ansi joins so if you're using Oracle on 8i, you can't use Dynamic Relations. </remarks>
 	[Serializable]
 	public class DynamicRelation : DynamicRelationBase
 	{
@@ -29,19 +26,17 @@ namespace SD.HnD.DAL.RelationClasses
 		/// relations in the relation collection.</remarks>
 		public DynamicRelation(DerivedTableDefinition leftOperand)
 		{
-			base.InitClass(JoinHint.None, string.Empty, string.Empty, null, leftOperand, null);
+			this.InitClass(JoinHint.None, string.Empty, string.Empty, null, leftOperand, null);
 		}
 	
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DynamicRelation"/> class.
-		/// </summary>
+		/// <summary>Initializes a new instance of the <see cref="DynamicRelation"/> class.</summary>
 		/// <param name="leftOperand">The left operand.</param>
 		/// <param name="joinType">Type of the join. If None is specified, Inner is assumed.</param>
 		/// <param name="rightOperand">The right operand.</param>
 		/// <param name="onClause">The on clause for the join.</param>
 		public DynamicRelation(DerivedTableDefinition leftOperand, JoinHint joinType, DerivedTableDefinition rightOperand, IPredicate onClause)
 		{
-			base.InitClass(joinType, string.Empty, string.Empty, onClause, leftOperand, rightOperand);
+			this.InitClass(joinType, string.Empty, string.Empty, onClause, leftOperand, rightOperand);
 		}
 	
 		/// <summary>Initializes a new instance of the <see cref="DynamicRelation"/> class.</summary>
@@ -52,7 +47,7 @@ namespace SD.HnD.DAL.RelationClasses
 		/// <param name="onClause">The on clause for the join.</param>
 		public DynamicRelation(DerivedTableDefinition leftOperand, JoinHint joinType, SD.HnD.DAL.EntityType rightOperand, string aliasRightOperand, IPredicate onClause)
 		{
-			base.InitClass(joinType, string.Empty, aliasRightOperand, onClause, leftOperand, GeneralEntityFactory.Create(rightOperand));
+			this.InitClass(joinType, string.Empty, aliasRightOperand, onClause, leftOperand, GeneralEntityFactory.Create(rightOperand));
 		}
 	
 		/// <summary>Initializes a new instance of the <see cref="DynamicRelation"/> class.</summary>
@@ -64,7 +59,7 @@ namespace SD.HnD.DAL.RelationClasses
 		/// <param name="onClause">The on clause for the join.</param>
 		public DynamicRelation(SD.HnD.DAL.EntityType leftOperand, JoinHint joinType, SD.HnD.DAL.EntityType rightOperand, string aliasLeftOperand, string aliasRightOperand, IPredicate onClause)
 		{
-			base.InitClass(joinType, aliasLeftOperand, aliasRightOperand, onClause, GeneralEntityFactory.Create(leftOperand), GeneralEntityFactory.Create(rightOperand));
+			this.InitClass(joinType, aliasLeftOperand, aliasRightOperand, onClause, GeneralEntityFactory.Create(leftOperand), GeneralEntityFactory.Create(rightOperand));
 		}
 		
 		/// <summary>Gets the inheritance provider for inheritance info retrieval for entity operands</summary>

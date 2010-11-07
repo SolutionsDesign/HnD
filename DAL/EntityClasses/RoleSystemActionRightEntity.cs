@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 2.6
+// Code is generated using LLBLGen Pro version: 3.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -22,75 +22,54 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.EntityClasses
 {
-	
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 
-	/// <summary>
-	/// Entity class which represents the entity 'RoleSystemActionRight'. <br/>
-	/// This class is used for Business Logic or for framework extension code. 
-	/// </summary>
+	/// <summary>Entity class which represents the entity 'RoleSystemActionRight'. This class is used for Business Logic or for framework extension code.</summary>
 	[Serializable]
 	public partial class RoleSystemActionRightEntity : RoleSystemActionRightEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
 		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
-		#region Constructors
-		/// <summary>
-		/// CTor
-		/// </summary>
+		/// <summary>CTor</summary>
 		public RoleSystemActionRightEntity():base()
 		{
 		}
 
-	
-		/// <summary>
-		/// CTor
-		/// </summary>
-		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <summary>CTor</summary>
 		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
-		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID):
-			base(roleID, actionRightID)
+		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID):
+			base(actionRightID, roleID)
 		{
 		}
 
-
-		/// <summary>
-		/// CTor
-		/// </summary>
-		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <summary>CTor</summary>
 		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse):
-			base(roleID, actionRightID, prefetchPathToUse)
+		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse):
+			base(actionRightID, roleID, prefetchPathToUse)
 		{
 		}
 
-
-		/// <summary>
-		/// CTor
-		/// </summary>
-		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <summary>CTor</summary>
 		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="validator">The custom validator object for this RoleSystemActionRightEntity</param>
-		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID, IValidator validator):
-			base(roleID, actionRightID, validator)
+		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID, IValidator validator):
+			base(actionRightID, roleID, validator)
 		{
 		}
-	
 		
-		/// <summary>
-		/// Private CTor for deserialization
-		/// </summary>
+		/// <summary>CTor for deserialization</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
 		protected RoleSystemActionRightEntity(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
 		}
-		#endregion
 
 		#region Custom Entity code
 		
