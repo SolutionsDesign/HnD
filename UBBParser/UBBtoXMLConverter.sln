@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UBBParser", "UBBParser\UBBParser.csproj", "{22A260C0-742F-42A7-82AB-DDB792082900}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "ParserTester\Tester.csproj", "{D32F2A6C-D650-40BC-9A74-24190B3D970A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22A260C0-742F-42A7-82AB-DDB792082900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A260C0-742F-42A7-82AB-DDB792082900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A260C0-742F-42A7-82AB-DDB792082900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A260C0-742F-42A7-82AB-DDB792082900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D32F2A6C-D650-40BC-9A74-24190B3D970A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D32F2A6C-D650-40BC-9A74-24190B3D970A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D32F2A6C-D650-40BC-9A74-24190B3D970A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D32F2A6C-D650-40BC-9A74-24190B3D970A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,240 @@
+UBB Syntax / grammar definition for the UBB SpecializedParser. 
+
+Because the keywords use the '[]' characters, optional attributes are enclosed in
+'<>' characters. These '<>' characters are not part of the attributes nor the tags.
+
+Available Keywords and their meaning
+=====================================
+
+https://url, 
+http://url,
+www.url,
+foo@bar.com
+will be recognized automatically. 
+
+[img <alt="altdescription">]http://|https://url of image (gif/jpg/png)[/img]
+[b]bold text[/b]
+[i]italic text[/i]
+[s]striked-through text[/s]
+[u]underlined text[/u]
+[url <description="linkdescription">]link[/url]
+[sup]superscripted text[/sup]
+[sub]subscripted text[/sub]
+[quote <nick="nickname of owner of quoted text">]text quoted[/quote]
+[code]text which formatting should be preserved[/code]
+[offtopic]offtopic text[/offtopic]
+[list <type="1|A|I">] 
+	[*]Item data
+[/list]
+[size value="1|2|3|4|5|6"]sized text[/size]
+[color value="RRGGBB"]text in different color[/color]
+all kinds of smileys: :) :( ;) :P :D :? :X etc.
+
+
+Tokens
+========
+[img					ImageStartTag
+alt						AltTerminal
+=						Assignment
+"QuotedText"			QuotedString
+'QuotedText'			SingleQuotedString
+]						TagCloseBracket
+[/img]					ImageEndTag
+[b]						BoldStartTag
+[/b]					BoldEndTag
+[i]						ItalicStartTag
+[/i]					ItalicEndTag
+[s]						StrikeStartTag
+[/s]					StrikeEndTag
+[u]						UnderlineStartTag
+[/u]					UnderlineEndTag
+[url					URLStartTag
+description				DescriptionTerminal
+[/url]					URLEndTag
+[quote					QuoteStartTag
+[quote]					QuoteStartTagSimple
+nick					NickTerminal
+[/quote]				QuoteEndTag
+[code					CodeStartTag
+[/code]					CodeEndTag
+[offtopic]				OfftopicStartTag
+[/offtopic]				OfftopicEndTag
+[list					ListStartTag
+[list]					ListStartTagSimple
+type					TypeTerminal
+[*]						ListItemStartTag
+[/*]					ListItemEndTag
+[/list]					ListEndTag
+[size					SizeStartTag
+value					ValueTerminal
+[/size]					SizeEndTag
+[color					ColorStartTag
+[/color]				ColorEndTag
+A URL					URL
+A URL of an Image		ImageURL
+An emailaddress			EmailAddress
+:) etc.					SmileyLaugh
+UntokenizedString		UntokenizedLiteralString
+
+
+Grammar
+==========
+Tokenstrings are formulated between "''". These quotes are not part of the token, just
+to distinguis them from the EBNF. Behind the RightHandSide (RHS) the XML tag is formulated which is
+the result of the emitter. This tag is placed here between brackets (). ( RHS result ) means, that the
+rule will emit the emitter result of the RHS's thus will not add any new information. () means the rule
+will not emit anything at all. This is possible for close tags, since the XML dom will automatically 
+add close tags. All rules encapsulate their emitter contents in XmlDocumentFragments.
+
+0:  StartSymbol				-> GeneralText												( RHS result )
+1:  GeneralText				-> SpecialText GeneralText									( <generaltext> SpecialText Result  Contents of RHS GeneralText </generaltext> )
+2: 	GeneralText				-> SpecialText												( <generaltext> RHS result </generaltext> )
+3:  SpecialText				-> QuotedText												( RHS result )
+4:	SpecialText				-> CodeText													( RHS result )
+5:	SpecialText				-> FormattedText											( RHS result )
+6:	SpecialText				-> Image													( RHS result )
+7:	SpecialText				-> List														( RHS result )
+8:	SpecialText				-> URL														( RHS result )
+9:  FormattedText			-> FormattedTextElement FormattedText						( <formattedtext> FormattedTextElement Result  Contents of RHS FormattedText </formattedtext> )
+10: FormattedText			-> FormattedTextElement										( <formattedtext> RHS Result </formattedtext> )
+11: FormattedTextElement	-> BoldText													( RHS result )
+12:	FormattedTextElement	-> ItalicText												( RHS result )
+13:	FormattedTextElement	-> StrikedText												( RHS result )
+14:	FormattedTextElement	-> UnderlinedText											( RHS result )
+15:	FormattedTextElement	-> OfftopicText												( RHS result )
+16:	FormattedTextElement	-> SizedText												( RHS result )
+17:	FormattedTextElement	-> ColoredText												( RHS result )
+18: FormattedTextElement	-> LiteralTextElement										( RHS result )
+19:	FormattedTextElement	-> Smiley													( RHS result )
+20:	FormattedTextElement	-> EmailAddress												( RHS result )
+21: FormattedTextElement	-> Link														( <url> Link Result </url> )
+22: LiteralText				-> LiteralTextElement LiteralText							( <literaltext> LiteralTextElement Result  Contents of RHS LiteralText </literaltext> )
+23: LiteralText				-> LiteralTextElement										( <literaltext> LiteralTextElement Result </literaltext> )
+24: LiteralTextElement		-> 'string of chars'										( <literaltextelement> RHS Result </literaltextelement)
+25: LiteralTextElement		-> '[br]'													( <br /> )
+26: QuotedText				-> QuotedTextStart GeneralText QuotedTextEnd				( <quote ...><generaltext>...</generaltext></quote> )
+27: QuotedTextStart			-> '[quote ' 'nick' '=' QuotedString ']'					( <quote nick="value" /> )
+28:	QuotedTextStart			-> '[quote]'												( <quote /> )
+29: QuotedTextEnd			-> '[/quote]'												()
+30: CodeText				-> CodeTextStart LiteralText CodeTextEnd					( <code> LiteralText Result </code> )
+31: CodeTextStart			-> '[code]'													( <code /> )
+32: CodeTextEnd				-> '[/code]'												()
+33: BoldText				-> BoldTextStart FormattedText BoldTextEnd					( <bold> FormattedText Result </bold> )
+34: BoldTextStart			-> '[b]'													( <bold /> )
+35: BoldTextEnd				-> '[/b]'													()
+36: ItalicText				-> ItalicTextStart FormattedText ItalicTextEnd				( <italic> FormattedText Result </italic> )
+37: ItalicTextStart			-> '[i]'													( <italic /> )
+38: ItalicTextEnd			-> '[/i]'													()
+39: StrikedText				-> StrikedTextStart FormattedText StrikedTextEnd			( <striked> FormattedText Result </striked> )
+40: StrikedTextStart		-> '[s]'													( <striked /> )
+41: StrikedTextEnd			-> '[/s]'													()
+42: UnderlinedText			-> UnderlinedTextStart FormattedText UnderlinedTextEnd		( <underlined> FormattedText Result </underlined> )
+43: UnderlinedTextStart		-> '[u]'													( <underlined /> )
+44: UnderlinedTextEnd		-> '[/u]'													()
+45: Image					-> ImageStart ImageURL ImageEnd								( <image ...> ImageURL Result </image> )
+46: ImageStart				-> '[img ' 'alt' '=' QuotedString ']'						( <image alt="value /> )
+47: ImageStart				-> '[img]'													( <image> )
+48: ImageURL				-> ' Image URL ending with jpg, gif or png'					( TextNode with RHS contents )
+49: ImageEnd				-> '[/img]'													()
+50: URL						-> URLStart Link URLEnd										( <url ...> Link Result </url> )
+51: URLStart				-> '[url ' 'description' '=' QuotedString ']'				( <url description="value" /> )
+52: URLStart				-> '[url]'													( <url /> )
+53: URLEnd					-> '[/url]'													()
+54: Link					-> ' URL Starting with http://, https:// or www '			( TextNode with RHS contents )
+55: EmailAddress			-> ' any legitimate emailaddress representation '			( <emailaddress> RHS contents </emailaddress> )
+56: OfftopicText			-> OfftopicTextStart FormattedText OfftopicTextEnd			( <offtopic> FormattedText Result </offtopic>
+57: OfftopicTextStart		-> '[offtopic]'												( <offtopic /> )
+58: OfftopicTextEnd			-> '[/offtopic]'											()
+59: List					-> ListStart ListItems ListEnd								( <list ...> ListItems Result </list> )
+60: ListStart				-> '[list ' 'type' '=' QuotedListType ']'					( <list type="value"> )
+61: ListStart				-> '[list]'													( <list /> )
+62: ListItems				-> ListItem ListItems										( <listitems> ListItem Result  Contents of RHS ListItems </listitems> )
+63: ListItems				-> ListItem													( <listitems> ListItem Result </listitems> )
+64: ListItem				-> '[*]' SpecialText '[/*]'                                 ( <listitem> SpecialText Result </listitem> )
+65: ListEnd					-> '[/list]'												()
+66: SizedText				-> SizedTextStart FormattedText SizedTextEnd				( <sized ...> FormattedText Result </sized> )
+67: SizedTextStart			-> '[size ' 'value' '=' SizeNumber ']'						( <size value="Value" /> )
+68: SizedTextEnd			-> '[/size]'												()
+69: ColoredText				-> ColoredTextStart FormattedText ColoredTextEnd			( <color ...> FormattedText Result </color> )
+70: ColoredTextStart		-> '[color ' 'value' '=' QuotedString ']'					( <color value="Value" /> )
+71: ColoredTextEnd			-> '[/color]'												()
+72: Smiley					-> SmileyLaugh												( RHS Result )
+73: Smiley					-> SmileyAngry												( RHS Result )
+74: Smiley					-> SmileyRegular											( RHS Result )
+75: Smiley					-> SmileyWink												( RHS Result )
+76: Smiley					-> SmileyCool												( RHS Result )
+77: Smiley					-> SmileyTongue												( RHS Result )
+78: Smiley					-> SmileyConfused											( RHS Result )
+79: Smiley					-> SmileyShocked											( RHS Result )
+80: Smiley					-> SmileyDissapointed										( RHS Result )
+81: Smiley					-> SmileySad												( RHS Result )
+82: Smiley					-> SmileyEmbarassed											( RHS Result )
+83: SmileyLaugh				-> ':D'														( <smileylaugh /> )
+84: SmileyAngry				-> ':('														( <smileyangry /> )
+85: SmileyRegular			-> ':)'														( <smileyregular /> )
+86: SmileyWink				-> ';)'														( <smileywink /> )
+87: SmileyCool				-> '8)'														( <smileycool /> )
+88: SmileyTongue			-> ':P'														( <smileytongue /> )
+89: SmileyConfused			-> ':?'														( <smileyconfused /> )
+90: SmileyShocked			-> ':o'														( <smileyshocked /> )
+91: SmileyDissapointed		-> ':/'														( <smileydissapointed /> )
+92: SmileySad				-> ';('														( <smileysad /> )
+93: SmileyEmbarassed		-> ':!'														( <smileyembarrased /> )
+
+
+Example UBB code
+==================
+
+This is example UBB compatible text
+[img alt="picture of me"]http://www.someurl.com/foo.jpg[/img]
+[b][color value="FF0000"]RED[/color] Bold[/b] Normal
+
+In tokens:
+Token							: Literal matched text
+--------------------------------+-------------------------------------------------
+UntokenizedLiteralString		: This
+Whitespace						: (space)
+UntokenizedLiteralString		: is 
+Whitespace						: (space)
+UntokenizedLiteralString		: example 
+Whitespace						: (space)
+UntokenizedLiteralString		: UBB 
+Whitespace						: (space)
+UntokenizedLiteralString		: compatible 
+Whitespace						: (space)
+UntokenizedLiteralString		: text
+CRLF							: \n
+ImageStartTag					: [img
+Whitespace						: (space)
+Alt								: Alt
+Assignment						: =
+QuotedString					: "ThisIsQuoted"
+TagCloseBracket					: ]
+ImageURL						: http://www.mysite.org/foo.jpg
+ImageEndTag						: [/img]
+CRLF							: \n
+BoldStartTag					: [b]
+ColorStartTag					: [color
+Assignment						: =
+QuotedString					: "FF0000"
+TagCloseBracket					: ]
+UntokenizedLiteralString		: RED
+Whitespace						: (space)
+ColorEndTag						: [/color]
+Whitespace						: (space)
+UntokenizedLiteralString		: Bold
+BoldEndTag						: [/b]
+Whitespace						: (space)
+UntokenizedLiteralString		: Normal
+
+
+
+
+
+
+
+
+
+
+
+

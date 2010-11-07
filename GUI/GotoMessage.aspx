@@ -1,0 +1,1 @@
+<%@ Page language="c#" CodeFile="GotoMessage.aspx.cs" Inherits="SD.HnD.GUI.GotoMessage" AutoEventWireup="true" EnableTheming="false" %>

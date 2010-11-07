@@ -1,0 +1,113 @@
+<%--
+
+	Main skin for the LLBLGen Pro theme. 
+
+  --%>
+
+<%-- The logo image as shown in the header of every page --%>
+<asp:Image BorderWidth="0" runat="server" imageurl="pics/LLBLGenProLogo.jpg" SkinId="imgLogo" />
+
+<%-- The link URL of the anchor in which the logo image is placed on every page --%>
+<asp:HyperLink SkinID="lnkLogoLink" runat="server" Target="_blank" NavigateUrl="http://www.llblgen.com"/>
+
+<%-- The imagebutton used to mark a thread done and which is shown when a thread isn't done in message view --%>
+<asp:imagebutton SkinId="btnThreadNotDone" runat="server" imageurl="pics/button_notdone.gif" alternatetext="Mark this thread as done" title="Mark this thread as done" borderwidth="0" />
+
+<%-- The imagebutton used to mark a thread not done and which is shown when a thread is done in message view --%>
+<asp:imagebutton SkinId="btnThreadDone" runat="server" imageurl="pics/button_done.gif" alternatetext="This thread is marked as done" title="This thread is marked as done" borderwidth="0"/>
+
+<%-- The imagebutton used to subscribe to notifications for the current thread in message view--%>
+<asp:imagebutton SkinId="btnSubscribeToThread" runat="server" imageurl="pics/button_subscribetothread.gif" alternatetext="Notify me of thread replies" title="Notify me of thread replies" borderwidth="0"/>
+
+<%-- The imagebutton used to unsubscribe from notifications for the current thread in message view--%>
+<asp:imagebutton SkinId="btnUnsubscribeFromThread" runat="server" imageurl="pics/button_unsubscribefromthread.gif" alternatetext="Don't notify me of thread replies" title="Don't notify me of thread replies" borderwidth="0" />
+
+<%-- The imagebutton used to bookmark the current thread in message view--%>
+<asp:imagebutton SkinId="btnBookmarkThread" runat="server" imageurl="pics/button_bookmark.gif" alternatetext="Add this thread to my bookmarks" title="Add this thread to my bookmarks" borderwidth="0"/>
+
+<%-- The imagebutton used to unbookmark the current thread in message view--%>
+<asp:imagebutton SkinId="btnUnbookmarkThread" runat="server" imageurl="pics/button_unbookmark.gif" alternatetext="Remove this thread from my bookmarks" title="Remove this thread from my bookmarks" borderwidth="0"/>
+
+<%-- The image used for the print button in message view to print the whole thread --%>
+<asp:Image ImageUrl="pics/button_print.gif" AlternateText="Print all messages in this thread" border="0" runat="server" SkinID="imgButtonPrint"/>
+
+<%-- The image used for the move thread button in message view to move a thread --%>
+<asp:Image ImageUrl="pics/button_move.gif" AlternateText="Move this thread to another forum" border="0" runat="server" SkinID="imgButtonMove"/>
+
+<%-- The image used for the delete thread button in message view to delete a thread --%>
+<asp:Image ImageUrl="pics/button_delete.gif" AlternateText="Delete this thread" border="0" runat="server" SkinID="imgButtonDelete"/>
+
+<%-- The image used for the close thread button in message view to close a thread --%>
+<asp:Image ImageUrl="pics/button_close.gif" AlternateText="Close this thread" border="0" runat="server" SkinID="imgButtonClose"/>
+
+<%-- The image used for the thread properties button in message view to view the properties of a thread --%>
+<asp:Image ImageUrl="pics/button_properties.gif"  AlternateText="Edit this thread's properties" border="0" runat="server" SkinID="imgButtonProperties"/>
+
+<%-- The RSS button used in forum/thread views --%>
+<asp:Image SkinId="imgButtonRss" ImageUrl="pics/button_rss.gif" border="0" AlternateText="RSS Feed for this forum" align="absmiddle" runat="Server"/>
+
+<%-- Image used in thread view to show that a sticky thread has new posts --%>
+<asp:image width="15" Height="15" hspace="2" SkinID="imgIconNewPostsSticky" ImageUrl="pics/icon_newposts_sticky.jpg" AlternateText="New messages since your last visit, thread is pinned / sticky." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a sticky thread has no new posts --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPostsSticky" ImageUrl="pics/icon_nonewposts_sticky.jpg" AlternateText="No new messages since your last visit, thread is pinned / sticky." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a normal thread has new posts --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNewPosts" ImageUrl="pics/icon_newposts.jpg" AlternateText="New messages since your last visit." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a normal thread has no new posts --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPosts" ImageUrl="pics/icon_nonewposts.jpg" AlternateText="No new messages since your last visit." border="0"  RunAt="server"/>
+
+<%-- Image used in thread view to show that a closed thread has new posts --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNewPostsClosed" ImageUrl="pics/icon_newposts_locked.jpg" AlternateText="New messages since your last visit, thread is locked / closed." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a closed thread has no new posts --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPostsClosed" ImageUrl="pics/icon_nonewposts_locked.jpg" AlternateText="No new messages since your last visit, thread is locked / closed." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a sticky thread has new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" Height="15" hspace="2" SkinID="imgIconNewPostsStickyAlt" ImageUrl="pics/icon_newposts_sticky_alt.jpg" AlternateText="New messages since your last visit, thread is pinned / sticky." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a sticky thread has no new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPostsStickyAlt" ImageUrl="pics/icon_nonewposts_sticky_alt.jpg" AlternateText="No new messages since your last visit, thread is pinned / sticky." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a normal thread has new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNewPostsAlt" ImageUrl="pics/icon_newposts_alt.jpg" AlternateText="New messages since your last visit." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a normal thread has no new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPostsAlt" ImageUrl="pics/icon_nonewposts_alt.jpg" AlternateText="No new messages since your last visit." border="0"  RunAt="server"/>
+
+<%-- Image used in thread view to show that a closed thread has new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNewPostsClosedAlt" ImageUrl="pics/icon_newposts_locked_alt.jpg" AlternateText="New messages since your last visit, thread is locked / closed." border="0" RunAt="server"/>
+
+<%-- Image used in thread view to show that a closed thread has no new posts. Used on alternate items in the repeater --%>
+<asp:image width="15" height="15" hspace="2" SkinID="imgIconNoNewPostsClosedAlt" ImageUrl="pics/icon_nonewposts_locked_alt.jpg" AlternateText="No new messages since your last visit, thread is locked / closed." border="0" RunAt="server"/>
+
+<%-- Image used in thread lists to show that a thread is marked done --%>
+<asp:image Skinid="imgThreadDoneSmall" align="absmiddle" runat="server" imageurl="pics/button_done_small.gif" alternatetext="This thread is marked as done" title="This thread is marked as done" borderwidth="0" />
+
+<%-- Image used in thread lists to show that a thread isn't yet marked done --%>
+<asp:image Skinid="imgThreadNotDoneSmall" align="absmiddle" runat="server" imageurl="pics/button_notdone_small.gif" alternatetext="This thread is active" title="This thread is active" borderwidth="0" />
+
+<%-- Legend variant of imgIconNoNewPosts --%>
+<asp:Image SkinId="imgIconNoNewPostsLegend" runat="server" ImageUrl="pics/icon_nonewposts_legenda.jpg" border="0"/>
+
+<%-- Legend variant of imgIconNewPosts --%>
+<asp:Image SkinId="imgIconNewPostsLegend" runat="server" ImageUrl="pics/icon_newposts_legenda.jpg" border="0"/>
+
+<%-- Legend variant of imgIconNoNewPostsClosed --%>
+<asp:Image SkinId="imgIconNoNewPostsClosedLegend" runat="server" ImageUrl="pics/icon_nonewposts_locked_legenda.jpg" border="0"/>
+
+<%-- Legend variant of imgIconNewPostsClosed --%>
+<asp:Image SkinId="imgIconNewPostsClosedLegend" runat="server" ImageUrl="pics/icon_newposts_locked_legenda.jpg" border="0"/>
+
+<%-- Legend variant of imgIconNoNewPostsSticky --%>
+<asp:Image SkinId="imgIconNoNewPostsStickyLegend" runat="server" ImageUrl="pics/icon_nonewposts_sticky_legenda.jpg" border="0"/>
+
+<%-- Legend variant of imgIconNewPostsSticky --%>
+<asp:Image SkinId="imgIconNewPostsStickyLegend" runat="server" ImageUrl="pics/icon_newposts_sticky_legenda.jpg" border="0"/>
+
+<%-- Image used for the Expand section button of the front page --%>
+<asp:Image SkinId="imgButtonExpand" ImageUrl="pics/button_expand.gif" border="0" AlternateText="Expand section" runat="Server"/>
+
+<%-- Image used for the Collapse section button of the front page --%>
+<asp:Image SkinId="imgButtonCollapse" ImageUrl="pics/button_collapse.gif" border="0" AlternateText="Collapse section" runat="Server"/>
