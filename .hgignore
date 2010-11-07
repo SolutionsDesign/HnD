@@ -1,0 +1,9 @@
+glob:BL/bin/
+glob:DAL/bin/
+glob:DAL/obj/
+glob:GUI/bin/
+glob:BL/obj/
+glob:Utility/bin/
+glob:GUI/Bin/
+glob:Utility/obj/
+glob:*.suo
