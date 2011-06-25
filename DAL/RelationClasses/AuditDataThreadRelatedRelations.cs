@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -17,7 +17,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.RelationClasses
 {
-	/// <summary>Implements the static Relations variant for the entity: AuditDataThreadRelated. </summary>
+	/// <summary>Implements the relations factory for the entity: AuditDataThreadRelated. </summary>
 	public partial class AuditDataThreadRelatedRelations : AuditDataCoreRelations
 	{
 		/// <summary>CTor</summary>
@@ -114,5 +114,18 @@ namespace SD.HnD.DAL.RelationClasses
 		#region Included Code
 
 		#endregion
+	}
+	
+	/// <summary>Static class which is used for providing relationship instances which are re-used internally for syncing</summary>
+	internal static class StaticAuditDataThreadRelatedRelations
+	{
+		internal static readonly IEntityRelation AuditActionEntityUsingAuditActionIDStatic = new AuditDataThreadRelatedRelations().AuditActionEntityUsingAuditActionID;
+		internal static readonly IEntityRelation ThreadEntityUsingThreadIDStatic = new AuditDataThreadRelatedRelations().ThreadEntityUsingThreadID;
+		internal static readonly IEntityRelation UserEntityUsingUserIDStatic = new AuditDataThreadRelatedRelations().UserEntityUsingUserID;
+
+		/// <summary>CTor</summary>
+		static StaticAuditDataThreadRelatedRelations()
+		{
+		}
 	}
 }

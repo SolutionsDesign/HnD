@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -529,22 +529,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _role;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_actionRight!=null)
-			{
-				_actionRight.ActiveContext = this.ActiveContext;
-			}
-			if(_forum!=null)
-			{
-				_forum.ActiveContext = this.ActiveContext;
-			}
-			if(_role!=null)
-			{
-				_role.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -594,7 +578,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_actionRightReturnsNewIfNotFound = true;
+		{
+			_actionRightReturnsNewIfNotFound = true;
 			_forumReturnsNewIfNotFound = true;
 			_roleReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
@@ -625,7 +610,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncActionRight(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _actionRight, new PropertyChangedEventHandler( OnActionRightPropertyChanged ), "ActionRight", ForumRoleForumActionRightEntity.Relations.ActionRightEntityUsingActionRightID, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.ActionRightID } );		
+			this.PerformDesetupSyncRelatedEntity( _actionRight, new PropertyChangedEventHandler( OnActionRightPropertyChanged ), "ActionRight", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.ActionRightEntityUsingActionRightIDStatic, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.ActionRightID } );		
 			_actionRight = null;
 		}
 		
@@ -637,7 +622,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncActionRight(true, true);
 				_actionRight = (ActionRightEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _actionRight, new PropertyChangedEventHandler( OnActionRightPropertyChanged ), "ActionRight", ForumRoleForumActionRightEntity.Relations.ActionRightEntityUsingActionRightID, true, ref _alreadyFetchedActionRight, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _actionRight, new PropertyChangedEventHandler( OnActionRightPropertyChanged ), "ActionRight", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.ActionRightEntityUsingActionRightIDStatic, true, ref _alreadyFetchedActionRight, new string[] {  } );
 			}
 		}
 
@@ -658,7 +643,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncForum(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ForumRoleForumActionRightEntity.Relations.ForumEntityUsingForumID, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.ForumID } );		
+			this.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.ForumEntityUsingForumIDStatic, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.ForumID } );		
 			_forum = null;
 		}
 		
@@ -670,7 +655,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncForum(true, true);
 				_forum = (ForumEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ForumRoleForumActionRightEntity.Relations.ForumEntityUsingForumID, true, ref _alreadyFetchedForum, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.ForumEntityUsingForumIDStatic, true, ref _alreadyFetchedForum, new string[] {  } );
 			}
 		}
 
@@ -691,7 +676,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncRole(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", ForumRoleForumActionRightEntity.Relations.RoleEntityUsingRoleID, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.RoleID } );		
+			this.PerformDesetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.RoleEntityUsingRoleIDStatic, true, signalRelatedEntity, "ForumRoleForumActionRights", resetFKFields, new int[] { (int)ForumRoleForumActionRightFieldIndex.RoleID } );		
 			_role = null;
 		}
 		
@@ -703,7 +688,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncRole(true, true);
 				_role = (RoleEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", ForumRoleForumActionRightEntity.Relations.RoleEntityUsingRoleID, true, ref _alreadyFetchedRole, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _role, new PropertyChangedEventHandler( OnRolePropertyChanged ), "Role", SD.HnD.DAL.RelationClasses.StaticForumRoleForumActionRightRelations.RoleEntityUsingRoleIDStatic, true, ref _alreadyFetchedRole, new string[] {  } );
 			}
 		}
 

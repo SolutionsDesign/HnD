@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -17,7 +17,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.RelationClasses
 {
-	/// <summary>Implements the static Relations variant for the entity: User. </summary>
+	/// <summary>Implements the relations factory for the entity: User. </summary>
 	public partial class UserRelations
 	{
 		/// <summary>CTor</summary>
@@ -204,5 +204,25 @@ namespace SD.HnD.DAL.RelationClasses
 		#region Included Code
 
 		#endregion
+	}
+	
+	/// <summary>Static class which is used for providing relationship instances which are re-used internally for syncing</summary>
+	internal static class StaticUserRelations
+	{
+		internal static readonly IEntityRelation AuditDataCoreEntityUsingUserIDStatic = new UserRelations().AuditDataCoreEntityUsingUserID;
+		internal static readonly IEntityRelation BookmarkEntityUsingUserIDStatic = new UserRelations().BookmarkEntityUsingUserID;
+		internal static readonly IEntityRelation IPBanEntityUsingIPBanSetByUserIDStatic = new UserRelations().IPBanEntityUsingIPBanSetByUserID;
+		internal static readonly IEntityRelation MessageEntityUsingPostedByUserIDStatic = new UserRelations().MessageEntityUsingPostedByUserID;
+		internal static readonly IEntityRelation RoleUserEntityUsingUserIDStatic = new UserRelations().RoleUserEntityUsingUserID;
+		internal static readonly IEntityRelation SupportQueueThreadEntityUsingClaimedByUserIDStatic = new UserRelations().SupportQueueThreadEntityUsingClaimedByUserID;
+		internal static readonly IEntityRelation SupportQueueThreadEntityUsingPlacedInQueueByUserIDStatic = new UserRelations().SupportQueueThreadEntityUsingPlacedInQueueByUserID;
+		internal static readonly IEntityRelation ThreadEntityUsingStartedByUserIDStatic = new UserRelations().ThreadEntityUsingStartedByUserID;
+		internal static readonly IEntityRelation ThreadSubscriptionEntityUsingUserIDStatic = new UserRelations().ThreadSubscriptionEntityUsingUserID;
+		internal static readonly IEntityRelation UserTitleEntityUsingUserTitleIDStatic = new UserRelations().UserTitleEntityUsingUserTitleID;
+
+		/// <summary>CTor</summary>
+		static StaticUserRelations()
+		{
+		}
 	}
 }

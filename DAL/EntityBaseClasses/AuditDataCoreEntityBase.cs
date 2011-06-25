@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -483,18 +483,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _userAudited;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_auditAction!=null)
-			{
-				_auditAction.ActiveContext = this.ActiveContext;
-			}
-			if(_userAudited!=null)
-			{
-				_userAudited.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -541,7 +529,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_auditActionReturnsNewIfNotFound = true;
+		{
+			_auditActionReturnsNewIfNotFound = true;
 			_userAuditedReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
 
@@ -573,7 +562,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncAuditAction(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", AuditDataCoreEntity.Relations.AuditActionEntityUsingAuditActionID, true, signalRelatedEntity, "AuditDataCore", resetFKFields, new int[] { (int)AuditDataCoreFieldIndex.AuditActionID } );		
+			this.PerformDesetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", SD.HnD.DAL.RelationClasses.StaticAuditDataCoreRelations.AuditActionEntityUsingAuditActionIDStatic, true, signalRelatedEntity, "AuditDataCore", resetFKFields, new int[] { (int)AuditDataCoreFieldIndex.AuditActionID } );		
 			_auditAction = null;
 		}
 		
@@ -585,7 +574,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncAuditAction(true, true);
 				_auditAction = (AuditActionEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", AuditDataCoreEntity.Relations.AuditActionEntityUsingAuditActionID, true, ref _alreadyFetchedAuditAction, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _auditAction, new PropertyChangedEventHandler( OnAuditActionPropertyChanged ), "AuditAction", SD.HnD.DAL.RelationClasses.StaticAuditDataCoreRelations.AuditActionEntityUsingAuditActionIDStatic, true, ref _alreadyFetchedAuditAction, new string[] {  } );
 			}
 		}
 
@@ -606,7 +595,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncUserAudited(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _userAudited, new PropertyChangedEventHandler( OnUserAuditedPropertyChanged ), "UserAudited", AuditDataCoreEntity.Relations.UserEntityUsingUserID, true, signalRelatedEntity, "LoggedAudits", resetFKFields, new int[] { (int)AuditDataCoreFieldIndex.UserID } );		
+			this.PerformDesetupSyncRelatedEntity( _userAudited, new PropertyChangedEventHandler( OnUserAuditedPropertyChanged ), "UserAudited", SD.HnD.DAL.RelationClasses.StaticAuditDataCoreRelations.UserEntityUsingUserIDStatic, true, signalRelatedEntity, "LoggedAudits", resetFKFields, new int[] { (int)AuditDataCoreFieldIndex.UserID } );		
 			_userAudited = null;
 		}
 		
@@ -618,7 +607,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncUserAudited(true, true);
 				_userAudited = (UserEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _userAudited, new PropertyChangedEventHandler( OnUserAuditedPropertyChanged ), "UserAudited", AuditDataCoreEntity.Relations.UserEntityUsingUserID, true, ref _alreadyFetchedUserAudited, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _userAudited, new PropertyChangedEventHandler( OnUserAuditedPropertyChanged ), "UserAudited", SD.HnD.DAL.RelationClasses.StaticAuditDataCoreRelations.UserEntityUsingUserIDStatic, true, ref _alreadyFetchedUserAudited, new string[] {  } );
 			}
 		}
 

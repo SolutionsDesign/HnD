@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -355,14 +355,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _setByUser;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_setByUser!=null)
-			{
-				_setByUser.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -408,7 +400,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_setByUserReturnsNewIfNotFound = true;
+		{
+			_setByUserReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
@@ -449,7 +442,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncSetByUser(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _setByUser, new PropertyChangedEventHandler( OnSetByUserPropertyChanged ), "SetByUser", IPBanEntity.Relations.UserEntityUsingIPBanSetByUserID, true, signalRelatedEntity, "IPBansSet", resetFKFields, new int[] { (int)IPBanFieldIndex.IPBanSetByUserID } );		
+			this.PerformDesetupSyncRelatedEntity( _setByUser, new PropertyChangedEventHandler( OnSetByUserPropertyChanged ), "SetByUser", SD.HnD.DAL.RelationClasses.StaticIPBanRelations.UserEntityUsingIPBanSetByUserIDStatic, true, signalRelatedEntity, "IPBansSet", resetFKFields, new int[] { (int)IPBanFieldIndex.IPBanSetByUserID } );		
 			_setByUser = null;
 		}
 		
@@ -461,7 +454,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncSetByUser(true, true);
 				_setByUser = (UserEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _setByUser, new PropertyChangedEventHandler( OnSetByUserPropertyChanged ), "SetByUser", IPBanEntity.Relations.UserEntityUsingIPBanSetByUserID, true, ref _alreadyFetchedSetByUser, new string[] { "SetByUserNickName" } );
+				this.PerformSetupSyncRelatedEntity( _setByUser, new PropertyChangedEventHandler( OnSetByUserPropertyChanged ), "SetByUser", SD.HnD.DAL.RelationClasses.StaticIPBanRelations.UserEntityUsingIPBanSetByUserIDStatic, true, ref _alreadyFetchedSetByUser, new string[] { "SetByUserNickName" } );
 			}
 		}
 

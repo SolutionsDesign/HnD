@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -1026,29 +1026,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _supportQueueThread;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			_auditDataThreadRelated.ActiveContext = this.ActiveContext;
-			_presentInBookmarks.ActiveContext = this.ActiveContext;
-			_messages.ActiveContext = this.ActiveContext;
-			_threadSubscription.ActiveContext = this.ActiveContext;
-			_usersWhoBookmarkedThread.ActiveContext = this.ActiveContext;
-			_usersWhoPostedInThread.ActiveContext = this.ActiveContext;
-			_usersWhoSubscribedThread.ActiveContext = this.ActiveContext;
-			if(_forum!=null)
-			{
-				_forum.ActiveContext = this.ActiveContext;
-			}
-			if(_userWhoStartedThread!=null)
-			{
-				_userWhoStartedThread.ActiveContext = this.ActiveContext;
-			}
-			if(_supportQueueThread!=null)
-			{
-				_supportQueueThread.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -1104,6 +1081,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
+
 			_auditDataThreadRelated = new SD.HnD.DAL.CollectionClasses.AuditDataThreadRelatedCollection();
 			_auditDataThreadRelated.SetContainingEntityInfo(this, "Thread");
 
@@ -1163,7 +1141,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncForum(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, signalRelatedEntity, "Threads", resetFKFields, new int[] { (int)ThreadFieldIndex.ForumID } );		
+			this.PerformDesetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", SD.HnD.DAL.RelationClasses.StaticThreadRelations.ForumEntityUsingForumIDStatic, true, signalRelatedEntity, "Threads", resetFKFields, new int[] { (int)ThreadFieldIndex.ForumID } );		
 			_forum = null;
 		}
 		
@@ -1175,7 +1153,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncForum(true, true);
 				_forum = (ForumEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", ThreadEntity.Relations.ForumEntityUsingForumID, true, ref _alreadyFetchedForum, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _forum, new PropertyChangedEventHandler( OnForumPropertyChanged ), "Forum", SD.HnD.DAL.RelationClasses.StaticThreadRelations.ForumEntityUsingForumIDStatic, true, ref _alreadyFetchedForum, new string[] {  } );
 			}
 		}
 
@@ -1196,7 +1174,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncUserWhoStartedThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, signalRelatedEntity, "StartedThreads", resetFKFields, new int[] { (int)ThreadFieldIndex.StartedByUserID } );		
+			this.PerformDesetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", SD.HnD.DAL.RelationClasses.StaticThreadRelations.UserEntityUsingStartedByUserIDStatic, true, signalRelatedEntity, "StartedThreads", resetFKFields, new int[] { (int)ThreadFieldIndex.StartedByUserID } );		
 			_userWhoStartedThread = null;
 		}
 		
@@ -1208,7 +1186,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncUserWhoStartedThread(true, true);
 				_userWhoStartedThread = (UserEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", ThreadEntity.Relations.UserEntityUsingStartedByUserID, true, ref _alreadyFetchedUserWhoStartedThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _userWhoStartedThread, new PropertyChangedEventHandler( OnUserWhoStartedThreadPropertyChanged ), "UserWhoStartedThread", SD.HnD.DAL.RelationClasses.StaticThreadRelations.UserEntityUsingStartedByUserIDStatic, true, ref _alreadyFetchedUserWhoStartedThread, new string[] {  } );
 			}
 		}
 
@@ -1229,7 +1207,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncSupportQueueThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", Relations.SupportQueueThreadEntityUsingThreadID, false, signalRelatedEntity, "Thread", false, new int[] { (int)ThreadFieldIndex.ThreadID } );
+			this.PerformDesetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", SD.HnD.DAL.RelationClasses.StaticThreadRelations.SupportQueueThreadEntityUsingThreadIDStatic, false, signalRelatedEntity, "Thread", false, new int[] { (int)ThreadFieldIndex.ThreadID } );
 			_supportQueueThread = null;
 		}
 	
@@ -1241,7 +1219,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{
 				DesetupSyncSupportQueueThread(true, true);
 				_supportQueueThread = (SupportQueueThreadEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", Relations.SupportQueueThreadEntityUsingThreadID, false, ref _alreadyFetchedSupportQueueThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _supportQueueThread, new PropertyChangedEventHandler( OnSupportQueueThreadPropertyChanged ), "SupportQueueThread", SD.HnD.DAL.RelationClasses.StaticThreadRelations.SupportQueueThreadEntityUsingThreadIDStatic, false, ref _alreadyFetchedSupportQueueThread, new string[] {  } );
 			}
 		}
 		

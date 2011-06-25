@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -366,15 +366,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _message;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_message!=null)
-			{
-				_message.ActiveContext = this.ActiveContext;
-			}
-			base.AddInternalsToContext();
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -402,7 +393,6 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		private void InitClassFetch(System.Int32 auditDataID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
-
 			InitClassMembers();	
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
@@ -412,7 +402,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_messageReturnsNewIfNotFound = true;
+		{
+			_messageReturnsNewIfNotFound = true;
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
@@ -436,7 +427,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncMessage(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _message, new PropertyChangedEventHandler( OnMessagePropertyChanged ), "Message", AuditDataMessageRelatedEntity.Relations.MessageEntityUsingMessageID, true, signalRelatedEntity, "AuditDataMessageRelated", resetFKFields, new int[] { (int)AuditDataMessageRelatedFieldIndex.MessageID } );		
+			this.PerformDesetupSyncRelatedEntity( _message, new PropertyChangedEventHandler( OnMessagePropertyChanged ), "Message", SD.HnD.DAL.RelationClasses.StaticAuditDataMessageRelatedRelations.MessageEntityUsingMessageIDStatic, true, signalRelatedEntity, "AuditDataMessageRelated", resetFKFields, new int[] { (int)AuditDataMessageRelatedFieldIndex.MessageID } );		
 			_message = null;
 		}
 		
@@ -448,7 +439,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncMessage(true, true);
 				_message = (MessageEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _message, new PropertyChangedEventHandler( OnMessagePropertyChanged ), "Message", AuditDataMessageRelatedEntity.Relations.MessageEntityUsingMessageID, true, ref _alreadyFetchedMessage, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _message, new PropertyChangedEventHandler( OnMessagePropertyChanged ), "Message", SD.HnD.DAL.RelationClasses.StaticAuditDataMessageRelatedRelations.MessageEntityUsingMessageIDStatic, true, ref _alreadyFetchedMessage, new string[] {  } );
 			}
 		}
 

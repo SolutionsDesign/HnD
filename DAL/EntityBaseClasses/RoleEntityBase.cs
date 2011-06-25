@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -949,19 +949,6 @@ namespace SD.HnD.DAL.EntityClasses
 			_users.MaxNumberOfItemsToReturn=maxNumberOfItemsToReturn;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			_forumRoleForumActionRights.ActiveContext = this.ActiveContext;
-			_roleAuditAction.ActiveContext = this.ActiveContext;
-			_roleSystemActionRights.ActiveContext = this.ActiveContext;
-			_roleUser.ActiveContext = this.ActiveContext;
-			_systemDataAnonymousRole.ActiveContext = this.ActiveContext;
-			_systemDataDefaultRoleNewUser.ActiveContext = this.ActiveContext;
-			_assignedSystemActionRights.ActiveContext = this.ActiveContext;
-			_assignedAuditActions.ActiveContext = this.ActiveContext;
-			_users.ActiveContext = this.ActiveContext;
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -1016,6 +1003,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
+
 			_forumRoleForumActionRights = new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection();
 			_forumRoleForumActionRights.SetContainingEntityInfo(this, "Role");
 

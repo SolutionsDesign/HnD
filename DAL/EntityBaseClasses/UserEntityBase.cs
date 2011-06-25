@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -1466,28 +1466,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _userTitle;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			_loggedAudits.ActiveContext = this.ActiveContext;
-			_bookmarks.ActiveContext = this.ActiveContext;
-			_iPBansSet.ActiveContext = this.ActiveContext;
-			_postedMessages.ActiveContext = this.ActiveContext;
-			_roleUser.ActiveContext = this.ActiveContext;
-			_supportQueueThreadsClaimed.ActiveContext = this.ActiveContext;
-			_supportQueueThreadsPlaced.ActiveContext = this.ActiveContext;
-			_startedThreads.ActiveContext = this.ActiveContext;
-			_threadSubscription.ActiveContext = this.ActiveContext;
-			_startedThreadsInForums.ActiveContext = this.ActiveContext;
-			_roles.ActiveContext = this.ActiveContext;
-			_threadsInBookmarks.ActiveContext = this.ActiveContext;
-			_postedMessagesInThreads.ActiveContext = this.ActiveContext;
-			_threadCollectionViaThreadSubscription.ActiveContext = this.ActiveContext;
-			if(_userTitle!=null)
-			{
-				_userTitle.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -1548,6 +1526,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
+
 			_loggedAudits = new SD.HnD.DAL.CollectionClasses.AuditDataCoreCollection();
 			_loggedAudits.SetContainingEntityInfo(this, "UserAudited");
 
@@ -1642,7 +1621,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncUserTitle(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _userTitle, new PropertyChangedEventHandler( OnUserTitlePropertyChanged ), "UserTitle", UserEntity.Relations.UserTitleEntityUsingUserTitleID, true, signalRelatedEntity, "Users", resetFKFields, new int[] { (int)UserFieldIndex.UserTitleID } );		
+			this.PerformDesetupSyncRelatedEntity( _userTitle, new PropertyChangedEventHandler( OnUserTitlePropertyChanged ), "UserTitle", SD.HnD.DAL.RelationClasses.StaticUserRelations.UserTitleEntityUsingUserTitleIDStatic, true, signalRelatedEntity, "Users", resetFKFields, new int[] { (int)UserFieldIndex.UserTitleID } );		
 			_userTitle = null;
 		}
 		
@@ -1654,7 +1633,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncUserTitle(true, true);
 				_userTitle = (UserTitleEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _userTitle, new PropertyChangedEventHandler( OnUserTitlePropertyChanged ), "UserTitle", UserEntity.Relations.UserTitleEntityUsingUserTitleID, true, ref _alreadyFetchedUserTitle, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _userTitle, new PropertyChangedEventHandler( OnUserTitlePropertyChanged ), "UserTitle", SD.HnD.DAL.RelationClasses.StaticUserRelations.UserTitleEntityUsingUserTitleIDStatic, true, ref _alreadyFetchedUserTitle, new string[] {  } );
 			}
 		}
 

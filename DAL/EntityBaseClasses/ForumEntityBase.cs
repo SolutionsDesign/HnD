@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -661,21 +661,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _defaultSupportQueue;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			_forumRoleForumActionRights.ActiveContext = this.ActiveContext;
-			_threads.ActiveContext = this.ActiveContext;
-			_usersWhoStartedThreads.ActiveContext = this.ActiveContext;
-			if(_section!=null)
-			{
-				_section.ActiveContext = this.ActiveContext;
-			}
-			if(_defaultSupportQueue!=null)
-			{
-				_defaultSupportQueue.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -726,6 +711,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
+
 			_forumRoleForumActionRights = new SD.HnD.DAL.CollectionClasses.ForumRoleForumActionRightCollection();
 			_forumRoleForumActionRights.SetContainingEntityInfo(this, "Forum");
 
@@ -782,7 +768,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncSection(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, signalRelatedEntity, "Forums", resetFKFields, new int[] { (int)ForumFieldIndex.SectionID } );		
+			this.PerformDesetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", SD.HnD.DAL.RelationClasses.StaticForumRelations.SectionEntityUsingSectionIDStatic, true, signalRelatedEntity, "Forums", resetFKFields, new int[] { (int)ForumFieldIndex.SectionID } );		
 			_section = null;
 		}
 		
@@ -794,7 +780,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncSection(true, true);
 				_section = (SectionEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", ForumEntity.Relations.SectionEntityUsingSectionID, true, ref _alreadyFetchedSection, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _section, new PropertyChangedEventHandler( OnSectionPropertyChanged ), "Section", SD.HnD.DAL.RelationClasses.StaticForumRelations.SectionEntityUsingSectionIDStatic, true, ref _alreadyFetchedSection, new string[] {  } );
 			}
 		}
 
@@ -815,7 +801,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncDefaultSupportQueue(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, signalRelatedEntity, "DefaultForForums", resetFKFields, new int[] { (int)ForumFieldIndex.DefaultSupportQueueID } );		
+			this.PerformDesetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", SD.HnD.DAL.RelationClasses.StaticForumRelations.SupportQueueEntityUsingDefaultSupportQueueIDStatic, true, signalRelatedEntity, "DefaultForForums", resetFKFields, new int[] { (int)ForumFieldIndex.DefaultSupportQueueID } );		
 			_defaultSupportQueue = null;
 		}
 		
@@ -827,7 +813,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncDefaultSupportQueue(true, true);
 				_defaultSupportQueue = (SupportQueueEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", ForumEntity.Relations.SupportQueueEntityUsingDefaultSupportQueueID, true, ref _alreadyFetchedDefaultSupportQueue, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _defaultSupportQueue, new PropertyChangedEventHandler( OnDefaultSupportQueuePropertyChanged ), "DefaultSupportQueue", SD.HnD.DAL.RelationClasses.StaticForumRelations.SupportQueueEntityUsingDefaultSupportQueueIDStatic, true, ref _alreadyFetchedDefaultSupportQueue, new string[] {  } );
 			}
 		}
 

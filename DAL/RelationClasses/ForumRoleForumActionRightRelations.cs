@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -17,7 +17,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DAL.RelationClasses
 {
-	/// <summary>Implements the static Relations variant for the entity: ForumRoleForumActionRight. </summary>
+	/// <summary>Implements the relations factory for the entity: ForumRoleForumActionRight. </summary>
 	public partial class ForumRoleForumActionRightRelations
 	{
 		/// <summary>CTor</summary>
@@ -91,5 +91,18 @@ namespace SD.HnD.DAL.RelationClasses
 		#region Included Code
 
 		#endregion
+	}
+	
+	/// <summary>Static class which is used for providing relationship instances which are re-used internally for syncing</summary>
+	internal static class StaticForumRoleForumActionRightRelations
+	{
+		internal static readonly IEntityRelation ActionRightEntityUsingActionRightIDStatic = new ForumRoleForumActionRightRelations().ActionRightEntityUsingActionRightID;
+		internal static readonly IEntityRelation ForumEntityUsingForumIDStatic = new ForumRoleForumActionRightRelations().ForumEntityUsingForumID;
+		internal static readonly IEntityRelation RoleEntityUsingRoleIDStatic = new ForumRoleForumActionRightRelations().RoleEntityUsingRoleID;
+
+		/// <summary>CTor</summary>
+		static StaticForumRoleForumActionRightRelations()
+		{
+		}
 	}
 }

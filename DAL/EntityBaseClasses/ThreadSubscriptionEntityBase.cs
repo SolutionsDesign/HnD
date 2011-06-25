@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -442,18 +442,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _user;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_thread!=null)
-			{
-				_thread.ActiveContext = this.ActiveContext;
-			}
-			if(_user!=null)
-			{
-				_user.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -501,7 +489,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_threadReturnsNewIfNotFound = true;
+		{
+			_threadReturnsNewIfNotFound = true;
 			_userReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
 
@@ -529,7 +518,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", ThreadSubscriptionEntity.Relations.ThreadEntityUsingThreadID, true, signalRelatedEntity, "ThreadSubscription", resetFKFields, new int[] { (int)ThreadSubscriptionFieldIndex.ThreadID } );		
+			this.PerformDesetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", SD.HnD.DAL.RelationClasses.StaticThreadSubscriptionRelations.ThreadEntityUsingThreadIDStatic, true, signalRelatedEntity, "ThreadSubscription", resetFKFields, new int[] { (int)ThreadSubscriptionFieldIndex.ThreadID } );		
 			_thread = null;
 		}
 		
@@ -541,7 +530,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncThread(true, true);
 				_thread = (ThreadEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", ThreadSubscriptionEntity.Relations.ThreadEntityUsingThreadID, true, ref _alreadyFetchedThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", SD.HnD.DAL.RelationClasses.StaticThreadSubscriptionRelations.ThreadEntityUsingThreadIDStatic, true, ref _alreadyFetchedThread, new string[] {  } );
 			}
 		}
 
@@ -562,7 +551,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncUser(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _user, new PropertyChangedEventHandler( OnUserPropertyChanged ), "User", ThreadSubscriptionEntity.Relations.UserEntityUsingUserID, true, signalRelatedEntity, "ThreadSubscription", resetFKFields, new int[] { (int)ThreadSubscriptionFieldIndex.UserID } );		
+			this.PerformDesetupSyncRelatedEntity( _user, new PropertyChangedEventHandler( OnUserPropertyChanged ), "User", SD.HnD.DAL.RelationClasses.StaticThreadSubscriptionRelations.UserEntityUsingUserIDStatic, true, signalRelatedEntity, "ThreadSubscription", resetFKFields, new int[] { (int)ThreadSubscriptionFieldIndex.UserID } );		
 			_user = null;
 		}
 		
@@ -574,7 +563,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncUser(true, true);
 				_user = (UserEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _user, new PropertyChangedEventHandler( OnUserPropertyChanged ), "User", ThreadSubscriptionEntity.Relations.UserEntityUsingUserID, true, ref _alreadyFetchedUser, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _user, new PropertyChangedEventHandler( OnUserPropertyChanged ), "User", SD.HnD.DAL.RelationClasses.StaticThreadSubscriptionRelations.UserEntityUsingUserIDStatic, true, ref _alreadyFetchedUser, new string[] {  } );
 			}
 		}
 

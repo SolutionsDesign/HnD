@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -54,16 +54,14 @@ namespace SD.HnD.DAL.DaoClasses
 			DynamicQueryEngine.ArithAbortOn = value;
 		}
 
-		/// <summary>Compatibility level used by the DQE. Default is SqlServer2000. To utilize SqlServer 2005 specific features, set this parameter 
-		/// to SqlServer2005, either through a setting in the .config file of your application or by setting this parameter once in your application.
+		/// <summary>Sets the default compatibility level used by the DQE. Default is SqlServer2005. This is a global setting.
 		/// Compatibility level influences the query generated for paging, sequence name (@@IDENTITY/SCOPE_IDENTITY()), and usage of newsequenceid() in inserts. 
-		/// It also influences the provider to use. This way you can switch between SqlServer server client 'SqlClient' and SqlServer CE Desktop.</summary>
+		/// It also influences the ado.net provider to use. This way you can switch between SqlServer server client 'SqlClient' and SqlServer CE Desktop.</summary>
 		/// <remarks>Setting this property will overrule a similar setting in the .config file. Don't set this property when queries are executed as
-		/// it might switch factories for ADO.NET elements which could result in undefined behavior. Set this property at startup of your application as it's
-		/// a global setting (affects all queries in your application using this DQE)</remarks>
+		/// it might switch factories for ADO.NET elements which could result in undefined behavior so set this property at startup of your application</remarks>
 		public static void SetSqlServerCompatibilityLevel(SqlServerCompatibilityLevel compatibilityLevel)
 		{
-			DynamicQueryEngine.CompatibilityLevel = compatibilityLevel;
+			DynamicQueryEngine.DefaultCompatibilityLevel = compatibilityLevel;
 		}
 #endif 
 		/// <summary>Gets the connection string.</summary>

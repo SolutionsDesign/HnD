@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -601,20 +601,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _postedByUser;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			_attachments.ActiveContext = this.ActiveContext;
-			_auditDataMessageRelated.ActiveContext = this.ActiveContext;
-			if(_thread!=null)
-			{
-				_thread.ActiveContext = this.ActiveContext;
-			}
-			if(_postedByUser!=null)
-			{
-				_postedByUser.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -664,6 +650,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
 		{
+
 			_attachments = new SD.HnD.DAL.CollectionClasses.AttachmentCollection();
 			_attachments.SetContainingEntityInfo(this, "BelongsToMessage");
 
@@ -711,7 +698,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncThread(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", MessageEntity.Relations.ThreadEntityUsingThreadID, true, signalRelatedEntity, "Messages", resetFKFields, new int[] { (int)MessageFieldIndex.ThreadID } );		
+			this.PerformDesetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", SD.HnD.DAL.RelationClasses.StaticMessageRelations.ThreadEntityUsingThreadIDStatic, true, signalRelatedEntity, "Messages", resetFKFields, new int[] { (int)MessageFieldIndex.ThreadID } );		
 			_thread = null;
 		}
 		
@@ -723,7 +710,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncThread(true, true);
 				_thread = (ThreadEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", MessageEntity.Relations.ThreadEntityUsingThreadID, true, ref _alreadyFetchedThread, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _thread, new PropertyChangedEventHandler( OnThreadPropertyChanged ), "Thread", SD.HnD.DAL.RelationClasses.StaticMessageRelations.ThreadEntityUsingThreadIDStatic, true, ref _alreadyFetchedThread, new string[] {  } );
 			}
 		}
 
@@ -744,7 +731,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncPostedByUser(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _postedByUser, new PropertyChangedEventHandler( OnPostedByUserPropertyChanged ), "PostedByUser", MessageEntity.Relations.UserEntityUsingPostedByUserID, true, signalRelatedEntity, "PostedMessages", resetFKFields, new int[] { (int)MessageFieldIndex.PostedByUserID } );		
+			this.PerformDesetupSyncRelatedEntity( _postedByUser, new PropertyChangedEventHandler( OnPostedByUserPropertyChanged ), "PostedByUser", SD.HnD.DAL.RelationClasses.StaticMessageRelations.UserEntityUsingPostedByUserIDStatic, true, signalRelatedEntity, "PostedMessages", resetFKFields, new int[] { (int)MessageFieldIndex.PostedByUserID } );		
 			_postedByUser = null;
 		}
 		
@@ -756,7 +743,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncPostedByUser(true, true);
 				_postedByUser = (UserEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _postedByUser, new PropertyChangedEventHandler( OnPostedByUserPropertyChanged ), "PostedByUser", MessageEntity.Relations.UserEntityUsingPostedByUserID, true, ref _alreadyFetchedPostedByUser, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _postedByUser, new PropertyChangedEventHandler( OnPostedByUserPropertyChanged ), "PostedByUser", SD.HnD.DAL.RelationClasses.StaticMessageRelations.UserEntityUsingPostedByUserIDStatic, true, ref _alreadyFetchedPostedByUser, new string[] {  } );
 			}
 		}
 

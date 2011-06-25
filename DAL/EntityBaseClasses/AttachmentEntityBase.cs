@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.0
+// Code is generated using LLBLGen Pro version: 3.1
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -355,14 +355,6 @@ namespace SD.HnD.DAL.EntityClasses
 			return _belongsToMessage;
 		}
 
-		/// <summary> Adds the internals to the active context. </summary>
-		protected override void AddInternalsToContext()
-		{
-			if(_belongsToMessage!=null)
-			{
-				_belongsToMessage.ActiveContext = this.ActiveContext;
-			}
-		}
 
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
@@ -408,7 +400,8 @@ namespace SD.HnD.DAL.EntityClasses
 
 		/// <summary> Initializes the class members</summary>
 		private void InitClassMembers()
-		{			_belongsToMessageReturnsNewIfNotFound = true;
+		{
+			_belongsToMessageReturnsNewIfNotFound = true;
 			PerformDependencyInjection();
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
@@ -445,7 +438,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="resetFKFields">if set to true it will also reset the FK fields pointing to the related entity</param>
 		private void DesetupSyncBelongsToMessage(bool signalRelatedEntity, bool resetFKFields)
 		{
-			this.PerformDesetupSyncRelatedEntity( _belongsToMessage, new PropertyChangedEventHandler( OnBelongsToMessagePropertyChanged ), "BelongsToMessage", AttachmentEntity.Relations.MessageEntityUsingMessageID, true, signalRelatedEntity, "Attachments", resetFKFields, new int[] { (int)AttachmentFieldIndex.MessageID } );		
+			this.PerformDesetupSyncRelatedEntity( _belongsToMessage, new PropertyChangedEventHandler( OnBelongsToMessagePropertyChanged ), "BelongsToMessage", SD.HnD.DAL.RelationClasses.StaticAttachmentRelations.MessageEntityUsingMessageIDStatic, true, signalRelatedEntity, "Attachments", resetFKFields, new int[] { (int)AttachmentFieldIndex.MessageID } );		
 			_belongsToMessage = null;
 		}
 		
@@ -457,7 +450,7 @@ namespace SD.HnD.DAL.EntityClasses
 			{		
 				DesetupSyncBelongsToMessage(true, true);
 				_belongsToMessage = (MessageEntity)relatedEntity;
-				this.PerformSetupSyncRelatedEntity( _belongsToMessage, new PropertyChangedEventHandler( OnBelongsToMessagePropertyChanged ), "BelongsToMessage", AttachmentEntity.Relations.MessageEntityUsingMessageID, true, ref _alreadyFetchedBelongsToMessage, new string[] {  } );
+				this.PerformSetupSyncRelatedEntity( _belongsToMessage, new PropertyChangedEventHandler( OnBelongsToMessagePropertyChanged ), "BelongsToMessage", SD.HnD.DAL.RelationClasses.StaticAttachmentRelations.MessageEntityUsingMessageIDStatic, true, ref _alreadyFetchedBelongsToMessage, new string[] {  } );
 			}
 		}
 
