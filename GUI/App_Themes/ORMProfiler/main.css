@@ -1,0 +1,554 @@
+/**********************************************/
+/*                                            */
+/*             HTML Tag styles                */
+/*                                            */
+/**********************************************/
+
+A
+{
+	color : #483502;
+	text-decoration : underline;
+}
+
+A:visited
+{
+	color : #483502;
+}
+
+A:active
+{
+	color : #FBE39C;
+	background : #006486;
+}
+
+A:hover
+{
+	color : #483502;
+	background : #FFCC00;
+	text-decoration : none;
+}
+
+BODY
+{ 
+	font-size: 9pt; 
+	color: #000000; 
+	font-family: verdana, arial, helvetica, sans-serif; 
+	background-color: #F2EFE8;
+	background-image: url("pics/background_page.png");
+	background-position: left top;
+	background-repeat: repeat-x;
+	background-attachment: fixed;
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+
+CODE, PRE
+{
+	font-family: Verdana , 'Lucida Console' , 'Courier New' , sans-serif;
+}
+
+HR
+{
+	border-top: #C89E2B 1px solid;
+}
+
+IMG
+{
+	border-style:solid;
+	border-color:#C89E2B;
+}
+
+SELECT
+{
+	font-size: 9pt;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+}
+
+TD
+{
+	font-size: 9pt; 
+	color: #000000; 
+	font-family: verdana, arial, helvetica, sans-serif; 
+}
+
+TEXTAREA
+{
+	border-right: #C89E2B 1px solid;
+	border-top: #C89E2B 1px solid;
+	font: 9pt Verdana, Arial, Helvetica, sans-serif;
+	border-left: #C89E2B 1px solid;
+	color: #000000;
+	border-bottom: #C89E2B 1px solid;
+}
+
+/***************************************************************************************/
+
+/************************************************/
+/*                                              */
+/*          CSS Classes, used in the pages      */
+/*                                              */
+/************************************************/
+
+/************************/
+/* Tag specific classes */
+/************************/
+
+/* Class for links which shouldn't have any decoration. */
+A.LinkNoUnderline
+{
+	text-decoration: none;
+}
+
+/* Class which is used with Thread subjects which are a link. */
+A.ThreadSubjectLink
+{
+	font-weight:bold;
+}
+
+/**********************/
+/* Base color classes */
+/**********************/
+
+/* Class to be used in tabular lists to get a slighter lighter background in the row. */
+.LightBackground
+{
+	background-color: #faf9f6;
+}
+
+/* Class to be used in tabular lists to get a slighter darker background in the row. */
+.DarkBackground
+{
+	background-color: #ebeae8;
+}
+
+/* Class to be used in tabular lists to get the normal background color as set in the body in the row. */
+.NormalBackground
+{
+	background-color: #f2f1ee;
+}
+
+
+/**************************************************/
+/* Tabular data and form oriented classes classes */
+/**************************************************/
+
+/* Class for an empty row in a tabular list of data to keep the lines in the table */
+.EmptyRow
+{
+	border-top: #C89E2B 1px solid;
+	border-bottom: #C89E2B 1px solid;
+}
+
+/* Class for an empty row in a tabular list of data to keep the lines in the table, however this class has only the top border defined */
+.EmptyRowOnlyTopBorder
+{
+	border-top: #C89E2B 1px solid;
+}
+
+/* As EmptyRow, but now at the bottom of a tabular list of data */
+.EmptyRowBottom
+{
+	border-top: #C89E2B 1px solid;
+}
+
+/* Class used for a table definition which are used as the explanation boxes on pages.  */
+.ExplanationBox
+{
+	border: solid 1px;
+	border-top-color: #e1DdD2;
+	border-left-color: #e1ddd2;
+	border-right-color: #DdD9Cd;
+	border-bottom-color: #DdD9Cd;
+	background-image: url("pics/background_explanationbox.gif");
+	background-position: left top;
+	background-repeat: repeat-x;
+	background-color: #ebeae8;
+}
+
+/* CLass for the normal form buttons, used everywhere in the application. */
+.FormButtons
+{
+	font-size: 9pt;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+}
+
+
+/* Class for flat form buttons used in the message editor, for example the [b] [i] etc. buttons */
+.FormButtonsFlat_Light		
+{
+	font-size: 9pt;
+	color: #333333; 
+	background-color: #fcfcfc; 
+	border-style: solid;
+	border-left-width: 1px; 
+	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px;
+	font-family: Verdana, Tahoma, Arial, Helvetica, sans-serif;
+}
+
+/* Class which is used a fill in form window, which is placed inside FormContent */
+.FormWindow
+{
+	background-image: url("pics/background_explanationbox.gif");
+	background-position: left top;
+	background-repeat: repeat-x;
+	background-color: #ebeae8;
+}
+
+/* Class which is used for a general small border table with borders around every cell. This class is used 
+ * in the IP Ban list and in the MessageEditor control where it's used above the smiley list for the caption. */
+.GeneralSmallBorderTable
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #333333; 
+	background-color: #fcfcfc; 
+	border: #ccdee4; 
+	border-style: solid;
+	border-left-width: 1px; 
+	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px;
+}
+
+/* Class used for a table definition which are used as the legend boxes on pages.  */
+.LegendBox
+{
+	border: solid 1px;
+	border-top-color: #fcfbf8;
+	border-left-color: #fcfbf8;
+	border-right-color: #d7d6d4;
+	border-bottom-color: #d7d6d4;
+	background-color: #f2f1ee;
+}
+
+/* Class used for the message header, which is the header right above the message text containing post date and ip number. */
+.MessageHeader
+{
+	font-size:8pt;
+	border-bottom: #DAD8D2 1px solid;
+	color: #787878;
+}
+
+/* Class used for the message footer, which is the footer right below the message text containing signature of the poster and the 'top' link. */
+.MessageFooter
+{
+	font-size:7pt;
+	border-top: #DAD8D2 1px solid;
+	color: #787878;
+}
+
+/* Class for the slightly bigger text in the description text of the author of the message next to a message  */
+.SmallFontAuthorSmaller
+{
+	font-size:7pt;
+	color: #483502;
+}
+
+/* Class for the smallest text in the description text of the author of the message next to a message  */
+.SmallFontAuthorSmallest
+{
+	font-size:6pt;
+	color: #483502;
+}
+
+/* Class for slightly bigger fonts than SmallFontSmallest */
+.SmallFontSmaller
+{
+	font-size:8pt;
+}
+
+/* Class for very small fonts, used everywhere in the application */
+.SmallFontSmallest
+{
+	font-size:7pt;
+}
+
+/* Class for the small font used in threadlists */
+.SmallFontThreadList
+{
+	font-size:7pt;
+	color: #777777;
+}
+
+/* Class for the area in which support information is placed above messages in message view */
+.SupportArea
+{
+	background-color: #faf9f6;
+}
+
+/* Class which is used for the headers in the support area sections: Support Queue management and Memos */
+.SupportAreaHeader
+{
+	color: #000000;
+	background-color: #DAD8D2;
+	background-image: url("pics/background_supportarea_1line.gif");
+	background-position:top center;
+	background-repeat: repeat-x;
+	
+	font-weight: bold;
+	font-size: 8pt;
+}
+
+/* Class for a row in the support area in which support information is placed above messages in message view */
+.SupportAreaRow
+{
+	border-bottom: solid 0px #DAD8D2;
+	border-top: solid 0px #DAD8D2;
+	border-left: solid 0px #DAD8D2;
+	border-right: solid 1px #DAD8D2;
+}
+
+/* Class which is used for the column headers in tabular data in tables. */
+.TableColumnHeader, .FormColumnHeader
+{
+	font-weight: bold;
+	font-size: 8pt;
+	border-right: #C89E2B 1px solid;
+	background-color: #FBDB84;
+	color: #6D5003;
+}
+
+/* Class which is used for the description displayed below a TableName or FormName. Only used in TwoLine table / form headers. */
+.TableDescription, .FormDescription
+{
+	font-size: 7pt;
+	font-weight: normal;
+	margin-left: 10px;
+	padding-top: 0px;
+}
+
+/* Class which is used for the table header for tabular data with a 2-line header or a form header with two lines, used everywhere in the application. */
+.TableHeaderTwoLine, .FormHeaderTwoLine
+{
+	color: #483502;
+	background-color: #CAA02B;
+	background-image: url("pics/background_tablehd_2line.png");
+	background-position:top center;
+	background-repeat: repeat-x;
+}
+
+/* Class which is used for the table header for tabular data with a 1-line header or a form header with one line, used everywhere in the application. 
+ * One line headers don't have a description. */
+.TableHeaderOneLine, .FormHeaderOneLine
+{
+	color: #483502;
+	background-color: #CAA02B;
+	background-image: url("pics/background_tablehd_1line.png");
+	background-position:top center;
+	background-repeat: repeat-x;
+}
+
+/* Class which is used for the name displayed in a table header of form header */
+.TableName, .FormName
+{
+	font-weight: bold;
+	font-size: 11pt;
+	margin-left: 4px;
+	padding-bottom: 0px;
+}
+
+/* Class which is used for a row in tabular data. */
+.TableRow
+{
+	font-size:9pt;
+	border-right: #DAD8D2 1px solid;
+	color: #000000;
+}
+
+/* Class which is used for a row in tabular data which is selected, like in a gridview. */
+.TableRowSelected
+{
+	font-size:9pt;
+	border-right: #DAD8D2 1px solid;
+	background-color: #fbe39c;
+	color: #000000;
+}
+
+/* Class which is used for the sub name of a table or form. This subname is displayed below the name in a slighter smaller font. Example usage: thread subject
+ * in messages view (Messages.aspx) */
+.TableSubName, .FormSubName
+{
+	font-size: 10pt;
+	font-weight: normal;
+	margin-left: 10px;
+	padding-top: 0px;
+}
+
+/* Class which is used for the container in which a form or table content is placed. */
+.TableContent, .FormContent
+{
+	background-color: #C89E2B;
+}
+
+
+/* Class used for a TD definition which is used as the welcome box on the startpage  */
+.WelcomeBox
+{
+	font-size:8pt;
+}
+
+
+/****************************/
+/*  Header related classes  */
+/****************************/
+
+.HeaderTop
+{
+	background-image: url("pics/background_header_top.png");
+	background-position: top left;
+	background-repeat: repeat-x;
+	background-color: #E5BD4F;
+}
+
+.HeaderBottom
+{
+	background-image: url("pics/background_header_bottom.png");
+	background-position: top left;
+	background-repeat: repeat-x;
+	background-color: #E5BD4F;
+}
+
+.HeaderLinkTop
+{
+	color : #FCFAF2;
+	background: Transparent;
+	text-decoration : none;
+	font-weight:bold;
+}
+
+.HeaderLinkTop:visited
+{
+	color : #FCFAF2;
+	background: Transparent;
+}
+
+.HeaderLinkTop:active
+{
+	color : #FCFAF2;
+	background: Transparent;
+}
+
+.HeaderLinkTop:hover
+{
+	color : #FCFAF2;
+	background: Transparent;
+	text-decoration : underline;
+}
+
+.HeaderLinkBottom
+{
+	color : #FDF8E8;
+	background: Transparent;
+	text-decoration : none;
+}
+
+.HeaderLinkBottom:visited
+{
+	color : #FDF8E8;
+	background: Transparent;
+}
+
+.HeaderLinkBottom:active
+{
+	color : #FDF8E8;
+	background: Transparent;
+}
+
+.HeaderLinkBottom:hover
+{
+	color : #FDF8E8;
+	background: Transparent;
+	text-decoration : underline;
+}
+
+.HeaderSeparator
+{
+	color: #483502;
+}
+
+
+
+/***************************************************************************************/
+
+/*******************************************************/
+/*                                                     */
+/*           CSS Classes, used in messages HTML        */
+/*                                                     */
+/*******************************************************/
+
+/* Class for text defined with the [size] UBB tag and size value 1 */
+.MessageFontSize_1
+{
+	font-size:6pt;
+}
+
+/* Class for text defined with the [size] UBB tag and size value 2 */
+.MessageFontSize_2
+{
+	font-size:7pt;
+}
+
+/* Class for text defined with the [size] UBB tag and size value 3 */
+.MessageFontSize_3
+{
+	font-size:9pt;
+}
+
+/* Class for text defined with the [size] UBB tag and size value 4 */
+.MessageFontSize_4
+{
+	font-size:12pt;
+}
+
+/* Class for text defined with the [size] UBB tag and size value 5 */
+.MessageFontSize_5
+{
+	font-size:14pt;
+}
+
+/* Class for text defined with the [size] UBB tag and size value 6 */
+.MessageFontSize_6
+{
+	font-size:18pt;
+}
+
+
+/* Class for text defined with the [code] UBB tag. Text surrounded by [code] UBB tags is placed inside a table. 
+   This class is used on the TD of the table which contains the actual text */
+.CodeText
+{
+	border-right: #DAD8D2 1px solid;
+	border-top: #DAD8D2 1px solid;
+	font-size: 7pt;
+	border-left: #DAD8D2 1px solid;
+	color: #000066;
+	border-bottom: #DAD8D2 1px solid;
+	background-color: #fcfcfc;
+}
+
+/* Class for text defined with the [quote] UBB tag. Text surrounded by [quote] UBB tags is placed inside a table. 
+   This class is used on the TD of the table which contains the actual text */
+.QuoteText
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 11px; 
+	color: #333333; 
+	background-color: #fcfcfc; 
+	border: #DAD8D2; 
+	border-style: solid;
+	border-left-width: 1px; 
+	border-top-width: 1px; 
+	border-right-width: 1px; 
+	border-bottom-width: 1px;
+}
+
+/* Class for text defined with the [offtopic] UBB tag. Text surrounded by [offtopic] UBB tags is placed inside a span which uses this class. */
+.OfftopicText
+{
+	font-size: 7pt;
+	color: #777777;
+}
+
+/***************************************************************************************/
