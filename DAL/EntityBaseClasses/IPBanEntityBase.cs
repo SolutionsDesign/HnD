@@ -419,10 +419,6 @@ namespace SD.HnD.DAL.EntityClasses
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("IPBanID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IPBanSetByUserID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IPBanSetOn", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("IPSegment1", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("IPSegment2", fieldHashtable);
@@ -432,6 +428,10 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties.Add("IPSegment4", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Range", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IPBanSetByUserID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IPBanSetOn", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Reason", fieldHashtable);
 		}
@@ -571,26 +571,6 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)IPBanFieldIndex.IPBanID, value, true); }
 		}
 
-		/// <summary> The IPBanSetByUserID property of the Entity IPBan<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetByUserID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 IPBanSetByUserID
-		{
-			get { return (System.Int32)GetValue((int)IPBanFieldIndex.IPBanSetByUserID, true); }
-			set	{ SetValue((int)IPBanFieldIndex.IPBanSetByUserID, value, true); }
-		}
-
-		/// <summary> The IPBanSetOn property of the Entity IPBan<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetOn"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.DateTime IPBanSetOn
-		{
-			get { return (System.DateTime)GetValue((int)IPBanFieldIndex.IPBanSetOn, true); }
-			set	{ SetValue((int)IPBanFieldIndex.IPBanSetOn, value, true); }
-		}
-
 		/// <summary> The IPSegment1 property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPSegment1"<br/>
 		/// Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0<br/>
@@ -639,6 +619,26 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.Range, true); }
 			set	{ SetValue((int)IPBanFieldIndex.Range, value, true); }
+		}
+
+		/// <summary> The IPBanSetByUserID property of the Entity IPBan<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetByUserID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 IPBanSetByUserID
+		{
+			get { return (System.Int32)GetValue((int)IPBanFieldIndex.IPBanSetByUserID, true); }
+			set	{ SetValue((int)IPBanFieldIndex.IPBanSetByUserID, value, true); }
+		}
+
+		/// <summary> The IPBanSetOn property of the Entity IPBan<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetOn"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.DateTime IPBanSetOn
+		{
+			get { return (System.DateTime)GetValue((int)IPBanFieldIndex.IPBanSetOn, true); }
+			set	{ SetValue((int)IPBanFieldIndex.IPBanSetOn, value, true); }
 		}
 
 		/// <summary> The Reason property of the Entity IPBan<br/><br/></summary>

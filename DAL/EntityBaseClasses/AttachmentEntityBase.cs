@@ -417,19 +417,19 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AddedOn", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("Approved", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("AttachmentID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("Filecontents", fieldHashtable);
+			_fieldsCustomProperties.Add("MessageID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Filename", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Approved", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Filecontents", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Filesize", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("MessageID", fieldHashtable);
+			_fieldsCustomProperties.Add("AddedOn", fieldHashtable);
 		}
 		#endregion
 
@@ -554,14 +554,34 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AddedOn property of the Entity Attachment<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Attachment"."AddedOn"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.DateTime AddedOn
+		/// <summary> The AttachmentID property of the Entity Attachment<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Attachment"."AttachmentID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 AttachmentID
 		{
-			get { return (System.DateTime)GetValue((int)AttachmentFieldIndex.AddedOn, true); }
-			set	{ SetValue((int)AttachmentFieldIndex.AddedOn, value, true); }
+			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.AttachmentID, true); }
+			set	{ SetValue((int)AttachmentFieldIndex.AttachmentID, value, true); }
+		}
+
+		/// <summary> The MessageID property of the Entity Attachment<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Attachment"."MessageID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 MessageID
+		{
+			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.MessageID, true); }
+			set	{ SetValue((int)AttachmentFieldIndex.MessageID, value, true); }
+		}
+
+		/// <summary> The Filename property of the Entity Attachment<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Attachment"."Filename"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 255<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String Filename
+		{
+			get { return (System.String)GetValue((int)AttachmentFieldIndex.Filename, true); }
+			set	{ SetValue((int)AttachmentFieldIndex.Filename, value, true); }
 		}
 
 		/// <summary> The Approved property of the Entity Attachment<br/><br/></summary>
@@ -574,16 +594,6 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)AttachmentFieldIndex.Approved, value, true); }
 		}
 
-		/// <summary> The AttachmentID property of the Entity Attachment<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Attachment"."AttachmentID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 AttachmentID
-		{
-			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.AttachmentID, true); }
-			set	{ SetValue((int)AttachmentFieldIndex.AttachmentID, value, true); }
-		}
-
 		/// <summary> The Filecontents property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."Filecontents"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Image, 0, 0, 2147483647<br/>
@@ -592,16 +602,6 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Byte[])GetValue((int)AttachmentFieldIndex.Filecontents, true); }
 			set	{ SetValue((int)AttachmentFieldIndex.Filecontents, value, true); }
-		}
-
-		/// <summary> The Filename property of the Entity Attachment<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Attachment"."Filename"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 255<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String Filename
-		{
-			get { return (System.String)GetValue((int)AttachmentFieldIndex.Filename, true); }
-			set	{ SetValue((int)AttachmentFieldIndex.Filename, value, true); }
 		}
 
 		/// <summary> The Filesize property of the Entity Attachment<br/><br/></summary>
@@ -614,14 +614,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)AttachmentFieldIndex.Filesize, value, true); }
 		}
 
-		/// <summary> The MessageID property of the Entity Attachment<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Attachment"."MessageID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// <summary> The AddedOn property of the Entity Attachment<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Attachment"."AddedOn"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 MessageID
+		public virtual System.DateTime AddedOn
 		{
-			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.MessageID, true); }
-			set	{ SetValue((int)AttachmentFieldIndex.MessageID, value, true); }
+			get { return (System.DateTime)GetValue((int)AttachmentFieldIndex.AddedOn, true); }
+			set	{ SetValue((int)AttachmentFieldIndex.AddedOn, value, true); }
 		}
 
 

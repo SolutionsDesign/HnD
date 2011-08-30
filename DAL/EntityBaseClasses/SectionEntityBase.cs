@@ -411,13 +411,13 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("SectionDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("SectionID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("SectionName", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("SectionDescription", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
 		}
 		#endregion
 
@@ -509,26 +509,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The OrderNo property of the Entity Section<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Section"."OrderNo"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 OrderNo
-		{
-			get { return (System.Int16)GetValue((int)SectionFieldIndex.OrderNo, true); }
-			set	{ SetValue((int)SectionFieldIndex.OrderNo, value, true); }
-		}
-
-		/// <summary> The SectionDescription property of the Entity Section<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Section"."SectionDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String SectionDescription
-		{
-			get { return (System.String)GetValue((int)SectionFieldIndex.SectionDescription, true); }
-			set	{ SetValue((int)SectionFieldIndex.SectionDescription, value, true); }
-		}
-
 		/// <summary> The SectionID property of the Entity Section<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Section"."SectionID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -547,6 +527,26 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.String)GetValue((int)SectionFieldIndex.SectionName, true); }
 			set	{ SetValue((int)SectionFieldIndex.SectionName, value, true); }
+		}
+
+		/// <summary> The SectionDescription property of the Entity Section<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Section"."SectionDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String SectionDescription
+		{
+			get { return (System.String)GetValue((int)SectionFieldIndex.SectionDescription, true); }
+			set	{ SetValue((int)SectionFieldIndex.SectionDescription, value, true); }
+		}
+
+		/// <summary> The OrderNo property of the Entity Section<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Section"."OrderNo"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int16 OrderNo
+		{
+			get { return (System.Int16)GetValue((int)SectionFieldIndex.OrderNo, true); }
+			set	{ SetValue((int)SectionFieldIndex.OrderNo, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'ForumEntity' using a relation of type '1:n'.<br/><br/>

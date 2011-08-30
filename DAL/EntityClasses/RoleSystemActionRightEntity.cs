@@ -37,28 +37,28 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
-		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID):
-			base(actionRightID, roleID)
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID):
+			base(roleID, actionRightID)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse):
-			base(actionRightID, roleID, prefetchPathToUse)
+		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse):
+			base(roleID, actionRightID, prefetchPathToUse)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="validator">The custom validator object for this RoleSystemActionRightEntity</param>
-		public RoleSystemActionRightEntity(System.Int32 actionRightID, System.Int32 roleID, IValidator validator):
-			base(actionRightID, roleID, validator)
+		public RoleSystemActionRightEntity(System.Int32 roleID, System.Int32 actionRightID, IValidator validator):
+			base(roleID, actionRightID, validator)
 		{
 		}
 		

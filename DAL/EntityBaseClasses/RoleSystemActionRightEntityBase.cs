@@ -75,29 +75,29 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
-		protected RoleSystemActionRightEntityBase(System.Int32 actionRightID, System.Int32 roleID)
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		protected RoleSystemActionRightEntityBase(System.Int32 roleID, System.Int32 actionRightID)
 		{
-			InitClassFetch(actionRightID, roleID, null, null);
+			InitClassFetch(roleID, actionRightID, null, null);
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected RoleSystemActionRightEntityBase(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse)
+		protected RoleSystemActionRightEntityBase(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse)
 		{
-			InitClassFetch(actionRightID, roleID, null, prefetchPathToUse);
+			InitClassFetch(roleID, actionRightID, null, prefetchPathToUse);
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="validator">The custom validator object for this RoleSystemActionRightEntity</param>
-		protected RoleSystemActionRightEntityBase(System.Int32 actionRightID, System.Int32 roleID, IValidator validator)
+		protected RoleSystemActionRightEntityBase(System.Int32 roleID, System.Int32 actionRightID, IValidator validator)
 		{
-			InitClassFetch(actionRightID, roleID, validator, null);
+			InitClassFetch(roleID, actionRightID, validator, null);
 		}
 
 		/// <summary>Private CTor for deserialization</summary>
@@ -133,13 +133,13 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((RoleSystemActionRightFieldIndex)fieldIndex)
 			{
-				case RoleSystemActionRightFieldIndex.ActionRightID:
-					DesetupSyncActionRight(true, false);
-					_alreadyFetchedActionRight = false;
-					break;
 				case RoleSystemActionRightFieldIndex.RoleID:
 					DesetupSyncRole(true, false);
 					_alreadyFetchedRole = false;
+					break;
+				case RoleSystemActionRightFieldIndex.ActionRightID:
+					DesetupSyncActionRight(true, false);
+					_alreadyFetchedActionRight = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
@@ -302,54 +302,54 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 actionRightID, System.Int32 roleID)
+		public bool FetchUsingPK(System.Int32 roleID, System.Int32 actionRightID)
 		{
-			return FetchUsingPK(actionRightID, roleID, null, null, null);
+			return FetchUsingPK(roleID, actionRightID, null, null, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse)
+		public bool FetchUsingPK(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse)
 		{
-			return FetchUsingPK(actionRightID, roleID, prefetchPathToUse, null, null);
+			return FetchUsingPK(roleID, actionRightID, prefetchPathToUse, null, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse, Context contextToUse)
+		public bool FetchUsingPK(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return FetchUsingPK(actionRightID, roleID, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(roleID, actionRightID, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <param name="excludedIncludedFields">The list of IEntityField objects which have to be excluded or included for the fetch. 
 		/// If null or empty, all fields are fetched (default). If an instance of ExcludeIncludeFieldsList is passed in and its ExcludeContainedFields property
 		/// is set to false, the fields contained in excludedIncludedFields are kept in the query, the rest of the fields in the query are excluded.</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
+		public bool FetchUsingPK(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
 		{
-			return Fetch(actionRightID, roleID, prefetchPathToUse, contextToUse, excludedIncludedFields);
+			return Fetch(roleID, actionRightID, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
 		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
-			return Fetch(this.ActionRightID, this.RoleID, null, null, null);
+			return Fetch(this.RoleID, this.ActionRightID, null, null, null);
 		}
 
 
@@ -469,17 +469,17 @@ namespace SD.HnD.DAL.EntityClasses
 		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="validator">The validator object for this RoleSystemActionRightEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		private void InitClassFetch(System.Int32 actionRightID, System.Int32 roleID, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 roleID, System.Int32 actionRightID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
 			this.Validator = validator;
 			this.Fields = CreateFields();
 			InitClassMembers();	
-			Fetch(actionRightID, roleID, prefetchPathToUse, null, null);
+			Fetch(roleID, actionRightID, prefetchPathToUse, null, null);
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
@@ -507,9 +507,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ActionRightID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("RoleID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ActionRightID", fieldHashtable);
 		}
 		#endregion
 
@@ -580,21 +580,21 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Fetches the entity from the persistent storage. Fetch simply reads the entity into an EntityFields object. </summary>
-		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="roleID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
+		/// <param name="actionRightID">PK value for RoleSystemActionRight which data should be fetched into this RoleSystemActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <param name="excludedIncludedFields">The list of IEntityField objects which have to be excluded or included for the fetch. 
 		/// If null or empty, all fields are fetched (default). If an instance of ExcludeIncludeFieldsList is passed in and its ExcludeContainedFields property
 		/// is set to false, the fields contained in excludedIncludedFields are kept in the query, the rest of the fields in the query are excluded.</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		private bool Fetch(System.Int32 actionRightID, System.Int32 roleID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
+		private bool Fetch(System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
 		{
 			try
 			{
 				OnFetch();
-				this.Fields[(int)RoleSystemActionRightFieldIndex.ActionRightID].ForcedCurrentValueWrite(actionRightID);
 				this.Fields[(int)RoleSystemActionRightFieldIndex.RoleID].ForcedCurrentValueWrite(roleID);
+				this.Fields[(int)RoleSystemActionRightFieldIndex.ActionRightID].ForcedCurrentValueWrite(actionRightID);
 				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
 				return (this.Fields.State == EntityState.Fetched);
 			}
@@ -676,16 +676,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ActionRightID property of the Entity RoleSystemActionRight<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "RoleSystemActionRight"."ActionRightID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
-		public virtual System.Int32 ActionRightID
-		{
-			get { return (System.Int32)GetValue((int)RoleSystemActionRightFieldIndex.ActionRightID, true); }
-			set	{ SetValue((int)RoleSystemActionRightFieldIndex.ActionRightID, value, true); }
-		}
-
 		/// <summary> The RoleID property of the Entity RoleSystemActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "RoleSystemActionRight"."RoleID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -694,6 +684,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)RoleSystemActionRightFieldIndex.RoleID, true); }
 			set	{ SetValue((int)RoleSystemActionRightFieldIndex.RoleID, value, true); }
+		}
+
+		/// <summary> The ActionRightID property of the Entity RoleSystemActionRight<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "RoleSystemActionRight"."ActionRightID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		public virtual System.Int32 ActionRightID
+		{
+			get { return (System.Int32)GetValue((int)RoleSystemActionRightFieldIndex.ActionRightID, true); }
+			set	{ SetValue((int)RoleSystemActionRightFieldIndex.ActionRightID, value, true); }
 		}
 
 

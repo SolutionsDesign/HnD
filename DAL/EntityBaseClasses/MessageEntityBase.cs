@@ -673,23 +673,23 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ChangeTrackerStamp", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MessageID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("PostingDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("PostedByUserID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("PostedFromIP", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ChangeTrackerStamp", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MessageText", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MessageTextAsHTML", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MessageTextAsXml", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("PostedByUserID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("PostedFromIP", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("PostingDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
 		}
 		#endregion
 
@@ -868,16 +868,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ChangeTrackerStamp property of the Entity Message<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Message"."ChangeTrackerStamp"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Timestamp, 0, 0, 8<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Byte[] ChangeTrackerStamp
-		{
-			get { return (System.Byte[])GetValue((int)MessageFieldIndex.ChangeTrackerStamp, true); }
-
-		}
-
 		/// <summary> The MessageID property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."MessageID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -886,6 +876,56 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)MessageFieldIndex.MessageID, true); }
 			set	{ SetValue((int)MessageFieldIndex.MessageID, value, true); }
+		}
+
+		/// <summary> The PostingDate property of the Entity Message<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Message"."PostingDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.DateTime PostingDate
+		{
+			get { return (System.DateTime)GetValue((int)MessageFieldIndex.PostingDate, true); }
+			set	{ SetValue((int)MessageFieldIndex.PostingDate, value, true); }
+		}
+
+		/// <summary> The PostedByUserID property of the Entity Message<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Message"."PostedByUserID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 PostedByUserID
+		{
+			get { return (System.Int32)GetValue((int)MessageFieldIndex.PostedByUserID, true); }
+			set	{ SetValue((int)MessageFieldIndex.PostedByUserID, value, true); }
+		}
+
+		/// <summary> The ThreadID property of the Entity Message<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Message"."ThreadID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 ThreadID
+		{
+			get { return (System.Int32)GetValue((int)MessageFieldIndex.ThreadID, true); }
+			set	{ SetValue((int)MessageFieldIndex.ThreadID, value, true); }
+		}
+
+		/// <summary> The PostedFromIP property of the Entity Message<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Message"."PostedFromIP"<br/>
+		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String PostedFromIP
+		{
+			get { return (System.String)GetValue((int)MessageFieldIndex.PostedFromIP, true); }
+			set	{ SetValue((int)MessageFieldIndex.PostedFromIP, value, true); }
+		}
+
+		/// <summary> The ChangeTrackerStamp property of the Entity Message<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Message"."ChangeTrackerStamp"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Timestamp, 0, 0, 8<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Byte[] ChangeTrackerStamp
+		{
+			get { return (System.Byte[])GetValue((int)MessageFieldIndex.ChangeTrackerStamp, true); }
+
 		}
 
 		/// <summary> The MessageText property of the Entity Message<br/><br/></summary>
@@ -916,46 +956,6 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.String)GetValue((int)MessageFieldIndex.MessageTextAsXml, true); }
 			set	{ SetValue((int)MessageFieldIndex.MessageTextAsXml, value, true); }
-		}
-
-		/// <summary> The PostedByUserID property of the Entity Message<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Message"."PostedByUserID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 PostedByUserID
-		{
-			get { return (System.Int32)GetValue((int)MessageFieldIndex.PostedByUserID, true); }
-			set	{ SetValue((int)MessageFieldIndex.PostedByUserID, value, true); }
-		}
-
-		/// <summary> The PostedFromIP property of the Entity Message<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Message"."PostedFromIP"<br/>
-		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String PostedFromIP
-		{
-			get { return (System.String)GetValue((int)MessageFieldIndex.PostedFromIP, true); }
-			set	{ SetValue((int)MessageFieldIndex.PostedFromIP, value, true); }
-		}
-
-		/// <summary> The PostingDate property of the Entity Message<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Message"."PostingDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.DateTime PostingDate
-		{
-			get { return (System.DateTime)GetValue((int)MessageFieldIndex.PostingDate, true); }
-			set	{ SetValue((int)MessageFieldIndex.PostingDate, value, true); }
-		}
-
-		/// <summary> The ThreadID property of the Entity Message<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Message"."ThreadID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 ThreadID
-		{
-			get { return (System.Int32)GetValue((int)MessageFieldIndex.ThreadID, true); }
-			set	{ SetValue((int)MessageFieldIndex.ThreadID, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'AttachmentEntity' using a relation of type '1:n'.<br/><br/>

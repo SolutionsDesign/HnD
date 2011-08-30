@@ -130,13 +130,13 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((SystemDataFieldIndex)fieldIndex)
 			{
-				case SystemDataFieldIndex.AnonymousRole:
-					DesetupSyncRoleForAnonymous(true, false);
-					_alreadyFetchedRoleForAnonymous = false;
-					break;
 				case SystemDataFieldIndex.DefaultRoleNewUser:
 					DesetupSyncRoleForNewUser(true, false);
 					_alreadyFetchedRoleForNewUser = false;
+					break;
+				case SystemDataFieldIndex.AnonymousRole:
+					DesetupSyncRoleForAnonymous(true, false);
+					_alreadyFetchedRoleForAnonymous = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
@@ -499,21 +499,21 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AnonymousRole", fieldHashtable);
+			_fieldsCustomProperties.Add("ID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("DefaultRoleNewUser", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("AnonymousRole", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("DefaultUserTitleNewUser", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("HoursThresholdForActiveThreads", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("MinNumberOfNonStickyVisibleThreads", fieldHashtable);
+			_fieldsCustomProperties.Add("PageSizeSearchResults", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MinNumberOfThreadsToFetch", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("PageSizeSearchResults", fieldHashtable);
+			_fieldsCustomProperties.Add("MinNumberOfNonStickyVisibleThreads", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("SendReplyNotifications", fieldHashtable);
 		}
@@ -680,14 +680,14 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AnonymousRole property of the Entity SystemData<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SystemData"."AnonymousRole"<br/>
+		/// <summary> The ID property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."ID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 AnonymousRole
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ID
 		{
-			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.AnonymousRole, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.AnonymousRole, value, true); }
+			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.ID, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.ID, value, true); }
 		}
 
 		/// <summary> The DefaultRoleNewUser property of the Entity SystemData<br/><br/></summary>
@@ -698,6 +698,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, true); }
 			set	{ SetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, value, true); }
+		}
+
+		/// <summary> The AnonymousRole property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."AnonymousRole"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 AnonymousRole
+		{
+			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.AnonymousRole, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.AnonymousRole, value, true); }
 		}
 
 		/// <summary> The DefaultUserTitleNewUser property of the Entity SystemData<br/><br/></summary>
@@ -720,24 +730,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)SystemDataFieldIndex.HoursThresholdForActiveThreads, value, true); }
 		}
 
-		/// <summary> The ID property of the Entity SystemData<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SystemData"."ID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ID
-		{
-			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.ID, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.ID, value, true); }
-		}
-
-		/// <summary> The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfNonStickyVisibleThreads"<br/>
+		/// <summary> The PageSizeSearchResults property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults"<br/>
 		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 MinNumberOfNonStickyVisibleThreads
+		public virtual System.Int16 PageSizeSearchResults
 		{
-			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, value, true); }
+			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.PageSizeSearchResults, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.PageSizeSearchResults, value, true); }
 		}
 
 		/// <summary> The MinNumberOfThreadsToFetch property of the Entity SystemData<br/><br/></summary>
@@ -750,14 +750,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, value, true); }
 		}
 
-		/// <summary> The PageSizeSearchResults property of the Entity SystemData<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults"<br/>
+		/// <summary> The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfNonStickyVisibleThreads"<br/>
 		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 PageSizeSearchResults
+		public virtual System.Int16 MinNumberOfNonStickyVisibleThreads
 		{
-			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.PageSizeSearchResults, true); }
-			set	{ SetValue((int)SystemDataFieldIndex.PageSizeSearchResults, value, true); }
+			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, true); }
+			set	{ SetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, value, true); }
 		}
 
 		/// <summary> The SendReplyNotifications property of the Entity SystemData<br/><br/></summary>

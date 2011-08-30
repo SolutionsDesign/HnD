@@ -152,13 +152,13 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((ForumFieldIndex)fieldIndex)
 			{
-				case ForumFieldIndex.DefaultSupportQueueID:
-					DesetupSyncDefaultSupportQueue(true, false);
-					_alreadyFetchedDefaultSupportQueue = false;
-					break;
 				case ForumFieldIndex.SectionID:
 					DesetupSyncSection(true, false);
 					_alreadyFetchedSection = false;
+					break;
+				case ForumFieldIndex.DefaultSupportQueueID:
+					DesetupSyncDefaultSupportQueue(true, false);
+					_alreadyFetchedDefaultSupportQueue = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
@@ -735,19 +735,23 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("SectionID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumName", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumDescription", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ForumLastPostingDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("HasRSSFeed", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("DefaultSupportQueueID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("DefaultThreadListInterval", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ForumDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ForumLastPostingDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ForumName", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("HasRSSFeed", fieldHashtable);
+			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("MaxAttachmentSize", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
@@ -756,10 +760,6 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties.Add("NewThreadWelcomeText", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("NewThreadWelcomeTextAsHTML", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("SectionID", fieldHashtable);
 		}
 		#endregion
 
@@ -950,6 +950,66 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
+		/// <summary> The ForumID property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ForumID
+		{
+			get { return (System.Int32)GetValue((int)ForumFieldIndex.ForumID, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumID, value, true); }
+		}
+
+		/// <summary> The SectionID property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."SectionID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 SectionID
+		{
+			get { return (System.Int32)GetValue((int)ForumFieldIndex.SectionID, true); }
+			set	{ SetValue((int)ForumFieldIndex.SectionID, value, true); }
+		}
+
+		/// <summary> The ForumName property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumName"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String ForumName
+		{
+			get { return (System.String)GetValue((int)ForumFieldIndex.ForumName, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumName, value, true); }
+		}
+
+		/// <summary> The ForumDescription property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String ForumDescription
+		{
+			get { return (System.String)GetValue((int)ForumFieldIndex.ForumDescription, true); }
+			set	{ SetValue((int)ForumFieldIndex.ForumDescription, value, true); }
+		}
+
+		/// <summary> The ForumLastPostingDate property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."ForumLastPostingDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> ForumLastPostingDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)ForumFieldIndex.ForumLastPostingDate, false); }
+			set	{ SetValue((int)ForumFieldIndex.ForumLastPostingDate, value, true); }
+		}
+
+		/// <summary> The HasRSSFeed property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."HasRSSFeed"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean HasRSSFeed
+		{
+			get { return (System.Boolean)GetValue((int)ForumFieldIndex.HasRSSFeed, true); }
+			set	{ SetValue((int)ForumFieldIndex.HasRSSFeed, value, true); }
+		}
+
 		/// <summary> The DefaultSupportQueueID property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."DefaultSupportQueueID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -970,54 +1030,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)ForumFieldIndex.DefaultThreadListInterval, value, true); }
 		}
 
-		/// <summary> The ForumDescription property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
+		/// <summary> The OrderNo property of the Entity Forum<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Forum"."OrderNo"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String ForumDescription
+		public virtual System.Int16 OrderNo
 		{
-			get { return (System.String)GetValue((int)ForumFieldIndex.ForumDescription, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumDescription, value, true); }
-		}
-
-		/// <summary> The ForumID property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ForumID
-		{
-			get { return (System.Int32)GetValue((int)ForumFieldIndex.ForumID, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumID, value, true); }
-		}
-
-		/// <summary> The ForumLastPostingDate property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumLastPostingDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> ForumLastPostingDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)ForumFieldIndex.ForumLastPostingDate, false); }
-			set	{ SetValue((int)ForumFieldIndex.ForumLastPostingDate, value, true); }
-		}
-
-		/// <summary> The ForumName property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."ForumName"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String ForumName
-		{
-			get { return (System.String)GetValue((int)ForumFieldIndex.ForumName, true); }
-			set	{ SetValue((int)ForumFieldIndex.ForumName, value, true); }
-		}
-
-		/// <summary> The HasRSSFeed property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."HasRSSFeed"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean HasRSSFeed
-		{
-			get { return (System.Boolean)GetValue((int)ForumFieldIndex.HasRSSFeed, true); }
-			set	{ SetValue((int)ForumFieldIndex.HasRSSFeed, value, true); }
+			get { return (System.Int16)GetValue((int)ForumFieldIndex.OrderNo, true); }
+			set	{ SetValue((int)ForumFieldIndex.OrderNo, value, true); }
 		}
 
 		/// <summary> The MaxAttachmentSize property of the Entity Forum<br/><br/></summary>
@@ -1058,26 +1078,6 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.String)GetValue((int)ForumFieldIndex.NewThreadWelcomeTextAsHTML, true); }
 			set	{ SetValue((int)ForumFieldIndex.NewThreadWelcomeTextAsHTML, value, true); }
-		}
-
-		/// <summary> The OrderNo property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."OrderNo"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 OrderNo
-		{
-			get { return (System.Int16)GetValue((int)ForumFieldIndex.OrderNo, true); }
-			set	{ SetValue((int)ForumFieldIndex.OrderNo, value, true); }
-		}
-
-		/// <summary> The SectionID property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."SectionID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 SectionID
-		{
-			get { return (System.Int32)GetValue((int)ForumFieldIndex.SectionID, true); }
-			set	{ SetValue((int)ForumFieldIndex.SectionID, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'ForumRoleForumActionRightEntity' using a relation of type '1:n'.<br/><br/>

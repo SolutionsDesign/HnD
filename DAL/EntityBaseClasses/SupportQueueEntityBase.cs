@@ -499,13 +499,13 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("QueueDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("QueueID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("QueueName", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("QueueDescription", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("OrderNo", fieldHashtable);
 		}
 		#endregion
 
@@ -604,26 +604,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The OrderNo property of the Entity SupportQueue<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueue"."OrderNo"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int16 OrderNo
-		{
-			get { return (System.Int16)GetValue((int)SupportQueueFieldIndex.OrderNo, true); }
-			set	{ SetValue((int)SupportQueueFieldIndex.OrderNo, value, true); }
-		}
-
-		/// <summary> The QueueDescription property of the Entity SupportQueue<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueue"."QueueDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String QueueDescription
-		{
-			get { return (System.String)GetValue((int)SupportQueueFieldIndex.QueueDescription, true); }
-			set	{ SetValue((int)SupportQueueFieldIndex.QueueDescription, value, true); }
-		}
-
 		/// <summary> The QueueID property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."QueueID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -637,11 +617,31 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary> The QueueName property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."QueueName"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		public virtual System.String QueueName
 		{
 			get { return (System.String)GetValue((int)SupportQueueFieldIndex.QueueName, true); }
 			set	{ SetValue((int)SupportQueueFieldIndex.QueueName, value, true); }
+		}
+
+		/// <summary> The QueueDescription property of the Entity SupportQueue<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueue"."QueueDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String QueueDescription
+		{
+			get { return (System.String)GetValue((int)SupportQueueFieldIndex.QueueDescription, true); }
+			set	{ SetValue((int)SupportQueueFieldIndex.QueueDescription, value, true); }
+		}
+
+		/// <summary> The OrderNo property of the Entity SupportQueue<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueue"."OrderNo"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int16 OrderNo
+		{
+			get { return (System.Int16)GetValue((int)SupportQueueFieldIndex.OrderNo, true); }
+			set	{ SetValue((int)SupportQueueFieldIndex.OrderNo, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'ForumEntity' using a relation of type '1:n'.<br/><br/>

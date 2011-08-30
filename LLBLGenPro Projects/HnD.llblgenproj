@@ -42,7 +42,7 @@
     <Property Name="RelationshipsFollowDBForeignKeyConstraints" Value="0" />
     <Property Name="RemoveUnderscoresFromElementName" Value="false" />
     <Property Name="RemoveUnmappedElementsAfterRefresh" Value="0" />
-    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRefresh" Value="false" />
+    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRefresh" Value="true" />
     <Property Name="RetrieveDBCustomProperties" Value="false" />
     <Property Name="RootNamespace" Value="" />
     <Property Name="SequencePattern" Value="SEQ_{$EntityName}" />
@@ -58,25 +58,25 @@
     <Property Name="TypedViewNameStripPattern" Value="{vw_}{}" />
     <Property Name="UniqueConstraintsFollowDBUniqueConstraints" Value="0" />
     <Property Name="UpdateCustomPropertiesAfterRefresh" Value="0" />
-    <Property Name="UseCustomFieldOrderingOnNewElements" Value="false" />
+    <Property Name="UseCustomFieldOrderingOnNewElements" Value="true" />
   </Properties>
   <TypeShortcuts />
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\HnD3.0_hg\LLBLGenPro Projects" />
+        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\HnD3.1_hg\DAL" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
-        <PlatformName Value=".NET 2.0" />
-        <PresetName Value="SD.LLBLGen.Pro.V3ProjectFile" />
+        <PlatformName Value=".NET 4.0" />
+        <PresetName Value="SD.Presets.SelfServicing.TwoClasses2010" />
         <RootNamespace Value="SD.HnD.DAL" />
-        <TemplateGroup Value="LLBLGen Pro v3" />
+        <TemplateGroup Value="SelfServicing" />
         <TemplateBindings>
-          <Binding Name="SD.LLBLGen.Pro.V3ProjectFileBindings" />
-          <Binding Name="SD.AdditionalTemplates.DbEditor.Net2.0" />
           <Binding Name="SD.TemplateBindings.SqlServerSpecific.NET20" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.NET40" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.NET35" />
           <Binding Name="SD.TemplateBindings.SharedTemplates.NET20" />
-          <Binding Name="SD.TemplateBindings.SharedTemplates.BackwardsCompatibility.NET20" />
+          <Binding Name="SD.TemplateBindings.General" />
         </TemplateBindings>
       </LastUsedPreferences>
     </OutputType>
@@ -108,100 +108,100 @@
     <EntityDefinitions>
       <EntityDefinition Name="ActionRight">
         <Fields>
-          <Field Name="ActionRightDescription" Type="string" MaxLength="50" />
-          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" />
-          <Field Name="AppliesToForum" Type="bool" />
-          <Field Name="AppliesToSystem" Type="bool" />
+          <Field Name="ActionRightDescription" Type="string" MaxLength="50" FieldIndex="1" />
+          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="AppliesToForum" Type="bool" FieldIndex="2" />
+          <Field Name="AppliesToSystem" Type="bool" FieldIndex="3" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Attachment">
         <Fields>
-          <Field Name="AddedOn" Type="datetime" />
-          <Field Name="Approved" Type="bool" />
-          <Field Name="AttachmentID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="Filecontents" Type="byte[]" MaxLength="2147483647" />
-          <Field Name="Filename" Type="string" IsOptional="true" MaxLength="255" />
-          <Field Name="Filesize" Type="int" />
-          <Field Name="MessageID" Type="int" IsAutoCreated="true" />
+          <Field Name="AddedOn" Type="datetime" FieldIndex="6" />
+          <Field Name="Approved" Type="bool" FieldIndex="3" />
+          <Field Name="AttachmentID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="Filecontents" Type="byte[]" MaxLength="2147483647" FieldIndex="4" />
+          <Field Name="Filename" Type="string" MaxLength="255" FieldIndex="2" />
+          <Field Name="Filesize" Type="int" FieldIndex="5" />
+          <Field Name="MessageID" Type="int" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="AuditAction">
         <Fields>
-          <Field Name="AuditActionDescription" Type="string" IsOptional="true" MaxLength="50" />
-          <Field Name="AuditActionID" Type="int" IsPrimaryKey="true" />
+          <Field Name="AuditActionDescription" Type="string" MaxLength="50" FieldIndex="1" />
+          <Field Name="AuditActionID" Type="int" IsPrimaryKey="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="AuditDataCore" InheritanceType="2">
         <Fields>
-          <Field Name="AuditActionID" Type="int" IsAutoCreated="true" />
-          <Field Name="AuditDataID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="AuditedOn" Type="datetime" />
-          <Field Name="UserID" Type="int" IsAutoCreated="true" />
+          <Field Name="AuditActionID" Type="int" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="AuditDataID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="AuditedOn" Type="datetime" FieldIndex="3" />
+          <Field Name="UserID" Type="int" IsAutoCreated="true" FieldIndex="2" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="AuditDataMessageRelated" InheritanceType="2">
         <Fields>
-          <Field Name="MessageID" Type="int" IsAutoCreated="true" />
+          <Field Name="MessageID" Type="int" IsAutoCreated="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="AuditDataThreadRelated" InheritanceType="2">
         <Fields>
-          <Field Name="ThreadID" Type="int" IsAutoCreated="true" />
+          <Field Name="ThreadID" Type="int" IsAutoCreated="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Bookmark">
         <Fields>
-          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Forum">
         <Fields>
-          <Field Name="DefaultSupportQueueID" Type="int" IsOptional="true" IsAutoCreated="true" />
-          <Field Name="DefaultThreadListInterval" Type="byte" />
-          <Field Name="ForumDescription" Type="string" MaxLength="250" />
-          <Field Name="ForumID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="ForumLastPostingDate" Type="datetime" IsOptional="true" />
-          <Field Name="ForumName" Type="string" MaxLength="50" />
-          <Field Name="HasRSSFeed" Type="bool" />
-          <Field Name="MaxAttachmentSize" Type="int" IsOptional="true">
+          <Field Name="DefaultSupportQueueID" Type="int" IsOptional="true" IsAutoCreated="true" FieldIndex="6" />
+          <Field Name="DefaultThreadListInterval" Type="byte" FieldIndex="7" />
+          <Field Name="ForumDescription" Type="string" MaxLength="250" FieldIndex="3" />
+          <Field Name="ForumID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="ForumLastPostingDate" Type="datetime" IsOptional="true" FieldIndex="4" />
+          <Field Name="ForumName" Type="string" MaxLength="50" FieldIndex="2" />
+          <Field Name="HasRSSFeed" Type="bool" FieldIndex="5" />
+          <Field Name="MaxAttachmentSize" Type="int" IsOptional="true" FieldIndex="9">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="MaxNoOfAttachmentsPerMessage" Type="short" IsOptional="true">
+          <Field Name="MaxNoOfAttachmentsPerMessage" Type="short" IsOptional="true" FieldIndex="10">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="NewThreadWelcomeText" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="NewThreadWelcomeTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="OrderNo" Type="short" />
-          <Field Name="SectionID" Type="int" IsAutoCreated="true" />
+          <Field Name="NewThreadWelcomeText" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="11" />
+          <Field Name="NewThreadWelcomeTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="12" />
+          <Field Name="OrderNo" Type="short" FieldIndex="8" />
+          <Field Name="SectionID" Type="int" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="ForumRoleForumActionRight">
         <Fields>
-          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="ForumID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="2" />
+          <Field Name="ForumID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="IPBan">
         <Fields>
-          <Field Name="IPBanID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="IPBanSetByUserID" Type="int" IsAutoCreated="true" />
-          <Field Name="IPBanSetOn" Type="datetime" />
-          <Field Name="IPSegment1" Type="byte" />
-          <Field Name="IPSegment2" Type="byte" />
-          <Field Name="IPSegment3" Type="byte" />
-          <Field Name="IPSegment4" Type="byte" />
-          <Field Name="Range" Type="byte" />
-          <Field Name="Reason" Type="string" MaxLength="1073741823" />
+          <Field Name="IPBanID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="IPBanSetByUserID" Type="int" IsAutoCreated="true" FieldIndex="6" />
+          <Field Name="IPBanSetOn" Type="datetime" FieldIndex="7" />
+          <Field Name="IPSegment1" Type="byte" FieldIndex="1" />
+          <Field Name="IPSegment2" Type="byte" FieldIndex="2" />
+          <Field Name="IPSegment3" Type="byte" FieldIndex="3" />
+          <Field Name="IPSegment4" Type="byte" FieldIndex="4" />
+          <Field Name="Range" Type="byte" FieldIndex="5" />
+          <Field Name="Reason" Type="string" MaxLength="1073741823" FieldIndex="8" />
         </Fields>
         <Forfs>
           <Forf Name="SetByUserNickName" MappedField=":User:NickName" RelationshipName="IPBan.SetByUser-User.IPBansSet" ViaStartNavigator="true" />
@@ -209,134 +209,134 @@
       </EntityDefinition>
       <EntityDefinition Name="Message">
         <Fields>
-          <Field Name="ChangeTrackerStamp" Type="byte[]" IsReadOnly="true" MaxLength="8" />
-          <Field Name="MessageID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="MessageText" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="MessageTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="MessageTextAsXml" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="PostedByUserID" Type="int" IsAutoCreated="true" />
-          <Field Name="PostedFromIP" Type="string" MaxLength="25" />
-          <Field Name="PostingDate" Type="datetime" />
-          <Field Name="ThreadID" Type="int" IsAutoCreated="true" />
+          <Field Name="ChangeTrackerStamp" Type="byte[]" IsReadOnly="true" MaxLength="8" FieldIndex="5" />
+          <Field Name="MessageID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="MessageText" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="6" />
+          <Field Name="MessageTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="7" />
+          <Field Name="MessageTextAsXml" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="8" />
+          <Field Name="PostedByUserID" Type="int" IsAutoCreated="true" FieldIndex="2" />
+          <Field Name="PostedFromIP" Type="string" MaxLength="25" FieldIndex="4" />
+          <Field Name="PostingDate" Type="datetime" FieldIndex="1" />
+          <Field Name="ThreadID" Type="int" IsAutoCreated="true" FieldIndex="3" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Role">
         <Fields>
-          <Field Name="RoleDescription" Type="string" MaxLength="50" />
-          <Field Name="RoleID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
+          <Field Name="RoleDescription" Type="string" MaxLength="50" FieldIndex="1" />
+          <Field Name="RoleID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="RoleAuditAction">
         <Fields>
-          <Field Name="AuditActionID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="AuditActionID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="RoleSystemActionRight">
         <Fields>
-          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="ActionRightID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="RoleUser">
         <Fields>
-          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="RoleID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Section">
         <Fields>
-          <Field Name="OrderNo" Type="short" />
-          <Field Name="SectionDescription" Type="string" MaxLength="250" />
-          <Field Name="SectionID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="SectionName" Type="string" MaxLength="50" />
+          <Field Name="OrderNo" Type="short" FieldIndex="3" />
+          <Field Name="SectionDescription" Type="string" MaxLength="250" FieldIndex="2" />
+          <Field Name="SectionID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="SectionName" Type="string" MaxLength="50" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="SupportQueue">
         <Fields>
-          <Field Name="OrderNo" Type="short" />
-          <Field Name="QueueDescription" Type="string" IsOptional="true" MaxLength="250" />
-          <Field Name="QueueID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="QueueName" Type="string" IsOptional="true" MaxLength="50" />
+          <Field Name="OrderNo" Type="short" FieldIndex="3" />
+          <Field Name="QueueDescription" Type="string" MaxLength="250" FieldIndex="2" />
+          <Field Name="QueueID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="QueueName" Type="string" MaxLength="50" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="SupportQueueThread">
         <Fields>
-          <Field Name="ClaimedByUserID" Type="int" IsOptional="true" IsAutoCreated="true" />
-          <Field Name="ClaimedOn" Type="datetime" IsOptional="true" />
-          <Field Name="PlacedInQueueByUserID" Type="int" IsAutoCreated="true" />
-          <Field Name="PlacedInQueueOn" Type="datetime" />
-          <Field Name="QueueID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="ClaimedByUserID" Type="int" IsOptional="true" IsAutoCreated="true" FieldIndex="4" />
+          <Field Name="ClaimedOn" Type="datetime" IsOptional="true" FieldIndex="5" />
+          <Field Name="PlacedInQueueByUserID" Type="int" IsAutoCreated="true" FieldIndex="2" />
+          <Field Name="PlacedInQueueOn" Type="datetime" FieldIndex="3" />
+          <Field Name="QueueID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="SystemData">
         <Fields>
-          <Field Name="AnonymousRole" Type="int" IsAutoCreated="true" />
-          <Field Name="DefaultRoleNewUser" Type="int" IsAutoCreated="true" />
-          <Field Name="DefaultUserTitleNewUser" Type="int" />
-          <Field Name="HoursThresholdForActiveThreads" Type="short" />
-          <Field Name="ID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="MinNumberOfNonStickyVisibleThreads" Type="short" />
-          <Field Name="MinNumberOfThreadsToFetch" Type="short" />
-          <Field Name="PageSizeSearchResults" Type="short" />
-          <Field Name="SendReplyNotifications" Type="bool" />
+          <Field Name="AnonymousRole" Type="int" IsAutoCreated="true" FieldIndex="2" />
+          <Field Name="DefaultRoleNewUser" Type="int" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="DefaultUserTitleNewUser" Type="int" FieldIndex="3" />
+          <Field Name="HoursThresholdForActiveThreads" Type="short" FieldIndex="4" />
+          <Field Name="ID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="MinNumberOfNonStickyVisibleThreads" Type="short" FieldIndex="7" />
+          <Field Name="MinNumberOfThreadsToFetch" Type="short" FieldIndex="6" />
+          <Field Name="PageSizeSearchResults" Type="short" FieldIndex="5" />
+          <Field Name="SendReplyNotifications" Type="bool" FieldIndex="8" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="Thread">
         <Fields>
-          <Field Name="ForumID" Type="int" IsAutoCreated="true" />
-          <Field Name="IsClosed" Type="bool" />
-          <Field Name="IsSticky" Type="bool" />
-          <Field Name="MarkedAsDone" Type="bool" />
-          <Field Name="Memo" Type="string" IsOptional="true" MaxLength="1073741823" />
-          <Field Name="NumberOfViews" Type="int" IsOptional="true" />
-          <Field Name="StartedByUserID" Type="int" IsAutoCreated="true" />
-          <Field Name="Subject" Type="string" MaxLength="250" />
-          <Field Name="ThreadID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="ThreadLastPostingDate" Type="datetime" IsOptional="true" />
+          <Field Name="ForumID" Type="int" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="IsClosed" Type="bool" FieldIndex="6" />
+          <Field Name="IsSticky" Type="bool" FieldIndex="5" />
+          <Field Name="MarkedAsDone" Type="bool" FieldIndex="7" />
+          <Field Name="Memo" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="9" />
+          <Field Name="NumberOfViews" Type="int" IsOptional="true" FieldIndex="8" />
+          <Field Name="StartedByUserID" Type="int" IsAutoCreated="true" FieldIndex="3" />
+          <Field Name="Subject" Type="string" MaxLength="250" FieldIndex="2" />
+          <Field Name="ThreadID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="ThreadLastPostingDate" Type="datetime" IsOptional="true" FieldIndex="4" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="ThreadSubscription">
         <Fields>
-          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
-          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" />
+          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="User">
         <Fields>
-          <Field Name="AmountOfPostings" Type="int" IsOptional="true" />
-          <Field Name="AutoSubscribeToThread" Type="bool" IsOptional="true">
+          <Field Name="AmountOfPostings" Type="int" IsOptional="true" FieldIndex="15" />
+          <Field Name="AutoSubscribeToThread" Type="bool" IsOptional="true" FieldIndex="18">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="DateOfBirth" Type="datetime" IsOptional="true" />
-          <Field Name="DefaultNumberOfMessagesPerPage" Type="short" IsOptional="true">
+          <Field Name="DateOfBirth" Type="datetime" IsOptional="true" FieldIndex="9" />
+          <Field Name="DefaultNumberOfMessagesPerPage" Type="short" IsOptional="true" FieldIndex="19">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="EmailAddress" Type="string" IsOptional="true" MaxLength="200" />
-          <Field Name="EmailAddressIsPublic" Type="bool" IsOptional="true" />
-          <Field Name="IconURL" Type="string" IsOptional="true" MaxLength="250" />
-          <Field Name="IPNumber" Type="string" MaxLength="25" />
-          <Field Name="IsBanned" Type="bool" />
-          <Field Name="JoinDate" Type="datetime" IsOptional="true" />
-          <Field Name="LastVisitedDate" Type="datetime" IsOptional="true" />
-          <Field Name="Location" Type="string" IsOptional="true" MaxLength="100" />
-          <Field Name="NickName" Type="string" MaxLength="20" />
-          <Field Name="Occupation" Type="string" IsOptional="true" MaxLength="100" />
-          <Field Name="Password" Type="string" MaxLength="30" />
-          <Field Name="Signature" Type="string" IsOptional="true" MaxLength="250" />
-          <Field Name="SignatureAsHTML" Type="string" IsOptional="true" MaxLength="1024" />
-          <Field Name="UserID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
-          <Field Name="UserTitleID" Type="int" IsAutoCreated="true" />
-          <Field Name="Website" Type="string" IsOptional="true" MaxLength="200" />
+          <Field Name="EmailAddress" Type="string" IsOptional="true" MaxLength="200" FieldIndex="7" />
+          <Field Name="EmailAddressIsPublic" Type="bool" IsOptional="true" FieldIndex="16" />
+          <Field Name="IconURL" Type="string" IsOptional="true" MaxLength="250" FieldIndex="6" />
+          <Field Name="IPNumber" Type="string" MaxLength="25" FieldIndex="4" />
+          <Field Name="IsBanned" Type="bool" FieldIndex="3" />
+          <Field Name="JoinDate" Type="datetime" IsOptional="true" FieldIndex="14" />
+          <Field Name="LastVisitedDate" Type="datetime" IsOptional="true" FieldIndex="17" />
+          <Field Name="Location" Type="string" IsOptional="true" MaxLength="100" FieldIndex="11" />
+          <Field Name="NickName" Type="string" MaxLength="20" FieldIndex="1" />
+          <Field Name="Occupation" Type="string" IsOptional="true" MaxLength="100" FieldIndex="10" />
+          <Field Name="Password" Type="string" MaxLength="30" FieldIndex="2" />
+          <Field Name="Signature" Type="string" IsOptional="true" MaxLength="250" FieldIndex="5" />
+          <Field Name="SignatureAsHTML" Type="string" IsOptional="true" MaxLength="1024" FieldIndex="13" />
+          <Field Name="UserID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
+          <Field Name="UserTitleID" Type="int" IsAutoCreated="true" FieldIndex="8" />
+          <Field Name="Website" Type="string" IsOptional="true" MaxLength="200" FieldIndex="12" />
         </Fields>
         <UniqueConstraints>
           <UniqueConstraint Name="TFUserNickNameU2">
@@ -346,8 +346,8 @@
       </EntityDefinition>
       <EntityDefinition Name="UserTitle">
         <Fields>
-          <Field Name="UserTitleDescription" Type="string" MaxLength="50" />
-          <Field Name="UserTitleID" Type="int" IsReadOnly="true" IsPrimaryKey="true" />
+          <Field Name="UserTitleDescription" Type="string" MaxLength="50" FieldIndex="1" />
+          <Field Name="UserTitleID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
     </EntityDefinitions>
@@ -618,8 +618,8 @@
     <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE">
       <ConnectionElements>
         <ConnectionElement Name="ServerName" Value="nerd" />
-        <ConnectionElement Name="CatalogName" Value="HnD" />
-        <ConnectionElement Name="UseWindowsAuthentication" Value="True" />
+        <ConnectionElement Name="CatalogName" Value="master" />
+        <ConnectionElement Name="UseWindowsAuthentication" Value="true" />
         <ConnectionElement Name="UserID" Value="" />
         <ConnectionElement Name="Password" Value="" />
       </ConnectionElements>
@@ -634,7 +634,7 @@
               <Tables>
                 <Table Name="ActionRight">
                   <Fields>
-                    <Field Name="ActionRightID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_26516e94b1f9f61f035bc167f26" DbType="8" Precision="10" />
+                    <Field Name="ActionRightID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_ActionRight_PK" DbType="8" Precision="10" />
                     <Field Name="ActionRightDescription" Ordinal="2" DbType="12" Length="50" />
                     <Field Name="AppliesToForum" Ordinal="3" DbType="2" />
                     <Field Name="AppliesToSystem" Ordinal="4" DbType="2" />
@@ -642,9 +642,9 @@
                 </Table>
                 <Table Name="Attachment">
                   <Fields>
-                    <Field Name="AttachmentID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_efbaf7440aebc35d4827b0e2fdb" DbType="8" Precision="10" />
+                    <Field Name="AttachmentID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_Attachment" DbType="8" Precision="10" />
                     <Field Name="MessageID" Ordinal="2" DbType="8" Precision="10" />
-                    <Field Name="Filename" Ordinal="3" IsOptional="true" DbType="12" Length="255" />
+                    <Field Name="Filename" Ordinal="3" DbType="12" Length="255" />
                     <Field Name="Approved" Ordinal="4" DbType="2" />
                     <Field Name="Filecontents" Ordinal="5" DbType="7" Length="2147483647" />
                     <Field Name="Filesize" Ordinal="6" DbType="8" Precision="10" />
@@ -653,13 +653,13 @@
                 </Table>
                 <Table Name="AuditAction">
                   <Fields>
-                    <Field Name="AuditActionID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_72987674f30bcb399b8fe02ad44" DbType="8" Precision="10" />
-                    <Field Name="AuditActionDescription" Ordinal="2" IsOptional="true" DbType="12" Length="50" />
+                    <Field Name="AuditActionID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_AuditAction_PK" DbType="8" Precision="10" />
+                    <Field Name="AuditActionDescription" Ordinal="2" DbType="12" Length="50" />
                   </Fields>
                 </Table>
                 <Table Name="AuditDataCore">
                   <Fields>
-                    <Field Name="AuditDataID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_c07da0140cb9b450d4072531f24" DbType="8" Precision="10" />
+                    <Field Name="AuditDataID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_AuditDataCore_PK" DbType="8" Precision="10" />
                     <Field Name="AuditActionID" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="UserID" Ordinal="3" DbType="8" Precision="10" />
                     <Field Name="AuditedOn" Ordinal="4" DbType="4" />
@@ -667,25 +667,25 @@
                 </Table>
                 <Table Name="AuditDataMessageRelated">
                   <Fields>
-                    <Field Name="AuditDataID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_dc40a60453aa497037493d2a97f" DbType="8" Precision="10" />
+                    <Field Name="AuditDataID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_AuditDataMessageRelated_PK" DbType="8" Precision="10" />
                     <Field Name="MessageID" Ordinal="2" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="AuditDataThreadRelated">
                   <Fields>
-                    <Field Name="AuditDataID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_9645348416abf95adf7feda2466" DbType="8" Precision="10" />
+                    <Field Name="AuditDataID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_AuditDataThreadRelated_PK" DbType="8" Precision="10" />
                     <Field Name="ThreadID" Ordinal="2" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="Bookmark">
                   <Fields>
-                    <Field Name="ThreadID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_968461f457683b83965b518294f" DbType="8" Precision="10" />
-                    <Field Name="UserID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_968461f457683b83965b518294f" DbType="8" Precision="10" />
+                    <Field Name="ThreadID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_Bookmark_PK" DbType="8" Precision="10" />
+                    <Field Name="UserID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="TF_Bookmark_PK" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="Forum">
                   <Fields>
-                    <Field Name="ForumID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_f6c4eeb43f0a66288298c2ecfbc" DbType="8" Precision="10" />
+                    <Field Name="ForumID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_Forum_PK" DbType="8" Precision="10" />
                     <Field Name="SectionID" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="ForumName" Ordinal="3" DbType="12" Length="50" />
                     <Field Name="ForumDescription" Ordinal="4" DbType="12" Length="250" />
@@ -702,14 +702,14 @@
                 </Table>
                 <Table Name="ForumRoleForumActionRight">
                   <Fields>
-                    <Field Name="ForumID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_fff3d804e4284221be22b19dc0e" DbType="8" Precision="10" />
-                    <Field Name="RoleID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_fff3d804e4284221be22b19dc0e" DbType="8" Precision="10" />
-                    <Field Name="ActionRightID" Ordinal="3" IsPrimaryKey="true" PkConstraintName="PK_fff3d804e4284221be22b19dc0e" DbType="8" Precision="10" />
+                    <Field Name="ForumID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_ForumRoleActionRight_PK" DbType="8" Precision="10" />
+                    <Field Name="RoleID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="TF_ForumRoleActionRight_PK" DbType="8" Precision="10" />
+                    <Field Name="ActionRightID" Ordinal="3" IsPrimaryKey="true" PkConstraintName="TF_ForumRoleActionRight_PK" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="IPBan">
                   <Fields>
-                    <Field Name="IPBanID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_2c33b134239b130eb2046cdf6db" DbType="8" Precision="10" />
+                    <Field Name="IPBanID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_TF_IPBan" DbType="8" Precision="10" />
                     <Field Name="IPSegment1" Ordinal="2" DefaultValue="(0)" DbType="22" Precision="3" />
                     <Field Name="IPSegment2" Ordinal="3" DefaultValue="(0)" DbType="22" Precision="3" />
                     <Field Name="IPSegment3" Ordinal="4" DefaultValue="(0)" DbType="22" Precision="3" />
@@ -722,7 +722,7 @@
                 </Table>
                 <Table Name="Message">
                   <Fields>
-                    <Field Name="MessageID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_2ed0bb34e1cbedc5ff94a97aef7" DbType="8" Precision="10" />
+                    <Field Name="MessageID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_Message_PK" DbType="8" Precision="10" />
                     <Field Name="PostingDate" Ordinal="2" DbType="4" />
                     <Field Name="PostedByUserID" Ordinal="3" DbType="8" Precision="10" />
                     <Field Name="ThreadID" Ordinal="4" DbType="8" Precision="10" />
@@ -735,31 +735,31 @@
                 </Table>
                 <Table Name="Role">
                   <Fields>
-                    <Field Name="RoleID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_c0b0c7e49bdabf0458118ace6cc" DbType="8" Precision="10" />
+                    <Field Name="RoleID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_Role_PK" DbType="8" Precision="10" />
                     <Field Name="RoleDescription" Ordinal="2" DbType="12" Length="50" />
                   </Fields>
                 </Table>
                 <Table Name="RoleAuditAction">
                   <Fields>
-                    <Field Name="AuditActionID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_e45abfc4b7a94392f00c82f9c8f" DbType="8" Precision="10" />
-                    <Field Name="RoleID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_e45abfc4b7a94392f00c82f9c8f" DbType="8" Precision="10" />
+                    <Field Name="AuditActionID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_RoleAuditAction_PK" DbType="8" Precision="10" />
+                    <Field Name="RoleID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="TF_RoleAuditAction_PK" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="RoleSystemActionRight">
                   <Fields>
-                    <Field Name="RoleID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_f9bc40f4861b3f20940c63d235b" DbType="8" Precision="10" />
-                    <Field Name="ActionRightID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_f9bc40f4861b3f20940c63d235b" DbType="8" Precision="10" />
+                    <Field Name="RoleID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_RoleSystemActionRight_PK" DbType="8" Precision="10" />
+                    <Field Name="ActionRightID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="TF_RoleSystemActionRight_PK" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="RoleUser">
                   <Fields>
-                    <Field Name="RoleID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_2b8e87f4195871b4f575e599545" DbType="8" Precision="10" />
-                    <Field Name="UserID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_2b8e87f4195871b4f575e599545" DbType="8" Precision="10" />
+                    <Field Name="RoleID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="TF_RoleUser_PK" DbType="8" Precision="10" />
+                    <Field Name="UserID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="TF_RoleUser_PK" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="Section">
                   <Fields>
-                    <Field Name="SectionID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_fbaab20424ea25c8de3ee5d8ca4" DbType="8" Precision="10" />
+                    <Field Name="SectionID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_Section_PK" DbType="8" Precision="10" />
                     <Field Name="SectionName" Ordinal="2" DbType="12" Length="50" />
                     <Field Name="SectionDescription" Ordinal="3" DbType="12" Length="250" />
                     <Field Name="OrderNo" Ordinal="4" DefaultValue="(0)" DbType="16" Precision="5" />
@@ -767,16 +767,16 @@
                 </Table>
                 <Table Name="SupportQueue">
                   <Fields>
-                    <Field Name="QueueID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_6438bd04fde963b7e3d9aca02e3" DbType="8" Precision="10" />
-                    <Field Name="QueueName" Ordinal="2" IsOptional="true" DbType="12" Length="50" />
-                    <Field Name="QueueDescription" Ordinal="3" IsOptional="true" DbType="12" Length="250" />
+                    <Field Name="QueueID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_SupportQueue" DbType="8" Precision="10" />
+                    <Field Name="QueueName" Ordinal="2" DbType="12" Length="50" />
+                    <Field Name="QueueDescription" Ordinal="3" DbType="12" Length="250" />
                     <Field Name="OrderNo" Ordinal="4" DbType="16" Precision="5" />
                   </Fields>
                 </Table>
                 <Table Name="SupportQueueThread">
                   <Fields>
-                    <Field Name="QueueID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_2fdca244e32aa769d8fbecc3a77" DbType="8" Precision="10" />
-                    <Field Name="ThreadID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_2fdca244e32aa769d8fbecc3a77" DbType="8" Precision="10" />
+                    <Field Name="QueueID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_SupportQueueThread" DbType="8" Precision="10" />
+                    <Field Name="ThreadID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_SupportQueueThread" DbType="8" Precision="10" />
                     <Field Name="PlacedInQueueByUserID" Ordinal="3" DbType="8" Precision="10" />
                     <Field Name="PlacedInQueueOn" Ordinal="4" DbType="4" />
                     <Field Name="ClaimedByUserID" Ordinal="5" IsOptional="true" DbType="8" Precision="10" />
@@ -790,7 +790,7 @@
                 </Table>
                 <Table Name="SystemData">
                   <Fields>
-                    <Field Name="ID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_099cd3342539eaddec68a746313" DbType="8" Precision="10" />
+                    <Field Name="ID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_TF_SystemData" DbType="8" Precision="10" />
                     <Field Name="DefaultRoleNewUser" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="AnonymousRole" Ordinal="3" DbType="8" Precision="10" />
                     <Field Name="DefaultUserTitleNewUser" Ordinal="4" DefaultValue="(0)" DbType="8" Precision="10" />
@@ -803,7 +803,7 @@
                 </Table>
                 <Table Name="Thread">
                   <Fields>
-                    <Field Name="ThreadID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_49940874484a53a0ce4de6e0f35" DbType="8" Precision="10" />
+                    <Field Name="ThreadID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_Thread_PK" DbType="8" Precision="10" />
                     <Field Name="ForumID" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="Subject" Ordinal="3" DbType="12" Length="250" />
                     <Field Name="StartedByUserID" Ordinal="4" DbType="8" Precision="10" />
@@ -817,13 +817,13 @@
                 </Table>
                 <Table Name="ThreadSubscription">
                   <Fields>
-                    <Field Name="UserID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_17c074541dfa2cfa46a42b00e12" DbType="8" Precision="10" />
-                    <Field Name="ThreadID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_17c074541dfa2cfa46a42b00e12" DbType="8" Precision="10" />
+                    <Field Name="UserID" Ordinal="1" IsPrimaryKey="true" PkConstraintName="PK_ThreadSubscription" DbType="8" Precision="10" />
+                    <Field Name="ThreadID" Ordinal="2" IsPrimaryKey="true" PkConstraintName="PK_ThreadSubscription" DbType="8" Precision="10" />
                   </Fields>
                 </Table>
                 <Table Name="User">
                   <Fields>
-                    <Field Name="UserID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_8df186f474b8a3366dd4bc86877" DbType="8" Precision="10" />
+                    <Field Name="UserID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_User_PK" DbType="8" Precision="10" />
                     <Field Name="NickName" Ordinal="2" DbType="12" Length="20" />
                     <Field Name="Password" Ordinal="3" DbType="12" Length="30" />
                     <Field Name="IsBanned" Ordinal="4" DbType="2" />
@@ -852,7 +852,7 @@
                 </Table>
                 <Table Name="UserTitle">
                   <Fields>
-                    <Field Name="UserTitleID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="PK_d2e33064462bfd0a4042983c96e" DbType="8" Precision="10" />
+                    <Field Name="UserTitleID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" PkConstraintName="TF_UserTitle_PK" DbType="8" Precision="10" />
                     <Field Name="UserTitleDescription" Ordinal="2" DbType="24" Length="50" />
                   </Fields>
                 </Table>

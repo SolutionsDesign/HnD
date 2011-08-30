@@ -75,29 +75,29 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
-		protected ThreadSubscriptionEntityBase(System.Int32 threadID, System.Int32 userID)
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		protected ThreadSubscriptionEntityBase(System.Int32 userID, System.Int32 threadID)
 		{
-			InitClassFetch(threadID, userID, null, null);
+			InitClassFetch(userID, threadID, null, null);
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected ThreadSubscriptionEntityBase(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse)
+		protected ThreadSubscriptionEntityBase(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse)
 		{
-			InitClassFetch(threadID, userID, null, prefetchPathToUse);
+			InitClassFetch(userID, threadID, null, prefetchPathToUse);
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="validator">The custom validator object for this ThreadSubscriptionEntity</param>
-		protected ThreadSubscriptionEntityBase(System.Int32 threadID, System.Int32 userID, IValidator validator)
+		protected ThreadSubscriptionEntityBase(System.Int32 userID, System.Int32 threadID, IValidator validator)
 		{
-			InitClassFetch(threadID, userID, validator, null);
+			InitClassFetch(userID, threadID, validator, null);
 		}
 
 		/// <summary>Private CTor for deserialization</summary>
@@ -133,13 +133,13 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((ThreadSubscriptionFieldIndex)fieldIndex)
 			{
-				case ThreadSubscriptionFieldIndex.ThreadID:
-					DesetupSyncThread(true, false);
-					_alreadyFetchedThread = false;
-					break;
 				case ThreadSubscriptionFieldIndex.UserID:
 					DesetupSyncUser(true, false);
 					_alreadyFetchedUser = false;
+					break;
+				case ThreadSubscriptionFieldIndex.ThreadID:
+					DesetupSyncThread(true, false);
+					_alreadyFetchedThread = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
@@ -302,54 +302,54 @@ namespace SD.HnD.DAL.EntityClasses
 
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 threadID, System.Int32 userID)
+		public bool FetchUsingPK(System.Int32 userID, System.Int32 threadID)
 		{
-			return FetchUsingPK(threadID, userID, null, null, null);
+			return FetchUsingPK(userID, threadID, null, null, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse)
+		public bool FetchUsingPK(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse)
 		{
-			return FetchUsingPK(threadID, userID, prefetchPathToUse, null, null);
+			return FetchUsingPK(userID, threadID, prefetchPathToUse, null, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse, Context contextToUse)
+		public bool FetchUsingPK(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse, Context contextToUse)
 		{
-			return FetchUsingPK(threadID, userID, prefetchPathToUse, contextToUse, null);
+			return FetchUsingPK(userID, threadID, prefetchPathToUse, contextToUse, null);
 		}
 
 		/// <summary> Fetches the contents of this entity from the persistent storage using the primary key.</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <param name="excludedIncludedFields">The list of IEntityField objects which have to be excluded or included for the fetch. 
 		/// If null or empty, all fields are fetched (default). If an instance of ExcludeIncludeFieldsList is passed in and its ExcludeContainedFields property
 		/// is set to false, the fields contained in excludedIncludedFields are kept in the query, the rest of the fields in the query are excluded.</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		public bool FetchUsingPK(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
+		public bool FetchUsingPK(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
 		{
-			return Fetch(threadID, userID, prefetchPathToUse, contextToUse, excludedIncludedFields);
+			return Fetch(userID, threadID, prefetchPathToUse, contextToUse, excludedIncludedFields);
 		}
 
 		/// <summary> Refetches the Entity from the persistent storage. Refetch is used to re-load an Entity which is marked "Out-of-sync", due to a save action. Refetching an empty Entity has no effect. </summary>
 		/// <returns>true if Refetch succeeded, false otherwise</returns>
 		public override bool Refetch()
 		{
-			return Fetch(this.ThreadID, this.UserID, null, null, null);
+			return Fetch(this.UserID, this.ThreadID, null, null, null);
 		}
 
 
@@ -469,17 +469,17 @@ namespace SD.HnD.DAL.EntityClasses
 		}		
 
 		/// <summary> Initializes the the entity and fetches the data related to the entity in this entity.</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="validator">The validator object for this ThreadSubscriptionEntity</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		private void InitClassFetch(System.Int32 threadID, System.Int32 userID, IValidator validator, IPrefetchPath prefetchPathToUse)
+		private void InitClassFetch(System.Int32 userID, System.Int32 threadID, IValidator validator, IPrefetchPath prefetchPathToUse)
 		{
 			OnInitializing();
 			this.Validator = validator;
 			this.Fields = CreateFields();
 			InitClassMembers();	
-			Fetch(threadID, userID, prefetchPathToUse, null, null);
+			Fetch(userID, threadID, prefetchPathToUse, null, null);
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassFetch
 			// __LLBLGENPRO_USER_CODE_REGION_END
@@ -507,9 +507,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("UserID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
 		}
 		#endregion
 
@@ -580,21 +580,21 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Fetches the entity from the persistent storage. Fetch simply reads the entity into an EntityFields object. </summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
 		/// <param name="contextToUse">The context to add the entity to if the fetch was succesful. </param>
 		/// <param name="excludedIncludedFields">The list of IEntityField objects which have to be excluded or included for the fetch. 
 		/// If null or empty, all fields are fetched (default). If an instance of ExcludeIncludeFieldsList is passed in and its ExcludeContainedFields property
 		/// is set to false, the fields contained in excludedIncludedFields are kept in the query, the rest of the fields in the query are excluded.</param>
 		/// <returns>True if succeeded, false otherwise.</returns>
-		private bool Fetch(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
+		private bool Fetch(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
 		{
 			try
 			{
 				OnFetch();
-				this.Fields[(int)ThreadSubscriptionFieldIndex.ThreadID].ForcedCurrentValueWrite(threadID);
 				this.Fields[(int)ThreadSubscriptionFieldIndex.UserID].ForcedCurrentValueWrite(userID);
+				this.Fields[(int)ThreadSubscriptionFieldIndex.ThreadID].ForcedCurrentValueWrite(threadID);
 				CreateDAOInstance().FetchExisting(this, this.Transaction, prefetchPathToUse, contextToUse, excludedIncludedFields);
 				return (this.Fields.State == EntityState.Fetched);
 			}
@@ -676,16 +676,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ThreadID property of the Entity ThreadSubscription<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "ThreadSubscription"."ThreadID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
-		public virtual System.Int32 ThreadID
-		{
-			get { return (System.Int32)GetValue((int)ThreadSubscriptionFieldIndex.ThreadID, true); }
-			set	{ SetValue((int)ThreadSubscriptionFieldIndex.ThreadID, value, true); }
-		}
-
 		/// <summary> The UserID property of the Entity ThreadSubscription<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ThreadSubscription"."UserID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -694,6 +684,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)ThreadSubscriptionFieldIndex.UserID, true); }
 			set	{ SetValue((int)ThreadSubscriptionFieldIndex.UserID, value, true); }
+		}
+
+		/// <summary> The ThreadID property of the Entity ThreadSubscription<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "ThreadSubscription"."ThreadID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		public virtual System.Int32 ThreadID
+		{
+			get { return (System.Int32)GetValue((int)ThreadSubscriptionFieldIndex.ThreadID, true); }
+			set	{ SetValue((int)ThreadSubscriptionFieldIndex.ThreadID, value, true); }
 		}
 
 

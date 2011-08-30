@@ -411,9 +411,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("UserTitleDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("UserTitleID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("UserTitleDescription", fieldHashtable);
 		}
 		#endregion
 
@@ -505,16 +505,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The UserTitleDescription property of the Entity UserTitle<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "UserTitle"."UserTitleDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String UserTitleDescription
-		{
-			get { return (System.String)GetValue((int)UserTitleFieldIndex.UserTitleDescription, true); }
-			set	{ SetValue((int)UserTitleFieldIndex.UserTitleDescription, value, true); }
-		}
-
 		/// <summary> The UserTitleID property of the Entity UserTitle<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "UserTitle"."UserTitleID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -523,6 +513,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)UserTitleFieldIndex.UserTitleID, true); }
 			set	{ SetValue((int)UserTitleFieldIndex.UserTitleID, value, true); }
+		}
+
+		/// <summary> The UserTitleDescription property of the Entity UserTitle<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "UserTitle"."UserTitleDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String UserTitleDescription
+		{
+			get { return (System.String)GetValue((int)UserTitleFieldIndex.UserTitleDescription, true); }
+			set	{ SetValue((int)UserTitleFieldIndex.UserTitleDescription, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'UserEntity' using a relation of type '1:n'.<br/><br/>

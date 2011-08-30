@@ -37,28 +37,28 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
-		public ThreadSubscriptionEntity(System.Int32 threadID, System.Int32 userID):
-			base(threadID, userID)
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		public ThreadSubscriptionEntity(System.Int32 userID, System.Int32 threadID):
+			base(userID, threadID)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public ThreadSubscriptionEntity(System.Int32 threadID, System.Int32 userID, IPrefetchPath prefetchPathToUse):
-			base(threadID, userID, prefetchPathToUse)
+		public ThreadSubscriptionEntity(System.Int32 userID, System.Int32 threadID, IPrefetchPath prefetchPathToUse):
+			base(userID, threadID, prefetchPathToUse)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="userID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
+		/// <param name="threadID">PK value for ThreadSubscription which data should be fetched into this ThreadSubscription object</param>
 		/// <param name="validator">The custom validator object for this ThreadSubscriptionEntity</param>
-		public ThreadSubscriptionEntity(System.Int32 threadID, System.Int32 userID, IValidator validator):
-			base(threadID, userID, validator)
+		public ThreadSubscriptionEntity(System.Int32 userID, System.Int32 threadID, IValidator validator):
+			base(userID, threadID, validator)
 		{
 		}
 		

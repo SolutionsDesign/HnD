@@ -561,9 +561,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ActionRightDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("ActionRightID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ActionRightDescription", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("AppliesToForum", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
@@ -678,16 +678,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ActionRightDescription property of the Entity ActionRight<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "ActionRight"."ActionRightDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String ActionRightDescription
-		{
-			get { return (System.String)GetValue((int)ActionRightFieldIndex.ActionRightDescription, true); }
-			set	{ SetValue((int)ActionRightFieldIndex.ActionRightDescription, value, true); }
-		}
-
 		/// <summary> The ActionRightID property of the Entity ActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ActionRight"."ActionRightID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -696,6 +686,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)ActionRightFieldIndex.ActionRightID, true); }
 			set	{ SetValue((int)ActionRightFieldIndex.ActionRightID, value, true); }
+		}
+
+		/// <summary> The ActionRightDescription property of the Entity ActionRight<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "ActionRight"."ActionRightDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String ActionRightDescription
+		{
+			get { return (System.String)GetValue((int)ActionRightFieldIndex.ActionRightDescription, true); }
+			set	{ SetValue((int)ActionRightFieldIndex.ActionRightDescription, value, true); }
 		}
 
 		/// <summary> The AppliesToForum property of the Entity ActionRight<br/><br/></summary>

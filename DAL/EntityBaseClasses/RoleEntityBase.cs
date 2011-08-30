@@ -1039,9 +1039,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("RoleDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("RoleID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("RoleDescription", fieldHashtable);
 		}
 		#endregion
 
@@ -1204,16 +1204,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The RoleDescription property of the Entity Role<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Role"."RoleDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String RoleDescription
-		{
-			get { return (System.String)GetValue((int)RoleFieldIndex.RoleDescription, true); }
-			set	{ SetValue((int)RoleFieldIndex.RoleDescription, value, true); }
-		}
-
 		/// <summary> The RoleID property of the Entity Role<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Role"."RoleID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -1222,6 +1212,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)RoleFieldIndex.RoleID, true); }
 			set	{ SetValue((int)RoleFieldIndex.RoleID, value, true); }
+		}
+
+		/// <summary> The RoleDescription property of the Entity Role<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Role"."RoleDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String RoleDescription
+		{
+			get { return (System.String)GetValue((int)RoleFieldIndex.RoleDescription, true); }
+			set	{ SetValue((int)RoleFieldIndex.RoleDescription, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'ForumRoleForumActionRightEntity' using a relation of type '1:n'.<br/><br/>

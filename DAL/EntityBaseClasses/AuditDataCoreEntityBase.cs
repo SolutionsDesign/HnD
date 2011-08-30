@@ -547,13 +547,13 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AuditActionID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("AuditDataID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AuditedOn", fieldHashtable);
+			_fieldsCustomProperties.Add("AuditActionID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("UserID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("AuditedOn", fieldHashtable);
 		}
 		#endregion
 
@@ -718,16 +718,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AuditActionID property of the Entity AuditDataCore<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "AuditDataCore"."AuditActionID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 AuditActionID
-		{
-			get { return (System.Int32)GetValue((int)AuditDataCoreFieldIndex.AuditActionID, true); }
-			set	{ SetValue((int)AuditDataCoreFieldIndex.AuditActionID, value, true); }
-		}
-
 		/// <summary> The AuditDataID property of the Entity AuditDataCore<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "AuditDataCore"."AuditDataID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -738,14 +728,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)AuditDataCoreFieldIndex.AuditDataID, value, true); }
 		}
 
-		/// <summary> The AuditedOn property of the Entity AuditDataCore<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "AuditDataCore"."AuditedOn"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// <summary> The AuditActionID property of the Entity AuditDataCore<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "AuditDataCore"."AuditActionID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.DateTime AuditedOn
+		public virtual System.Int32 AuditActionID
 		{
-			get { return (System.DateTime)GetValue((int)AuditDataCoreFieldIndex.AuditedOn, true); }
-			set	{ SetValue((int)AuditDataCoreFieldIndex.AuditedOn, value, true); }
+			get { return (System.Int32)GetValue((int)AuditDataCoreFieldIndex.AuditActionID, true); }
+			set	{ SetValue((int)AuditDataCoreFieldIndex.AuditActionID, value, true); }
 		}
 
 		/// <summary> The UserID property of the Entity AuditDataCore<br/><br/></summary>
@@ -756,6 +746,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)AuditDataCoreFieldIndex.UserID, true); }
 			set	{ SetValue((int)AuditDataCoreFieldIndex.UserID, value, true); }
+		}
+
+		/// <summary> The AuditedOn property of the Entity AuditDataCore<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "AuditDataCore"."AuditedOn"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.DateTime AuditedOn
+		{
+			get { return (System.DateTime)GetValue((int)AuditDataCoreFieldIndex.AuditedOn, true); }
+			set	{ SetValue((int)AuditDataCoreFieldIndex.AuditedOn, value, true); }
 		}
 
 

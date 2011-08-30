@@ -561,9 +561,9 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AuditActionDescription", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("AuditActionID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("AuditActionDescription", fieldHashtable);
 		}
 		#endregion
 
@@ -674,16 +674,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AuditActionDescription property of the Entity AuditAction<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "AuditAction"."AuditActionDescription"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String AuditActionDescription
-		{
-			get { return (System.String)GetValue((int)AuditActionFieldIndex.AuditActionDescription, true); }
-			set	{ SetValue((int)AuditActionFieldIndex.AuditActionDescription, value, true); }
-		}
-
 		/// <summary> The AuditActionID property of the Entity AuditAction<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "AuditAction"."AuditActionID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -692,6 +682,16 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)AuditActionFieldIndex.AuditActionID, true); }
 			set	{ SetValue((int)AuditActionFieldIndex.AuditActionID, value, true); }
+		}
+
+		/// <summary> The AuditActionDescription property of the Entity AuditAction<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "AuditAction"."AuditActionDescription"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String AuditActionDescription
+		{
+			get { return (System.String)GetValue((int)AuditActionFieldIndex.AuditActionDescription, true); }
+			set	{ SetValue((int)AuditActionFieldIndex.AuditActionDescription, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'AuditDataCoreEntity' using a relation of type '1:n'.<br/><br/>

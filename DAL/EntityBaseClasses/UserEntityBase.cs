@@ -1574,45 +1574,45 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AmountOfPostings", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("AutoSubscribeToThread", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("DateOfBirth", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("DefaultNumberOfMessagesPerPage", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("EmailAddress", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("EmailAddressIsPublic", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IconURL", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IPNumber", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IsBanned", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("JoinDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("LastVisitedDate", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("Location", fieldHashtable);
+			_fieldsCustomProperties.Add("UserID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("NickName", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("Occupation", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Password", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IsBanned", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IPNumber", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Signature", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("SignatureAsHTML", fieldHashtable);
+			_fieldsCustomProperties.Add("IconURL", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("UserID", fieldHashtable);
+			_fieldsCustomProperties.Add("EmailAddress", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("UserTitleID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("DateOfBirth", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Occupation", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Location", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Website", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("SignatureAsHTML", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("JoinDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("AmountOfPostings", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("EmailAddressIsPublic", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("LastVisitedDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("AutoSubscribeToThread", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("DefaultNumberOfMessagesPerPage", fieldHashtable);
 		}
 		#endregion
 
@@ -1860,124 +1860,14 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The AmountOfPostings property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."AmountOfPostings"<br/>
+		/// <summary> The UserID property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."UserID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Int32> AmountOfPostings
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 UserID
 		{
-			get { return (Nullable<System.Int32>)GetValue((int)UserFieldIndex.AmountOfPostings, false); }
-			set	{ SetValue((int)UserFieldIndex.AmountOfPostings, value, true); }
-		}
-
-		/// <summary> The AutoSubscribeToThread property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."AutoSubscribeToThread"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.Boolean AutoSubscribeToThread
-		{
-			get { return (System.Boolean)GetValue((int)UserFieldIndex.AutoSubscribeToThread, true); }
-			set	{ SetValue((int)UserFieldIndex.AutoSubscribeToThread, value, true); }
-		}
-
-		/// <summary> The DateOfBirth property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."DateOfBirth"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> DateOfBirth
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.DateOfBirth, false); }
-			set	{ SetValue((int)UserFieldIndex.DateOfBirth, value, true); }
-		}
-
-		/// <summary> The DefaultNumberOfMessagesPerPage property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."DefaultNumberOfMessagesPerPage"<br/>
-		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.Int16 DefaultNumberOfMessagesPerPage
-		{
-			get { return (System.Int16)GetValue((int)UserFieldIndex.DefaultNumberOfMessagesPerPage, true); }
-			set	{ SetValue((int)UserFieldIndex.DefaultNumberOfMessagesPerPage, value, true); }
-		}
-
-		/// <summary> The EmailAddress property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."EmailAddress"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 200<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String EmailAddress
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.EmailAddress, true); }
-			set	{ SetValue((int)UserFieldIndex.EmailAddress, value, true); }
-		}
-
-		/// <summary> The EmailAddressIsPublic property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."EmailAddressIsPublic"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Boolean> EmailAddressIsPublic
-		{
-			get { return (Nullable<System.Boolean>)GetValue((int)UserFieldIndex.EmailAddressIsPublic, false); }
-			set	{ SetValue((int)UserFieldIndex.EmailAddressIsPublic, value, true); }
-		}
-
-		/// <summary> The IconURL property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."IconURL"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String IconURL
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.IconURL, true); }
-			set	{ SetValue((int)UserFieldIndex.IconURL, value, true); }
-		}
-
-		/// <summary> The IPNumber property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."IPNumber"<br/>
-		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.String IPNumber
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.IPNumber, true); }
-			set	{ SetValue((int)UserFieldIndex.IPNumber, value, true); }
-		}
-
-		/// <summary> The IsBanned property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."IsBanned"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean IsBanned
-		{
-			get { return (System.Boolean)GetValue((int)UserFieldIndex.IsBanned, true); }
-			set	{ SetValue((int)UserFieldIndex.IsBanned, value, true); }
-		}
-
-		/// <summary> The JoinDate property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."JoinDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> JoinDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.JoinDate, false); }
-			set	{ SetValue((int)UserFieldIndex.JoinDate, value, true); }
-		}
-
-		/// <summary> The LastVisitedDate property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."LastVisitedDate"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> LastVisitedDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.LastVisitedDate, false); }
-			set	{ SetValue((int)UserFieldIndex.LastVisitedDate, value, true); }
-		}
-
-		/// <summary> The Location property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."Location"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String Location
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.Location, true); }
-			set	{ SetValue((int)UserFieldIndex.Location, value, true); }
+			get { return (System.Int32)GetValue((int)UserFieldIndex.UserID, true); }
+			set	{ SetValue((int)UserFieldIndex.UserID, value, true); }
 		}
 
 		/// <summary> The NickName property of the Entity User<br/><br/></summary>
@@ -1990,16 +1880,6 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)UserFieldIndex.NickName, value, true); }
 		}
 
-		/// <summary> The Occupation property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."Occupation"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String Occupation
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.Occupation, true); }
-			set	{ SetValue((int)UserFieldIndex.Occupation, value, true); }
-		}
-
 		/// <summary> The Password property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Password"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 30<br/>
@@ -2008,6 +1888,26 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Password, true); }
 			set	{ SetValue((int)UserFieldIndex.Password, value, true); }
+		}
+
+		/// <summary> The IsBanned property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."IsBanned"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean IsBanned
+		{
+			get { return (System.Boolean)GetValue((int)UserFieldIndex.IsBanned, true); }
+			set	{ SetValue((int)UserFieldIndex.IsBanned, value, true); }
+		}
+
+		/// <summary> The IPNumber property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."IPNumber"<br/>
+		/// Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.String IPNumber
+		{
+			get { return (System.String)GetValue((int)UserFieldIndex.IPNumber, true); }
+			set	{ SetValue((int)UserFieldIndex.IPNumber, value, true); }
 		}
 
 		/// <summary> The Signature property of the Entity User<br/><br/></summary>
@@ -2020,24 +1920,24 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)UserFieldIndex.Signature, value, true); }
 		}
 
-		/// <summary> The SignatureAsHTML property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."SignatureAsHTML"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 1024<br/>
+		/// <summary> The IconURL property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."IconURL"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250<br/>
 		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String SignatureAsHTML
+		public virtual System.String IconURL
 		{
-			get { return (System.String)GetValue((int)UserFieldIndex.SignatureAsHTML, true); }
-			set	{ SetValue((int)UserFieldIndex.SignatureAsHTML, value, true); }
+			get { return (System.String)GetValue((int)UserFieldIndex.IconURL, true); }
+			set	{ SetValue((int)UserFieldIndex.IconURL, value, true); }
 		}
 
-		/// <summary> The UserID property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."UserID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 UserID
+		/// <summary> The EmailAddress property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."EmailAddress"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 200<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.String EmailAddress
 		{
-			get { return (System.Int32)GetValue((int)UserFieldIndex.UserID, true); }
-			set	{ SetValue((int)UserFieldIndex.UserID, value, true); }
+			get { return (System.String)GetValue((int)UserFieldIndex.EmailAddress, true); }
+			set	{ SetValue((int)UserFieldIndex.EmailAddress, value, true); }
 		}
 
 		/// <summary> The UserTitleID property of the Entity User<br/><br/></summary>
@@ -2050,6 +1950,36 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)UserFieldIndex.UserTitleID, value, true); }
 		}
 
+		/// <summary> The DateOfBirth property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."DateOfBirth"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> DateOfBirth
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.DateOfBirth, false); }
+			set	{ SetValue((int)UserFieldIndex.DateOfBirth, value, true); }
+		}
+
+		/// <summary> The Occupation property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."Occupation"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.String Occupation
+		{
+			get { return (System.String)GetValue((int)UserFieldIndex.Occupation, true); }
+			set	{ SetValue((int)UserFieldIndex.Occupation, value, true); }
+		}
+
+		/// <summary> The Location property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."Location"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.String Location
+		{
+			get { return (System.String)GetValue((int)UserFieldIndex.Location, true); }
+			set	{ SetValue((int)UserFieldIndex.Location, value, true); }
+		}
+
 		/// <summary> The Website property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Website"<br/>
 		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 200<br/>
@@ -2058,6 +1988,76 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Website, true); }
 			set	{ SetValue((int)UserFieldIndex.Website, value, true); }
+		}
+
+		/// <summary> The SignatureAsHTML property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."SignatureAsHTML"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 1024<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.String SignatureAsHTML
+		{
+			get { return (System.String)GetValue((int)UserFieldIndex.SignatureAsHTML, true); }
+			set	{ SetValue((int)UserFieldIndex.SignatureAsHTML, value, true); }
+		}
+
+		/// <summary> The JoinDate property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."JoinDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> JoinDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.JoinDate, false); }
+			set	{ SetValue((int)UserFieldIndex.JoinDate, value, true); }
+		}
+
+		/// <summary> The AmountOfPostings property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."AmountOfPostings"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> AmountOfPostings
+		{
+			get { return (Nullable<System.Int32>)GetValue((int)UserFieldIndex.AmountOfPostings, false); }
+			set	{ SetValue((int)UserFieldIndex.AmountOfPostings, value, true); }
+		}
+
+		/// <summary> The EmailAddressIsPublic property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."EmailAddressIsPublic"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Boolean> EmailAddressIsPublic
+		{
+			get { return (Nullable<System.Boolean>)GetValue((int)UserFieldIndex.EmailAddressIsPublic, false); }
+			set	{ SetValue((int)UserFieldIndex.EmailAddressIsPublic, value, true); }
+		}
+
+		/// <summary> The LastVisitedDate property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."LastVisitedDate"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> LastVisitedDate
+		{
+			get { return (Nullable<System.DateTime>)GetValue((int)UserFieldIndex.LastVisitedDate, false); }
+			set	{ SetValue((int)UserFieldIndex.LastVisitedDate, value, true); }
+		}
+
+		/// <summary> The AutoSubscribeToThread property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."AutoSubscribeToThread"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.Boolean AutoSubscribeToThread
+		{
+			get { return (System.Boolean)GetValue((int)UserFieldIndex.AutoSubscribeToThread, true); }
+			set	{ SetValue((int)UserFieldIndex.AutoSubscribeToThread, value, true); }
+		}
+
+		/// <summary> The DefaultNumberOfMessagesPerPage property of the Entity User<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "User"."DefaultNumberOfMessagesPerPage"<br/>
+		/// Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.Int16 DefaultNumberOfMessagesPerPage
+		{
+			get { return (System.Int16)GetValue((int)UserFieldIndex.DefaultNumberOfMessagesPerPage, true); }
+			set	{ SetValue((int)UserFieldIndex.DefaultNumberOfMessagesPerPage, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'AuditDataCoreEntity' using a relation of type '1:n'.<br/><br/>

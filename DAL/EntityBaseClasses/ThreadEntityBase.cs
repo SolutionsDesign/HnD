@@ -1114,25 +1114,25 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("ForumID", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IsClosed", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("IsSticky", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("MarkedAsDone", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("Memo", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("NumberOfViews", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("StartedByUserID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Subject", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
+			_fieldsCustomProperties.Add("StartedByUserID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("ThreadLastPostingDate", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IsSticky", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("IsClosed", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("MarkedAsDone", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("NumberOfViews", fieldHashtable);
+			fieldHashtable = new Dictionary<string, string>();
+			_fieldsCustomProperties.Add("Memo", fieldHashtable);
 		}
 		#endregion
 
@@ -1401,6 +1401,16 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
+		/// <summary> The ThreadID property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."ThreadID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		public virtual System.Int32 ThreadID
+		{
+			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ThreadID, true); }
+			set	{ SetValue((int)ThreadFieldIndex.ThreadID, value, true); }
+		}
+
 		/// <summary> The ForumID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."ForumID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
@@ -1409,66 +1419,6 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ForumID, true); }
 			set	{ SetValue((int)ThreadFieldIndex.ForumID, value, true); }
-		}
-
-		/// <summary> The IsClosed property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."IsClosed"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean IsClosed
-		{
-			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsClosed, true); }
-			set	{ SetValue((int)ThreadFieldIndex.IsClosed, value, true); }
-		}
-
-		/// <summary> The IsSticky property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."IsSticky"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean IsSticky
-		{
-			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsSticky, true); }
-			set	{ SetValue((int)ThreadFieldIndex.IsSticky, value, true); }
-		}
-
-		/// <summary> The MarkedAsDone property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."MarkedAsDone"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Boolean MarkedAsDone
-		{
-			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.MarkedAsDone, true); }
-			set	{ SetValue((int)ThreadFieldIndex.MarkedAsDone, value, true); }
-		}
-
-		/// <summary> The Memo property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."Memo"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String Memo
-		{
-			get { return (System.String)GetValue((int)ThreadFieldIndex.Memo, true); }
-			set	{ SetValue((int)ThreadFieldIndex.Memo, value, true); }
-		}
-
-		/// <summary> The NumberOfViews property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."NumberOfViews"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Int32> NumberOfViews
-		{
-			get { return (Nullable<System.Int32>)GetValue((int)ThreadFieldIndex.NumberOfViews, false); }
-			set	{ SetValue((int)ThreadFieldIndex.NumberOfViews, value, true); }
-		}
-
-		/// <summary> The StartedByUserID property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."StartedByUserID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		public virtual System.Int32 StartedByUserID
-		{
-			get { return (System.Int32)GetValue((int)ThreadFieldIndex.StartedByUserID, true); }
-			set	{ SetValue((int)ThreadFieldIndex.StartedByUserID, value, true); }
 		}
 
 		/// <summary> The Subject property of the Entity Thread<br/><br/></summary>
@@ -1481,14 +1431,14 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)ThreadFieldIndex.Subject, value, true); }
 		}
 
-		/// <summary> The ThreadID property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."ThreadID"<br/>
+		/// <summary> The StartedByUserID property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."StartedByUserID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
-		public virtual System.Int32 ThreadID
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Int32 StartedByUserID
 		{
-			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ThreadID, true); }
-			set	{ SetValue((int)ThreadFieldIndex.ThreadID, value, true); }
+			get { return (System.Int32)GetValue((int)ThreadFieldIndex.StartedByUserID, true); }
+			set	{ SetValue((int)ThreadFieldIndex.StartedByUserID, value, true); }
 		}
 
 		/// <summary> The ThreadLastPostingDate property of the Entity Thread<br/><br/></summary>
@@ -1499,6 +1449,56 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			get { return (Nullable<System.DateTime>)GetValue((int)ThreadFieldIndex.ThreadLastPostingDate, false); }
 			set	{ SetValue((int)ThreadFieldIndex.ThreadLastPostingDate, value, true); }
+		}
+
+		/// <summary> The IsSticky property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."IsSticky"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean IsSticky
+		{
+			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsSticky, true); }
+			set	{ SetValue((int)ThreadFieldIndex.IsSticky, value, true); }
+		}
+
+		/// <summary> The IsClosed property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."IsClosed"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean IsClosed
+		{
+			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsClosed, true); }
+			set	{ SetValue((int)ThreadFieldIndex.IsClosed, value, true); }
+		}
+
+		/// <summary> The MarkedAsDone property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."MarkedAsDone"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		public virtual System.Boolean MarkedAsDone
+		{
+			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.MarkedAsDone, true); }
+			set	{ SetValue((int)ThreadFieldIndex.MarkedAsDone, value, true); }
+		}
+
+		/// <summary> The NumberOfViews property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."NumberOfViews"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> NumberOfViews
+		{
+			get { return (Nullable<System.Int32>)GetValue((int)ThreadFieldIndex.NumberOfViews, false); }
+			set	{ SetValue((int)ThreadFieldIndex.NumberOfViews, value, true); }
+		}
+
+		/// <summary> The Memo property of the Entity Thread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "Thread"."Memo"<br/>
+		/// Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual System.String Memo
+		{
+			get { return (System.String)GetValue((int)ThreadFieldIndex.Memo, true); }
+			set	{ SetValue((int)ThreadFieldIndex.Memo, value, true); }
 		}
 
 		/// <summary> Retrieves all related entities of type 'AuditDataThreadRelatedEntity' using a relation of type '1:n'.<br/><br/>

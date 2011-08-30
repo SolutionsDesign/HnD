@@ -158,14 +158,6 @@ namespace SD.HnD.DAL.EntityClasses
 		{
 			switch((SupportQueueThreadFieldIndex)fieldIndex)
 			{
-				case SupportQueueThreadFieldIndex.ClaimedByUserID:
-					DesetupSyncClaimedByUser(true, false);
-					_alreadyFetchedClaimedByUser = false;
-					break;
-				case SupportQueueThreadFieldIndex.PlacedInQueueByUserID:
-					DesetupSyncPlacedInQueueByUser(true, false);
-					_alreadyFetchedPlacedInQueueByUser = false;
-					break;
 				case SupportQueueThreadFieldIndex.QueueID:
 					DesetupSyncSupportQueue(true, false);
 					_alreadyFetchedSupportQueue = false;
@@ -173,6 +165,14 @@ namespace SD.HnD.DAL.EntityClasses
 				case SupportQueueThreadFieldIndex.ThreadID:
 					DesetupSyncThread(true, false);
 					_alreadyFetchedThread = false;
+					break;
+				case SupportQueueThreadFieldIndex.PlacedInQueueByUserID:
+					DesetupSyncPlacedInQueueByUser(true, false);
+					_alreadyFetchedPlacedInQueueByUser = false;
+					break;
+				case SupportQueueThreadFieldIndex.ClaimedByUserID:
+					DesetupSyncClaimedByUser(true, false);
+					_alreadyFetchedClaimedByUser = false;
 					break;
 				default:
 					base.PerformDesyncSetupFKFieldChange(fieldIndex);
@@ -723,17 +723,17 @@ namespace SD.HnD.DAL.EntityClasses
 			_fieldsCustomProperties = new Dictionary<string, Dictionary<string, string>>();
 			Dictionary<string, string> fieldHashtable;
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ClaimedByUserID", fieldHashtable);
+			_fieldsCustomProperties.Add("QueueID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ClaimedOn", fieldHashtable);
+			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("PlacedInQueueByUserID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("PlacedInQueueOn", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("QueueID", fieldHashtable);
+			_fieldsCustomProperties.Add("ClaimedByUserID", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("ThreadID", fieldHashtable);
+			_fieldsCustomProperties.Add("ClaimedOn", fieldHashtable);
 		}
 		#endregion
 
@@ -980,24 +980,24 @@ namespace SD.HnD.DAL.EntityClasses
 			get { return FieldsCustomProperties;}
 		}
 
-		/// <summary> The ClaimedByUserID property of the Entity SupportQueueThread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueueThread"."ClaimedByUserID"<br/>
+		/// <summary> The QueueID property of the Entity SupportQueueThread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueueThread"."QueueID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Int32> ClaimedByUserID
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		public virtual System.Int32 QueueID
 		{
-			get { return (Nullable<System.Int32>)GetValue((int)SupportQueueThreadFieldIndex.ClaimedByUserID, false); }
-			set	{ SetValue((int)SupportQueueThreadFieldIndex.ClaimedByUserID, value, true); }
+			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.QueueID, true); }
+			set	{ SetValue((int)SupportQueueThreadFieldIndex.QueueID, value, true); }
 		}
 
-		/// <summary> The ClaimedOn property of the Entity SupportQueueThread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueueThread"."ClaimedOn"<br/>
-		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> ClaimedOn
+		/// <summary> The ThreadID property of the Entity SupportQueueThread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueueThread"."ThreadID"<br/>
+		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		public virtual System.Int32 ThreadID
 		{
-			get { return (Nullable<System.DateTime>)GetValue((int)SupportQueueThreadFieldIndex.ClaimedOn, false); }
-			set	{ SetValue((int)SupportQueueThreadFieldIndex.ClaimedOn, value, true); }
+			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.ThreadID, true); }
+			set	{ SetValue((int)SupportQueueThreadFieldIndex.ThreadID, value, true); }
 		}
 
 		/// <summary> The PlacedInQueueByUserID property of the Entity SupportQueueThread<br/><br/></summary>
@@ -1020,24 +1020,24 @@ namespace SD.HnD.DAL.EntityClasses
 			set	{ SetValue((int)SupportQueueThreadFieldIndex.PlacedInQueueOn, value, true); }
 		}
 
-		/// <summary> The QueueID property of the Entity SupportQueueThread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueueThread"."QueueID"<br/>
+		/// <summary> The ClaimedByUserID property of the Entity SupportQueueThread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueueThread"."ClaimedByUserID"<br/>
 		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
-		public virtual System.Int32 QueueID
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.Int32> ClaimedByUserID
 		{
-			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.QueueID, true); }
-			set	{ SetValue((int)SupportQueueThreadFieldIndex.QueueID, value, true); }
+			get { return (Nullable<System.Int32>)GetValue((int)SupportQueueThreadFieldIndex.ClaimedByUserID, false); }
+			set	{ SetValue((int)SupportQueueThreadFieldIndex.ClaimedByUserID, value, true); }
 		}
 
-		/// <summary> The ThreadID property of the Entity SupportQueueThread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "SupportQueueThread"."ThreadID"<br/>
-		/// Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
-		public virtual System.Int32 ThreadID
+		/// <summary> The ClaimedOn property of the Entity SupportQueueThread<br/><br/></summary>
+		/// <remarks>Mapped on  table field: "SupportQueueThread"."ClaimedOn"<br/>
+		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
+		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		public virtual Nullable<System.DateTime> ClaimedOn
 		{
-			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.ThreadID, true); }
-			set	{ SetValue((int)SupportQueueThreadFieldIndex.ThreadID, value, true); }
+			get { return (Nullable<System.DateTime>)GetValue((int)SupportQueueThreadFieldIndex.ClaimedOn, false); }
+			set	{ SetValue((int)SupportQueueThreadFieldIndex.ClaimedOn, value, true); }
 		}
 
 

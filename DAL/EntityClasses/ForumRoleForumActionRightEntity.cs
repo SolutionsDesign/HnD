@@ -37,31 +37,31 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="forumID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
-		public ForumRoleForumActionRightEntity(System.Int32 actionRightID, System.Int32 forumID, System.Int32 roleID):
-			base(actionRightID, forumID, roleID)
+		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
+		public ForumRoleForumActionRightEntity(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID):
+			base(forumID, roleID, actionRightID)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="forumID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
+		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		public ForumRoleForumActionRightEntity(System.Int32 actionRightID, System.Int32 forumID, System.Int32 roleID, IPrefetchPath prefetchPathToUse):
-			base(actionRightID, forumID, roleID, prefetchPathToUse)
+		public ForumRoleForumActionRightEntity(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse):
+			base(forumID, roleID, actionRightID, prefetchPathToUse)
 		{
 		}
 
 		/// <summary>CTor</summary>
-		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="forumID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
+		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="validator">The custom validator object for this ForumRoleForumActionRightEntity</param>
-		public ForumRoleForumActionRightEntity(System.Int32 actionRightID, System.Int32 forumID, System.Int32 roleID, IValidator validator):
-			base(actionRightID, forumID, roleID, validator)
+		public ForumRoleForumActionRightEntity(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IValidator validator):
+			base(forumID, roleID, actionRightID, validator)
 		{
 		}
 		
