@@ -33,7 +33,7 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "08302011";
+		public static readonly string Build = "09082011";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>

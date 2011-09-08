@@ -481,6 +481,12 @@ namespace SD.HnD.BL
 			// fetch all subscriptions, using the filter and the prefetch path. 
             subscriptions.GetMulti(predicate, prefetch);
 
+			if(subscriptions.Count <= 0)
+			{
+				// no subscriptions, nothing to do
+				return;
+			}
+
 			// now collect all email addresses into an array so we can pass that to the email routine. 
             string[] toAddresses = new string[subscriptions.Count];
 
