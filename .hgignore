@@ -7,3 +7,5 @@ glob:Utility/bin/
 glob:GUI/Bin/
 glob:Utility/obj/
 glob:*.suo
+syntax: glob
+GUI/Web.config
