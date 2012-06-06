@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -43,7 +43,6 @@ namespace SD.HnD.DAL.DaoClasses
 		{
 		}
 		
-#if !CF
 		/// <summary>Sets the flag to signal the SqlServer DQE to generate SET ARITHABORT ON statements prior to INSERT, DELETE and UPDATE Queries.
 		/// Keep this flag to false in normal usage, but set it to true if you need to write into a table which is part of an indexed view.
 		/// It will not affect normal inserts/updates that much, leaving it on is not harmful. See Books online for details on SET ARITHABORT ON.
@@ -63,7 +62,7 @@ namespace SD.HnD.DAL.DaoClasses
 		{
 			DynamicQueryEngine.DefaultCompatibilityLevel = compatibilityLevel;
 		}
-#endif 
+
 		/// <summary>Gets the connection string.</summary>
 		/// <returns>the connection string as set by code or in the config file.</returns>
 		protected override string GetConnectionString()

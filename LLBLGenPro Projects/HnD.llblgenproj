@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--LLBLGen Pro v3.1 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
-<Project Version="3.1" TargetFrameworkName="LLBLGen Pro Runtime Framework">
+<!--LLBLGen Pro v3.5 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
+<Project Version="3.5" TargetFrameworkName="LLBLGen Pro Runtime Framework">
   <Properties>
     <Abbreviations />
     <Property Name="AdditionalTaskPerformerFolder" Value="" />
@@ -26,6 +26,7 @@
     <Property Name="ForeignKeyFieldPattern" Value="{$NavigatorName}{$RelatedFieldName}" />
     <Property Name="GroupUsage" Value="0" />
     <Property Name="IdentifyingFieldsFollowDBPrimaryKeyConstraints" Value="0" />
+    <Property Name="InsertUnderscoreAtWordBreakCaseInsensitiveDBs" Value="false" />
     <Property Name="InsertUnderscoreAtWordBreakCaseSensitiveDBs" Value="false" />
     <Property Name="LengthPrecisionScaleFollowDBLengthPrecisionScale" Value="0" />
     <Property Name="MakeElementNamePascalCasing" Value="false" />
@@ -38,6 +39,8 @@
     <Property Name="PreferVariableLengthTypes" Value="true" />
     <Property Name="ProjectCreator" Value="FB" />
     <Property Name="ProjectName" Value="HnD" />
+    <Property Name="ReflectNullabilityOfElementFieldInTargetField" Value="0" />
+    <Property Name="RelationalModelDataElementNameCasingCaseInsensitiveDBs" Value="3" />
     <Property Name="RelationalModelDataElementNameCasingCaseSensitiveDBs" Value="3" />
     <Property Name="RelationshipsFollowDBForeignKeyConstraints" Value="0" />
     <Property Name="RemoveUnderscoresFromElementName" Value="false" />

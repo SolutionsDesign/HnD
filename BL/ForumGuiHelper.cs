@@ -24,6 +24,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.TypedListClasses;
 using SD.HnD.DAL.FactoryClasses;
@@ -49,12 +51,8 @@ namespace SD.HnD.BL
 		public static ForumMessagesTypedList GetLastPostedMessagesInForum(int amount, int forumID)
 		{
 			ForumMessagesTypedList forumMessages = new ForumMessagesTypedList();
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add( (ForumFields.ForumID == forumID));
-			filter.AddWithAnd((ForumFields.HasRSSFeed == true));
-			SortExpression sorter = new SortExpression(MessageFields.PostingDate | SortOperator.Descending);
-			forumMessages.Fill(amount, sorter, false, filter);
-
+			forumMessages.Fill(amount, new SortExpression(MessageFields.PostingDate.Ascending()), false,
+							   (ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true));
 			return forumMessages;
 		}
 
@@ -111,33 +109,22 @@ namespace SD.HnD.BL
             // Set up query conditions using Predicate Expressions
 			// we'll keep the sticky threads filter and the forum filter in separate variables as we'll re-use them later on.
 			FieldCompareValuePredicate stickyThreadsFilter = (FieldCompareValuePredicate)(ThreadFields.IsSticky == true);
-			FieldCompareValuePredicate forumFilter = (FieldCompareValuePredicate)(ThreadFields.ForumID == forumID);
-
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add(forumFilter);
-			// combine the following two predicates into one predicate expression, as either one of them has to be true, but as a whole combined they should
-			// act as a single operator to the AND operator with the forumfilter.
-			PredicateExpression messageLimiterSubFilter = new PredicateExpression();
-			messageLimiterSubFilter.Add(stickyThreadsFilter);
-			messageLimiterSubFilter.AddWithOr(ThreadFields.ThreadLastPostingDate >= limiterDate);
-			filter.AddWithAnd(messageLimiterSubFilter);
+			var forumFilter = ThreadFields.ForumID == forumID;
+			var filter = forumFilter.And(stickyThreadsFilter.Or(ThreadFields.ThreadLastPostingDate >= limiterDate));
 
 			// if the user can't view threads started by others, filter out threads started by users different from userID
 			if(!canViewNormalThreadsStartedByOthers)
 			{
 				// caller can't view threads started by others: add a filter so that threads not started by calling user aren't enlisted. 
 				// however sticky threads are always returned so the filter contains a check so the limit is only applied on threads which aren't sticky
-				PredicateExpression threadsByOthersFilter = new PredicateExpression();
-				threadsByOthersFilter.Add(ThreadFields.StartedByUserID==userID);
 				// add a filter for sticky threads, add it with 'OR', so sticky threads are always accepted
-				threadsByOthersFilter.AddWithOr(ThreadFields.IsSticky == true);
-				filter.AddWithAnd(threadsByOthersFilter);
+				filter.AddWithAnd((ThreadFields.StartedByUserID == userID).Or(ThreadFields.IsSticky == true));
 			}
             
             //Set up the sort expressions
-            SortExpression sorter = new SortExpression(ThreadFields.IsSticky | SortOperator.Descending);
-            sorter.Add(ThreadFields.IsClosed | SortOperator.Ascending);
-            sorter.Add(ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
+			SortExpression sorter = new SortExpression(ThreadFields.IsSticky.Descending());
+			sorter.Add(ThreadFields.IsClosed.Ascending());
+			sorter.Add(ThreadFields.ThreadLastPostingDate.Descending());
 
 			DataTable threads = new DataTable();
 			TypedListDAO dao = new TypedListDAO();
@@ -154,17 +141,16 @@ namespace SD.HnD.BL
 				threads = new DataTable();
 
 				// first fetch the sticky threads. 
-				filter = new PredicateExpression();
-				filter.Add(forumFilter);
-				filter.AddWithAnd(stickyThreadsFilter);
-                sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
+				filter = forumFilter.And(stickyThreadsFilter);
+                sorter = new SortExpression(ThreadFields.ThreadLastPostingDate.Descending());
 				dao.GetMultiAsDataTable(fields, threads, 0, sorter, filter, relations, true, null, null, 0, 0);
 
 				// then fetch the rest. Fetch it into the same datatable object to append the rows to the already fetched sticky threads (if any)
 				stickyThreadsFilter.Value=false;
 				dao.GetMultiAsDataTable(fields, threads, minNumberOfThreadsToFetch, sorter, filter, relations, true, null, null, 0, 0);
 
-				// sort closed threads to the bottom. 
+				// sort closed threads to the bottom. Do this in-memory as it's a sort operation after projection. Doing it on the server would mean
+				// a sort operation before projection.
 				return new DataView(threads, string.Empty, ThreadFieldIndex.IsClosed.ToString() + " ASC", DataViewRowState.CurrentRows);
 			}
 			else
@@ -181,14 +167,11 @@ namespace SD.HnD.BL
 		public static ForumsWithSectionNameTypedList GetAllForumsWithSectionNames()
 		{
 			ForumsWithSectionNameTypedList toReturn = new ForumsWithSectionNameTypedList();
-			SortExpression sorter = new SortExpression();
-			sorter.Add(SectionFields.OrderNo | SortOperator.Ascending);
-			sorter.Add(SectionFields.SectionName | SortOperator.Ascending);
-			sorter.Add(ForumFields.OrderNo| SortOperator.Ascending);
-			sorter.Add(ForumFields.ForumName | SortOperator.Ascending);
-
+			SortExpression sorter = new SortExpression(SectionFields.OrderNo.Ascending());
+			sorter.Add(SectionFields.SectionName.Ascending());
+			sorter.Add(ForumFields.OrderNo.Ascending());
+			sorter.Add(ForumFields.ForumName.Ascending());
 			toReturn.Fill(0, sorter);
-
 			return toReturn;
 		}
 
@@ -200,15 +183,11 @@ namespace SD.HnD.BL
 		/// <returns>Entity collection with entities for all forums in this section sorted alphabitacally</returns>
 		public static ForumCollection GetAllForumsInSection(int sectionID)
 		{
-			//create the filter with the ID passed to the method.
-			PredicateExpression filter = new PredicateExpression(ForumFields.SectionID == sectionID);
-
-			// Sort forums on orderno ascending, then on name alphabetically
-			SortExpression sorter = new SortExpression(ForumFields.OrderNo | SortOperator.Ascending);
-			sorter.Add(ForumFields.ForumName | SortOperator.Ascending);
-
-			ForumCollection toReturn = new ForumCollection();
-			toReturn.GetMulti(filter, 0, sorter);
+			var q = new QueryFactory().Forum
+						.Where(ForumFields.SectionID == sectionID)
+						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
+			var toReturn = new ForumCollection();
+			toReturn.GetMulti(q);
 			return toReturn;
 		}
 
@@ -240,6 +219,7 @@ namespace SD.HnD.BL
 			// fetch all forums with statistics in a dynamic list, while filtering on the list of accessable forums for this user. 
 			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
 			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
+			// Create the filter separate of the query itself, as it's re-used multiple times. 
 			PredicateExpression threadFilter = new PredicateExpression();
 			if((forumsWithThreadsFromOthers!=null) && (forumsWithThreadsFromOthers.Count > 0))
 			{
@@ -262,65 +242,58 @@ namespace SD.HnD.BL
 					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
 				}
 				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID==userID));
+				onlyOwnThreadsFilter.AddWithAnd((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID==userID));
 				threadFilter.AddWithOr(onlyOwnThreadsFilter);
 			}
 			else
 			{
 				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
 				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
+				threadFilter.Add((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
 			}
-			ResultsetFields fields = new ResultsetFields(8);
-			fields.DefineField(ForumFields.ForumID, 0);
-			fields.DefineField(ForumFields.ForumName, 1);
-			fields.DefineField(ForumFields.ForumDescription, 2);
-			fields.DefineField(ForumFields.ForumLastPostingDate, 3);
-			// add a scalar query which retrieves the # of threads in the specific forum. Utilizes an index on the FK field to forum in thread
-			// this will result in the query:
-			// (
-			//		SELECT COUNT(ThreadID) FROM Thread 
-			//		WHERE ForumID = Forum.ForumID AND threadfilter. 
-			// ) As AmountThreads
-			fields.DefineField(new EntityField("AmountThreads",
-					new ScalarQueryExpression(ThreadFields.ThreadID.SetAggregateFunction(AggregateFunction.Count),
-						new PredicateExpression(ThreadFields.ForumID == ForumFields.ForumID).AddWithAnd(threadFilter))), 4);
 
-			// add a scalar query which retrieves the # of messages in the threads of this forum. Utilizies an index on the FK field in thread to forum.
-			// this will result in the query:
-			// (
-			//		SELECT COUNT(MessageID) FROM Message 
-			//		WHERE ThreadID IN
-			//		(
-			//			SELECT ThreadID FROM Thread WHERE ForumID = Forum.ForumID AND threadfilter
-			//		)
-			// ) AS AmountMessages
-			fields.DefineField(new EntityField("AmountMessages",
-					new ScalarQueryExpression(MessageFields.MessageID.SetAggregateFunction(AggregateFunction.Count),
-						new FieldCompareSetPredicate(
-								MessageFields.ThreadID,		// field to compare with the results in the IN clause
-								ThreadFields.ThreadID,		// field to select in the select inside the IN clause
-								SetOperator.In,				// operator, 
-								new PredicateExpression(ThreadFields.ForumID == ForumFields.ForumID).AddWithAnd(threadFilter)	// the filter for the subquery inside the IN clause
-								))), 5);	// rest of the DefineField method.
-			
-			fields.DefineField(ForumFields.HasRSSFeed, 6);
-			fields.DefineField(ForumFields.SectionID, 7);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(ForumFields.ForumID, 
+								ForumFields.ForumName, 
+								ForumFields.ForumDescription, 
+								ForumFields.ForumLastPostingDate,
+								// add a scalar query which retrieves the # of threads in the specific forum. 
+								// this will result in the query:
+								// (
+								//		SELECT COUNT(ThreadID) FROM Thread 
+								//		WHERE ForumID = Forum.ForumID AND threadfilter. 
+								// ) As AmountThreads
+								qf.Create()
+										.Select(ThreadFields.ThreadID.Count())
+										.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+										.Where(threadFilter)
+										.ToScalar().As("AmountThreads"),
+								// add a scalar query which retrieves the # of messages in the threads of this forum. 
+								// this will result in the query:
+								// (
+								//		SELECT COUNT(MessageID) FROM Message 
+								//		WHERE ThreadID IN
+								//		(
+								//			SELECT ThreadID FROM Thread WHERE ForumID = Forum.ForumID AND threadfilter
+								//		)
+								// ) AS AmountMessages
+								qf.Create()
+										.Select(MessageFields.MessageID.Count())
+										.Where(MessageFields.ThreadID.In(
+												qf.Create()
+													.Select(ThreadFields.ThreadID)
+													.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+													.Where(threadFilter)))
+										.ToScalar().As("AmountMessages"),
+								ForumFields.HasRSSFeed, 
+								ForumFields.SectionID)
+						.Where(ForumFields.ForumID == accessableForums)
+						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
 
-			DataTable results = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
+			var results = new TypedListDAO().FetchAsDataTable(q);
 
-			// sort per section: orderno and name, then per forum: orderno and name, so the views are already sorted automatically.
-			SortExpression sorter = new SortExpression();
-			sorter.Add(ForumFields.OrderNo | SortOperator.Ascending);
-			sorter.Add(ForumFields.ForumName | SortOperator.Ascending);
-
-			// use a field compare range predicate to filter on the forums accessable to the user
-			dao.GetMultiAsDataTable(fields, results, 0, sorter, (ForumFields.ForumID == accessableForums), null, true, null, null, 0, 0);
-
-            // Now per section create a new DataView in memory using in-memory filtering on the DataTable. 
+			// Now per section create a new DataView in memory using in-memory filtering on the DataTable. 
             foreach(SectionEntity section in availableSections)
             {
                 // Create view for current section and filter out rows we don't want. Do this with in-memory filtering of the dataview, so we don't

@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -69,14 +67,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected AuditDataCoreEntityBase() : base()
+		protected AuditDataCoreEntityBase() :base("AuditDataCoreEntity")
 		{
 			InitClassEmpty(null);
 		}
 
 		/// <summary>CTor</summary>
 		/// <param name="auditDataID">PK value for AuditDataCore which data should be fetched into this AuditDataCore object</param>
-		protected AuditDataCoreEntityBase(System.Int32 auditDataID)
+		protected AuditDataCoreEntityBase(System.Int32 auditDataID):base("AuditDataCoreEntity")
 		{
 			InitClassFetch(auditDataID, null, null);
 		}
@@ -84,7 +82,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="auditDataID">PK value for AuditDataCore which data should be fetched into this AuditDataCore object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected AuditDataCoreEntityBase(System.Int32 auditDataID, IPrefetchPath prefetchPathToUse)
+		protected AuditDataCoreEntityBase(System.Int32 auditDataID, IPrefetchPath prefetchPathToUse): base("AuditDataCoreEntity")
 		{
 			InitClassFetch(auditDataID, null, prefetchPathToUse);
 		}
@@ -92,7 +90,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="auditDataID">PK value for AuditDataCore which data should be fetched into this AuditDataCore object</param>
 		/// <param name="validator">The custom validator object for this AuditDataCoreEntity</param>
-		protected AuditDataCoreEntityBase(System.Int32 auditDataID, IValidator validator)
+		protected AuditDataCoreEntityBase(System.Int32 auditDataID, IValidator validator):base("AuditDataCoreEntity")
 		{
 			InitClassFetch(auditDataID, validator, null);
 		}
@@ -145,7 +143,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedAuditAction = (_auditAction != null);
 			_alreadyFetchedUserAudited = (_userAudited != null);
@@ -221,7 +219,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -243,7 +241,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -263,7 +261,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -568,7 +566,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _auditAction</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncAuditAction(IEntity relatedEntity)
+		private void SetupSyncAuditAction(IEntityCore relatedEntity)
 		{
 			if(_auditAction!=relatedEntity)
 			{		
@@ -601,7 +599,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _userAudited</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncUserAudited(IEntity relatedEntity)
+		private void SetupSyncUserAudited(IEntityCore relatedEntity)
 		{
 			if(_userAudited!=relatedEntity)
 			{		
@@ -688,12 +686,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.UserCollection(), (IEntityRelation)GetRelationsForField("UserAudited")[0], (int)SD.HnD.DAL.EntityType.AuditDataCoreEntity, (int)SD.HnD.DAL.EntityType.UserEntity, 0, null, null, null, "UserAudited", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "AuditDataCoreEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

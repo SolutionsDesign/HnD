@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,25 +11,22 @@ using System;
 using System.ComponentModel;
 using System.Data;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using SD.HnD.DAL.HelperClasses;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
+
 namespace SD.HnD.DAL.TypedListClasses
 {
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	/// <summary>Typed datatable for the list 'MessagesInThread'.<br/><br/></summary>
-#if !CF	
 	[Serializable, System.ComponentModel.DesignerCategory("Code")]
 	[ToolboxItem(true)]
 	[DesignTimeVisible(true)]
-#endif
 	public partial class MessagesInThreadTypedList : TypedListBase<MessagesInThreadRow>
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfacesList
 		// __LLBLGENPRO_USER_CODE_REGION_END	

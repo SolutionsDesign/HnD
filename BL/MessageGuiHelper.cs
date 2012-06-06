@@ -20,6 +20,8 @@
 using System;
 using System.Data;
 
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DAL.HelperClasses;
 using SD.HnD.DAL.DaoClasses;
@@ -27,6 +29,7 @@ using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL;
 using System.Collections.Generic;
+using SD.HnD.DAL.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -113,17 +116,16 @@ namespace SD.HnD.BL
 		/// <returns>Dataview with 0 or more attachments related to the message with the id passed in. The rows don't contain the actual attachment data</returns>
 		public static DataView GetAttachmentsAsDataView(int messageID)
 		{
-			ResultsetFields fields = new ResultsetFields(5);
-			fields.DefineField(AttachmentFields.AttachmentID, 0);
-			fields.DefineField(AttachmentFields.Filename, 1);
-			fields.DefineField(AttachmentFields.Approved, 2);
-			fields.DefineField(AttachmentFields.Filesize, 3);
-			fields.DefineField(AttachmentFields.AddedOn, 4);
+			var q = new QueryFactory().Create()
+						.Select(AttachmentFields.AttachmentID,
+								AttachmentFields.Filename,
+								AttachmentFields.Approved,
+								AttachmentFields.Filesize,
+								AttachmentFields.AddedOn)
+						.Where(AttachmentFields.MessageID == messageID)
+						.OrderBy(AttachmentFields.AddedOn.Ascending());
 
-			DataTable attachments = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-			SortExpression sorter = new SortExpression(AttachmentFields.AddedOn | SortOperator.Ascending);
-			dao.GetMultiAsDataTable(fields, attachments, 0, sorter, (AttachmentFields.MessageID == messageID), null, true, null, null, 0, 0);
+			var attachments = new TypedListDAO().FetchAsDataTable(q);
 			return attachments.DefaultView;
 		}
 
@@ -152,26 +154,16 @@ namespace SD.HnD.BL
 		/// <returns>MessageEntity if found, otherwise null. MessageEntity has its Thread entity prefetched</returns>
 		public static MessageEntity GetMessageWithAttachmentLogic(int attachmentID)
 		{
-			// we're going to use a message collection so we can use a filter on a related entity. 
-			// we're not going to utilize lazy loading, as that would require the attachment to be loaded into memory, but that could potentially be expensive
-			// for memory, so we'll avoid that
-			MessageCollection messages = new MessageCollection();
-			RelationCollection relations = new RelationCollection();
-			relations.Add(MessageEntity.Relations.AttachmentEntityUsingMessageID);
-			// we're going to use a prefetch path as well, to prefetch the thread entity as well.
-			PrefetchPath path = new PrefetchPath((int)EntityType.MessageEntity);
-			path.Add(MessageEntity.PrefetchPathThread);
-			messages.GetMulti((AttachmentFields.AttachmentID == attachmentID), 0, null, relations, path);
-			if(messages.Count > 0)
-			{
-				// found it
-				return messages[0];
-			}
-			else
-			{
-				// not found,
-				return null;
-			}
+			var qf = new QueryFactory();
+			var q = qf.Message
+						.From(QueryTarget.InnerJoin(qf.Attachment).On(MessageFields.MessageID == AttachmentFields.MessageID))
+						.Where(AttachmentFields.AttachmentID == attachmentID)
+						.Limit(1)
+						.WithPath(MessageEntity.PrefetchPathThread);
+			var messages = new MessageCollection();
+			messages.GetMulti(q);
+
+			return (messages.Count > 0) ? messages[0] : null;
 		}
 
 
@@ -201,32 +193,27 @@ namespace SD.HnD.BL
 			// we'll use a dynamic list for the data to return. This is similar to GetAttachmentsAsDataView, however now we'll add more data + we'll
 			// filter on more things. The data we'll add is the ForumID of the thread containing the messagee the attachment is attached to, as well as
 			// the userid of the poster of the message the attachment is attached to, and the threadid of the thread the message is in.
-			ResultsetFields fields = new ResultsetFields(9);
-			fields.DefineField(AttachmentFields.AttachmentID, 0);
-			fields.DefineField(AttachmentFields.MessageID, 1);
-			fields.DefineField(AttachmentFields.Filename, 2);
-			fields.DefineField(AttachmentFields.Approved, 3);
-			fields.DefineField(AttachmentFields.Filesize, 4);
-			fields.DefineField(AttachmentFields.AddedOn, 5);
-			fields.DefineField(MessageFields.PostedByUserID, 6);
-			fields.DefineField(ThreadFields.ForumID, 7);
-			fields.DefineField(ThreadFields.ThreadID, 8);
+			// We've to filter the list of attachments based on the forums accessable by the calling user, the list of forums the calling user has approval 
+			// rights on and by the forums on which the user can see other user's threads. We'll create a predicate expression for this, and will add 
+			// for each of these filters a separate predicate to this predicate expression and specify AND, so they all have to be true 
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(AttachmentFields.AttachmentID,
+								AttachmentFields.MessageID,
+								AttachmentFields.Filename,
+								AttachmentFields.Approved,
+								AttachmentFields.Filesize,
+								AttachmentFields.AddedOn,
+								MessageFields.PostedByUserID,
+								ThreadFields.ForumID,
+								ThreadFields.ThreadID)
+						.From(qf.Attachment
+								.InnerJoin(qf.Message).On(AttachmentFields.MessageID == MessageFields.MessageID)
+								.InnerJoin(qf.Thread).On(MessageFields.ThreadID == ThreadFields.ThreadID))
+						.Where(CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID, false))
+						.OrderBy(AttachmentFields.AddedOn.Ascending());
 
-			// we've to join attachment - message - thread, so we've to create a RelationCollection with the necessary relations. 
-			RelationCollection relations = new RelationCollection();
-			relations.Add(AttachmentEntity.Relations.MessageEntityUsingMessageID);
-			relations.Add(MessageEntity.Relations.ThreadEntityUsingThreadID);
-
-			// we've to filter the list of attachments based on the forums accessable by the calling user, the list of forums the calling user has approval rights
-			// on and by the forums on which the user can see other user's threads. We'll create a predicate expression for this, and will add for each of these
-			// filters a separate predicate to this predicate expression and specify AND, so they all have to be true 
-			PredicateExpression filter = CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID, false);
-			
-			DataTable attachments = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-			// The results will be sorted on the date the attachments were added, ascending, so the oldest will be on top.
-			SortExpression sorter = new SortExpression(AttachmentFields.AddedOn | SortOperator.Ascending);
-			dao.GetMultiAsDataTable(fields, attachments, 0, sorter, filter, relations, true, null, null, 0, 0);
+			var attachments = new TypedListDAO().FetchAsDataTable(q);
 			return attachments.DefaultView;
 		}
 
@@ -242,7 +229,7 @@ namespace SD.HnD.BL
 		/// <returns>ready to use predicate expression for fetch actions on attachments with the approval state specified in the threads
 		/// matching the forumID's.</returns>
 		private static PredicateExpression CreateAttachmentFilter(List<int> accessableForums, List<int> forumsWithApprovalRight,
-				List<int> forumsWithThreadsFromOthers, int userID, bool approvalState)
+																  List<int> forumsWithThreadsFromOthers, int userID, bool approvalState)
 		{
 			PredicateExpression filter = new PredicateExpression();
 
@@ -293,21 +280,18 @@ namespace SD.HnD.BL
 					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
 				}
 				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
+				onlyOwnThreadsFilter.AddWithAnd((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
 				threadFilter.AddWithOr(onlyOwnThreadsFilter);
 			}
 			else
 			{
 				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
 				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
+				threadFilter.Add((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
 			}
 			filter.AddWithAnd(threadFilter);
 			// as last filter, we'll add a filter to only get the data for attachments which aren't approved yet.
 			filter.AddWithAnd(AttachmentFields.Approved == false);
-
 			return filter;
 		}
 	}

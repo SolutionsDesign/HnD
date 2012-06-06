@@ -95,17 +95,21 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SD.LLBLGen.Pro.DQE.SqlServer.NET20, Version=2.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+    <Reference Include="SD.LLBLGen.Pro.DQE.SqlServer.NET20, Version=3.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\RuntimeLibraries\SD.LLBLGen.Pro.DQE.SqlServer.NET20.dll</HintPath>
     </Reference>
-    <Reference Include="SD.LLBLGen.Pro.LinqSupportClasses.NET35, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+    <Reference Include="SD.LLBLGen.Pro.LinqSupportClasses.NET35, Version=3.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\RuntimeLibraries\SD.LLBLGen.Pro.LinqSupportClasses.NET35.dll</HintPath>
     </Reference>
-    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses.NET20, Version=2.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses.NET20, Version=3.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\RuntimeLibraries\SD.LLBLGen.Pro.ORMSupportClasses.NET20.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.LLBLGen.Pro.QuerySpec, Version=3.5.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\RuntimeLibraries\SD.LLBLGen.Pro.QuerySpec.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -428,6 +432,9 @@
     <Compile Include="FactoryClasses\EntityFieldsFactory.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
+    <Compile Include="FactoryClasses\QueryFactory.cs">
+      <GeneratedBy>LLBLGen Pro</GeneratedBy>
+    </Compile>
     <Compile Include="HelperClasses\FieldCreationClasses.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
@@ -444,9 +451,6 @@
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
     <Compile Include="HelperClasses\Transaction.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="HelperClasses\TransactionComPlus.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
     <Compile Include="HelperClasses\TypeDefaultValue.cs">

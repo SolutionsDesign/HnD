@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -81,14 +79,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected ForumEntityBase() : base()
+		protected ForumEntityBase() :base("ForumEntity")
 		{
 			InitClassEmpty(null);
 		}
 
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
-		protected ForumEntityBase(System.Int32 forumID)
+		protected ForumEntityBase(System.Int32 forumID):base("ForumEntity")
 		{
 			InitClassFetch(forumID, null, null);
 		}
@@ -96,7 +94,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected ForumEntityBase(System.Int32 forumID, IPrefetchPath prefetchPathToUse)
+		protected ForumEntityBase(System.Int32 forumID, IPrefetchPath prefetchPathToUse): base("ForumEntity")
 		{
 			InitClassFetch(forumID, null, prefetchPathToUse);
 		}
@@ -104,7 +102,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="forumID">PK value for Forum which data should be fetched into this Forum object</param>
 		/// <param name="validator">The custom validator object for this ForumEntity</param>
-		protected ForumEntityBase(System.Int32 forumID, IValidator validator)
+		protected ForumEntityBase(System.Int32 forumID, IValidator validator):base("ForumEntity")
 		{
 			InitClassFetch(forumID, validator, null);
 		}
@@ -167,7 +165,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedForumRoleForumActionRights = (_forumRoleForumActionRights.Count > 0);
 			_alreadyFetchedThreads = (_threads.Count > 0);
@@ -250,7 +248,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -293,7 +291,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -319,7 +317,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -774,7 +772,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _section</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncSection(IEntity relatedEntity)
+		private void SetupSyncSection(IEntityCore relatedEntity)
 		{
 			if(_section!=relatedEntity)
 			{		
@@ -807,7 +805,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _defaultSupportQueue</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncDefaultSupportQueue(IEntity relatedEntity)
+		private void SetupSyncDefaultSupportQueue(IEntityCore relatedEntity)
 		{
 			if(_defaultSupportQueue!=relatedEntity)
 			{		
@@ -920,12 +918,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.SupportQueueCollection(), (IEntityRelation)GetRelationsForField("DefaultSupportQueue")[0], (int)SD.HnD.DAL.EntityType.ForumEntity, (int)SD.HnD.DAL.EntityType.SupportQueueEntity, 0, null, null, null, "DefaultSupportQueue", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "ForumEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

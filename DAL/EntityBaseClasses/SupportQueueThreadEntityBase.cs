@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -77,7 +75,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected SupportQueueThreadEntityBase() : base()
+		protected SupportQueueThreadEntityBase() :base("SupportQueueThreadEntity")
 		{
 			InitClassEmpty(null);
 		}
@@ -85,7 +83,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="queueID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
 		/// <param name="threadID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
-		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID)
+		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID):base("SupportQueueThreadEntity")
 		{
 			InitClassFetch(queueID, threadID, null, null);
 		}
@@ -94,7 +92,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="queueID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
 		/// <param name="threadID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID, IPrefetchPath prefetchPathToUse)
+		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID, IPrefetchPath prefetchPathToUse): base("SupportQueueThreadEntity")
 		{
 			InitClassFetch(queueID, threadID, null, prefetchPathToUse);
 		}
@@ -103,7 +101,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="queueID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
 		/// <param name="threadID">PK value for SupportQueueThread which data should be fetched into this SupportQueueThread object</param>
 		/// <param name="validator">The custom validator object for this SupportQueueThreadEntity</param>
-		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID, IValidator validator)
+		protected SupportQueueThreadEntityBase(System.Int32 queueID, System.Int32 threadID, IValidator validator):base("SupportQueueThreadEntity")
 		{
 			InitClassFetch(queueID, threadID, validator, null);
 		}
@@ -181,7 +179,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedSupportQueue = (_supportQueue != null);
 			_alreadyFetchedClaimedByUser = (_claimedByUser != null);
@@ -259,7 +257,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -289,7 +287,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -315,7 +313,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -748,7 +746,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _supportQueue</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncSupportQueue(IEntity relatedEntity)
+		private void SetupSyncSupportQueue(IEntityCore relatedEntity)
 		{
 			if(_supportQueue!=relatedEntity)
 			{		
@@ -781,7 +779,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _claimedByUser</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncClaimedByUser(IEntity relatedEntity)
+		private void SetupSyncClaimedByUser(IEntityCore relatedEntity)
 		{
 			if(_claimedByUser!=relatedEntity)
 			{		
@@ -814,7 +812,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _placedInQueueByUser</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncPlacedInQueueByUser(IEntity relatedEntity)
+		private void SetupSyncPlacedInQueueByUser(IEntityCore relatedEntity)
 		{
 			if(_placedInQueueByUser!=relatedEntity)
 			{		
@@ -847,7 +845,7 @@ namespace SD.HnD.DAL.EntityClasses
 	
 		/// <summary> setups the sync logic for member _thread</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncThread(IEntity relatedEntity)
+		private void SetupSyncThread(IEntityCore relatedEntity)
 		{
 			if(_thread!=relatedEntity)
 			{
@@ -950,12 +948,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadCollection(), (IEntityRelation)GetRelationsForField("Thread")[0], (int)SD.HnD.DAL.EntityType.SupportQueueThreadEntity, (int)SD.HnD.DAL.EntityType.ThreadEntity, 0, null, null, null, "Thread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.OneToOne);	}
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "SupportQueueThreadEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

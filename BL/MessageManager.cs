@@ -21,12 +21,15 @@ using System;
 using System.Data;
 using SD.HnD.Utility;
 
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL;
 using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.HelperClasses;
 using SD.HnD.DAL.DaoClasses;
+using SD.HnD.DAL.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -75,8 +78,9 @@ namespace SD.HnD.BL
 		{
 			// fabricate the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
 			// WHERE Message.ThreadID IN (SELECT ThreadID FROM Thread WHERE threadFilter)
-			PredicateExpression messageFilter = new PredicateExpression();
-			messageFilter.Add(new FieldCompareSetPredicate(MessageFields.ThreadID, ThreadFields.ThreadID, SetOperator.In, threadFilter));
+			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create()
+																.Select(ThreadFields.ThreadID)
+																.Where(threadFilter));
 			DeleteMessages(messageFilter, trans);
 		}
 
@@ -86,7 +90,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageFilter">The message filter.</param>
 		/// <param name="trans">The transaction to use.</param>
-		private static void DeleteMessages(PredicateExpression messageFilter, Transaction trans)
+		private static void DeleteMessages(IPredicate messageFilter, Transaction trans)
 		{
 			// first delete all audit info for these message. This isn't done by a batch call directly on the db, as this is a targetperentity hierarchy
 			// which can't be deleted directly into the database in all cases, so we first fetch the entities to delete. 
@@ -150,17 +154,15 @@ namespace SD.HnD.BL
 		public static int ReParseMessages(int amountToParse, DateTime startDate, bool reGenerateHTML, ParserData parserData)
 		{
 			// index is blocks of 100 messages.
-			ResultsetFields fields = new ResultsetFields(2);
-			fields.DefineField(MessageFields.MessageID, 0);
-			fields.DefineField(MessageFields.MessageText, 1);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(MessageFields.MessageID, MessageFields.MessageText)
+						.Where(MessageFields.PostingDate >= new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, 0));
 
-            //filter messages with postingDate >= the passed startDate
-            PredicateExpression filter = new PredicateExpression(MessageFields.PostingDate >= new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, 0));
-			
 			if(amountToParse <= 0)
 			{
-				// If we don't have a specific amount of messasges to parse, then parse all messages posted till Now.
-                filter.Add(MessageFields.PostingDate <= DateTime.Now);
+				// If we don't have a specific amount of messages to parse, then parse all messages posted till Now.
+				q.AndWhere(MessageFields.PostingDate <= DateTime.Now);
 			}
 
 			TypedListDAO dao = new TypedListDAO();
@@ -172,8 +174,8 @@ namespace SD.HnD.BL
 
 			while(!parsingFinished)
 			{
-				DataTable messagesToParse = new DataTable();
-				dao.GetMultiAsDataTable(fields, messagesToParse, 0, null, filter, null, true, null, null, pageNo, pageSize);
+				q.Page(pageNo, pageSize);
+				DataTable messagesToParse = dao.FetchAsDataTable(q);
 				parsingFinished = (messagesToParse.Rows.Count <= 0);
 
 				if(!parsingFinished)
@@ -299,8 +301,8 @@ namespace SD.HnD.BL
 			transactionToUse.Add(forums);
 			// use a fieldcompare set predicate to select the forumid based on the thread. This filter is equal to
 			// WHERE ForumID == (SELECT ForumID FROM Thread WHERE ThreadID=@ThreadID)
-			FieldCompareSetPredicate forumFilter = new FieldCompareSetPredicate(
-					ForumFields.ForumID, ThreadFields.ForumID, SetOperator.Equal, (ThreadFields.ThreadID == threadID));
+			var forumFilter = new FieldCompareSetPredicate(
+								ForumFields.ForumID, ThreadFields.ForumID, SetOperator.Equal, (ThreadFields.ThreadID == threadID));
 			forums.GetMulti(forumFilter);
 			ForumEntity containingForum = null;
 			if(forums.Count>0)

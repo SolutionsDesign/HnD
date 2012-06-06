@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -78,7 +78,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits ActionRightEntity's mappings</summary>
 		private void InitActionRightEntityMappings()
 		{
-			this.AddElementMapping( "ActionRightEntity", "HnD", @"dbo", "ActionRight", 4 );
+			this.AddElementMapping( "ActionRightEntity", @"HnD", @"dbo", "ActionRight", 4 );
 			this.AddElementFieldMapping( "ActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "ActionRightEntity", "ActionRightDescription", "ActionRightDescription", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 			this.AddElementFieldMapping( "ActionRightEntity", "AppliesToForum", "AppliesToForum", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 2 );
@@ -87,7 +87,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits AttachmentEntity's mappings</summary>
 		private void InitAttachmentEntityMappings()
 		{
-			this.AddElementMapping( "AttachmentEntity", "HnD", @"dbo", "Attachment", 7 );
+			this.AddElementMapping( "AttachmentEntity", @"HnD", @"dbo", "Attachment", 7 );
 			this.AddElementFieldMapping( "AttachmentEntity", "AttachmentID", "AttachmentID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "AttachmentEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "AttachmentEntity", "Filename", "Filename", false, "NVarChar", 255, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -99,14 +99,14 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits AuditActionEntity's mappings</summary>
 		private void InitAuditActionEntityMappings()
 		{
-			this.AddElementMapping( "AuditActionEntity", "HnD", @"dbo", "AuditAction", 2 );
+			this.AddElementMapping( "AuditActionEntity", @"HnD", @"dbo", "AuditAction", 2 );
 			this.AddElementFieldMapping( "AuditActionEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "AuditActionEntity", "AuditActionDescription", "AuditActionDescription", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 		}
 		/// <summary>Inits AuditDataCoreEntity's mappings</summary>
 		private void InitAuditDataCoreEntityMappings()
 		{
-			this.AddElementMapping( "AuditDataCoreEntity", "HnD", @"dbo", "AuditDataCore", 4 );
+			this.AddElementMapping( "AuditDataCoreEntity", @"HnD", @"dbo", "AuditDataCore", 4 );
 			this.AddElementFieldMapping( "AuditDataCoreEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "AuditDataCoreEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "AuditDataCoreEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
@@ -115,28 +115,28 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits AuditDataMessageRelatedEntity's mappings</summary>
 		private void InitAuditDataMessageRelatedEntityMappings()
 		{
-			this.AddElementMapping( "AuditDataMessageRelatedEntity", "HnD", @"dbo", "AuditDataMessageRelated", 2 );
+			this.AddElementMapping( "AuditDataMessageRelatedEntity", @"HnD", @"dbo", "AuditDataMessageRelated", 2 );
 			this.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "AuditDataMessageRelatedEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits AuditDataThreadRelatedEntity's mappings</summary>
 		private void InitAuditDataThreadRelatedEntityMappings()
 		{
-			this.AddElementMapping( "AuditDataThreadRelatedEntity", "HnD", @"dbo", "AuditDataThreadRelated", 2 );
+			this.AddElementMapping( "AuditDataThreadRelatedEntity", @"HnD", @"dbo", "AuditDataThreadRelated", 2 );
 			this.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "AuditDataID", "AuditDataID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "AuditDataThreadRelatedEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits BookmarkEntity's mappings</summary>
 		private void InitBookmarkEntityMappings()
 		{
-			this.AddElementMapping( "BookmarkEntity", "HnD", @"dbo", "Bookmark", 2 );
+			this.AddElementMapping( "BookmarkEntity", @"HnD", @"dbo", "Bookmark", 2 );
 			this.AddElementFieldMapping( "BookmarkEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "BookmarkEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits ForumEntity's mappings</summary>
 		private void InitForumEntityMappings()
 		{
-			this.AddElementMapping( "ForumEntity", "HnD", @"dbo", "Forum", 13 );
+			this.AddElementMapping( "ForumEntity", @"HnD", @"dbo", "Forum", 13 );
 			this.AddElementFieldMapping( "ForumEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "ForumEntity", "SectionID", "SectionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "ForumEntity", "ForumName", "ForumName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -154,7 +154,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits ForumRoleForumActionRightEntity's mappings</summary>
 		private void InitForumRoleForumActionRightEntityMappings()
 		{
-			this.AddElementMapping( "ForumRoleForumActionRightEntity", "HnD", @"dbo", "ForumRoleForumActionRight", 3 );
+			this.AddElementMapping( "ForumRoleForumActionRightEntity", @"HnD", @"dbo", "ForumRoleForumActionRight", 3 );
 			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "ForumRoleForumActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
@@ -162,7 +162,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits IPBanEntity's mappings</summary>
 		private void InitIPBanEntityMappings()
 		{
-			this.AddElementMapping( "IPBanEntity", "HnD", @"dbo", "IPBan", 9 );
+			this.AddElementMapping( "IPBanEntity", @"HnD", @"dbo", "IPBan", 9 );
 			this.AddElementFieldMapping( "IPBanEntity", "IPBanID", "IPBanID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "IPBanEntity", "IPSegment1", "IPSegment1", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 1 );
 			this.AddElementFieldMapping( "IPBanEntity", "IPSegment2", "IPSegment2", false, "TinyInt", 0, 0, 3, false, "", null, typeof(System.Byte), 2 );
@@ -176,7 +176,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits MessageEntity's mappings</summary>
 		private void InitMessageEntityMappings()
 		{
-			this.AddElementMapping( "MessageEntity", "HnD", @"dbo", "Message", 9 );
+			this.AddElementMapping( "MessageEntity", @"HnD", @"dbo", "Message", 9 );
 			this.AddElementFieldMapping( "MessageEntity", "MessageID", "MessageID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "MessageEntity", "PostingDate", "PostingDate", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 1 );
 			this.AddElementFieldMapping( "MessageEntity", "PostedByUserID", "PostedByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
@@ -190,35 +190,35 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits RoleEntity's mappings</summary>
 		private void InitRoleEntityMappings()
 		{
-			this.AddElementMapping( "RoleEntity", "HnD", @"dbo", "Role", 2 );
+			this.AddElementMapping( "RoleEntity", @"HnD", @"dbo", "Role", 2 );
 			this.AddElementFieldMapping( "RoleEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "RoleEntity", "RoleDescription", "RoleDescription", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 		}
 		/// <summary>Inits RoleAuditActionEntity's mappings</summary>
 		private void InitRoleAuditActionEntityMappings()
 		{
-			this.AddElementMapping( "RoleAuditActionEntity", "HnD", @"dbo", "RoleAuditAction", 2 );
+			this.AddElementMapping( "RoleAuditActionEntity", @"HnD", @"dbo", "RoleAuditAction", 2 );
 			this.AddElementFieldMapping( "RoleAuditActionEntity", "AuditActionID", "AuditActionID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "RoleAuditActionEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits RoleSystemActionRightEntity's mappings</summary>
 		private void InitRoleSystemActionRightEntityMappings()
 		{
-			this.AddElementMapping( "RoleSystemActionRightEntity", "HnD", @"dbo", "RoleSystemActionRight", 2 );
+			this.AddElementMapping( "RoleSystemActionRightEntity", @"HnD", @"dbo", "RoleSystemActionRight", 2 );
 			this.AddElementFieldMapping( "RoleSystemActionRightEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "RoleSystemActionRightEntity", "ActionRightID", "ActionRightID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits RoleUserEntity's mappings</summary>
 		private void InitRoleUserEntityMappings()
 		{
-			this.AddElementMapping( "RoleUserEntity", "HnD", @"dbo", "RoleUser", 2 );
+			this.AddElementMapping( "RoleUserEntity", @"HnD", @"dbo", "RoleUser", 2 );
 			this.AddElementFieldMapping( "RoleUserEntity", "RoleID", "RoleID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "RoleUserEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits SectionEntity's mappings</summary>
 		private void InitSectionEntityMappings()
 		{
-			this.AddElementMapping( "SectionEntity", "HnD", @"dbo", "Section", 4 );
+			this.AddElementMapping( "SectionEntity", @"HnD", @"dbo", "Section", 4 );
 			this.AddElementFieldMapping( "SectionEntity", "SectionID", "SectionID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "SectionEntity", "SectionName", "SectionName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 			this.AddElementFieldMapping( "SectionEntity", "SectionDescription", "SectionDescription", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -227,7 +227,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits SupportQueueEntity's mappings</summary>
 		private void InitSupportQueueEntityMappings()
 		{
-			this.AddElementMapping( "SupportQueueEntity", "HnD", @"dbo", "SupportQueue", 4 );
+			this.AddElementMapping( "SupportQueueEntity", @"HnD", @"dbo", "SupportQueue", 4 );
 			this.AddElementFieldMapping( "SupportQueueEntity", "QueueID", "QueueID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "SupportQueueEntity", "QueueName", "QueueName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 			this.AddElementFieldMapping( "SupportQueueEntity", "QueueDescription", "QueueDescription", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -236,7 +236,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits SupportQueueThreadEntity's mappings</summary>
 		private void InitSupportQueueThreadEntityMappings()
 		{
-			this.AddElementMapping( "SupportQueueThreadEntity", "HnD", @"dbo", "SupportQueueThread", 6 );
+			this.AddElementMapping( "SupportQueueThreadEntity", @"HnD", @"dbo", "SupportQueueThread", 6 );
 			this.AddElementFieldMapping( "SupportQueueThreadEntity", "QueueID", "QueueID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "SupportQueueThreadEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "SupportQueueThreadEntity", "PlacedInQueueByUserID", "PlacedInQueueByUserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
@@ -247,7 +247,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits SystemDataEntity's mappings</summary>
 		private void InitSystemDataEntityMappings()
 		{
-			this.AddElementMapping( "SystemDataEntity", "HnD", @"dbo", "SystemData", 9 );
+			this.AddElementMapping( "SystemDataEntity", @"HnD", @"dbo", "SystemData", 9 );
 			this.AddElementFieldMapping( "SystemDataEntity", "ID", "ID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "SystemDataEntity", "DefaultRoleNewUser", "DefaultRoleNewUser", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "SystemDataEntity", "AnonymousRole", "AnonymousRole", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 2 );
@@ -261,7 +261,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits ThreadEntity's mappings</summary>
 		private void InitThreadEntityMappings()
 		{
-			this.AddElementMapping( "ThreadEntity", "HnD", @"dbo", "Thread", 10 );
+			this.AddElementMapping( "ThreadEntity", @"HnD", @"dbo", "Thread", 10 );
 			this.AddElementFieldMapping( "ThreadEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "ThreadEntity", "ForumID", "ForumID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 			this.AddElementFieldMapping( "ThreadEntity", "Subject", "Subject", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -276,14 +276,14 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits ThreadSubscriptionEntity's mappings</summary>
 		private void InitThreadSubscriptionEntityMappings()
 		{
-			this.AddElementMapping( "ThreadSubscriptionEntity", "HnD", @"dbo", "ThreadSubscription", 2 );
+			this.AddElementMapping( "ThreadSubscriptionEntity", @"HnD", @"dbo", "ThreadSubscription", 2 );
 			this.AddElementFieldMapping( "ThreadSubscriptionEntity", "UserID", "UserID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "ThreadSubscriptionEntity", "ThreadID", "ThreadID", false, "Int", 0, 0, 10, false, "", null, typeof(System.Int32), 1 );
 		}
 		/// <summary>Inits UserEntity's mappings</summary>
 		private void InitUserEntityMappings()
 		{
-			this.AddElementMapping( "UserEntity", "HnD", @"dbo", "User", 20 );
+			this.AddElementMapping( "UserEntity", @"HnD", @"dbo", "User", 20 );
 			this.AddElementFieldMapping( "UserEntity", "UserID", "UserID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "UserEntity", "NickName", "NickName", false, "NVarChar", 20, 0, 0, false, "", null, typeof(System.String), 1 );
 			this.AddElementFieldMapping( "UserEntity", "Password", "Password", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 2 );
@@ -308,7 +308,7 @@ namespace SD.HnD.DAL.HelperClasses
 		/// <summary>Inits UserTitleEntity's mappings</summary>
 		private void InitUserTitleEntityMappings()
 		{
-			this.AddElementMapping( "UserTitleEntity", "HnD", @"dbo", "UserTitle", 2 );
+			this.AddElementMapping( "UserTitleEntity", @"HnD", @"dbo", "UserTitle", 2 );
 			this.AddElementFieldMapping( "UserTitleEntity", "UserTitleID", "UserTitleID", false, "Int", 0, 0, 10, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0 );
 			this.AddElementFieldMapping( "UserTitleEntity", "UserTitleDescription", "UserTitleDescription", false, "VarChar", 50, 0, 0, false, "", null, typeof(System.String), 1 );
 		}

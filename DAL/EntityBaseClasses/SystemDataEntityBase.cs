@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -69,14 +67,14 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected SystemDataEntityBase() : base()
+		protected SystemDataEntityBase() :base("SystemDataEntity")
 		{
 			InitClassEmpty(null);
 		}
 
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
-		protected SystemDataEntityBase(System.Int32 iD)
+		protected SystemDataEntityBase(System.Int32 iD):base("SystemDataEntity")
 		{
 			InitClassFetch(iD, null, null);
 		}
@@ -84,7 +82,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected SystemDataEntityBase(System.Int32 iD, IPrefetchPath prefetchPathToUse)
+		protected SystemDataEntityBase(System.Int32 iD, IPrefetchPath prefetchPathToUse): base("SystemDataEntity")
 		{
 			InitClassFetch(iD, null, prefetchPathToUse);
 		}
@@ -92,7 +90,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <summary>CTor</summary>
 		/// <param name="iD">PK value for SystemData which data should be fetched into this SystemData object</param>
 		/// <param name="validator">The custom validator object for this SystemDataEntity</param>
-		protected SystemDataEntityBase(System.Int32 iD, IValidator validator)
+		protected SystemDataEntityBase(System.Int32 iD, IValidator validator):base("SystemDataEntity")
 		{
 			InitClassFetch(iD, validator, null);
 		}
@@ -145,7 +143,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedRoleForAnonymous = (_roleForAnonymous != null);
 			_alreadyFetchedRoleForNewUser = (_roleForNewUser != null);
@@ -206,7 +204,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -228,7 +226,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -248,7 +246,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -530,7 +528,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _roleForAnonymous</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncRoleForAnonymous(IEntity relatedEntity)
+		private void SetupSyncRoleForAnonymous(IEntityCore relatedEntity)
 		{
 			if(_roleForAnonymous!=relatedEntity)
 			{		
@@ -563,7 +561,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _roleForNewUser</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncRoleForNewUser(IEntity relatedEntity)
+		private void SetupSyncRoleForNewUser(IEntityCore relatedEntity)
 		{
 			if(_roleForNewUser!=relatedEntity)
 			{		
@@ -650,12 +648,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(), (IEntityRelation)GetRelationsForField("RoleForNewUser")[0], (int)SD.HnD.DAL.EntityType.SystemDataEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "RoleForNewUser", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "SystemDataEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

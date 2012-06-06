@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -69,9 +67,10 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected AuditDataThreadRelatedEntityBase() : base()
+		protected AuditDataThreadRelatedEntityBase() 
 		{
 			InitClassEmpty(null);
+			SetName("AuditDataThreadRelatedEntity");
 		}
 
 		/// <summary>CTor</summary>
@@ -79,14 +78,16 @@ namespace SD.HnD.DAL.EntityClasses
 		protected AuditDataThreadRelatedEntityBase(System.Int32 auditDataID):base(auditDataID)
 		{
 			InitClassFetch(auditDataID, null, null);
+			SetName("AuditDataThreadRelatedEntity");
 		}
 
 		/// <summary>CTor</summary>
 		/// <param name="auditDataID">PK value for AuditDataThreadRelated which data should be fetched into this AuditDataThreadRelated object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected AuditDataThreadRelatedEntityBase(System.Int32 auditDataID, IPrefetchPath prefetchPathToUse):base(auditDataID, prefetchPathToUse)
+		protected AuditDataThreadRelatedEntityBase(System.Int32 auditDataID, IPrefetchPath prefetchPathToUse): base(auditDataID, prefetchPathToUse)
 		{
 			InitClassFetch(auditDataID, null, prefetchPathToUse);
+			SetName("AuditDataThreadRelatedEntity");
 		}
 
 		/// <summary>CTor</summary>
@@ -95,6 +96,7 @@ namespace SD.HnD.DAL.EntityClasses
 		protected AuditDataThreadRelatedEntityBase(System.Int32 auditDataID, IValidator validator):base(auditDataID, validator)
 		{
 			InitClassFetch(auditDataID, validator, null);
+			SetName("AuditDataThreadRelatedEntity");
 		}
 
 		/// <summary>Private CTor for deserialization</summary>
@@ -132,7 +134,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedThread = (_thread != null);
 		}
@@ -201,7 +203,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -219,7 +221,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -237,7 +239,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -433,7 +435,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _thread</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncThread(IEntity relatedEntity)
+		private void SetupSyncThread(IEntityCore relatedEntity)
 		{
 			if(_thread!=relatedEntity)
 			{		
@@ -490,12 +492,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.ThreadCollection(), (IEntityRelation)GetRelationsForField("Thread")[0], (int)SD.HnD.DAL.EntityType.AuditDataThreadRelatedEntity, (int)SD.HnD.DAL.EntityType.ThreadEntity, 0, null, null, null, "Thread", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "AuditDataThreadRelatedEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

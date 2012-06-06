@@ -1,6 +1,6 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageIPBans.aspx.cs" Inherits="SD.HnD.GUI.Admin.ManageIPBans" 
 	MasterPageFile="~/Admin/AdminMaster.master" Title="HnD::Administrate::Manage IP bans"%>
-<%@ Register Assembly="SD.LLBLGen.Pro.ORMSupportClasses.NET20" Namespace="SD.LLBLGen.Pro.ORMSupportClasses" TagPrefix="llblgenpro" %>
+<%@ Register Assembly="SD.LLBLGen.Pro.ORMSupportClasses.Web" Namespace="SD.LLBLGen.Pro.ORMSupportClasses" TagPrefix="llblgenpro" %>
 
 <asp:Content ContentPlaceHolderID="phMainContent" runat="server">
 <asp:HiddenField ID="_userID" runat="server" />

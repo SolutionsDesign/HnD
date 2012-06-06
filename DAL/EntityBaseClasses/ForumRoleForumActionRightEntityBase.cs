@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.1
+// Code is generated using LLBLGen Pro version: 3.5
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
 // Templates vendor: Solutions Design.
@@ -11,9 +11,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Data;
 using System.Xml.Serialization;
 using SD.HnD.DAL;
@@ -73,7 +71,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary>CTor</summary>
-		protected ForumRoleForumActionRightEntityBase() : base()
+		protected ForumRoleForumActionRightEntityBase() :base("ForumRoleForumActionRightEntity")
 		{
 			InitClassEmpty(null);
 		}
@@ -82,7 +80,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="forumID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
-		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID)
+		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID):base("ForumRoleForumActionRightEntity")
 		{
 			InitClassFetch(forumID, roleID, actionRightID, null, null);
 		}
@@ -92,7 +90,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="prefetchPathToUse">the PrefetchPath which defines the graph of objects to fetch as well</param>
-		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse)
+		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IPrefetchPath prefetchPathToUse): base("ForumRoleForumActionRightEntity")
 		{
 			InitClassFetch(forumID, roleID, actionRightID, null, prefetchPathToUse);
 		}
@@ -102,7 +100,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="roleID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="actionRightID">PK value for ForumRoleForumActionRight which data should be fetched into this ForumRoleForumActionRight object</param>
 		/// <param name="validator">The custom validator object for this ForumRoleForumActionRightEntity</param>
-		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IValidator validator)
+		protected ForumRoleForumActionRightEntityBase(System.Int32 forumID, System.Int32 roleID, System.Int32 actionRightID, IValidator validator):base("ForumRoleForumActionRightEntity")
 		{
 			InitClassFetch(forumID, roleID, actionRightID, validator, null);
 		}
@@ -168,7 +166,7 @@ namespace SD.HnD.DAL.EntityClasses
 		}
 
 		/// <summary> Will perform post-ReadXml actions</summary>
-		protected override void PostReadXmlFixups()
+		protected override void PerformPostReadXmlFixups()
 		{
 			_alreadyFetchedActionRight = (_actionRight != null);
 			_alreadyFetchedForum = (_forum != null);
@@ -237,7 +235,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="entity">Entity to set as an related entity</param>
 		/// <remarks>Used by prefetch path logic.</remarks>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntityProperty(string propertyName, IEntity entity)
+		protected override void SetRelatedEntityProperty(string propertyName, IEntityCore entity)
 		{
 			switch(propertyName)
 			{
@@ -263,7 +261,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void SetRelatedEntity(IEntity relatedEntity, string fieldName)
+		protected override void SetRelatedEntity(IEntityCore relatedEntity, string fieldName)
 		{
 			switch(fieldName)
 			{
@@ -286,7 +284,7 @@ namespace SD.HnD.DAL.EntityClasses
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
 		/// <param name="signalRelatedEntityManyToOne">if set to true it will notify the manytoone side, if applicable.</param>
 		[EditorBrowsable(EditorBrowsableState.Never)]
-		protected override void UnsetRelatedEntity(IEntity relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
+		protected override void UnsetRelatedEntity(IEntityCore relatedEntity, string fieldName, bool signalRelatedEntityManyToOne)
 		{
 			switch(fieldName)
 			{
@@ -616,7 +614,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _actionRight</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncActionRight(IEntity relatedEntity)
+		private void SetupSyncActionRight(IEntityCore relatedEntity)
 		{
 			if(_actionRight!=relatedEntity)
 			{		
@@ -649,7 +647,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _forum</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncForum(IEntity relatedEntity)
+		private void SetupSyncForum(IEntityCore relatedEntity)
 		{
 			if(_forum!=relatedEntity)
 			{		
@@ -682,7 +680,7 @@ namespace SD.HnD.DAL.EntityClasses
 		
 		/// <summary> setups the sync logic for member _role</summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
-		private void SetupSyncRole(IEntity relatedEntity)
+		private void SetupSyncRole(IEntityCore relatedEntity)
 		{
 			if(_role!=relatedEntity)
 			{		
@@ -780,12 +778,6 @@ namespace SD.HnD.DAL.EntityClasses
 			get	{ return new PrefetchPathElement(new SD.HnD.DAL.CollectionClasses.RoleCollection(), (IEntityRelation)GetRelationsForField("Role")[0], (int)SD.HnD.DAL.EntityType.ForumRoleForumActionRightEntity, (int)SD.HnD.DAL.EntityType.RoleEntity, 0, null, null, null, "Role", SD.LLBLGen.Pro.ORMSupportClasses.RelationType.ManyToOne); }
 		}
 
-		/// <summary>Returns the full name for this entity, which is important for the DAO to find back persistence info for this entity.</summary>
-		[Browsable(false), XmlIgnore]
-		protected override string LLBLGenProEntityName
-		{
-			get { return "ForumRoleForumActionRightEntity";}
-		}
 
 		/// <summary> The custom properties for the type of this entity instance.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

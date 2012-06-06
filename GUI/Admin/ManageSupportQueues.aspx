@@ -1,6 +1,6 @@
 <%@ Page Language="C#" AutoEventWireup="true" CodeFile="ManageSupportQueues.aspx.cs" Inherits="SD.HnD.GUI.Admin.ManageSupportQueues" 
 	MasterPageFile="~/Admin/AdminMaster.master" Title="HnD::Administrate::Manage Support Queues"%>
-<%@ Register Assembly="SD.LLBLGen.Pro.ORMSupportClasses.NET20" Namespace="SD.LLBLGen.Pro.ORMSupportClasses" TagPrefix="llblgenpro" %>
+<%@ Register Assembly="SD.LLBLGen.Pro.ORMSupportClasses.Web" Namespace="SD.LLBLGen.Pro.ORMSupportClasses" TagPrefix="llblgenpro" %>
 
 <asp:Content ContentPlaceHolderID="phMainContent" runat="server">
 <table width="700" align="center" class="ExplanationBox" cellpadding="2" cellspacing="0">
