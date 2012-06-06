@@ -9,3 +9,5 @@ glob:Utility/obj/
 glob:*.suo
 syntax: glob
 GUI/Web.config
+DAL/SD.HnD.DAL.csproj.user
+BL/SD.HnD.BL.csproj.user
