@@ -27,6 +27,9 @@ using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.HelperClasses;
 using SD.HnD.DAL;
 using SD.HnD.DAL.DaoClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.HnD.DAL.FactoryClasses;
 
 
 namespace SD.HnD.BL
@@ -46,36 +49,31 @@ namespace SD.HnD.BL
 		/// </returns>
 		public static DataView GetAllSectionsWStatisticsAsDataView(bool excludeEmptySections)
 		{
-			ResultsetFields fields = new ResultsetFields(5);
-			fields.DefineField(SectionFields.SectionID, 0);
-			fields.DefineField(SectionFields.SectionName, 1);
-			fields.DefineField(SectionFields.SectionDescription, 2);
-			fields.DefineField(SectionFields.OrderNo, 3);
-			// as fifth field, we'll add a scalarquery expression. This scalar query expression will simply do a count on the # of forumIDs in
-			// the forum table for the current section. This will result in the query:
-			// (
-			//    SELECT 	COUNT(ForumID)
-			//    FROM	Forum
-			//    WHERE Forum.SectionID = Section.SectionID
-			// ) AS AmountForums
-			fields.DefineField(new EntityField("AmountForums",
-					new ScalarQueryExpression(ForumFields.ForumID.SetAggregateFunction(AggregateFunction.Count),
-						(ForumFields.SectionID == SectionFields.SectionID))), 4);
+			// join with a derived table, which calculates the number of forums per section. This allows us to re-use the
+			// scalar values in multiple places (projection and where clause), without re-calculating the scalar per row.
 
-            // Sort sections alphabitacally
-            SortExpression sorter = new SortExpression(SectionFields.OrderNo | SortOperator.Ascending);
-			sorter.Add(SectionFields.SectionName | SortOperator.Ascending);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+							.Select(SectionFields.SectionID,
+									SectionFields.SectionName,
+									SectionFields.SectionDescription,
+									SectionFields.OrderNo,
+									qf.Field("ForumCountList", "ForumCount").As("AmountForums"))
+							.From(qf.Section.InnerJoin(
+										qf.Create()
+											.Select(ForumFields.ForumID.Count().As("ForumCount"), 
+													ForumFields.SectionID)
+											.GroupBy(ForumFields.SectionID)
+											.As("ForumCountList"))
+										.On(ForumFields.SectionID.Source("ForumCountList")==SectionFields.SectionID))
+							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
 
-			IPredicate filter = null;
 			if(excludeEmptySections)
 			{
-				// filter on sections which don't have a forum
-				filter = ((EntityField)fields[4] != 0);
+				q.AndWhere(qf.Field("ForumCountList", "ForumCount")!=0);
 			}
-
 			TypedListDAO dao = new TypedListDAO();
-			DataTable results = new DataTable();
-			dao.GetMultiAsDataTable(fields, results, 0, sorter, filter, null, true, null, null, 0, 0);
+			var results = dao.FetchAsDataTable(q);
 			return results.DefaultView;
 		}
 
@@ -86,14 +84,9 @@ namespace SD.HnD.BL
         /// <returns>SectionCollection</returns>
         public static SectionCollection GetAllSections()
         {
-            // Sort sections on orderno first then on name alphabetically
-			SortExpression sorter = new SortExpression(SectionFields.OrderNo | SortOperator.Ascending);
-			sorter.Add(SectionFields.SectionName | SortOperator.Ascending);
-
-            SectionCollection sections = new SectionCollection();
-            //Retrieves all Entity objects into this Collection object.
-            sections.GetMulti(null, 0, sorter);
-
+			var q = new QueryFactory().Section.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
+			SectionCollection sections = new SectionCollection();
+			sections.GetMulti(q);
             return sections;
         }
 

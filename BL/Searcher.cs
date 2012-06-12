@@ -33,6 +33,8 @@ using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.HelperClasses;
 using SD.HnD.DAL.DaoClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
 using SD.HnD.Utility;
 using System.Collections.Generic;
@@ -72,9 +74,7 @@ namespace SD.HnD.BL
 				searchMessageText = true;
 			}
 
-			PredicateExpression mainFilter = new PredicateExpression();
 			PredicateExpression searchTermFilter = new PredicateExpression();
-
 			if(searchMessageText)
 			{
 				// Message contents filter
@@ -93,48 +93,9 @@ namespace SD.HnD.BL
 					searchTermFilter.Add(new FieldFullTextSearchPredicate(ThreadFields.Subject, FullTextSearchOperator.Contains, searchTerms));
 				}
 			}
-			mainFilter.Add(searchTermFilter);
-
-			// add forumid filter
-			mainFilter.AddWithAnd(ForumFields.ForumID == forumIDs);
-
-			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
-			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			PredicateExpression threadFilter = new PredicateExpression();
-			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
-			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
-
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
-				}
-				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
-			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
-			}
-
-			mainFilter.AddWithAnd(threadFilter);
+			IPredicateExpression mainFilter = searchTermFilter
+													.And(ForumFields.ForumID == forumIDs)
+													.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID));
 
 			ISortExpression sorter = new SortExpression();
 			// add first element
@@ -158,6 +119,7 @@ namespace SD.HnD.BL
 
 			return results;
 		}
+
 
 
 		/// <summary>
@@ -296,22 +258,22 @@ namespace SD.HnD.BL
 			switch(element)
 			{
 				case SearchResultsOrderSetting.ForumAscending:					
-					toReturn = (ForumFields.ForumName | SortOperator.Ascending);
+					toReturn = ForumFields.ForumName.Ascending();
 					break;
 				case SearchResultsOrderSetting.ForumDescending:
-					toReturn = (ForumFields.ForumName | SortOperator.Descending);
+					toReturn = ForumFields.ForumName.Descending();
 					break;
 				case SearchResultsOrderSetting.LastPostDateAscending:
-					toReturn = (ThreadFields.ThreadLastPostingDate | SortOperator.Ascending);
+					toReturn = ThreadFields.ThreadLastPostingDate.Ascending();
 					break;
 				case SearchResultsOrderSetting.LastPostDateDescending:
-					toReturn = (ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
+					toReturn = ThreadFields.ThreadLastPostingDate.Descending();
 					break;
 				case SearchResultsOrderSetting.ThreadSubjectAscending:
-					toReturn = (ThreadFields.Subject | SortOperator.Ascending);
+					toReturn = ThreadFields.Subject.Ascending();
 					break;
 				case SearchResultsOrderSetting.ThreadSubjectDescending:
-					toReturn = (ThreadFields.Subject | SortOperator.Descending);
+					toReturn = ThreadFields.Subject.Descending();
 					break;
 			}
 
