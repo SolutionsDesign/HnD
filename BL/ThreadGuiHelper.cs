@@ -33,6 +33,7 @@ using SD.HnD.DAL.HelperClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DAL.TypedListClasses;
 using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
 namespace SD.HnD.BL
 {
@@ -58,51 +59,6 @@ namespace SD.HnD.BL
 			}
 
             return thread;
-		}
-		
-
-		/// <summary>
-		/// Creates the thread filter. Filters on the threads viewable by the passed in userid, which is the caller of the method. 
-		/// If a forum isn't in the list of forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should 
-		/// be counted / taken into account. 
-		/// </summary>
-		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="userID">The user ID.</param>
-		/// <returns>ready to use thread filter.</returns>
-		public static IPredicateExpression CreateThreadFilter(List<int> forumsWithThreadsFromOthers, int userID)
-		{
-			var threadFilter = new PredicateExpression();
-			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
-			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
-
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
-				}
-				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
-			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
-			}
-			return threadFilter;
 		}
 
 
@@ -181,67 +137,49 @@ namespace SD.HnD.BL
                 return null;
             }
 
-			// create dyn. list and pull statistics using that list.
-			ResultsetFields fields = new ResultsetFields(3);
-			fields.DefineField(ThreadFields.ThreadID, 0, "AmountThreads", string.Empty, AggregateFunction.CountDistinct);
-			fields.DefineField(MessageFields.MessageID, 1, "AmountPostings", string.Empty, AggregateFunction.Count);
-			fields.DefineField(ThreadFields.ThreadLastPostingDate, 2, "LastPostingDate", string.Empty, AggregateFunction.Max);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(ThreadFields.ThreadID.CountDistinct().As("AmountThreads"),
+								MessageFields.MessageID.Count().As("AmountPostings"),
+								ThreadFields.ThreadLastPostingDate.Max().As("LastPostingDate"))
+						.From(qf.Thread.InnerJoin(qf.Message).On(ThreadFields.ThreadID==MessageFields.ThreadID))
+						.Where((ThreadFields.ForumID == accessableForums)
+								.And(ThreadFields.IsClosed == false)
+								.And(ThreadFields.MarkedAsDone == false)
+								.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
+								.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)));
+			var dao = new TypedListDAO();
+			return dao.FetchAsDataTable(q);
+
+
+			//// create dyn. list and pull statistics using that list.
+			//ResultsetFields fields = new ResultsetFields(3);
+			//fields.DefineField(ThreadFields.ThreadID, 0, "AmountThreads", string.Empty, AggregateFunction.CountDistinct);
+			//fields.DefineField(MessageFields.MessageID, 1, "AmountPostings", string.Empty, AggregateFunction.Count);
+			//fields.DefineField(ThreadFields.ThreadLastPostingDate, 2, "LastPostingDate", string.Empty, AggregateFunction.Max);
 			
-            RelationCollection relations = new RelationCollection();
-			relations.Add(ThreadEntity.Relations.MessageEntityUsingThreadID);
+			//RelationCollection relations = new RelationCollection();
+			//relations.Add(ThreadEntity.Relations.MessageEntityUsingThreadID);
 
-			PredicateExpression filter = new PredicateExpression();
-			// only the forums the user has access to
-            filter.Add(ThreadFields.ForumID == accessableForums.ToArray());
-			// only the threads which are not closed
-			filter.AddWithAnd(ThreadFields.IsClosed == false);
-			// only the threads which are active (== not done)
-			filter.AddWithAnd(ThreadFields.MarkedAsDone == false);
-			// only threads which have been updated in the last Globals.HoursForActiveThreadsTreshold hours
-			filter.AddWithAnd(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold));
+			//PredicateExpression filter = new PredicateExpression();
+			//// only the forums the user has access to
+			//filter.Add(ThreadFields.ForumID == accessableForums.ToArray());
+			//// only the threads which are not closed
+			//filter.AddWithAnd(ThreadFields.IsClosed == false);
+			//// only the threads which are active (== not done)
+			//filter.AddWithAnd(ThreadFields.MarkedAsDone == false);
+			//// only threads which have been updated in the last Globals.HoursForActiveThreadsTreshold hours
+			//filter.AddWithAnd(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold));
 
-			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
-			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			PredicateExpression threadFilter = new PredicateExpression();
-			if((forumsWithThreadsFromOthers!=null) && (forumsWithThreadsFromOthers.Count > 0))
-			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
+			//// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
+			//// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
+			//IPredicateExpression threadFilter = ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID);
+			//filter.AddWithAnd(threadFilter);
 
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
-				}
-				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID==userID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
-			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
-			}
-			
-			filter.AddWithAnd(threadFilter);
-
-			TypedListDAO dao = new TypedListDAO();
-			DataTable toReturn = new DataTable();
-            dao.GetMultiAsDataTable(fields, toReturn, 0, null, filter, relations, true, null, null, 0, 0);
-            return toReturn;
+			//TypedListDAO dao = new TypedListDAO();
+			//DataTable toReturn = new DataTable();
+			//dao.GetMultiAsDataTable(fields, toReturn, 0, null, filter, relations, true, null, null, 0, 0);
+            //return toReturn;
 		}
 
 
@@ -254,83 +192,28 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithOnlyOwnThreads">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>a dataView of Active threads</returns>
-		public static DataView GetActiveThreadsAsDataView(List<int> accessableForums, short hoursThreshold,
-				List<int> forumsWithThreadsFromOthers, int userID)
+		public static DataView GetActiveThreadsAsDataView(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
 		{
-            // return null, if the user does not have a valid list of forums to access
             if (accessableForums == null || accessableForums.Count <= 0)
             {
                 return null;
             }
 
-			PredicateExpression filter = new PredicateExpression();
-			// only the forums the user has access to
-            filter.Add(ThreadFields.ForumID == accessableForums);
-			// only the threads which are not closed
-			filter.Add(ThreadFields.IsClosed == false);
-			// only the threads which are active (== not done)
-			filter.Add(ThreadFields.MarkedAsDone == false);
-			// only threads which have been updated in the last Globals.HoursForActiveThreadsTreshold hours
-			filter.Add(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold));
-
-			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
-			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			PredicateExpression threadFilter = new PredicateExpression();
-			if((forumsWithThreadsFromOthers!=null) && (forumsWithThreadsFromOthers.Count > 0))
-			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
-
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
-				}
-				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID==userID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
-			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == userID));
-			}
-			
-			filter.AddWithAnd(threadFilter);
-
-			SortExpression sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Ascending);
-
-			// We'll use a dynamic list to retrieve all threads which are 'active' and in the specified interval
-			ResultsetFields fields = BuildDynamicListForAllThreadsWithStats();
-			int count = fields.Count;
-			// add 1 field to the resultset fields as we need data from Forum as well:
-			fields.Expand(1);
-			fields.DefineField(ForumFields.ForumName, count);
-
-			// now build the relations for the dynamic list. We'll join User twice: once for the startuser and one for the lastpost user. 
-			// also, we'll join the last message to the thread. The last message is joined with a custom filter added to the relation. 
-			RelationCollection relations = BuildRelationsForAllThreadsWithStats();
-			// add the relation thread-forum as well, as we need information from Forum
-			relations.Add(ThreadEntity.Relations.ForumEntityUsingForumID);
-			
-			DataTable activeThreads = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-
-			dao.GetMultiAsDataTable(fields, activeThreads, 0, sorter, filter, relations, true, null, null, 0, 0);
-            return activeThreads.DefaultView;
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf)) { ForumFields.ForumName }
+											.ToArray())
+						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+								.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
+						.Where((ThreadFields.ForumID == accessableForums)
+									.And(ThreadFields.IsClosed == false)
+									.And(ThreadFields.MarkedAsDone == false)
+									.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
+									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
+						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
+			var dao = new TypedListDAO();
+			var activeThreads = dao.FetchAsDataTable(q);
+			return activeThreads.DefaultView;
 		}
 
 
@@ -341,25 +224,20 @@ namespace SD.HnD.BL
         /// <returns>fetched messageentity with the userentity + usertitle entity fetched as well of the user who posted the message.</returns>
 		public static MessageEntity GetLastMessageInThreadWithUserInfo(int threadID)
 		{
+			var qf = new QueryFactory();
+			var q = qf.Message
+						.Where(MessageFields.MessageID.Equal(
+											qf.Create()
+												.Select(MessageFields.MessageID.Source("LastMessage"))
+												.Where((MessageFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
+														.And(MessageFields.ThreadID.Source("LastMessage")==threadID))
+												.Limit(1)
+												.OrderBy(MessageFields.PostingDate.Source("LastMessage").Descending())
+												.ToScalar()
+												.ForceRowLimit()))
+						.WithPath(MessageEntity.PrefetchPathPostedByUser.WithSubPath(UserEntity.PrefetchPathUserTitle));
 			MessageCollection messages = new MessageCollection();
-			PrefetchPath path = new PrefetchPath((int)EntityType.MessageEntity);
-			path.Add(MessageEntity.PrefetchPathPostedByUser).SubPath.Add(UserEntity.PrefetchPathUserTitle);
-
-			messages.GetMulti(
-					new FieldCompareSetPredicate(
-						MessageFields.MessageID,
-						MessageFields.MessageID.SetObjectAlias("LastMessage"), 
-						SetOperator.Equal,
-						new PredicateExpression(MessageFields.ThreadID == MessageFields.ThreadID.SetObjectAlias("LastMessage"))
-								.AddWithAnd(MessageFields.ThreadID==threadID), 
-						null, 
-						string.Empty, 
-						1,
-						new SortExpression(MessageFields.PostingDate.SetObjectAlias("LastMessage") | SortOperator.Descending)
-					), 1, 
-					null, 
-					null, 
-					path);
+			messages.GetMulti(q);
 			if(messages.Count<=0)
 			{
 				// not found
@@ -399,7 +277,7 @@ namespace SD.HnD.BL
 			PredicateExpression filter = new PredicateExpression(MessageFields.ThreadID == threadID);
 
 			// Sort Messages on posting date, ascending, so the first post is located on top. 
-			SortExpression sorter = new SortExpression(MessageFields.PostingDate | SortOperator.Ascending);
+			SortExpression sorter = new SortExpression(MessageFields.PostingDate.Ascending());
 
 			// fetch the data into the typedlist. Pass in the paging information as well, to perform server-side paging. 
 			messages.Fill(0, sorter, true, filter, null, null, pageNo, pageSize);
@@ -429,24 +307,17 @@ namespace SD.HnD.BL
         /// <returns></returns>
         public static int GetStartAtMessageForGivenMessageAndThread(int threadID, int messageID, int maxAmountMessagesPerPage)
         {
-            //construct the dynamic list fields
-            ResultsetFields fields = new ResultsetFields(1);
-            fields.DefineField(MessageFields.MessageID, 0);
-
-            //create the filter with the ID passed to the method.
-            PredicateExpression filter = new PredicateExpression(MessageFields.ThreadID == threadID);
-
-            // Sort messages on postingdate / ascending
-            SortExpression sorter = new SortExpression(MessageFields.PostingDate | SortOperator.Ascending);
-
-            // the value to be returned
-            int startAtMessage = 0;
-	        int rowIndex = 0;
-			DataTable dynamicList = new DataTable();
-            TypedListDAO dao = new TypedListDAO();
-            // Retrieves rows in the datatable provided which match the specified filter, containing the fields specified
-            dao.GetMultiAsDataTable(fields, dynamicList, 0, sorter, filter, null, false, null, null, 0, 0);
-            
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(MessageFields.MessageID)
+						.Where(MessageFields.ThreadID == threadID)
+						.OrderBy(MessageFields.PostingDate.Ascending())
+						.Distinct();
+			var dao = new TypedListDAO();
+			var dynamicList = dao.FetchAsDataTable(q);
+           
+			int startAtMessage = 0;
+			int rowIndex = 0;
             if (dynamicList.Rows.Count > 0)
             {
                 // there are messages. Find the row with messageID. There can be only one row with this messageID                    
@@ -478,22 +349,148 @@ namespace SD.HnD.BL
 		{
 			// use a scalar query, which obtains the first MessageID in a given thread. We sort on posting date ascending, and simply read
 			// the first messageid. If that's not available or not equal to messageID, the messageID isn't the first post in the thread, otherwise it is.
-			ResultsetFields fields = new ResultsetFields(1);
-			fields.DefineField(MessageFields.MessageID, 0);
-			DataTable results = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-			dao.GetMultiAsDataTable(fields, results, 1, new SortExpression(MessageFields.PostingDate | SortOperator.Ascending),
-					(MessageFields.ThreadID == threadID), null, true, null, null, 0, 0);
-			if(results.Rows.Count <= 0)
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(MessageFields.MessageID)
+						.Where(MessageFields.ThreadID == threadID)
+						.OrderBy(MessageFields.PostingDate.Ascending())
+						.Limit(1);
+			var dao = new TypedListDAO();
+			var firstMessageId = dao.GetScalar<int?>(q, null);
+			if(firstMessageId.HasValue)
 			{
-				// not found
-				return false;
+				return firstMessageId.Value == messageID;
 			}
+			// not found.
+			return false;
+		}
+		
 
-			return (((int)results.Rows[0][0]) == messageID);
+		/// <summary>
+		/// Creates the thread filter. Filters on the threads viewable by the passed in userid, which is the caller of the method. 
+		/// If a forum isn't in the list of forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should 
+		/// be counted / taken into account. 
+		/// </summary>
+		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
+		/// <param name="userID">The user ID.</param>
+		/// <returns>ready to use thread filter.</returns>
+		internal static IPredicateExpression CreateThreadFilter(List<int> forumsWithThreadsFromOthers, int userID)
+		{
+			var threadFilter = new PredicateExpression();
+			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
+			{
+				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
+
+				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
+				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
+				if(forumsWithThreadsFromOthers.Count == 1)
+				{
+					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
+					// databases, but we'll get a WHERE Field == @param
+					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
+					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
+					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
+				}
+				else
+				{
+					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
+					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
+					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
+				}
+				// the filter on either sticky or threads started by the calling user
+				onlyOwnThreadsFilter.AddWithAnd((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
+				threadFilter.AddWithOr(onlyOwnThreadsFilter);
+			}
+			else
+			{
+				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
+				// sticky threads or threads started by the calling user.
+				threadFilter.Add((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
+			}
+			return threadFilter;
 		}
 
 
+		/// <summary>
+		/// Builds the projection for a dynamic query which contains thread and statistics information.
+		/// </summary>
+		/// <param name="qf">The query factory to use.</param>
+		/// <returns>The fields for the projection</returns>
+		/// <remarks>Doesn't add the forum fields</remarks>
+		internal static object[] BuildQueryProjectionForAllThreadsWithStats(QueryFactory qf)
+		{
+			var toReturn = new List<object>() 
+			{ 
+				ThreadFields.ThreadID,
+				ThreadFields.ForumID,
+				ThreadFields.Subject,
+				ThreadFields.StartedByUserID,
+				ThreadFields.ThreadLastPostingDate,
+				ThreadFields.IsSticky,
+				ThreadFields.IsClosed,
+				ThreadFields.MarkedAsDone,
+				ThreadFields.NumberOfViews,
+				UserFields.NickName.Source("ThreadStarterUser"),
+				qf.Create()
+					.Select(MessageFields.MessageID.Count())
+					.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
+					.ToScalar()
+					.As("AmountMessages"),
+				UserFields.UserID.Source("LastPostingUser").As("LastPostingByUserID"),
+				UserFields.NickName.Source("LastPostingUser").As("NickNameLastPosting"),
+				MessageFields.MessageID.Source("LastMessage").As("LastMessageID")
+			};
+			return toReturn.ToArray();
+		}
+
+
+		/// <summary>
+		/// Builds form clause for the query specified for a fetch of all threads with statistics.
+		/// </summary>
+		/// <param name="qf">The query factory to use.</param>
+		/// <returns>ready to use join operand</returns>
+		internal static IJoinOperand BuildFromClauseForAllThreadsWithStats(QueryFactory qf)
+		{
+			return qf.Thread
+						.LeftJoin(qf.User.As("ThreadStarterUser")).On(ThreadFields.StartedByUserID == UserFields.UserID.Source("ThreadStarterUser"))
+						.InnerJoin(qf.Message.As("LastMessage")).On((ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
+									.And(MessageFields.MessageID.Source("LastMessage").Equal(
+											qf.Create()
+												.Select(MessageFields.MessageID)
+												.Where(MessageFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
+												.Limit(1)
+												.OrderBy(MessageFields.PostingDate.Descending())
+												.ToScalar()
+												.ForceRowLimit())))		// force the row limit otherwise the scalar won't have the TOP 1, which will force
+																		// the engine to remove the orderby / distinct as it otherwise fails. 
+						.LeftJoin(qf.User.As("LastPostingUser"))
+								.On(MessageFields.PostedByUserID.Source("LastMessage") == UserFields.UserID.Source("LastPostingUser"));
+		}
+
+#warning REMOVE
+		/// <summary>
+		/// Builds the relation collection for a fetch of all threads with statistics. 
+		/// </summary>
+		/// <returns>A ready to use relationcollection</returns>
+		/// <returns>Doesn't add the thread-forum relation.</returns>
+		internal static RelationCollection BuildRelationsForAllThreadsWithStats()
+		{
+			RelationCollection relations = new RelationCollection();
+			relations.Add(ThreadEntity.Relations.UserEntityUsingStartedByUserID, "ThreadStarterUser", JoinHint.Left);
+			IEntityRelation threadMessage = ThreadEntity.Relations.MessageEntityUsingThreadID;
+			// the custom filter of the relation is a subquery which compares the messageID of the last message in the thread with the messageid of the set to join
+			threadMessage.CustomFilter = new PredicateExpression(
+					new FieldCompareSetPredicate(MessageFields.MessageID.SetObjectAlias("LastMessage"),
+						MessageFields.MessageID, SetOperator.Equal,
+						(MessageFields.ThreadID == MessageFields.ThreadID.SetObjectAlias("LastMessage")), null, string.Empty, 1,
+							new SortExpression(MessageFields.PostingDate | SortOperator.Descending)));
+			// now add the relation to the relationcollection, we'll alias the message entity in the relation so we can refer to it in our custom filter.
+			relations.Add(threadMessage, "LastMessage");
+			relations.Add(MessageEntity.Relations.UserEntityUsingPostedByUserID, "LastMessage", "LastPostingUser", JoinHint.Left);
+			return relations;
+		}
+
+#warning REMOVE
 		/// <summary>
 		/// Builds the dynamic list for a query with all threads with statistics. 
 		/// </summary>
@@ -524,29 +521,6 @@ namespace SD.HnD.BL
 			fields.DefineField(MessageFields.MessageID, 13, "LastMessageID", "LastMessage");
 
 			return fields;
-		}
-
-
-		/// <summary>
-		/// Builds the relation collection for a fetch of all threads with statistics. 
-		/// </summary>
-		/// <returns>A ready to use relationcollection</returns>
-		/// <returns>Doesn't add the thread-forum relation.</returns>
-		internal static RelationCollection BuildRelationsForAllThreadsWithStats()
-		{
-			RelationCollection relations = new RelationCollection();
-			relations.Add(ThreadEntity.Relations.UserEntityUsingStartedByUserID, "ThreadStarterUser", JoinHint.Left);
-			IEntityRelation threadMessage = ThreadEntity.Relations.MessageEntityUsingThreadID;
-			// the custom filter of the relation is a subquery which compares the messageID of the last message in the thread with the messageid of the set to join
-			threadMessage.CustomFilter = new PredicateExpression(
-					new FieldCompareSetPredicate(MessageFields.MessageID.SetObjectAlias("LastMessage"),
-						MessageFields.MessageID, SetOperator.Equal,
-						(MessageFields.ThreadID == MessageFields.ThreadID.SetObjectAlias("LastMessage")), null, string.Empty, 1,
-							new SortExpression(MessageFields.PostingDate | SortOperator.Descending)));
-			// now add the relation to the relationcollection, we'll alias the message entity in the relation so we can refer to it in our custom filter.
-			relations.Add(threadMessage, "LastMessage");
-			relations.Add(MessageEntity.Relations.UserEntityUsingPostedByUserID, "LastMessage", "LastPostingUser", JoinHint.Left);
-			return relations;
 		}
 
 	}

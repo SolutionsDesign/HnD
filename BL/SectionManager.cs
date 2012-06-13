@@ -100,14 +100,11 @@ namespace SD.HnD.BL
 		/// <returns>True if succeeded, false otherwise</returns>
 		public static bool DeleteSection(int ID)
 		{
-            // trying to delete the entity directly from the database without first loading it.
-            // for that we use an entity collection and use the DeleteMulti method with a filter on the PK.
-            PredicateExpression deleteFilter = new PredicateExpression();
-            deleteFilter.Add(SectionFields.SectionID == ID);
-
+			// trying to delete the entity directly from the database without first loading it.
+			// for that we use an entity collection and use the DeleteMulti method with a filter on the PK.
 			SectionCollection sections = new SectionCollection();
             // try to delete the entity
-            int deletedRows = sections.DeleteMulti(deleteFilter);
+			int deletedRows = sections.DeleteMulti(SectionFields.SectionID == ID);
 
 			// there should only be one deleted row, since we are filtering by the PK.
 			// return true if there's 1, otherwise false.

@@ -32,6 +32,8 @@ using SD.HnD.DAL.DaoClasses;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
 namespace SD.HnD.BL
 {
@@ -47,25 +49,17 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static DataTable GetBookmarkStatisticsAsDataTable(int userID)
 		{
-			// create dyn. list and pull statistics using that list.
-			ResultsetFields fields = new ResultsetFields(3);
-			fields.DefineField(BookmarkFields.ThreadID, 0, "AmountThreads", AggregateFunction.CountDistinct);
-			fields.DefineField(MessageFields.MessageID, 1, "AmountPostings", AggregateFunction.Count);
-			fields.DefineField(ThreadFields.ThreadLastPostingDate, 2, "LastPostingDate", AggregateFunction.Max);
-
-			// the dynamic list is build on several entities, build the relations collection with the relations between these entities.
-			RelationCollection relations = new RelationCollection();
-			relations.Add(BookmarkEntity.Relations.ThreadEntityUsingThreadID);
-			relations.Add(ThreadEntity.Relations.MessageEntityUsingThreadID);
-
-			// set up the filter: only bookmarks for the user passed in. 
-			PredicateExpression filter = new PredicateExpression(BookmarkFields.UserID == userID);
-
-			TypedListDAO dao = new TypedListDAO();
-			DataTable toReturn = new DataTable();
-			dao.GetMultiAsDataTable(fields, toReturn, 0, null, filter, relations, true, null, null, 0, 0);
-
-			return toReturn;
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(BookmarkFields.ThreadID.CountDistinct().As("AmountThreads"),
+								MessageFields.MessageID.Count().As("AmountPostings"),
+								ThreadFields.ThreadLastPostingDate.Max().As("LastPostingDate"))
+						.From(qf.Bookmark
+								.InnerJoin(qf.Thread).On(BookmarkFields.ThreadID == ThreadFields.ThreadID)
+								.InnerJoin(qf.Message).On(ThreadFields.ThreadID == MessageFields.ThreadID))
+						.Where(BookmarkFields.UserID == userID);
+			var dao = new TypedListDAO();
+			return dao.FetchAsDataTable(q);
 		}
 
 
@@ -77,13 +71,12 @@ namespace SD.HnD.BL
 		/// <remarks>This list of nicknames is cached in the application object so these users can be logged off by force.</remarks>
 		public static DataView GetAllBannedUserNicknamesAsDataView()
 		{
-			ResultsetFields fields = new ResultsetFields(1);
-			fields.DefineField(UserFields.NickName, 0);
-
-			TypedListDAO dao = new TypedListDAO();
-			DataTable results = new DataTable();
-			dao.GetMultiAsDataTable(fields, results, 0, null, (UserFields.IsBanned == true), null, true, null, null, 0, 0);
-
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(UserFields.NickName)
+						.Where(UserFields.IsBanned == true);
+			var dao = new TypedListDAO();
+			var results = dao.FetchAsDataTable(q);
 			return results.DefaultView;
 		}
 
@@ -99,10 +92,11 @@ namespace SD.HnD.BL
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a dataView of the threads requested</returns>
 		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-				List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+																List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
 		{
 			return GetLastThreadsForUserAsDataView(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
 		}
+
 
 		/// <summary>
 		/// Gets the last pageSize threads in which the user specified participated with one or more messages for the page specified. 
@@ -116,7 +110,7 @@ namespace SD.HnD.BL
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a dataView of the threads requested</returns>
 		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-				List<int> forumsWithThreadsFromOthers, int callingUserID, int pageSize, int pageNumber)
+															   List<int> forumsWithThreadsFromOthers, int callingUserID, int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -130,31 +124,29 @@ namespace SD.HnD.BL
 				numberOfThreadsToFetch = 25;
 			}
 
-			PredicateExpression filter = CreateFilterForLastThreadsForUser(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID);
-			SortExpression sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
-
-			// We'll use a dynamic list to retrieve the threads info
-			ResultsetFields fields = ThreadGuiHelper.BuildDynamicListForAllThreadsWithStats();
-			int count = fields.Count;
-
-			// now build the relations for the dynamic list. We'll join User twice: once for the startuser and one for the lastpost user. 
-			// also, we'll join the last message to the thread. The last message is joined with a custom filter added to the relation. 
-			RelationCollection relations = ThreadGuiHelper.BuildRelationsForAllThreadsWithStats();
-
-			DataTable lastThreads = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-
+			var qf = new QueryFactory();
+			var q = qf.Create()
+							.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+							.Where((ThreadFields.ForumID == accessableForums)
+									.And(ThreadFields.ThreadID.In(qf.Create()
+																		.Select(MessageFields.ThreadID)
+																		.Where(MessageFields.PostedByUserID == participantUserID)))
+									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID)))
+							.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			if(pageNumber <= 0)
 			{
 				// no paging
 				// get the last numberOfThreadsToFetch, so specify a limit equal to the numberOfThreadsToFetch specified
-				dao.GetMultiAsDataTable(fields, lastThreads, numberOfThreadsToFetch, sorter, filter, relations, true, null, null, 0, 0);
+				q.Limit(numberOfThreadsToFetch);
 			}
 			else
 			{
 				// use paging
-				dao.GetMultiAsDataTable(fields, lastThreads, 0, sorter, filter, relations, true, null, null, pageNumber, numberOfThreadsToFetch);
+				q.Page(pageNumber, numberOfThreadsToFetch);
 			}
+			var dao = new TypedListDAO();
+			var lastThreads = dao.FetchAsDataTable(q);
 			return lastThreads.DefaultView;
 		}
 
@@ -169,27 +161,24 @@ namespace SD.HnD.BL
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <returns>a dataView of the threads requested</returns>
 		public static int GetRowCountLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-				List<int> forumsWithThreadsFromOthers, int callingUserID)
+																  List<int> forumsWithThreadsFromOthers, int callingUserID)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
 			{
 				return 0;
 			}
-
-			PredicateExpression filter = CreateFilterForLastThreadsForUser(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID);
-			SortExpression sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
-
-			// We'll use a dynamic list to retrieve the threads info
-			ResultsetFields fields = ThreadGuiHelper.BuildDynamicListForAllThreadsWithStats();
-			int count = fields.Count;
-
-			// now build the relations for the dynamic list. We'll join User twice: once for the startuser and one for the lastpost user. 
-			// also, we'll join the last message to the thread. The last message is joined with a custom filter added to the relation. 
-			RelationCollection relations = ThreadGuiHelper.BuildRelationsForAllThreadsWithStats();
-
-			TypedListDAO dao = new TypedListDAO();
-			return dao.GetDbCount(fields, null, filter, relations, null, false);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+							.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+							.Where((ThreadFields.ForumID == accessableForums)
+									.And(ThreadFields.ThreadID.In(qf.Create()
+																		.Select(MessageFields.ThreadID)
+																		.Where(MessageFields.PostedByUserID == participantUserID)))
+									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID)));
+			var dao = new TypedListDAO();
+			return dao.GetScalar<int>(qf.Create().Select(Functions.CountRow()).From(q), null);
 		}
 
 

@@ -31,6 +31,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Web;
 using System.Net.Mail;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.HnD.DAL.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -465,22 +468,16 @@ namespace SD.HnD.BL
         /// <param name="threadID">The thread that was updated.</param>
         /// <param name="initiatedByUserID">The user who initiated the update (who will not receive notification).</param>
         private static void SendThreadReplyNotifications(int threadID, int initiatedByUserID, string emailTemplate, 
-				Dictionary<string, string> emailData)
+														 Dictionary<string, string> emailData)
         {
             // get list of subscribers to thread, minus the initiator. Do this by fetching the subscriptions plus the related user entity entity instances. 
 			// The related user entities are loaded using a prefetch path. 
-            ThreadSubscriptionCollection subscriptions = new ThreadSubscriptionCollection();
-            PrefetchPath prefetch = new PrefetchPath((int)EntityType.ThreadSubscriptionEntity);
-            prefetch.Add(ThreadSubscriptionEntity.PrefetchPathUser);
-
-			// we're interested in subscriptions on the specified thread and for all users who aren't the initiating user. 
-            PredicateExpression predicate = new PredicateExpression();
-            predicate.Add(ThreadSubscriptionFields.ThreadID == threadID);
-            predicate.AddWithAnd(ThreadSubscriptionFields.UserID != initiatedByUserID);
-
-			// fetch all subscriptions, using the filter and the prefetch path. 
-            subscriptions.GetMulti(predicate, prefetch);
-
+			var qf = new QueryFactory();
+			var q = qf.ThreadSubscription
+							.Where((ThreadSubscriptionFields.ThreadID == threadID).And(ThreadSubscriptionFields.UserID != initiatedByUserID))
+							.WithPath(ThreadSubscriptionEntity.PrefetchPathUser);
+			ThreadSubscriptionCollection subscriptions = new ThreadSubscriptionCollection();
+			subscriptions.GetMulti(q);
 			if(subscriptions.Count <= 0)
 			{
 				// no subscriptions, nothing to do

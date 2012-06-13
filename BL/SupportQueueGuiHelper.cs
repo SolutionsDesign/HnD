@@ -27,6 +27,9 @@ using SD.HnD.DAL.HelperClasses;
 using System.Data;
 using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.HnD.DAL.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -61,7 +64,7 @@ namespace SD.HnD.BL
 		{
 			SupportQueueCollection toReturn = new SupportQueueCollection();
 			// fetch all supportqueue entities and sort on the orderno fields
-			toReturn.GetMulti(null, 0, new SortExpression(SupportQueueFields.OrderNo | SortOperator.Ascending));
+			toReturn.GetMulti(null, 0, new SortExpression(SupportQueueFields.OrderNo.Ascending()));
 			return toReturn;
 		}
 
@@ -89,9 +92,10 @@ namespace SD.HnD.BL
 		{
 			// the relation supportqueue - thread is stored in a SupportQueueThread entity. Use that entity as a filter for the support queue. If
 			// that entity doesn't exist, the thread isn't in a supportqueue.
-
-			RelationCollection relations = new RelationCollection();
-			relations.Add(SupportQueueEntity.Relations.SupportQueueThreadEntityUsingQueueID);
+			var qf = new QueryFactory();
+			var q = qf.SupportQueueThread
+						.From(QueryTarget.InnerJoin(qf.SupportQueue).On(SupportQueueThreadFields.QueueID == SupportQueueFields.QueueID))
+						.Where(SupportQueueThreadFields.ThreadID == threadID);
 
 			// use a supportqueue collection to fetch the support queue, which will contain 0 or 1 entities after the fetch
 			SupportQueueCollection supportQueues = new SupportQueueCollection();
@@ -101,9 +105,7 @@ namespace SD.HnD.BL
 			{
 				trans.Add(supportQueues);
 			}
-
-			// fetch using a filter on a related entity, namely the SupportQueueThread entity. We'll filter on thread.
-			supportQueues.GetMulti((SupportQueueThreadFields.ThreadID == threadID), relations);
+			supportQueues.GetMulti(q);
 			if(supportQueues.Count > 0)
 			{
 				// in a queue, return the instance
@@ -159,46 +161,29 @@ namespace SD.HnD.BL
 			{
 				return null;
 			}
-
-			PredicateExpression filter = new PredicateExpression();
-			// only the forums the user has access to
-			filter.Add(ThreadFields.ForumID == accessableForums);
-			// only the threads which are in this queue.
-			filter.Add(SupportQueueThreadFields.QueueID == supportQueueID);
-
-			SortExpression sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Ascending);
-
-			// We'll use a dynamic list to retrieve all threads which are in support queues
-			ResultsetFields fields = ThreadGuiHelper.BuildDynamicListForAllThreadsWithStats();
-			int count = fields.Count;
-			// add fields to the resultset fields as we need data from forum, the nickname of the user who placed the thread in the queue,
-			// the nickname of the user who claimed the thread (if any) and the date/times when the thread was placed or claimed
-			fields.Expand(7);
-			fields.DefineField(ForumFields.ForumName, count);
-			fields.DefineField(UserFields.NickName, count + 1, "NickNamePlacedInQueue", "PlacedInQueueUser");
-			fields.DefineField(SupportQueueThreadFields.PlacedInQueueByUserID, count + 2);
-			fields.DefineField(SupportQueueThreadFields.PlacedInQueueOn, count + 3);
-			fields.DefineField(UserFields.NickName, count + 4, "NickNameClaimedThread", "ClaimedThreadUser");
-			fields.DefineField(SupportQueueThreadFields.ClaimedByUserID, count + 5);
-			fields.DefineField(SupportQueueThreadFields.ClaimedOn, count + 6);
-
-			// now build the relations for the dynamic list. We'll join User three times: once for the startuser, once for the lastpost user and
-			// once for the user who placed the thread in the queue.
-			// Also, we'll join the last message to the thread. The last message is joined with a custom filter added to the relation. 
-			RelationCollection relations = ThreadGuiHelper.BuildRelationsForAllThreadsWithStats();
-
-			// add the relation thread-forum as well, as we need information from Forum
-			relations.Add(ThreadEntity.Relations.ForumEntityUsingForumID);
-			// add the relation thread - SupportQueueThread and the relation SupportQueueThread - User, where we'll alias User. 
-			relations.Add(ThreadEntity.Relations.SupportQueueThreadEntityUsingThreadID);
-			relations.Add(SupportQueueThreadEntity.Relations.UserEntityUsingPlacedInQueueByUserID, "PlacedInQueueUser");
-			// add the relation supportqueuethread - user for the claiming user. We'll specify a left join, because a thread can be unclaimed.
-			relations.Add(SupportQueueThreadEntity.Relations.UserEntityUsingClaimedByUserID, "ClaimedThreadUser", JoinHint.Left); 
-
-			DataTable threadsInQueue = new DataTable();
+			var qf = new QueryFactory();
+			var q = qf.Create();
+			var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
+			projectionFields.AddRange(new[] { 
+								ForumFields.ForumName,
+								UserFields.NickName.Source("PlacedInQueueUser").As("NickNamePlacedInQueue"),
+								SupportQueueThreadFields.PlacedInQueueByUserID,
+								SupportQueueThreadFields.PlacedInQueueOn,
+								UserFields.NickName.Source("ClaimedThreadUser").As("NickNameClaimedThread"),
+								SupportQueueThreadFields.ClaimedByUserID,
+								SupportQueueThreadFields.ClaimedOn});
+			q.Select(projectionFields.ToArray());
+			q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+					.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID)
+					.InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID == SupportQueueThreadFields.ThreadID)
+					.InnerJoin(qf.User.As("PlacedInQueueUser"))
+							.On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
+					.LeftJoin(qf.User.As("ClaimedThreadUser"))
+							.On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")));
+			q.Where((ThreadFields.ForumID == accessableForums).And(SupportQueueThreadFields.QueueID == supportQueueID));
+			q.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
 			TypedListDAO dao = new TypedListDAO();
-
-			dao.GetMultiAsDataTable(fields, threadsInQueue, 0, sorter, filter, relations, true, null, null, 0, 0);
+			var threadsInQueue = dao.FetchAsDataTable(q);
 			return threadsInQueue.DefaultView;
 		}
 
@@ -217,19 +202,13 @@ namespace SD.HnD.BL
 				return 0;
 			}
 
-			PredicateExpression filter = new PredicateExpression();
-			// only the forums the user has access to
-			filter.Add(ThreadFields.ForumID == accessableForums);
-
-			// We'll a GetDbCount call to obtain the total number of threads which are in support queues
-
-			// we need to join support queue with thread, so we can filter on thread's fields. We work with the intermediate entity 
-			// 'SupportQueueThreadEntity' as we're not interested in the data, just the # of entries. 
-			RelationCollection relations = new RelationCollection();
-			relations.Add(SupportQueueThreadEntity.Relations.ThreadEntityUsingThreadID);
-
-			SupportQueueThreadCollection supportQueueThreads = new SupportQueueThreadCollection();
-			return supportQueueThreads.GetDbCount(filter, relations);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"))
+						.From(qf.SupportQueueThread.InnerJoin(qf.Thread).On(SupportQueueThreadFields.ThreadID == ThreadFields.ThreadID))
+						.Where(ThreadFields.ForumID == accessableForums);
+			var dao = new TypedListDAO();
+			return dao.GetScalar<int>(q, null);
 		}
 	}
 }

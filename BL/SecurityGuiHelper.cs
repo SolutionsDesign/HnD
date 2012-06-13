@@ -29,6 +29,9 @@ using SD.HnD.DAL.EntityClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DAL.DaoClasses;
 using System.Collections.Generic;
+using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.HnD.DAL.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -44,9 +47,10 @@ namespace SD.HnD.BL
 		public static RoleCollection GetAllRoles()
 		{
 			RoleCollection toReturn = new RoleCollection();
-			toReturn.GetMulti(null, 0, new SortExpression(RoleFields.RoleDescription | SortOperator.Ascending));
+			toReturn.GetMulti(null, 0, new SortExpression(RoleFields.RoleDescription.Ascending()));
 			return toReturn;
 		}
+
 
 		/// <summary>
 		/// Gets all audit actions.
@@ -55,7 +59,7 @@ namespace SD.HnD.BL
 		public static AuditActionCollection GetAllAuditActions()
 		{
 			AuditActionCollection toReturn = new AuditActionCollection();
-			toReturn.GetMulti(null, 0, new SortExpression(AuditActionFields.AuditActionDescription | SortOperator.Ascending));
+			toReturn.GetMulti(null, 0, new SortExpression(AuditActionFields.AuditActionDescription.Ascending()));
 			return toReturn;
 		}
 
@@ -80,13 +84,16 @@ namespace SD.HnD.BL
 		/// <returns>All audit data objects (polymorphic)</returns>
 		public static AuditDataCoreCollection GetAllAuditsForUser(int userID)
 		{
+			var qf = new QueryFactory();
+			var q = qf.AuditDataCore
+						.Where(AuditDataCoreFields.UserID==userID)
+						.OrderBy(AuditDataCoreFields.AuditedOn.Descending())
+						.Limit(50)
+						.WithPath(AuditDataMessageRelatedEntity.PrefetchPathMessage.WithSubPath(MessageEntity.PrefetchPathThread),
+								  AuditDataThreadRelatedEntity.PrefetchPathThread);
+			
 			AuditDataCoreCollection toReturn = new AuditDataCoreCollection();
-			// setup polymorphic prefetch paths:
-			PrefetchPath path = new PrefetchPath((int)EntityType.AuditDataCoreEntity);
-			path.Add(AuditDataMessageRelatedEntity.PrefetchPathMessage).SubPath.Add(MessageEntity.PrefetchPathThread);
-			path.Add(AuditDataThreadRelatedEntity.PrefetchPathThread);
-			toReturn.GetMulti((AuditDataCoreFields.UserID == userID), 
-				50, new SortExpression(AuditDataCoreFields.AuditedOn | SortOperator.Descending), null, path);
+			toReturn.GetMulti(q);
 			return toReturn;
 		}
 
@@ -110,7 +117,7 @@ namespace SD.HnD.BL
 				path = new PrefetchPath((int)EntityType.IPBanEntity);
 				path.Add(IPBanEntity.PrefetchPathSetByUser);
 			}
-			toReturn.GetMulti(null, 0, new SortExpression(IPBanFields.Range | SortOperator.Ascending), null, path, pageNo, pageSize);
+			toReturn.GetMulti(null, 0, new SortExpression(IPBanFields.Range.Ascending()), null, path, pageNo, pageSize);
 			return toReturn;
 		}
 
@@ -135,24 +142,24 @@ namespace SD.HnD.BL
 			// create dynamic list, with all fields of Role and 3 extra fields: one field for the # of users in the role, one field which
 			// signals if the role is the defaultnewuserrole and one field which signals if the role is the anonymous role. The # of users field is
 			// used in the query, the other two fields are added later for efficiency.
-			ResultsetFields fields = new ResultsetFields((int)RoleFieldIndex.AmountOfFields + 1);
-			fields.DefineField(RoleFields.RoleID, 0);
-			fields.DefineField(RoleFields.RoleDescription, 1);
-			// now add the # of users subquery to the resultset. This will result in the query:
-			// (
-			//    SELECT 	COUNT(UserID)
-			//    FROM	RoleUser
-			//    WHERE RoleUser.RoleID = Role.RoleID
-			// ) AS AmountUsersInRole
-			fields.DefineField(new EntityField("AmountUsersInRole",
-					new ScalarQueryExpression(RoleUserFields.UserID.SetAggregateFunction(AggregateFunction.Count),
-						(RoleUserFields.RoleID == RoleFields.RoleID))), 2);
-
-			// fetch the data into a datatable.
-			DataTable results = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-			dao.GetMultiAsDataTable(fields, results, 0, new SortExpression( RoleFields.RoleDescription | SortOperator.Ascending ), 
-				null, null, true, null, null, 0, 0);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(RoleFields.RoleID,
+								RoleFields.RoleDescription,
+								// now add the # of users subquery to the resultset. This will result in the query:
+								// (
+								//    SELECT 	COUNT(UserID)
+								//    FROM	RoleUser
+								//    WHERE RoleUser.RoleID = Role.RoleID
+								// ) AS AmountUsersInRole
+								qf.Create()
+									.Select(RoleUserFields.UserID.Count())
+									.CorrelatedOver(RoleUserFields.RoleID == RoleFields.RoleID)
+									.ToScalar()
+									.As("AmountUsersInRole"))
+						.OrderBy(RoleFields.RoleDescription.Ascending());
+			var dao = new TypedListDAO();
+			var results = dao.FetchAsDataTable(q);
 
 			// we now fetch the system data which contains the two role id's we've to check with in the results to return.
 			SystemDataEntity systemData = SystemGuiHelper.GetSystemSettings();
@@ -210,9 +217,7 @@ namespace SD.HnD.BL
 		public static ForumRoleForumActionRightCollection GetForumActionRightRolesFoForumRole(int roleID, int forumID)
 		{
 			ForumRoleForumActionRightCollection toReturn = new ForumRoleForumActionRightCollection();
-			PredicateExpression filter = new PredicateExpression(ForumRoleForumActionRightFields.RoleID == roleID);
-			filter.AddWithAnd((ForumRoleForumActionRightFields.ForumID==forumID));
-			toReturn.GetMulti(filter);
+			toReturn.GetMulti((ForumRoleForumActionRightFields.RoleID == roleID).And(ForumRoleForumActionRightFields.ForumID==forumID));
 			return toReturn;
 		}
 
@@ -224,7 +229,7 @@ namespace SD.HnD.BL
 		public static ActionRightCollection GetAllActionRightsApplybleToAForum()
 		{
 			ActionRightCollection toReturn = new ActionRightCollection();
-			toReturn.GetMulti((ActionRightFields.AppliesToForum == true), 0, new SortExpression( ActionRightFields.ActionRightID | SortOperator.Ascending ) );
+			toReturn.GetMulti((ActionRightFields.AppliesToForum == true), 0, new SortExpression( ActionRightFields.ActionRightID.Ascending()) );
 			return toReturn;
 		}
 
@@ -301,22 +306,18 @@ namespace SD.HnD.BL
 		/// <returns>fetched collection</returns>
 		public static AuditActionCollection GetAuditActionsForUser(int userID)
 		{
+			var qf = new QueryFactory();
+			var q = qf.AuditAction
+						.Where(AuditActionFields.AuditActionID
+											.In(qf.Create()
+														.Select(RoleAuditActionFields.AuditActionID)
+														.From(qf.RoleAuditAction
+																.InnerJoin(qf.Role).On(RoleAuditActionFields.RoleID==RoleFields.RoleID)
+																.InnerJoin(qf.RoleUser).On(RoleFields.RoleID==RoleUserFields.RoleID))
+														.Where(RoleUserFields.UserID==userID)));
+
 			AuditActionCollection auditActions = new AuditActionCollection();
-
-			// the subquery in the filter requires joins as the filter's subquery has to filter on fields in related entities:
-			// WHERE AuditActionID IN (SELECT AuditActionID FROM RoleAuditAction INNER JOIN Role ... INNER JOIN RoleUser ... WHERE RoleUser.UserID=userID)
-			RelationCollection relations = new RelationCollection();
-			relations.Add(RoleAuditActionEntity.Relations.RoleEntityUsingRoleID);
-			relations.Add(RoleEntity.Relations.RoleUserEntityUsingRoleID);
-
-			relations.Add(new EntityRelation(RoleAuditActionFields.RoleID, RoleUserFields.RoleID, RelationType.ManyToMany));
-
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add(new FieldCompareSetPredicate(AuditActionFields.AuditActionID,
-													RoleAuditActionFields.AuditActionID,
-													SetOperator.In,
-													(RoleUserFields.UserID == userID), relations));
-			auditActions.GetMulti(filter);
+			auditActions.GetMulti(q);
 			return auditActions;
 		}
 

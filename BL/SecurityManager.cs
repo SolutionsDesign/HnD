@@ -28,6 +28,7 @@ using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL;
 using SD.HnD.DAL.HelperClasses;
 
+using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
 
@@ -245,7 +246,7 @@ namespace SD.HnD.BL
 				trans.Add(roleActionRights);
 				// delete all role-systemactionright combinations directly from the database, by issuing a direct delete on the database, using a filter
 				// on roleid
-				roleActionRights.DeleteMulti((RoleSystemActionRightFields.RoleID == roleID));
+				roleActionRights.DeleteMulti(RoleSystemActionRightFields.RoleID == roleID);
 
 				// add new role-systemactionright entities which we'll save to the database after that
 				foreach(int actionRightID in actionRightIDs)
@@ -347,7 +348,7 @@ namespace SD.HnD.BL
 			try
 			{
 				// first remove the existing rows for the role
-                forumRightsPerRole.DeleteMulti((ForumRoleForumActionRightFields.RoleID == roleID) & (ForumRoleForumActionRightFields.ForumID == forumID));
+                forumRightsPerRole.DeleteMulti((ForumRoleForumActionRightFields.RoleID == roleID).And(ForumRoleForumActionRightFields.ForumID == forumID));
 
 				// THEN add new ones
 				foreach(int actionRightID in actionRightIDs)
