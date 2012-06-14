@@ -181,68 +181,6 @@ namespace SD.HnD.BL
 			return dao.GetScalar<int>(qf.Create().Select(Functions.CountRow()).From(q), null);
 		}
 
-
-		/// <summary>
-		/// Creates the filter for last threads for user code
-		/// </summary>
-		/// <param name="accessableForums">The accessable forums.</param>
-		/// <param name="participantUserID">The participant user ID.</param>
-		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="callingUserID">The calling user ID.</param>
-		/// <returns></returns>
-		private static PredicateExpression CreateFilterForLastThreadsForUser(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
-		{
-			PredicateExpression filter = new PredicateExpression();
-
-			// only the forums the calling user has access to
-			filter.Add(ThreadFields.ForumID == accessableForums);
-			// only the threads in which the participant user has posted one or more posts in. Do this with a fieldcompareset predicate
-			// to create the clause:
-			// where threadid in (select threadid from message where postedbyuserid = the participaintuserid specified.)
-			filter.AddWithAnd(new FieldCompareSetPredicate(ThreadFields.ThreadID, MessageFields.ThreadID, SetOperator.In,
-					(MessageFields.PostedByUserID == participantUserID)));
-
-			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
-			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			PredicateExpression threadFilter = new PredicateExpression();
-			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
-			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
-
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
-				}
-				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == callingUserID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
-			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add(new PredicateExpression(ThreadFields.IsSticky == true)
-						.AddWithOr(ThreadFields.StartedByUserID == callingUserID));
-			}
-
-			filter.AddWithAnd(threadFilter);
-
-			return filter;
-		}
-
 		
 		/// <summary>
 		/// Finds the users matching the filter criteria.
@@ -256,22 +194,23 @@ namespace SD.HnD.BL
 		/// <returns>User objects matching the query</returns>
 		public static UserCollection FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, string emailAddress)
 		{
-			PredicateExpression filter = new PredicateExpression();
+			var qf = new QueryFactory();
+			var q = qf.User
+						.OrderBy(UserFields.NickName.Ascending());
 			if(filterOnRole)
 			{
-				filter.Add(new FieldCompareSetPredicate(UserFields.UserID, RoleUserFields.UserID, SetOperator.In, (RoleUserFields.RoleID == roleID)));
+				q.AndWhere(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)));
 			}
 			if(filterOnNickName)
 			{
-				filter.Add((UserFields.NickName % ("%" + nickName + "%")));
+				q.AndWhere(UserFields.NickName.Like("%" + nickName + "%"));
 			}
 			if(filterOnEmailAddress)
 			{
-				filter.Add((UserFields.EmailAddress % ("%" + emailAddress + "%")));
+				q.AndWhere(UserFields.EmailAddress.Like("%" + emailAddress + "%"));
 			}
-
 			UserCollection toReturn = new UserCollection();
-			toReturn.GetMulti(filter, 0, new SortExpression(UserFields.NickName | SortOperator.Ascending));
+			toReturn.GetMulti(q);
 			return toReturn;
 		}
 
@@ -284,9 +223,12 @@ namespace SD.HnD.BL
 		/// <returns>true if the thread is bookmarked</returns>
 		public static bool CheckIfThreadIsAlreadyBookmarked(int userID, int threadID)
 		{
-			BookmarkCollection bookmarks = new BookmarkCollection();
-			PredicateExpression filter = new PredicateExpression((BookmarkFields.ThreadID == threadID) & (BookmarkFields.UserID == userID));
-			return (bookmarks.GetScalar(BookmarkFieldIndex.ThreadID, null, AggregateFunction.None, filter)!=null);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(BookmarkFields.ThreadID)
+						.Where((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
+			var dao = new TypedListDAO();
+			return dao.GetScalar<int?>(q, null) != null;
 		}
 
 
@@ -297,28 +239,19 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static DataView GetBookmarksAsDataView(int userID)
 		{
-			FieldCompareSetPredicate filter = new FieldCompareSetPredicate(
-				ThreadFields.ThreadID, BookmarkFields.ThreadID,	SetOperator.In, (BookmarkFields.UserID == userID));
-
-			SortExpression sorter = new SortExpression(ThreadFields.ThreadLastPostingDate | SortOperator.Descending);
-			
-			// We'll use a dynamic list to retrieve all threads which are bookmarked by the user.
-			ResultsetFields fields = ThreadGuiHelper.BuildDynamicListForAllThreadsWithStats();
-			// add 2 fields to the resultset fields as we need data from Forum as well:
-			int count = fields.Count;
-			fields.Expand(2);
-			fields.DefineField(ForumFields.ForumName, count);
-			fields.DefineField(ForumFields.SectionID, count+1);
-
-			// now build the relations for the dynamic list. We'll join User twice: once for the startuser and one for the lastpost user. 
-			// also, we'll join the last message to the thread. The last message is joined with a custom filter added to the relation. 
-			RelationCollection relations = ThreadGuiHelper.BuildRelationsForAllThreadsWithStats();
-			// add the relation thread-forum as well, as we need information from Forum
-			relations.Add(ThreadEntity.Relations.ForumEntityUsingForumID);
-
-			DataTable bookmarkedThreads = new DataTable();
-			TypedListDAO dao = new TypedListDAO();
-			dao.GetMultiAsDataTable(fields, bookmarkedThreads, 0, sorter, filter, relations, true, null, null, 0, 0);
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+									{
+										ForumFields.ForumName,
+										ForumFields.SectionID
+									}.ToArray())
+						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+								.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
+						.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
+						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+			var dao = new TypedListDAO();
+			var bookmarkedThreads = dao.FetchAsDataTable(q);
 			return bookmarkedThreads.DefaultView;
 		}
 
@@ -355,18 +288,12 @@ namespace SD.HnD.BL
 		/// <returns>entitycollection with data requested</returns>
 		public static UserCollection GetAllUsersNotInRole(int roleID)
 		{
-			// we're going to use the query:
-			// SELECT ... FROM User
-			// WHERE UserID NOT IN (SELECT UserID FROM RoleUser WHERE RoleID = @roleID)
-			// so define the filter as a fieldcompareset predicate where we use the roleid in the filter and negate the predicate so it will emit NOT IN
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add(new FieldCompareSetPredicate(UserFields.UserID, RoleUserFields.UserID,
-					SetOperator.In, (RoleUserFields.RoleID == roleID), true));
-
-			// sort on nickname ascending
-			SortExpression sorter = new SortExpression(UserFields.NickName | SortOperator.Ascending);
+			var qf = new QueryFactory();
+			var q = qf.User
+						.Where(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)))
+						.OrderBy(UserFields.NickName.Ascending());
 			UserCollection users = new UserCollection();
-			users.GetMulti(filter, 0, sorter);
+			users.GetMulti(q);
 			return users;
 		}
 
@@ -391,19 +318,12 @@ namespace SD.HnD.BL
 		/// <returns>UserCollection with data requested</returns>
 		public static UserCollection GetAllUsersInRole(int roleID)
 		{
-			// we're going to use the query:
-			// SELECT ... FROM User
-			// WHERE UserID IN (SELECT UserID FROM RoleUser WHERE RoleID = @roleID)
-			// so define the filter as a fieldcompareset predicate where we use the roleid in the filter
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add(new FieldCompareSetPredicate(UserFields.UserID, RoleUserFields.UserID,
-					SetOperator.In, (RoleUserFields.RoleID == roleID)));
-
-			// sort on nickname ascending
-			SortExpression sorter = new SortExpression(UserFields.NickName | SortOperator.Ascending);
-
+			var qf = new QueryFactory();
+			var q = qf.User
+						.Where(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)))
+						.OrderBy(UserFields.NickName.Ascending());
 			UserCollection users = new UserCollection();
-			users.GetMulti(filter, 0, sorter);
+			users.GetMulti(q);
 			return users;
 		}
 

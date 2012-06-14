@@ -34,6 +34,7 @@ using SD.HnD.DAL.DaoClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Security.Cryptography;
 using System.Web;
+using SD.LLBLGen.Pro.QuerySpec;
 
 namespace SD.HnD.BL
 {
@@ -277,14 +278,9 @@ namespace SD.HnD.BL
 		/// <param name="userID">user for whom these bookmarks have to be deleted</param>
 		public static void RemoveBookmarks(ArrayList threadIDsToRemove, int userID)
 		{
-			// create the filter to use in the direct delete action on the bookmarks entities
-			PredicateExpression filter = new PredicateExpression();
-			filter.Add(BookmarkFields.ThreadID == threadIDsToRemove);
-			filter.AddWithAnd(BookmarkFields.UserID == userID);
-
 			BookmarkCollection bookmarks = new BookmarkCollection();
 			// delete the bookmarks matching the filter directly from the database. 
-			bookmarks.DeleteMulti(filter);
+			bookmarks.DeleteMulti((BookmarkFields.ThreadID == threadIDsToRemove).And(BookmarkFields.UserID == userID));
 		}
 
 
@@ -296,11 +292,9 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static void RemoveSingleBookmark(int threadID, int userID)
 		{
-			PredicateExpression filter = new PredicateExpression(BookmarkFields.ThreadID == threadID);
-			filter.AddWithAnd(BookmarkFields.UserID == userID);
 			BookmarkCollection bookmarks = new BookmarkCollection();
 			// delete the bookmark directly from the database, no need for fetching it first.
-			bookmarks.DeleteMulti(filter);
+			bookmarks.DeleteMulti((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
 		}
 
 
