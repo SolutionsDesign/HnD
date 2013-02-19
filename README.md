@@ -30,6 +30,9 @@ Development requires VS.NET 2010 or later. To generate the data-access code, you
 * Complete control of fonts and colours with cascading style sheets (CSS).
 * Open source, so changes and additions can be easily implemented.
 
+### Getting started
+How to use it / install it, see the 'Docs' folder. To see it in action, go to [http://www.llblgen.com/tinyforum](http://www.llblgen.com/tinyforum). 
+
 ### License
 HnD is (c) [Solutions Design bv](http://www.sd.nl) and is released under [the GPL v2 license](https://github.com/SolutionsDesign/HnD/blob/master/LICENSE.txt)
 
