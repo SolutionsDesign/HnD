@@ -11,7 +11,7 @@ HnD stands for Help and Discuss and is running on .NET 2.0+ with 100% LLBLGen Pr
 * .NET 3.5+
 
 ### Development
-Development requires VS.NET 2010 or later. To generate the data-access code, you need LLBLGen Pro v3.x or later 
+Development requires VS.NET 2010 or later. To generate the data-access code, you need [LLBLGen Pro v3.x](http://www.llblgen.com/) or later 
 
 ### Features
 * Unlimited forums can be organised into as many sections as you like.
@@ -31,5 +31,5 @@ Development requires VS.NET 2010 or later. To generate the data-access code, you
 * Open source, so changes and additions can be easily implemented.
 
 ### License
-HnD is (c) [Solutions Design bv](http://www.sd.nl) and is released under the GPL v2 license. 
+HnD is (c) [Solutions Design bv](http://www.sd.nl) and is released under [the GPL v2 license](https://github.com/SolutionsDesign/HnD/blob/master/LICENSE.txt)
 
