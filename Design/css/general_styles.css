@@ -1,0 +1,184 @@
+﻿/* #region general tag css definitions */
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100%;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 26px;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 300;
+	letter-spacing: -1px;
+	margin: 0;
+}
+
+h1 {
+	font-size: 42px;
+	line-height: 44px;
+	margin: 0 0 40px 0;
+}
+
+h2 {
+	font-size: 36px;
+	line-height: 38px;
+	margin: 0 0 35px 0;
+}
+
+h3 {
+	font-size: 28px;
+	font-weight: 400;
+	letter-spacing: normal;
+	line-height: 28px;
+	margin-bottom: 30px;
+}
+
+h4, h5, h6 {
+	letter-spacing: normal;
+	margin: 0 0 15px 0;
+}
+
+h4 {
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 26px;
+}
+
+h5 {
+	font-size: 14px;
+	font-weight: 600;
+	line-height: 18px;
+}
+
+h6 {
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 18px;
+}
+/* #endregion */
+
+/* #region general margin shortcuts*/
+.mb0 { margin-bottom: 0;}
+.mb10 { margin-bottom: 10px;}
+.mb20 { margin-bottom: 20px;}
+.mb30 { margin-bottom: 30px;}
+.mb40 { margin-bottom: 40px;}
+
+.pb0 { padding-bottom: 0;}
+.pb10 { padding-bottom: 10px;}
+.pb20 { padding-bottom: 20px;}
+.pb30 { padding-bottom: 30px;}
+.pb40 { padding-bottom: 40px;}
+
+.mt0 { margin-top: 0;}
+.mt5 { margin-top: 5px;}
+.mt10 { margin-top: 10px;}
+.mt20 { margin-top: 20px;}
+.mt30 { margin-top: 30px;}
+.mt40 { margin-top: 40px;}
+
+.pt0 { padding-top: 0;}
+.pt10 { padding-top: 10px;}
+.pt20 { padding-top: 20px;}
+.pt30 { padding-top: 30px;}
+.pt40 { padding-top: 40px;}
+
+
+.plr10 { 
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.plr20 { 
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+/* #endregion */
+
+
+.page-header {
+	padding-bottom: 0;
+	padding-top: 40px;
+	margin: 40px 0 0;
+	border-bottom: 0;
+}
+
+.pull-center {
+	display: block;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	clear: both;
+	text-align:center;
+}
+
+.iconnewpost {
+	color: #0000ff;
+}
+
+.sectiontoggle.collapsed .glyphicon-chevron-up {
+	display: none;
+}
+
+.sectiontoggle.collapsed .glyphicon-chevron-down {
+	display: inline-block;
+}
+
+.sectiontoggle .glyphicon-chevron-down {
+	display: none;
+}
+
+.forumsection {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+.forumsectionheader {
+	padding: 10px;
+	font-size: 20px;
+	background-color: #ddd;
+}
+
+.forumsectionheadingrow {
+	padding: 0;
+	font-weight: bold;
+	font-size: 14px;
+	background-color: #efefef;
+}
+
+.forumsectionrow {
+	padding: 5px;
+	border-top: 1px solid #efefef;
+	border-left: 1px solid #efefef;
+	border-right: 1px solid #efefef;
+}
+
+.forumsectionrow.last {
+	border-bottom: 1px solid #efefef;
+}
+
+/* #region Mobile specific definitions*/
+
+@media (max-width:992px) {
+	 .notonmobile { display: none;}
+}
+
+/* to make the menus show when hovering over them with a mouse. */
+@media (min-width:767px) {
+	.dropdown:hover .dropdown-menu {
+		display: block;
+	}
+}
+/* #endregion*/
