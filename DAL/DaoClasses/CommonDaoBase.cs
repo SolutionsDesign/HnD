@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.5
+// Code is generated using LLBLGen Pro version: 4.2
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 //////////////////////////////////////////////////////////////
 using System;
@@ -39,7 +39,7 @@ namespace SD.HnD.DAL.DaoClasses
 		/// <param name="entityName">Name of the entity owning this Dao</param>
 		/// <param name="entityFactory">Entity factory for the entity owning this Dao.</param>
 		public CommonDaoBase(InheritanceHierarchyType typeOfInheritance, string entityName, IEntityFactory entityFactory)
-				: base(InheritanceInfoProviderSingleton.GetInstance(), new DynamicQueryEngine(), typeOfInheritance, entityName, entityFactory)
+				: base(InheritanceInfoProviderSingleton.GetInstance(), PersistenceInfoProviderSingleton.GetInstance(), new DynamicQueryEngine(), typeOfInheritance, entityName, entityFactory)
 		{
 		}
 		

@@ -1,19 +1,19 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.5
+// Code is generated using LLBLGen Pro version: 4.2
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 // Templates version: 
 //////////////////////////////////////////////////////////////
 using System;
 using System.Collections.Generic;
 using SD.HnD.DAL.HelperClasses;
-
-using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.RelationClasses;
 using SD.HnD.DAL.DaoClasses;
+
+using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.CollectionClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
@@ -757,15 +757,6 @@ namespace SD.HnD.DAL.FactoryClasses
 	[Serializable]
 	public static class EntityFactoryFactory
 	{
-#if CF
-		/// <summary>Gets the factory of the entity with the SD.HnD.DAL.EntityType specified</summary>
-		/// <param name="typeOfEntity">The type of entity.</param>
-		/// <returns>factory to use or null if not found</returns>
-		public static IEntityFactory GetFactory(SD.HnD.DAL.EntityType typeOfEntity)
-		{
-			return GeneralEntityFactory.Create(typeOfEntity).GetEntityFactory();
-		}
-#else
 		private static readonly Dictionary<Type, IEntityFactory> _factoryPerType = new Dictionary<Type, IEntityFactory>();
 
 		/// <summary>Initializes the <see cref="EntityFactoryFactory"/> class.</summary>
@@ -796,7 +787,6 @@ namespace SD.HnD.DAL.FactoryClasses
 		{
 			return GetFactory(GeneralEntityFactory.Create(typeOfEntity).GetType());
 		}
-#endif
 	}
 	
 	/// <summary>Element creator for creating project elements from somewhere else, like inside Linq providers.</summary>
@@ -833,6 +823,14 @@ namespace SD.HnD.DAL.FactoryClasses
 			return new TypedListDAO();
 		}
 		
+		/// <summary>Obtains the inheritance info provider instance from the singleton </summary>
+		/// <returns>The singleton instance of the inheritance info provider</returns>
+		public override IInheritanceInfoProvider ObtainInheritanceInfoProviderInstance()
+		{
+			return InheritanceInfoProviderSingleton.GetInstance();
+		}
+
+
 		/// <summary>Creates a new dynamic relation instance</summary>
 		/// <param name="leftOperand">The left operand.</param>
 		/// <returns>ready to use dynamic relation</returns>
@@ -850,6 +848,18 @@ namespace SD.HnD.DAL.FactoryClasses
 		public override IDynamicRelation CreateDynamicRelation(DerivedTableDefinition leftOperand, JoinHint joinType, DerivedTableDefinition rightOperand, IPredicate onClause)
 		{
 			return new DynamicRelation(leftOperand, joinType, rightOperand, onClause);
+		}
+
+		/// <summary>Creates a new dynamic relation instance</summary>
+		/// <param name="leftOperand">The left operand.</param>
+		/// <param name="joinType">Type of the join. If None is specified, Inner is assumed.</param>
+		/// <param name="rightOperand">The right operand.</param>
+		/// <param name="aliasLeftOperand">The alias of the left operand. If you don't want to / need to alias the right operand (only alias if you have to), specify string.Empty.</param>
+		/// <param name="onClause">The on clause for the join.</param>
+		/// <returns>ready to use dynamic relation</returns>
+		public override IDynamicRelation CreateDynamicRelation(IEntityFieldCore leftOperand, JoinHint joinType, DerivedTableDefinition rightOperand, string aliasLeftOperand, IPredicate onClause)
+		{
+			return new DynamicRelation(leftOperand, joinType, rightOperand, aliasLeftOperand, onClause);
 		}
 
 		/// <summary>Creates a new dynamic relation instance</summary>
@@ -876,14 +886,20 @@ namespace SD.HnD.DAL.FactoryClasses
 		{
 			return new DynamicRelation((SD.HnD.DAL.EntityType)Enum.Parse(typeof(SD.HnD.DAL.EntityType), leftOperandEntityName, false), joinType, (SD.HnD.DAL.EntityType)Enum.Parse(typeof(SD.HnD.DAL.EntityType), rightOperandEntityName, false), aliasLeftOperand, aliasRightOperand, onClause);
 		}
-				
-		/// <summary>Obtains the inheritance info provider instance from the singleton </summary>
-		/// <returns>The singleton instance of the inheritance info provider</returns>
-		public override IInheritanceInfoProvider ObtainInheritanceInfoProviderInstance()
+		
+		/// <summary>Creates a new dynamic relation instance</summary>
+		/// <param name="leftOperand">The left operand.</param>
+		/// <param name="joinType">Type of the join. If None is specified, Inner is assumed.</param>
+		/// <param name="rightOperandEntityName">Name of the entity, which is used as the right operand.</param>
+		/// <param name="aliasLeftOperand">The alias of the left operand. If you don't want to / need to alias the right operand (only alias if you have to), specify string.Empty.</param>
+		/// <param name="aliasRightOperand">The alias of the right operand. If you don't want to / need to alias the right operand (only alias if you have to), specify string.Empty.</param>
+		/// <param name="onClause">The on clause for the join.</param>
+		/// <returns>ready to use dynamic relation</returns>
+		public override IDynamicRelation CreateDynamicRelation(IEntityFieldCore leftOperand, JoinHint joinType, string rightOperandEntityName, string aliasLeftOperand, string aliasRightOperand, IPredicate onClause)
 		{
-			return InheritanceInfoProviderSingleton.GetInstance();
+			return new DynamicRelation(leftOperand, joinType, (SD.HnD.DAL.EntityType)Enum.Parse(typeof(SD.HnD.DAL.EntityType), rightOperandEntityName, false), aliasLeftOperand, aliasRightOperand, onClause);
 		}
-
+		
 		/// <summary>Implementation of the routine which gets the factory of the Entity type with the SD.HnD.DAL.EntityType value passed in</summary>
 		/// <param name="entityTypeValue">The entity type value.</param>
 		/// <returns>the entity factory of the entity type or null if not found</returns>
@@ -891,7 +907,7 @@ namespace SD.HnD.DAL.FactoryClasses
 		{
 			return EntityFactoryFactory.GetFactory((SD.HnD.DAL.EntityType)entityTypeValue);
 		}
-#if !CF		
+	
 		/// <summary>Implementation of the routine which gets the factory of the Entity type with the .NET type passed in</summary>
 		/// <param name="typeOfEntity">The type of entity.</param>
 		/// <returns>the entity factory of the entity type or null if not found</returns>
@@ -899,6 +915,6 @@ namespace SD.HnD.DAL.FactoryClasses
 		{
 			return EntityFactoryFactory.GetFactory(typeOfEntity);
 		}
-#endif
+
 	}
 }

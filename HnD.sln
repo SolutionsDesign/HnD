@@ -1,5 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.BL", "BL\SD.HnD.BL.csproj", "{DCF9E35B-D377-4B8C-A0BB-D31CD6A7EC1A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.DAL", "DAL\SD.HnD.DAL.csproj", "{43C8451A-A377-4589-BF7D-73BE386E7B4D}"
@@ -8,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.Utility", "Utility\S
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "GUI", "GUI\", "{D1192B40-860F-4645-965E-688C1DEB1931}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv3.5"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{43C8451A-A377-4589-BF7D-73BE386E7B4D}|SD.HnD.DAL.dll;{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}|SD.HnD.Utility.dll;{DCF9E35B-D377-4B8C-A0BB-D31CD6A7EC1A}|SD.HnD.BL.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/GUI"
 		Debug.AspNetCompiler.PhysicalPath = "GUI\"
@@ -25,6 +27,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "GUI", "GUI\", "{D1192B40-86
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "3532"
+		SlnRelativePath = "GUI\"
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject

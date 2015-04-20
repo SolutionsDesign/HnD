@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.5
+// Code is generated using LLBLGen Pro version: 4.2
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 // Templates version: 
 //////////////////////////////////////////////////////////////
@@ -333,7 +333,7 @@ namespace SD.HnD.DAL.EntityClasses
 		public static  AuditDataCoreEntity FetchPolymorphic(ITransaction transactionToUse, System.Int32 auditDataID, Context contextToUse, ExcludeIncludeFieldsList excludedIncludedFields)
 		{
 			IEntityFields fields = EntityFieldsFactory.CreateEntityFieldsObject(SD.HnD.DAL.EntityType.AuditDataCoreEntity);
-			fields[(int)AuditDataCoreFieldIndex.AuditDataID].ForcedCurrentValueWrite(auditDataID);
+			fields.ForcedValueWrite((int)AuditDataCoreFieldIndex.AuditDataID, auditDataID);
 			return (AuditDataCoreEntity)new AuditDataCoreDAO().FetchExistingPolymorphic(transactionToUse, fields, contextToUse, excludedIncludedFields);
 		}
 

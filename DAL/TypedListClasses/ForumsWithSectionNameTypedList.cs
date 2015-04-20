@@ -1,9 +1,9 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.5
+// Code is generated using LLBLGen Pro version: 4.2
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET20
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 // Templates version: 
 //////////////////////////////////////////////////////////////
@@ -17,6 +17,7 @@ using SD.HnD.DAL.DaoClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.FactoryClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec;
 
 
 namespace SD.HnD.DAL.TypedListClasses
@@ -68,7 +69,7 @@ namespace SD.HnD.DAL.TypedListClasses
 		{
 			InitClass(obeyWeakRelations);
 		}
-#if !CF	
+
 		/// <summary>Protected constructor for deserialization.</summary>
 		/// <param name="info"></param>
 		/// <param name="context"></param>
@@ -76,7 +77,6 @@ namespace SD.HnD.DAL.TypedListClasses
 		{
 			InitMembers();
 		}
-#endif		
 
 		/// <summary>Clones this instance.</summary>
 		/// <returns>A clone of this instance</returns>
@@ -85,6 +85,14 @@ namespace SD.HnD.DAL.TypedListClasses
 			ForumsWithSectionNameTypedList cloneToReturn = ((ForumsWithSectionNameTypedList)(base.Clone()));
 			cloneToReturn.InitMembers();
 			return cloneToReturn;
+		}
+				
+		/// <summary>Gets the QuerySpec query which fetches this typed list.</summary>
+		/// <param name="qf">The queryfactory.</param>
+		/// <returns>ready to use DynamicQuery instance to be used with FetchAsDataTable in the QuerySpec API</returns>
+		public DynamicQuery GetQuerySpecQuery(QueryFactory qf)
+		{
+			return qf.Create().Select(this.BuildResultset().GetAsEntityFieldCoreArray()).From(this.BuildRelationSet());
 		}
 
 		/// <summary>Creates a new TypedList dao instance</summary>
@@ -183,14 +191,14 @@ namespace SD.HnD.DAL.TypedListClasses
 			// __LLBLGENPRO_USER_CODE_REGION_END
 			OnInitialized();
 		}
-#if !CF
+
 		/// <summary>Creates a new instance of the DataTable class.</summary>
 		/// <returns>a new instance of a datatable with this schema.</returns>
 		protected override DataTable CreateInstance() 
 		{
 			return new ForumsWithSectionNameTypedList();
 		}
-#endif
+
 		#region Class Property Declarations
 		/// <summary>The custom properties for this TypedList type.</summary>
 		/// <remarks>The data returned from this property should be considered read-only: it is not thread safe to alter this data at runtime.</remarks>

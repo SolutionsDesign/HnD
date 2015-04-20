@@ -67,10 +67,10 @@
 		<add key="UBBSignatureTransformXSLPathFilename" value="ubb_signature.xsl"/>
 		<!-- The maximum # of messages per page. This is individually configurable, this value is used when the user hasn't configured the value.-->
 		<add key="MaxAmountMessagesPerPage" value="25"/>
-		<!-- The SqlServer compatibility level. 0 = SqlServer 7, 1 = SqlServer 2000 (Default), 2 = SqlServer 2005. Withing HnD, this value controls
+		<!-- The SqlServer compatibility level. 0 = SqlServer 7, 1 = SqlServer 2000, 2 = SqlServer 2005 (default), 3= sqlserver 2012. Withing HnD, this value controls
 			 how paging queries are expressed. In 7/2000 compatibility mode, a temptable is used, in sqlserver 2005 compatibility mode, when possible, 
-			 a CTE using ROW_NUMBER() is used. -->
-		<add key="SqlServerDQECompatibilityLevel" value="1"/>
+			 a CTE using ROW_NUMBER() is used, in 3 an offset paging query is used -->
+		<add key="SqlServerDQECompatibilityLevel" value="2"/>
 	</appSettings>
 	<!-- The network settings used by the forum system. -->
 	<system.net>
@@ -109,6 +109,7 @@
 			<controls>
 				<add tagPrefix="asp" namespace="System.Web.UI" assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>
 				<add tagPrefix="asp" namespace="System.Web.UI.WebControls" assembly="System.Web.Extensions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>
+				<add assembly="SD.LLBLGen.Pro.ORMSupportClasses.Web" namespace="SD.LLBLGen.Pro.ORMSupportClasses" tagPrefix="llblgenpro" />
 			</controls>
 		</pages>
 		<!-- The maximum size of an attachment. This is a hard limit. Any request from a browser sending a file larger than this size

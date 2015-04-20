@@ -1,12 +1,13 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 3.5
+// Code is generated using LLBLGen Pro version: 4.2
 // Code is generated on: 
-// Code is generated using templates: SD.TemplateBindings.SharedTemplates.NET35
+// Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
 //////////////////////////////////////////////////////////////
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using SD.LLBLGen.Pro.LinqSupportClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
@@ -139,6 +140,15 @@ namespace SD.HnD.DAL.Linq
 			return toReturn;
 		}
 
+		/// <summary>returns the datasource to use in a Linq query for the entity type specified</summary>
+		/// <typeparam name="TEntity">the type of the entity to get the datasource for</typeparam>
+		/// <returns>the requested datasource</returns>
+		public DataSource<TEntity> GetQueryableForEntity<TEntity>()
+			    where TEntity : class
+		{
+    		return new DataSource<TEntity>(_transactionToUse, new ElementCreator(), _customFunctionMappings, _contextToUse);
+		}
+
 		/// <summary>returns the datasource to use in a Linq query when targeting ActionRightEntity instances in the database.</summary>
 		public DataSource<ActionRightEntity> ActionRight
 		{
@@ -254,7 +264,7 @@ namespace SD.HnD.DAL.Linq
 		{
 			get { return new DataSource<UserTitleEntity>(_transactionToUse, new ElementCreator(), _customFunctionMappings, _contextToUse); }
 		}
-		
+ 
 		#region Class Property Declarations
 		/// <summary> Gets / sets the ITransaction to use for the queries created with this meta data object.</summary>
 		/// <remarks> Be aware that the ITransaction object set via this property is kept alive by the LLBLGenProQuery objects created with this meta data
