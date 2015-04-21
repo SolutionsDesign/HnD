@@ -1,0 +1,114 @@
+﻿/* define colors here*/
+@color: #066A8B;
+@forecolor: #fff;
+@menucolor: #f8f8f8;
+@color_grey: #9f9f9f;
+@color_row: #fff;
+
+/* no need to define anything below this point */
+
+@menucolor_transparency_10:  fadeout(@menucolor, 10%);
+@color_grey_plus_10: lighten(@color_grey, 10%);
+@color_grey_plus_20: lighten(@color_grey, 20%);
+@color_light_grey: lighten(@color_grey, 32%);
+
+@color_plus_10: lighten(@color, 10%);
+@color_plus_20: lighten(@color, 20%);
+@color_plus_50: lighten(@color, 50%);
+
+@color5: fade(@color,50%);
+@color7: fade(@color,70%);
+@color8: fade(@color,80%);
+@color9: fade(@color,90%);
+
+body {
+	background-color: @color_light_grey;
+}
+
+a {
+	color:@color;
+}
+
+a.sectiontoggle {
+	color:@color_plus_50;
+}
+
+mark {
+	background:@color;
+}
+
+::-moz-selection {
+	background:@color8;
+}
+::selection {
+	background:@color8;
+}
+
+.br-bottom:after {
+	border-top:2px solid @color;
+}
+.br-bottom-center::after {
+	border-top:2px solid @color;
+}
+
+.br-bottom-center.large:after {
+	border-top:5px solid @color;
+}
+
+.forumsectionheader {
+	background-color: @color;
+	color: @forecolor;
+}
+
+.forumsectionrow { 
+	background-color: @color_row;
+}
+
+.forumsectionheadingrow {
+	background-color: @color_grey_plus_20;
+}
+
+/* color of the icon of an element which has new posts */
+.iconnewpost {
+	color: @color_plus_10;
+}
+
+.iconnonewpost {
+	color: @color_grey;
+}
+
+.menu > li > a:hover,
+.menu > li > a:focus,
+.menu > li:hover > a {
+	color:@color;
+}
+
+
+.navbar-default {
+	background-color: @menucolor_transparency_10;
+}
+
+.submenu {
+    border-top:1px solid @color;
+}
+
+
+@media (max-width: 767px) {
+	.menu > li > a:hover,
+	.menu > li > a:focus {
+		color:@color;
+	}
+
+	.navbar-default {
+		background-color: @menucolor;
+	}
+}
+@media (min-width:992px) {
+	.header-transparent .menu > li > a:hover,
+	.header-transparent .menu > li > a:focus,
+	.header-transparent .menu > li:hover > a {
+		color:@color;
+		-webkit-transition: all .3s ease-out; transition: all .3s ease-out;
+	}
+}
+
