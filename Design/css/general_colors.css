@@ -1,22 +1,26 @@
 ﻿/* define colors here*/
+/* HnD main colors: @color: #970303; */
 /* no need to define anything below this point */
-body {
-  background-color: #f1f1f1;
-}
 a {
   color: #066a8b;
 }
 a.sectiontoggle {
-  color: #96e1fa;
+  color: #c6effd;
+}
+a.fs-tooltip {
+  color: #ffffff;
+}
+body {
+  background-color: #f1f1f1;
 }
 mark {
   background: #066a8b;
 }
 ::-moz-selection {
-  background: rgba(6, 106, 139, 0.8);
+  background: #066a8b;
 }
 ::selection {
-  background: rgba(6, 106, 139, 0.8);
+  background: #066a8b;
 }
 .br-bottom:after {
   border-top: 2px solid #066a8b;
@@ -27,21 +31,37 @@ mark {
 .br-bottom-center.large:after {
   border-top: 5px solid #066a8b;
 }
-.forumsectionheader {
+.footer-title:after {
+  border-top: 2px solid #066a8b;
+}
+.footer-widget > a,
+.footer-widget > a:hover,
+.footer-widget > a:active {
+  color: #088fbc;
+}
+.footer-wrapper {
+  background-color: #033242;
+}
+.form-control:focus {
+  border-color: #088fbc;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.001), 0 0 8px rgba(6, 106, 139, 0.7);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.001), 0 0 8px rgba(6, 106, 139, 0.7);
+}
+.fs-header {
   background-color: #066a8b;
   color: #ffffff;
 }
-.forumsectionrow {
+.fs-row {
   background-color: #ffffff;
 }
-.forumsectionheadingrow {
+.fs-headingrow {
   background-color: #d2d2d2;
 }
 /* color of the icon of an element which has new posts */
-.iconnewpost {
+.icon-newpost {
   color: #088fbc;
 }
-.iconnonewpost {
+.icon-nonewpost {
   color: #9f9f9f;
 }
 .menu > li > a:hover,

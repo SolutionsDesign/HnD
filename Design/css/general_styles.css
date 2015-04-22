@@ -17,7 +17,6 @@ body {
 	line-height: 26px;
 }
 
-
 h1, h2, h3, h4, h5, h6 {
 	font-weight: 300;
 	letter-spacing: -1px;
@@ -66,7 +65,33 @@ h6 {
 	font-weight: 400;
 	line-height: 18px;
 }
+
+input[type=search],
+input[type=text] {
+	border-radius:0;
+}
 /* #endregion */
+
+/* #region id defines */
+#main-wrapper{
+    min-height: 100%;
+    position:relative;
+}
+
+#body-content{
+    padding-bottom: 100px;    /* height of footer */
+}
+
+#footer {
+    height: 100px; 
+    width:100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+	right: 0;
+}
+/* #endregion*/
+
 
 /* #region overrides */
 ::-moz-selection {
@@ -120,6 +145,7 @@ h6 {
 
 /* #endregion */
 
+/* #region general class definitions, sorted alphabetically */
 	a:hover,
 	a:focus, 
 	a:active,
@@ -134,8 +160,7 @@ h6 {
 		box-shadow:none;
 		-webkit-transition:all 0.2s easeout; transition:all 0.2s ease-out;
 	}
-
-
+	
 	/* gives a small line at the left, under the text it is applied to*/
 	.br-bottom:after {
 		content:"";
@@ -144,6 +169,10 @@ h6 {
 		width:35px;
 		border-top: 2px solid #008080;
 		margin:6px 0 10px;
+	}
+
+	.btn {
+		border-radius:0;
 	}
 
 	.collapsing {
@@ -181,27 +210,28 @@ h6 {
 	.text-nowrap-responsive {
 		white-space: nowrap;
 	}
+/* #endregion */
 
 /* #region forum section definitions */
-	.forumsection {
+	.fs {
 		padding-left: 10px;
 		padding-right: 10px;
 	}
 	
-	.forumsectionheader {
+	.fs-header {
 		padding: 10px;
 		font-size: 20px;
 		background-color: #ddd;
 	}
 
-	.forumsectionheadingrow {
+	.fs-headingrow {
 		padding: 0;
 		font-weight: bold;
 		font-size: 14px;
 		background-color: #efefef;
 	}
 
-	.forumsectionrow {
+	.fs-row {
 		padding: 5px;
 		margin-bottom: 1px;
 	}
@@ -221,6 +251,47 @@ h6 {
 
 /* #endregion */
 
+/* #region Footer*/
+
+	.footer-widget .underlined-links {
+		text-decoration: underline;
+	}
+
+	.footer-wrapper {
+		background-color: #303236;
+	    color: #d8dade;
+	    position:relative;
+	    padding:60px 0 40px;
+	}
+
+	.footer-widget {
+		 margin-bottom:10px;
+		font-size: 14px;
+	}
+
+	.footer-widget > a {
+		color: #d8dade;
+	}
+
+	/* Footer title */
+	.footer-title {
+		font-family:"Montserrat",sans-serif;
+	    font-size: 16px;
+	    margin-bottom:5px;
+	    color: #d8dade;
+	    letter-spacing: 1px;
+	}
+	.footer-title:after {
+		content:"";
+		display:block;
+		height:1px;
+		width:22px;
+		border-top:2px solid rgb(181,67,33);
+		margin:5px 0 0;
+	}
+/* #endregion*/
+
+
 /* #region Mobile specific definitions*/
 
 @media (max-width:992px) {
@@ -236,16 +307,17 @@ h6 {
 	.navbar-brand {
 		padding-left: 0;
 	}
-
 }
 
 @media (max-width: 767px) {
+	.navbar-default {
+		background-color: inherit;
+	}
+
 	.text-nowrap-responsive {
 		white-space: normal;
 	}
 
-	.navbar-default {
-		background-color: inherit;
-	}
+	.xs-pull-left { float:left !important; }
 }
 /* #endregion*/

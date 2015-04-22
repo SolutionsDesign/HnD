@@ -1,114 +1,148 @@
 ﻿/* define colors here*/
 @color: #066A8B;
+/* HnD main colors: @color: #970303; */
 @forecolor: #fff;
 @menucolor: #f8f8f8;
-@color_grey: #9f9f9f;
-@color_row: #fff;
+@color-grey: #9f9f9f;
+@color-row: #fff;
 
 /* no need to define anything below this point */
 
-@menucolor_transparency_10:  fadeout(@menucolor, 10%);
-@color_grey_plus_10: lighten(@color_grey, 10%);
-@color_grey_plus_20: lighten(@color_grey, 20%);
-@color_light_grey: lighten(@color_grey, 32%);
+@menucolor-op90: fadeout(@menucolor, 10%);
+@color-grey-plus10: lighten(@color-grey, 10%);
+@color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-min40: darken(@color-grey, 40%);
 
-@color_plus_10: lighten(@color, 10%);
-@color_plus_20: lighten(@color, 20%);
-@color_plus_50: lighten(@color, 50%);
+@color-light-grey: lighten(@color-grey, 32%);
 
-@color5: fade(@color,50%);
-@color7: fade(@color,70%);
-@color8: fade(@color,80%);
-@color9: fade(@color,90%);
+@color-plus10: lighten(@color, 10%);
+@color-plus20: lighten(@color, 20%);
+@color-plus50: lighten(@color, 50%);
+@color-plus60: lighten(@color, 60%);
+@color-min15: darken(@color, 15%);
 
-body {
-	background-color: @color_light_grey;
-}
+@color-op50: fade(@color,50%);
+@color-op70: fade(@color,70%);
+@color-op80: fade(@color,80%);
+@color-op90: fade(@color,90%);
+@color-black-op1: fade(#000, 0.1);
+
 
 a {
-	color:@color;
+	color: @color;
 }
 
 a.sectiontoggle {
-	color:@color_plus_50;
+	color: @color-plus60;
+}
+
+a.fs-tooltip {
+	color: @forecolor;
+}
+
+
+body {
+	background-color: @color-light-grey;
 }
 
 mark {
-	background:@color;
+	background: @color;
 }
 
 ::-moz-selection {
-	background:@color8;
+	background: @color;
 }
+
 ::selection {
-	background:@color8;
+	background: @color;
 }
 
 .br-bottom:after {
-	border-top:2px solid @color;
+	border-top: 2px solid @color;
 }
+
 .br-bottom-center::after {
-	border-top:2px solid @color;
+	border-top: 2px solid @color;
 }
 
 .br-bottom-center.large:after {
-	border-top:5px solid @color;
+	border-top: 5px solid @color;
 }
 
-.forumsectionheader {
+.footer-title:after {
+	border-top: 2px solid @color;
+}
+
+.footer-widget > a,
+.footer-widget > a:hover,
+.footer-widget > a:active {
+	color: @color-plus10;
+}
+
+.footer-wrapper {
+	background-color: @color-min15;
+}
+
+.form-control:focus {
+	border-color: @color-plus10;
+	-webkit-box-shadow: inset 0 1px 1px @color-black-op1, 0 0 8px @color-op70;
+	box-shadow: inset 0 1px 1px @color-black-op1, 0 0 8px @color-op70;
+}
+
+.fs-header {
 	background-color: @color;
 	color: @forecolor;
 }
 
-.forumsectionrow { 
-	background-color: @color_row;
+.fs-row {
+	background-color: @color-row;
 }
 
-.forumsectionheadingrow {
-	background-color: @color_grey_plus_20;
+.fs-headingrow {
+	background-color: @color-grey-plus20;
 }
 
 /* color of the icon of an element which has new posts */
-.iconnewpost {
-	color: @color_plus_10;
+.icon-newpost {
+	color: @color-plus10;
 }
 
-.iconnonewpost {
-	color: @color_grey;
+.icon-nonewpost {
+	color: @color-grey;
 }
 
 .menu > li > a:hover,
 .menu > li > a:focus,
 .menu > li:hover > a {
-	color:@color;
+	color: @color;
 }
 
-
 .navbar-default {
-	background-color: @menucolor_transparency_10;
+	background-color: @menucolor-op90;
 }
 
 .submenu {
-    border-top:1px solid @color;
+	border-top: 1px solid @color;
 }
 
 
 @media (max-width: 767px) {
 	.menu > li > a:hover,
 	.menu > li > a:focus {
-		color:@color;
+		color: @color;
 	}
 
 	.navbar-default {
 		background-color: @menucolor;
 	}
 }
+
 @media (min-width:992px) {
 	.header-transparent .menu > li > a:hover,
 	.header-transparent .menu > li > a:focus,
 	.header-transparent .menu > li:hover > a {
-		color:@color;
-		-webkit-transition: all .3s ease-out; transition: all .3s ease-out;
+		color: @color;
+		-webkit-transition: all .3s ease-out;
+		transition: all .3s ease-out;
 	}
 }
-
