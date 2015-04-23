@@ -57,6 +57,10 @@ mark {
 	background: @color;
 }
 
+.breadcrumb {
+	background-color: @color-light-grey;
+}
+
 .br-bottom:after {
 	border-top: 2px solid @color;
 }
@@ -69,13 +73,19 @@ mark {
 	border-top: 5px solid @color;
 }
 
+.footer-links > li > a:hover,
+.footer-links > li > a:focus,
+.footer-links > li > a:active {
+	color: @color-plus10;
+}
+
 .footer-title:after {
 	border-top: 2px solid @color;
 }
 
-.footer-widget > a,
-.footer-widget > a:hover,
-.footer-widget > a:active {
+.footer-widget a,
+.footer-widget a:hover,
+.footer-widget a:active {
 	color: @color-plus10;
 }
 

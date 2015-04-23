@@ -93,7 +93,7 @@ input[type=text] {
 /* #endregion*/
 
 
-/* #region overrides */
+/* #region pseudo-elements */
 ::-moz-selection {
 	text-shadow:none;
 	color: #fff;
@@ -132,6 +132,10 @@ input[type=text] {
 	.pt30 { padding-top: 30px;}
 	.pt40 { padding-top: 40px;}
 
+	.plr0 { 
+		padding-left: 0;
+		padding-right: 0;
+	}
 
 	.plr10 { 
 		padding-left: 10px;
@@ -288,6 +292,26 @@ input[type=text] {
 		width:22px;
 		border-top:2px solid rgb(181,67,33);
 		margin:5px 0 0;
+	}
+
+	.footer-links {
+		margin:0;
+		padding:0;
+	}
+	.footer-links > li {
+		margin:0 20px 15px 0;
+		display:inline-block;
+		list-style:none;
+	}
+	.footer-links > li > a {
+		color:#d8dade;
+		-webkit-transition:all 0.6s ease-out; transition:all 0.6s ease-out;
+	}
+	.footer-links > li > a:hover,
+	.footer-links > li > a:focus,
+	.footer-links > li > a:active {
+		color: rgb(181,67,33);
+		-webkit-transition:all 0.3s ease-out; transition:all 0.3s ease-out;
 	}
 /* #endregion*/
 
