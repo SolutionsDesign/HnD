@@ -79,12 +79,16 @@
 		<div id="body-content">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-12 page-header">
-						<ol class="breadcrumb plr0">
+					<div class="col-sm-7 page-header">
+						<h2 class="br-bottom">Bugs & Issues</h2>
+						<p>In here bug reports and issue descriptions are posted as well work-arounds.</p>
+					</div>
+					<div class="col-sm-5 page-header">
+						<ol class="breadcrumb plr0  pull-right">
 							<li><a href="#">Home</a></li>
 							<li><a href="#">LLBLGen Pro</a></li>
-							<li class="active">Bugs and Issues</li>
-						</ol>
+							<li class="active">Bugs and Issues </li>
+						</ol><br />
 					</div>
 				</div>
 			</div>
@@ -92,99 +96,34 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-12 fs-header">
-							<div>
-								<a href="#idSection1Content" data-toggle="collapse" aria-expanded="true" aria-controls="idSection1Content" class="sectiontoggle">
-									<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-									<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-								</a>
-								General
-							</div>
-							<form>
-								<div class="form-group">
-									<label class="sr-only" for="idSearchBox">Search for</label>
-									<div class="input-group">
-										<input type="search" id="idSearchBox" class="form-control" role="search" placeholder="Please type your question here"/>
-										<div class="input-group-btn">
-											<button class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+							Threads
+							<div class="pull-right">
+								<a href="#" class="fs-tooltip" title="Forum RSS feed"><i class="fa fa-rss"></i></a>&nbsp;
+								<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Search this forum"><i class="fa fa-search"></i></a>&nbsp;
+								<ul class="dropdown-menu plr10 searchDropDown" role="menu" id="searchDropDown">
+									<form class="form-inline">
+										<div class="form-group">
+											<label class="sr-only" for="idSearchBox">Search for</label>
+											<div class="input-group">
+												<input type="search" id="idSearchBox" size="40" class="form-control" role="search" placeholder="Please type your question here" />
+												<div class="input-group-btn">
+													<button class="btn btn-default"><i class="fa fa-search"></i> Search</button>
+												</div>
+											</div>
 										</div>
-									</div>
-								</div>
-							</form>
-							<div class="pull-right">
-								<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="Section for threads of users who want to have a private 1-to-1 conversation with the support team and the LLBLGen Pro team.">
-									<i class="fa fa-info-circle"></i>
-								</a>
+									</form>
+								</ul>
+								<a href="#" class="fs-tooltip" title="New thread"><i class="fa fa-plus"></i></a>&nbsp;
 							</div>
 						</div>
 					</div>
-					<div class="row collapse in" id="idSection1Content">
-						<div class="col-sm-12">
-							<div class="row fs-headingrow">
-								<div class="col-sm-8 col-xs-8">Forum</div>
-								<div class="col-sm-1 notonmobile plr10">Threads</div>
-								<div class="col-sm-1 notonmobile plr10">Posts</div>
-								<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
-							</div>
-							<div class="row fs-row">
-								<div class="col-sm-8 col-xs-8">
-									<span class="glyphicon glyphicon-folder-close icon-nonewpost" aria-hidden="true"></span><a href="#" class="plr10">Announcements</a>
-								</div>
-								<div class="col-sm-1 notonmobile">206</div>
-								<div class="col-sm-1 notonmobile">1253</div>
-								<div class="col-sm-2 col-xs-4 text-nowrap-responsive">16-Apr-2015 17:38</div>
-							</div>
-							<div class="row fs-row">
-								<div class="col-sm-8 col-xs-8">
-									<span class="glyphicon glyphicon-folder-close icon-newpost" aria-hidden="true"></span><a href="#" class="plr10">General Chat</a>
-								</div>
-								<div class="col-sm-1 notonmobile">980</div>
-								<div class="col-sm-1 notonmobile">6464</div>
-								<div class="col-sm-2 col-xs-4 text-nowrap-responsive">12-Apr-2015 12:45</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section class="fs mt40">
-				<div class="container">
 					<div class="row">
-						<div class="col-sm-12 fs-header">
-							<a href="#idSection2Content" data-toggle="collapse" aria-expanded="true" aria-controls="idSection2Content" class="sectiontoggle">
-								<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
-								<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
-							</a>
-							LLBLGen Pro
-							<div class="pull-right">
-								<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="Everything related to the next-gen O/R mapper for .NET: LLBLGen Pro!">
-									<i class="fa fa-info-circle"></i>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div id="idSection2Content" class="row collapse in">
 						<div class="col-sm-12">
 							<div class="row fs-headingrow">
-								<div class="col-sm-8 col-xs-8">Forum</div>
-								<div class="col-sm-1 notonmobile plr10">Threads</div>
-								<div class="col-sm-1 notonmobile plr10">Posts</div>
+								<div class="col-sm-8 col-xs-8">Thread subject</div>
+								<div class="col-sm-1 notonmobile plr10">Replies</div>
+								<div class="col-sm-1 notonmobile plr10">Views</div>
 								<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
-							</div>
-							<div class="row fs-row">
-								<div class="col-sm-8 col-xs-8">
-									<span class="glyphicon glyphicon-folder-close icon-nonewpost" aria-hidden="true"></span><a href="#" class="plr10">Announcements</a>
-								</div>
-								<div class="col-sm-1 notonmobile">206</div>
-								<div class="col-sm-1 notonmobile">1253</div>
-								<div class="col-sm-2 col-xs-4 text-nowrap-responsive">16-Apr-2015 17:38</div>
-							</div>
-							<div class="row fs-row">
-								<div class="col-sm-8 col-xs-8">
-									<span class="glyphicon glyphicon-folder-close icon-newpost" aria-hidden="true"></span><a href="#" class="plr10">General Chat</a>
-								</div>
-								<div class="col-sm-1 notonmobile">980</div>
-								<div class="col-sm-1 notonmobile">6464</div>
-								<div class="col-sm-2 col-xs-4 text-nowrap-responsive">12-Apr-2015 12:45</div>
 							</div>
 							<div class="row fs-row">
 								<div class="col-sm-8 col-xs-8">
@@ -246,5 +185,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
 	<script src="js/general.js"></script>
+	<script type="text/javascript">
+		/* make sure the search drop down stays open when the user clicks inside the input box */
+		$('#searchDropDown').click(function (e) {
+			e.stopPropagation();
+		});
+	</script>
+
 </body>
 </html>

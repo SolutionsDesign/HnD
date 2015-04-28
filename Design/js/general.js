@@ -34,3 +34,10 @@ $(document).ready(function () {
 			}
 		});
 });
+
+$('.dropdown').dropdown().on("hide.bs.dropdown", function (e) {
+	if ($.contains(dropdown, e.target)) {
+		e.preventDefault();
+		//or return false;
+	}
+});

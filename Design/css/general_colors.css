@@ -80,7 +80,8 @@ mark {
 .navbar-default {
   background-color: rgba(248, 248, 248, 0.9);
 }
-.submenu {
+.submenu,
+.searchDropDown {
   border-top: 1px solid #066a8b;
 }
 @media (max-width: 767px) {
