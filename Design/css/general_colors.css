@@ -72,6 +72,15 @@ mark {
 .icon-nonewpost {
   color: #9f9f9f;
 }
+.icon-thread-open {
+  color: #9f9f9f;
+}
+.icon-thread-answered {
+  color: #088fbc;
+}
+.list-row-description {
+  color: #868686;
+}
 .menu > li > a:hover,
 .menu > li > a:focus,
 .menu > li:hover > a {

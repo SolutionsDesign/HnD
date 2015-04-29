@@ -11,6 +11,7 @@
 @menucolor-op90: fadeout(@menucolor, 10%);
 @color-grey-plus10: lighten(@color-grey, 10%);
 @color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-min10: darken(@color-grey, 10%);
 @color-grey-min40: darken(@color-grey, 40%);
 
 @color-light-grey: lighten(@color-grey, 32%);
@@ -113,13 +114,12 @@ mark {
 }
 
 /* color of the icon of an element which has new posts */
-.icon-newpost {
-	color: @color-plus10;
-}
+.icon-newpost { color: @color-plus10; }
+.icon-nonewpost { 	color: @color-grey; }
+.icon-thread-open { color: @color-grey;}
+.icon-thread-answered { color: @color-plus10;}
 
-.icon-nonewpost {
-	color: @color-grey;
-}
+.list-row-description { color: @color-grey-min10;}
 
 .menu > li > a:hover,
 .menu > li > a:focus,
