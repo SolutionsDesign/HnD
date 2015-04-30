@@ -113,6 +113,14 @@ mark {
 	background-color: @color-grey-plus20;
 }
 
+.ps-poster {
+	border-right: 1px  solid @color-light-grey;
+}
+
+.ps-message {
+	border-left: 1px  solid @color-light-grey;
+}
+
 /* color of the icon of an element which has new posts */
 .icon-newpost { color: @color-plus10; }
 .icon-nonewpost { 	color: @color-grey; }
@@ -145,6 +153,17 @@ mark {
 
 	.navbar-default {
 		background-color: @menucolor;
+	}
+}
+
+@media (max-width: 992px) {
+	.ps-poster {
+		border-right: 0;
+		border-bottom: 1px  solid @color-light-grey;
+	}
+
+	.ps-message {
+		border-left: 0;
 	}
 }
 

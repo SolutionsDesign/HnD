@@ -65,6 +65,12 @@ mark {
 .fs-headingrow {
   background-color: #d2d2d2;
 }
+.ps-poster {
+  border-right: 1px solid #f1f1f1;
+}
+.ps-message {
+  border-left: 1px solid #f1f1f1;
+}
 /* color of the icon of an element which has new posts */
 .icon-newpost {
   color: #088fbc;
@@ -100,6 +106,15 @@ mark {
   }
   .navbar-default {
     background-color: #f8f8f8;
+  }
+}
+@media (max-width: 992px) {
+  .ps-poster {
+    border-right: 0;
+    border-bottom: 1px solid #f1f1f1;
+  }
+  .ps-message {
+    border-left: 0;
   }
 }
 @media (min-width: 992px) {
