@@ -11,6 +11,7 @@
 @menucolor-op90: fadeout(@menucolor, 10%);
 @color-grey-plus10: lighten(@color-grey, 10%);
 @color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-min2: darken(@color-row, 2%);
 @color-grey-min10: darken(@color-grey, 10%);
 @color-grey-min40: darken(@color-grey, 40%);
 
@@ -27,6 +28,7 @@
 @color-op80: fade(@color,80%);
 @color-op90: fade(@color,90%);
 @color-black-op1: fade(#000, 0.1);
+@forecolor-min-60 : fade(@forecolor, 40%);
 
 
 a {
@@ -41,10 +43,23 @@ a.fs-tooltip {
 	color: @forecolor;
 }
 
+a.dimmed {
+	color: @forecolor-min-60;
+}
+
+a.dimmed:hover {
+	color : @color-plus60;
+}
+
 
 body {
 	background-color: @color-light-grey;
 }
+
+img.ps-poster-avatar {
+	border: 1px @color-grey-plus20 solid;
+}
+
 
 mark {
 	background: @color;
@@ -105,20 +120,20 @@ mark {
 	color: @forecolor;
 }
 
-.fs-row {
+.fs-thread-pager > a,
+.fs-thread-pager > a:hover,
+.fs-thread-pager > a:active {
+	color: @color-plus60;
+}
+
+.fs-row, 
+.ps-message 
+{
 	background-color: @color-row;
 }
 
 .fs-headingrow {
 	background-color: @color-grey-plus20;
-}
-
-.ps-poster {
-	border-right: 1px  solid @color-light-grey;
-}
-
-.ps-message {
-	border-left: 1px  solid @color-light-grey;
 }
 
 /* color of the icon of an element which has new posts */
@@ -139,8 +154,25 @@ mark {
 	background-color: @menucolor-op90;
 }
 
+.ps-poster {
+}
+
+.ps {
+	background-color : @color-grey-min2;
+}
+
+.ps-message-title {
+	color:@color-grey-min10;
+	border-bottom : 1px @color-grey-min2 solid;
+}
+
+.ps-message-signature {
+	color:@color-grey-min10;
+	border-top : 1px @color-grey-min2 solid;
+}
+
 .submenu,
-.searchDropDown {
+.inpageDropDown {
 	border-top: 1px solid @color;
 }
 
@@ -157,14 +189,6 @@ mark {
 }
 
 @media (max-width: 992px) {
-	.ps-poster {
-		border-right: 0;
-		border-bottom: 1px  solid @color-light-grey;
-	}
-
-	.ps-message {
-		border-left: 0;
-	}
 }
 
 @media (min-width:992px) {
@@ -172,7 +196,5 @@ mark {
 	.header-transparent .menu > li > a:focus,
 	.header-transparent .menu > li:hover > a {
 		color: @color;
-		-webkit-transition: all .3s ease-out;
-		transition: all .3s ease-out;
 	}
 }

@@ -193,6 +193,8 @@ input[type=text] {
 		border-radius:0;
 	}
 
+	.clear { clear: both; }
+
 	.collapsing {
 		-webkit-transition: none;
 		transition: none;
@@ -260,7 +262,7 @@ input[type=text] {
 		text-align:center;
 	}
 
-	.searchDropDown {
+	.inpageDropDown {
 		margin-top: 0;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
@@ -272,12 +274,73 @@ input[type=text] {
 /* #endregion */
 
 /* #region post definitions */
+
+img.ps-poster-avatar {
+		width: 100px;
+		height: 100px;
+		margin-bottom: 10px;
+	}
+
 	.ps-message {
 		overflow: auto;
+		padding: 0;
+		width: auto;
+		float: none;
+		display: block;
+	}
+
+	.ps-message-content {
+		overflow: auto;
+		padding: 1px 8px 1px;
+		font-size: 15px;
+		min-height: 120px;
+	}
+
+	.ps-message-title {
+		font-size: 14px;
+		padding: 1px 8px 1px;
+		width: 100%;
+		float: left;
+		display: block;
+	}
+
+	.ps-message-signature {
+		font-size: 12px;
+		padding: 4px 8px 1px;
+		margin-top: 5px;
+		line-height: 20px;
+	}
+
+	.ps-message-tools {
+		float: right;
 	}
 
 	.ps-poster {
+		padding: 5px;
+		width: 170px;
+		min-height: 100px;
+		display: block;
+		float: left;
+		position: relative;
+		margin-top: 20px;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		clear: both;
+		text-align:center;
+	}
 
+	.ps-poster-title,
+	.ps-poster-info {
+		font-size: 12px;
+	}
+
+	.ps-poster-stats {
+		margin-top: 30px;
+	}
+
+	.ps {
+		padding: 0;
+		margin-bottom: 10px;
 	}
 /* #endregion*/
 
@@ -303,6 +366,12 @@ input[type=text] {
 	.fs-row {
 		padding: 5px;
 		margin-bottom: 1px;
+	}
+
+	.fs-thread-header,
+	.fs-thread-pager {
+		float: left;
+		display: block;
 	}
 	
 	/* toggles for the forum section headers */
@@ -386,6 +455,62 @@ input[type=text] {
 
 @media (max-width:992px) {
 	 .notonmobile { display: none;}
+
+	 img.ps-poster-avatar {
+		width: 64px;
+		height: 64px;
+		margin: 5px;
+		 float: left;
+	}
+
+	.fs-header {
+		overflow: hidden;
+	}
+
+	.ps-message-tools {
+		float: left;
+		margin-left: 10px;
+	}
+
+	.ps-message {
+		overflow: auto;
+		padding: 5px;
+		width: 100%;
+		float: right;
+		display: block;
+	}
+
+	.ps-poster {
+		margin-top: 10px;
+		padding: 0 10px 0;
+		width: auto;
+		min-height: initial;
+		height: 83px;
+		display: block;
+		float: none;
+		position: relative;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		clear: both;
+		text-align: initial;
+	}
+
+	.ps-poster-name {
+		padding-left: 10px;
+		padding-right: 20px;
+		float: left;
+		display: block;
+		margin-top: 0;
+	}
+
+	.ps-poster-stats {
+		margin-left: 10px;
+		margin-top: 0;
+		padding-top: 0;
+		display: block;
+		float: left;
+		line-height: 24px;
+	}
 }
 
 

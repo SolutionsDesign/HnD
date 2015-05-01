@@ -10,8 +10,17 @@ a.sectiontoggle {
 a.fs-tooltip {
   color: #ffffff;
 }
+a.dimmed {
+  color: rgba(255, 255, 255, 0.4);
+}
+a.dimmed:hover {
+  color: #c6effd;
+}
 body {
   background-color: #f1f1f1;
+}
+img.ps-poster-avatar {
+  border: 1px #d2d2d2 solid;
 }
 mark {
   background: #066a8b;
@@ -59,17 +68,17 @@ mark {
   background-color: #066a8b;
   color: #ffffff;
 }
-.fs-row {
+.fs-thread-pager > a,
+.fs-thread-pager > a:hover,
+.fs-thread-pager > a:active {
+  color: #c6effd;
+}
+.fs-row,
+.ps-message {
   background-color: #ffffff;
 }
 .fs-headingrow {
   background-color: #d2d2d2;
-}
-.ps-poster {
-  border-right: 1px solid #f1f1f1;
-}
-.ps-message {
-  border-left: 1px solid #f1f1f1;
 }
 /* color of the icon of an element which has new posts */
 .icon-newpost {
@@ -95,8 +104,19 @@ mark {
 .navbar-default {
   background-color: rgba(248, 248, 248, 0.9);
 }
+.ps {
+  background-color: #fafafa;
+}
+.ps-message-title {
+  color: #868686;
+  border-bottom: 1px #fafafa solid;
+}
+.ps-message-signature {
+  color: #868686;
+  border-top: 1px #fafafa solid;
+}
 .submenu,
-.searchDropDown {
+.inpageDropDown {
   border-top: 1px solid #066a8b;
 }
 @media (max-width: 767px) {
@@ -108,22 +128,11 @@ mark {
     background-color: #f8f8f8;
   }
 }
-@media (max-width: 992px) {
-  .ps-poster {
-    border-right: 0;
-    border-bottom: 1px solid #f1f1f1;
-  }
-  .ps-message {
-    border-left: 0;
-  }
-}
 @media (min-width: 992px) {
   .header-transparent .menu > li > a:hover,
   .header-transparent .menu > li > a:focus,
   .header-transparent .menu > li:hover > a {
     color: #066a8b;
-    -webkit-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
   }
 }
 /*# sourceMappingURL=general_colors.css.map */
