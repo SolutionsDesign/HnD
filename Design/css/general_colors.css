@@ -10,11 +10,14 @@ a.sectiontoggle {
 a.fs-tooltip {
   color: #ffffff;
 }
-a.dimmed {
+.threadtools > a.dimmed {
   color: rgba(255, 255, 255, 0.4);
 }
-a.dimmed:hover {
+.threadtools > a.dimmed:hover {
   color: #c6effd;
+}
+.threadtools > a.active {
+  color: #ffffff;
 }
 body {
   background-color: #f1f1f1;
@@ -30,6 +33,13 @@ mark {
 }
 ::selection {
   background: #066a8b;
+}
+.as-row {
+  background-color: #ffffff;
+}
+.as-header {
+  background-color: #868686;
+  color: #ffffff;
 }
 .breadcrumb {
   background-color: #f1f1f1;

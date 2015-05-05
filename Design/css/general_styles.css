@@ -157,6 +157,16 @@ input[type=text] {
 	.pl40 { padding-left: 40px;}
 	.pl50 { padding-left: 50px;}
 
+	.p0 { padding: 0;}
+	.p5 { padding: 5px;}
+	.p10 { padding: 10px;}
+	.p20 { padding: 20px;}
+
+	.m0 { margin: 0;}
+	.m5 { margin: 5px;}
+	.m10 { margin: 10px;}
+	.m20 { margin: 20px;}
+
 /* #endregion */
 
 /* #region general class definitions, sorted alphabetically */
@@ -344,8 +354,9 @@ img.ps-poster-avatar {
 	}
 /* #endregion*/
 
-/* #region forum section definitions */
-	.fs {
+/* #region different section definitions */
+	.fs,
+	.as {
 		padding-left: 10px;
 		padding-right: 10px;
 	}
@@ -385,6 +396,15 @@ img.ps-poster-avatar {
 
 	.sectiontoggle .glyphicon-chevron-down {
 		display: none;
+	}
+	
+	.as-header {
+		font-size: 16px;
+		background-color: #ddd;
+	}
+
+	.as-row {
+		padding-bottom: 10px;
 	}
 
 /* #endregion */
@@ -463,9 +483,9 @@ img.ps-poster-avatar {
 		 float: left;
 	}
 
-	.fs-header {
-		overflow: hidden;
-	}
+	/*.fs-header {
+		height: 50px;
+	}*/
 
 	.ps-message-tools {
 		float: left;
@@ -488,9 +508,9 @@ img.ps-poster-avatar {
 		height: 83px;
 		display: block;
 		float: none;
-		position: relative;
 		margin-left: auto !important;
 		margin-right: auto !important;
+		position: relative;
 		clear: both;
 		text-align: initial;
 	}

@@ -11,6 +11,7 @@
 @menucolor-op90: fadeout(@menucolor, 10%);
 @color-grey-plus10: lighten(@color-grey, 10%);
 @color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-plus30: lighten(@color-grey, 30%);
 @color-grey-min2: darken(@color-row, 2%);
 @color-grey-min10: darken(@color-grey, 10%);
 @color-grey-min40: darken(@color-grey, 40%);
@@ -43,14 +44,17 @@ a.fs-tooltip {
 	color: @forecolor;
 }
 
-a.dimmed {
+.threadtools > a.dimmed {
 	color: @forecolor-min-60;
 }
 
-a.dimmed:hover {
+.threadtools > a.dimmed:hover {
 	color : @color-plus60;
 }
 
+.threadtools > a.active {
+	color : @forecolor;
+}
 
 body {
 	background-color: @color-light-grey;
@@ -71,6 +75,15 @@ mark {
 
 ::selection {
 	background: @color;
+}
+
+.as-row {
+	background-color: @forecolor;
+}
+
+.as-header {
+	background-color: @color-grey-min10;
+	color: @forecolor;
 }
 
 .breadcrumb {
