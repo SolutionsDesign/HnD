@@ -156,6 +156,7 @@ input[type=text] {
 	.pl30 { padding-left: 30px;}
 	.pl40 { padding-left: 40px;}
 	.pl50 { padding-left: 50px;}
+	.pl70 { padding-left: 70px;}
 
 	.p0 { padding: 0;}
 	.p5 { padding: 5px;}
@@ -214,10 +215,21 @@ input[type=text] {
 		margin-left: 40px;
 	}
 
+	.column-wrapper-bookmarks {
+		margin-left: 60px;
+	}
+
 	.column-fixed {
 		float: left;
 		width: 40px;
 		margin-left: -40px;
+	}
+
+	
+	.column-fixed-bookmarks {
+		float: left;
+		width: 60px;
+		margin-left: -60px;
 	}
 
 	.column-fluent {
@@ -401,6 +413,12 @@ img.ps-poster-avatar {
 	.as-header {
 		font-size: 16px;
 		background-color: #ddd;
+	}
+
+	.as-label {
+		display: inline-block; 
+		margin-top: 2px; 
+		vertical-align: middle;
 	}
 
 	.as-row {

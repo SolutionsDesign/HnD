@@ -105,39 +105,63 @@
 					</div>
 					<div class="row as-row">
 						<div class="col-sm-12">
-							Not claimed&nbsp;&nbsp;&nbsp;<button class="btn btn-default mt5 plr20"> Claim </button>&nbsp;&nbsp;&nbsp;
-							<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
-									Not in queue <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
-									<li><a href="#">First Line Queue</a></li>
-									<li><a href="#">Less Priority Queue</a></li>
-									<li><a href="#">LLBLGen Pro Team Queue</a></li>
-									<li><a href="#">One More Queue</a></li>
-								</ul>
+							<div class="form-group mb0 mt5">
+								<span class="as-label">Not claimed&nbsp;&nbsp;&nbsp;</span>
+								<button class="btn btn-default mt5 plr20" id="claimButton"> Claim </button>&nbsp;&nbsp;&nbsp;
+								<div class="btn-group">
+									<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
+										Not in queue <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+										<li><a href="#">First Line Queue</a></li>
+										<li><a href="#">Less Priority Queue</a></li>
+										<li><a href="#">LLBLGen Pro Team Queue</a></li>
+										<li><a href="#">One More Queue</a></li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row as-row">
 						<div class="col-sm-12">
-							Claimed by <a href="#">Otis</a> on 05-may-2015 17:20.07&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-default mt5"> Release </a>
-							&nbsp;&nbsp;&nbsp;<div class="btn-group">
-								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
-									LLBLGen Pro Team Queue <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
-									<li><a href="#">No queue</a></li>
-									<li class="divider"></li>
-									<li><a href="#">First Line Queue</a></li>
-									<li><a href="#">Less Priority Queue</a></li>
-									<li><a href="#">One More Queue</a></li>
-								</ul>
+							<div class="form-group mb0 mt5">
+								<span class="as-label">Claimed by <a href="#">Otis</a> on 05-may-2015 17:20.07&nbsp;&nbsp;&nbsp;</span>
+								<button class="btn btn-default mt5" id="releaseButton"> Release </button>
+								&nbsp;&nbsp;&nbsp;
+								<div class="btn-group">
+									<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
+										LLBLGen Pro Team Queue <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+										<li><a href="#">No queue</a></li>
+										<li class="divider"></li>
+										<li><a href="#">First Line Queue</a></li>
+										<li><a href="#">Less Priority Queue</a></li>
+										<li><a href="#">One More Queue</a></li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</section>
+
+			<section class="as">
+				<div class="container mt20">
+					<div class="row">
+						<div class="col-sm-12 as-header">
+							Memo&nbsp;&nbsp;&nbsp;<a href="#" title="Edit post" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
+						</div>
+					</div>
+					<div class="row as-row">
+						<div class="col-sm-12">
+							-----------------------------------------------------------------<br/>
+							<b>30-Mar-2015 17:41:52 <a href="#">Otis</a> wrote</b>: recovery strategies can't be shared among adapters, he might be re-using an instance<br/>
+						</div>
+					</div>
+				</div>
+			</section>
+
 
 			<section class="fs mt20">
 				<div class="container">
@@ -209,20 +233,20 @@
 									</div>
 								</div>
 								<div class="ps-message-content">
-									
+
 									I've removed every option from crypto obfuscator to have the less obfuscated dll possible, so only the rename (test mode, it only add CO_ to name) left. I still get the problem.
-									<br/><br/>
-									Then I've decompiled the obfuscated DLL to compare the code with the original DLL. I've cleaned (undo rename etc.) and everything are the same except 1 line:<br/><br/>
+									<br /><br />
+									Then I've decompiled the obfuscated DLL to compare the code with the original DLL. I've cleaned (undo rename etc.) and everything are the same except 1 line:<br /><br />
 									ThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylongline
-									<br/><br/>
+									<br /><br />
 									I must say I don't know why this is. The aliases are not created from names, so that's not it. It looks like the query is just not properly handled by the linq provider, but why it goes wrong is not clear. Keep in mind though that when you reference a local variable in a linq query, it will be an obfuscated element. Perhaps that's it, not sure.
-									<br/><br/>
-									We are using: LLBLGen Version 4.2.14.1212<br/> / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008.<br/> We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+									<br /><br />
+									We are using: LLBLGen Version 4.2.14.1212<br /> / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008.<br /> We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
 									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-									We are using: LLBLGen Versio<br/>n 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen<br/> Version 4.2.14.1212 / SQL Server 2008
-									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using:<br/> LLBLGen Version 4.2.14.1212 / SQL Server 2008
+									We are using: LLBLGen Versio<br />n 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen<br /> Version 4.2.14.1212 / SQL Server 2008
+									We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using:<br /> LLBLGen Version 4.2.14.1212 / SQL Server 2008
 								</div>
 								<div class="ps-message-signature">
 									<span>
