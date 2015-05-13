@@ -67,8 +67,17 @@ h6 {
 }
 
 input[type=search],
-input[type=text] {
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=file],
+input[type=number],
+input[type=search] {
 	border-radius:0;
+}
+
+input[type=checkbox] {
+	margin-top: 7px;	/* to align the label with the checkbox. Hurray for HTML! such an advanced system... */
 }
 /* #endregion */
 
