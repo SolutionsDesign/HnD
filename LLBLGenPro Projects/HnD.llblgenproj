@@ -84,7 +84,7 @@
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
         <PlatformName Value=".NET 4.0" />
-        <PresetName Value="SD.Presets.SelfServicing.TwoClasses" />
+        <PresetName Value="SD.Presets.SelfServicing.General" />
         <RootNamespace Value="SD.HnD.DAL" />
         <TemplateGroup Value="SelfServicing" />
         <TemplateBindings>
@@ -108,6 +108,8 @@
       <SettingValue Name="1:GenerateAsNullableTypeDefault" Value="true" Type="3" />
       <SettingValue Name="1:LazyLoadingWithoutResultReturnsNew" Value="true" Type="3" />
       <SettingValue Name="1:TdlEmitTimeDateInOutputFiles" Value="false" Type="3" />
+      <SettingValue Name="1:TypedListOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
+      <SettingValue Name="1:TypedViewOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
     </SettingValues>
   </OutputSettingValues>
   <CodeGenerationMetaDataDefaults>
@@ -565,6 +567,11 @@
         <Relationship Name="Message.Thread-Thread.Messages" StartAlias="Thread" EndAlias="Message" JoinHint="1" />
         <Relationship Name="Thread.Forum-Forum.Threads" StartAlias="Forum" EndAlias="Thread" JoinHint="1" />
       </Relationships>
+      <OutputSettingValues>
+        <SettingValues>
+          <SettingValue Name="8:OutputType" Value="PocoWithQuerySpecQuery" Type="18" />
+        </SettingValues>
+      </OutputSettingValues>
     </TypedListDefinition>
     <TypedListDefinition Name="ForumsWithSectionName">
       <EntityAliases>
@@ -582,6 +589,11 @@
       <Relationships>
         <Relationship Name="Forum.Section-Section.Forums" StartAlias="Section" EndAlias="Forum" JoinHint="1" />
       </Relationships>
+      <OutputSettingValues>
+        <SettingValues>
+          <SettingValue Name="8:OutputType" Value="PocoWithQuerySpecQuery" Type="18" />
+        </SettingValues>
+      </OutputSettingValues>
     </TypedListDefinition>
     <TypedListDefinition Name="MessagesInThread">
       <EntityAliases>
@@ -608,6 +620,11 @@
         <Relationship Name="Message.PostedByUser-User.PostedMessages" StartAlias="User" EndAlias="Message" JoinHint="2" />
         <Relationship Name="User.UserTitle-UserTitle.Users" StartAlias="UserTitle" EndAlias="User" JoinHint="1" />
       </Relationships>
+      <OutputSettingValues>
+        <SettingValues>
+          <SettingValue Name="8:OutputType" Value="PocoWithQuerySpecQuery" Type="18" />
+        </SettingValues>
+      </OutputSettingValues>
     </TypedListDefinition>
     <TypedListDefinition Name="SearchResult">
       <EntityAliases>
@@ -628,6 +645,11 @@
         <Relationship Name="Message.Thread-Thread.Messages" StartAlias="Thread" EndAlias="Message" JoinHint="1" />
         <Relationship Name="Thread.Forum-Forum.Threads" StartAlias="Forum" EndAlias="Thread" JoinHint="1" />
       </Relationships>
+      <OutputSettingValues>
+        <SettingValues>
+          <SettingValue Name="8:OutputType" Value="PocoWithQuerySpecQuery" Type="18" />
+        </SettingValues>
+      </OutputSettingValues>
     </TypedListDefinition>
   </TypedListDefinitions>
   <TargetDatabases>

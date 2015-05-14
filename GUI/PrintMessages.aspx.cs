@@ -96,11 +96,11 @@ namespace SD.HnD.GUI
 						
 			if(!Page.IsPostBack)
 			{
-				bool threadStartedByCurrentUser = (_thread.StartedByUserID == SessionAdapter.GetUserID());
-				// Get messages and bind it to the repeater control. Use the startmessage to get only the message visible on the current page. 
-				MessagesInThreadTypedList messages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(threadID, 0, 0);
-				rptMessages.DataSource = messages;
-				rptMessages.DataBind();
+				//bool threadStartedByCurrentUser = (_thread.StartedByUserID == SessionAdapter.GetUserID());
+				//// Get messages and bind it to the repeater control. Use the startmessage to get only the message visible on the current page. 
+				//MessagesInThreadTypedList messages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(threadID, 0, 0);
+				//rptMessages.DataSource = messages;
+				//rptMessages.DataBind();
 			}			
 		}
 

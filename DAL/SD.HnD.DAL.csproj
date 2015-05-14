@@ -115,7 +115,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassExtensions\MessagesInThreadTypedListExtension.cs" />
+    <Compile Include="ClassExtensions\MessagesInThreadRowExtension.cs" />
+    <None Include="packages.config" />
+    <Compile Include="ClassExtensions\QueryFactoryExtensions.cs" />
     <None Include="App.config">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </None>
@@ -267,75 +269,6 @@
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
     <Compile Include="DaoClasses\UserTitleDAO.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\ActionRightEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\AttachmentEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\AuditActionEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\AuditDataCoreEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\AuditDataMessageRelatedEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\AuditDataThreadRelatedEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\BookmarkEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\ForumEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\ForumRoleForumActionRightEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\IPBanEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\MessageEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\RoleAuditActionEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\RoleEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\RoleSystemActionRightEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\RoleUserEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\SectionEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\SupportQueueEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\SupportQueueThreadEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\SystemDataEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\ThreadEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\ThreadSubscriptionEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\UserEntityBase.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
-    <Compile Include="EntityBaseClasses\UserTitleEntityBase.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
     <Compile Include="EntityClasses\ActionRightEntity.cs">
@@ -527,19 +460,18 @@
     <Compile Include="StoredProcedureCallerClasses\RetrievalProcedures.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <Compile Include="TypedListClasses\ForumMessagesTypedList.cs">
+    <Compile Include="TypedListClasses\ForumMessagesRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <Compile Include="TypedListClasses\ForumsWithSectionNameTypedList.cs">
+    <Compile Include="TypedListClasses\ForumsWithSectionNameRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <Compile Include="TypedListClasses\MessagesInThreadTypedList.cs">
+    <Compile Include="TypedListClasses\MessagesInThreadRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <Compile Include="TypedListClasses\SearchResultTypedList.cs">
+    <Compile Include="TypedListClasses\SearchResultRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

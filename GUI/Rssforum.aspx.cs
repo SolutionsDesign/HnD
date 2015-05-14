@@ -61,9 +61,9 @@ namespace SD.HnD.GUI
 				_forumURL = "http://" + Request.Url.Host + ApplicationAdapter.GetVirtualRoot() + String.Format(@"Threads.aspx?ForumID={0}", forumID);
 
 				// get the messages
-				ForumMessagesTypedList messages = ForumGuiHelper.GetLastPostedMessagesInForum(10, forumID);
-				rptRSS.DataSource = messages;
-				rptRSS.DataBind();
+				//ForumMessagesTypedList messages = ForumGuiHelper.GetLastPostedMessagesInForum(10, forumID);
+				//rptRSS.DataSource = messages;
+				//rptRSS.DataBind();
 
 				Response.Cache.SetExpires(DateTime.Now.AddDays(7));
 				Response.Cache.SetCacheability(HttpCacheability.Public);

@@ -55,22 +55,22 @@ namespace SD.HnD.GUI
                 SessionAdapter.AddSearchTermsAndResults(string.Empty, null);
 
 				// Read all the current existing forums and their section names. 
-				ForumsWithSectionNameTypedList forumsWithSectionName = ForumGuiHelper.GetAllForumsWithSectionNames();
+				//ForumsWithSectionNameTypedList forumsWithSectionName = ForumGuiHelper.GetAllForumsWithSectionNames();
 				
-                // Get a list of Forum IDs to which the user has access right.
-                List<int> accessableForums = SessionAdapter.GetForumsWithActionRight(ActionRights.AccessForum);
+				//// Get a list of Forum IDs to which the user has access right.
+				//List<int> accessableForums = SessionAdapter.GetForumsWithActionRight(ActionRights.AccessForum);
 
-				foreach(ForumsWithSectionNameRow currentRow in forumsWithSectionName)
-				{
-					// filter out forums the user doesn't have access rights for.
-					if(accessableForums.Contains(currentRow.ForumID))
-					{
-						// forum is accessable to the user
-						ListItem newItem = new ListItem(String.Format("{0} - {1}", currentRow.SectionName, currentRow.ForumName), currentRow.ForumID.ToString());
-						newItem.Selected=true;
-						lbxForums.Items.Add(newItem);
-					}
-				}
+				//foreach(ForumsWithSectionNameRow currentRow in forumsWithSectionName)
+				//{
+				//	// filter out forums the user doesn't have access rights for.
+				//	if(accessableForums.Contains(currentRow.ForumID))
+				//	{
+				//		// forum is accessable to the user
+				//		ListItem newItem = new ListItem(String.Format("{0} - {1}", currentRow.SectionName, currentRow.ForumName), currentRow.ForumID.ToString());
+				//		newItem.Selected=true;
+				//		lbxForums.Items.Add(newItem);
+				//	}
+				//}
 
 				// make listbox as high as # of forums, with a maximum of 15 and a minimum of 8
 				if(lbxForums.Items.Count <= 15)
@@ -150,11 +150,11 @@ namespace SD.HnD.GUI
 				}
 
 				// Use Full text search variant. 
-				SearchResultTypedList results = BL.Searcher.DoSearch(searchTerms, forumIDs, orderFirstElement, orderSecondElement, 
-						SessionAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), SessionAdapter.GetUserID(), targetToSearch);
+				//SearchResultTypedList results = BL.Searcher.DoSearch(searchTerms, forumIDs, orderFirstElement, orderSecondElement, 
+				//		SessionAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), SessionAdapter.GetUserID(), targetToSearch);
 				
-				// store results in session.
-                SessionAdapter.AddSearchTermsAndResults(searchTerms, results);
+				//// store results in session.
+				//SessionAdapter.AddSearchTermsAndResults(searchTerms, results);
 				// view results.
 				Response.Redirect("SearchResults.aspx?Page=1", true);
 			}

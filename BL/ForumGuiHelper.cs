@@ -48,12 +48,13 @@ namespace SD.HnD.BL
 		/// <param name="amount">limit of amount of messages to return</param>
 		/// <param name="forumID">ID of forum to pull the messages for</param>
 		/// <returns>typed list with data requested</returns>
-		public static ForumMessagesTypedList GetLastPostedMessagesInForum(int amount, int forumID)
+		public static List<ForumMessagesRow> GetLastPostedMessagesInForum(int amount, int forumID)
 		{
-			ForumMessagesTypedList forumMessages = new ForumMessagesTypedList();
-			forumMessages.Fill(amount, new SortExpression(MessageFields.PostingDate.Ascending()), false,
-							   (ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true));
-			return forumMessages;
+			var qf = new QueryFactory();
+			var q = qf.GetForumMessagesTypedList()
+							  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
+							  .OrderBy(MessageFields.PostingDate.Ascending());
+			return new TypedListDAO().FetchQuery(q);
 		}
 
 		
@@ -154,15 +155,12 @@ namespace SD.HnD.BL
 		/// Gets all forum data with section name in a typedlist. Sorted on Section.OrderNo, Section.SectionName, Forum.OrderNo, Forum.ForumName.
 		/// </summary>
 		/// <returns>Filled typedlist with all forum names / forumIDs and their containing section's name, sorted on Sectionname, and then forumname</returns>
-		public static ForumsWithSectionNameTypedList GetAllForumsWithSectionNames()
+		public static List<ForumsWithSectionNameRow> GetAllForumsWithSectionNames()
 		{
-			ForumsWithSectionNameTypedList toReturn = new ForumsWithSectionNameTypedList();
-			SortExpression sorter = new SortExpression(SectionFields.OrderNo.Ascending());
-			sorter.Add(SectionFields.SectionName.Ascending());
-			sorter.Add(ForumFields.OrderNo.Ascending());
-			sorter.Add(ForumFields.ForumName.Ascending());
-			toReturn.Fill(0, sorter);
-			return toReturn;
+			var qf = new QueryFactory();
+			var q = qf.GetForumsWithSectionNameTypedList()
+							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
+			return new TypedListDAO().FetchQuery(q);
 		}
 
 
@@ -188,7 +186,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="availableSections">SectionCollection with all available sections</param>
 		/// <param name="accessableForums">List of accessable forums IDs.</param>
-		/// <param name="forumsWithOnlyOwnThreads">The forums for which the calling user can view other users' threads. Can be null</param>
+		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>
 		/// Dictionary with per key (sectionID) a dataview with forum information of all the forums in that section.
@@ -196,7 +194,7 @@ namespace SD.HnD.BL
 		/// <remarks>Uses dataviews because a dynamic list is executed to retrieve the information for the forums, which include aggregate info about
 		/// # of posts.</remarks>
         public static Dictionary<int, DataView> GetAllAvailableForumsDataViews(SectionCollection availableSections, List<int> accessableForums,
-				List<int> forumsWithThreadsFromOthers, int userID)
+																			   List<int> forumsWithThreadsFromOthers, int userID)
         {
 			Dictionary<int, DataView> toReturn = new Dictionary<int, DataView>();
 

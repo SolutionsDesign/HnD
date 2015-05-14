@@ -61,8 +61,8 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// TypedList filled with threads matching the query.
 		/// </returns>
-		public static SearchResultTypedList DoSearch(string searchString, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement,
-			SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userID, SearchTarget targetToSearch)
+		public static List<SearchResultRow> DoSearch(string searchString, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, SearchResultsOrderSetting orderSecondElement, 
+													 List<int> forumsWithThreadsFromOthers, int userID, SearchTarget targetToSearch)
 		{
 			// the search utilizes full text search. It performs a CONTAINS upon the MessageText field of the Message entity. 
 			string searchTerms = PrepareSearchTerms(searchString);
@@ -74,12 +74,14 @@ namespace SD.HnD.BL
 				searchMessageText = true;
 			}
 
-			PredicateExpression searchTermFilter = new PredicateExpression();
+			var qf = new QueryFactory();
+			var searchTermFilter = new PredicateExpression();
 			if(searchMessageText)
 			{
 				// Message contents filter
-				searchTermFilter.Add(new FieldCompareSetPredicate(ThreadFields.ThreadID, MessageFields.ThreadID,
-									SetOperator.In, new FieldFullTextSearchPredicate(MessageFields.MessageText, FullTextSearchOperator.Contains, searchTerms)));
+				searchTermFilter.Add(ThreadFields.ThreadID.In(qf.Create()
+																.Select(MessageFields.ThreadID)
+																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, FullTextSearchOperator.Contains, searchTerms))));
 			}
 			if(searchSubject)
 			{
@@ -93,33 +95,31 @@ namespace SD.HnD.BL
 					searchTermFilter.Add(new FieldFullTextSearchPredicate(ThreadFields.Subject, FullTextSearchOperator.Contains, searchTerms));
 				}
 			}
-			IPredicateExpression mainFilter = searchTermFilter
-													.And(ForumFields.ForumID == forumIDs)
-													.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID));
-
-			ISortExpression sorter = new SortExpression();
-			// add first element
-			sorter.Add(CreateSearchSortClause(orderFirstElement));
+			var q = qf.GetSearchResultTypedList()
+					  .Where(searchTermFilter
+								  .And(ForumFields.ForumID == forumIDs)
+								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
+					  .Limit(500)
+					  .OrderBy(CreateSearchSortClause(orderFirstElement));
 			if(orderSecondElement != orderFirstElement)
 			{
-				sorter.Add(CreateSearchSortClause(orderSecondElement));
+				// simply call OrderBy again, it will append the sortclause to the existing one.
+				q.OrderBy(CreateSearchSortClause(orderSecondElement));
 			}
 
-			SearchResultTypedList results = new SearchResultTypedList(false);
-
+			List<SearchResultRow> toReturn;
 			try
 			{
 				// get the data from the db. 
-				results.Fill(500, sorter, false, mainFilter);
+				toReturn = new TypedListDAO().FetchQuery(q);
 			}
 			catch
 			{
 				// probably an error with the search words / user error. Swallow for now, which will result in an empty resultset.
+				toReturn = new List<SearchResultRow>();
 			}
-
-			return results;
+			return toReturn;
 		}
-
 
 
 		/// <summary>

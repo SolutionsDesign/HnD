@@ -73,11 +73,11 @@ namespace SD.HnD.GUI
 			{
 				searchTerms = searchTerms.Substring(0, 1024);
 			}
-			SearchResultTypedList results = BL.Searcher.DoSearch(searchTerms, forumIDsToSearchIn, SearchResultsOrderSetting.ForumAscending,
-				SearchResultsOrderSetting.LastPostDateDescending, SessionAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
-				SessionAdapter.GetUserID(), SearchTarget.MessageText);
-			// store results in session.
-            SessionAdapter.AddSearchTermsAndResults(searchTerms, results);
+			//SearchResultTypedList results = BL.Searcher.DoSearch(searchTerms, forumIDsToSearchIn, SearchResultsOrderSetting.ForumAscending,
+			//	SearchResultsOrderSetting.LastPostDateDescending, SessionAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
+			//	SessionAdapter.GetUserID(), SearchTarget.MessageText);
+			//// store results in session.
+			//SessionAdapter.AddSearchTermsAndResults(searchTerms, results);
 			// view results.
 			Response.Redirect("SearchResults.aspx?Page=1", true);
 		}

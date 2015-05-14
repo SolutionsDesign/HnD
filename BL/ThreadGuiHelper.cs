@@ -253,7 +253,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">ID of Thread which messages should be returned</param>
 		/// <returns>TypedList with all messages in the thread</returns>
-		public static MessagesInThreadTypedList GetAllMessagesInThreadAsTypedList(int threadID)
+		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID)
 		{
 			return GetAllMessagesInThreadAsTypedList(threadID, 0, 0);
 		}
@@ -267,23 +267,20 @@ namespace SD.HnD.BL
 		/// <param name="pageNo">The page no.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <returns>TypedList with all messages in the thread for the page specified</returns>
-		public static MessagesInThreadTypedList GetAllMessagesInThreadAsTypedList(int threadID, int pageNo, int pageSize)
+		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID, int pageNo, int pageSize)
 		{
-			// we'll use a typedlist, MessagesInThread to pull the necessary data from the db. The typedlist contains fields from
-			// message, user and usertitle. 
-			MessagesInThreadTypedList messages = new MessagesInThreadTypedList(); 
+			// we'll use a typedlist, MessagesInThread to pull the necessary data from the db. The typedlist contains fields from message, user and usertitle. 
+			var qf = new QueryFactory();
+			var q = qf.GetMessagesInThreadTypedList()
+						  .Where(MessageFields.ThreadID == threadID)			// create the filter with the threadID passed to the method.
+						  .OrderBy(MessageFields.PostingDate.Descending())		// Sort Messages on posting date, ascending, so the first post is located on top. 
+						  .Page(pageNo, pageSize)								// Pass in the paging information as well, to perform server-side paging. 
+						  .Distinct();											// Use distinct to avoid duplicates as we're paging.
+			var messages = new TypedListDAO().FetchQuery(q);					// fetch the data into the typedlist. 
 
-			//create the filter with the threadID passed to the method.
-			PredicateExpression filter = new PredicateExpression(MessageFields.ThreadID == threadID);
-
-			// Sort Messages on posting date, ascending, so the first post is located on top. 
-			SortExpression sorter = new SortExpression(MessageFields.PostingDate.Ascending());
-
-			// fetch the data into the typedlist. Pass in the paging information as well, to perform server-side paging. 
-			messages.Fill(0, sorter, true, filter, null, null, pageNo, pageSize);
-
-			// update thread entity directly inside the DB with a non-transactional update statement so the # of views is increased by one.
+			// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
 			ThreadEntity updater = new ThreadEntity();
+
 			// set the NumberOfViews field to an expression which increases it by 1
 			updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
 			updater.IsNew = false;
@@ -297,15 +294,16 @@ namespace SD.HnD.BL
 		}
 
 
-        /// <summary>
-        /// Will return the StartMessageNo for including it in the URL when redirecting to a page with messages in the given
-        /// thread. The page started with StartMessageNo will contain the message with ID messageID. Paging is done using the
-        /// maxAmountMessagesPerPage property in Application.
-        /// </summary>
-        /// <param name="threadID">ID of the thread to which the messages belong</param>
-        /// <param name="messageID"></param>
-        /// <returns></returns>
-        public static int GetStartAtMessageForGivenMessageAndThread(int threadID, int messageID, int maxAmountMessagesPerPage)
+		/// <summary>
+		/// Will return the StartMessageNo for including it in the URL when redirecting to a page with messages in the given
+		/// thread. The page started with StartMessageNo will contain the message with ID messageID. Paging is done using the
+		/// maxAmountMessagesPerPage property in Application.
+		/// </summary>
+		/// <param name="threadID">ID of the thread to which the messages belong</param>
+		/// <param name="messageID"></param>
+		/// <param name="maxAmountMessagesPerPage">The max amount of messages per page to show. </param>
+		/// <returns></returns>
+		public static int GetStartAtMessageForGivenMessageAndThread(int threadID, int messageID, int maxAmountMessagesPerPage)
         {
 			var qf = new QueryFactory();
 			var q = qf.Create()
@@ -466,62 +464,5 @@ namespace SD.HnD.BL
 						.LeftJoin(qf.User.As("LastPostingUser"))
 								.On(MessageFields.PostedByUserID.Source("LastMessage") == UserFields.UserID.Source("LastPostingUser"));
 		}
-
-#warning REMOVE
-		/// <summary>
-		/// Builds the relation collection for a fetch of all threads with statistics. 
-		/// </summary>
-		/// <returns>A ready to use relationcollection</returns>
-		/// <returns>Doesn't add the thread-forum relation.</returns>
-		internal static RelationCollection BuildRelationsForAllThreadsWithStats()
-		{
-			RelationCollection relations = new RelationCollection();
-			relations.Add(ThreadEntity.Relations.UserEntityUsingStartedByUserID, "ThreadStarterUser", JoinHint.Left);
-			IEntityRelation threadMessage = ThreadEntity.Relations.MessageEntityUsingThreadID;
-			// the custom filter of the relation is a subquery which compares the messageID of the last message in the thread with the messageid of the set to join
-			threadMessage.CustomFilter = new PredicateExpression(
-					new FieldCompareSetPredicate(MessageFields.MessageID.SetObjectAlias("LastMessage"),
-						MessageFields.MessageID, SetOperator.Equal,
-						(MessageFields.ThreadID == MessageFields.ThreadID.SetObjectAlias("LastMessage")), null, string.Empty, 1,
-							new SortExpression(MessageFields.PostingDate | SortOperator.Descending)));
-			// now add the relation to the relationcollection, we'll alias the message entity in the relation so we can refer to it in our custom filter.
-			relations.Add(threadMessage, "LastMessage");
-			relations.Add(MessageEntity.Relations.UserEntityUsingPostedByUserID, "LastMessage", "LastPostingUser", JoinHint.Left);
-			return relations;
-		}
-
-#warning REMOVE
-		/// <summary>
-		/// Builds the dynamic list for a query with all threads with statistics. 
-		/// </summary>
-		/// <returns>setup in and ready to use resultset object</returns>
-		/// <remarks>Doesn't add the forum fields</remarks>
-		internal static ResultsetFields BuildDynamicListForAllThreadsWithStats()
-		{
-			ResultsetFields fields = new ResultsetFields(14);
-			fields.DefineField(ThreadFields.ThreadID, 0);
-			fields.DefineField(ThreadFields.ForumID, 1);
-			fields.DefineField(ThreadFields.Subject, 2);
-			fields.DefineField(ThreadFields.StartedByUserID, 3);
-			fields.DefineField(ThreadFields.ThreadLastPostingDate, 4);
-			fields.DefineField(ThreadFields.IsSticky, 5);
-			fields.DefineField(ThreadFields.IsClosed, 6);
-			fields.DefineField(ThreadFields.MarkedAsDone, 7);
-			fields.DefineField(ThreadFields.NumberOfViews, 8);
-			// the next field refers to an object alias, as we'll join User twice. 
-			fields.DefineField(UserFields.NickName.SetObjectAlias("ThreadStarterUser"), 9);
-			// the next field is a scalar query with the # of postings in the thread. 
-			fields.DefineField(new EntityField("AmountMessages",
-					new ScalarQueryExpression(MessageFields.MessageID.SetAggregateFunction(AggregateFunction.Count),
-						(MessageFields.ThreadID == ThreadFields.ThreadID)), typeof(int)), 10);
-			// the next two field refer to an object alias, as we'll join User twice. 
-			fields.DefineField(UserFields.UserID, 11, "LastPostingByUserID", "LastPostingUser");
-			fields.DefineField(UserFields.NickName, 12, "NickNameLastPosting", "LastPostingUser");
-			// the next field sets the alias for the field to a different string than the default. 
-			fields.DefineField(MessageFields.MessageID, 13, "LastMessageID", "LastMessage");
-
-			return fields;
-		}
-
 	}
 }

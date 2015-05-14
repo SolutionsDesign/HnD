@@ -58,10 +58,10 @@ namespace SD.HnD.GUI.Admin
 
 			if(!Page.IsPostBack)
 			{
-				// Read all the current existing forums and their section names. 
-				ForumsWithSectionNameTypedList forumsWithSectionNames = ForumGuiHelper.GetAllForumsWithSectionNames();
-				rpForums.DataSource = forumsWithSectionNames;
-				rpForums.DataBind();
+				//// Read all the current existing forums and their section names. 
+				//ForumsWithSectionNameTypedList forumsWithSectionNames = ForumGuiHelper.GetAllForumsWithSectionNames();
+				//rpForums.DataSource = forumsWithSectionNames;
+				//rpForums.DataBind();
 
 				SectionCollection sections = SectionGuiHelper.GetAllSections();
 				cbxSections.DataSource = sections;

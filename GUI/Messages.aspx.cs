@@ -285,9 +285,9 @@ namespace SD.HnD.GUI
 				plPageListTop.ThreadID = threadID;
 				
 				// Get messages and bind it to the repeater control. Use the startmessage to get only the message visible on the current page. 
-				MessagesInThreadTypedList messages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(threadID, currentPageNo, maxAmountMessagesPerPage);
-				rptMessages.DataSource = messages;
-				rptMessages.DataBind();
+				//MessagesInThreadTypedList messages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(threadID, currentPageNo, maxAmountMessagesPerPage);
+				//rptMessages.DataSource = messages;
+				//rptMessages.DataBind();
 			}			
 		}
 
