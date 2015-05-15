@@ -22,7 +22,8 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-
+using System.ComponentModel;
+using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
@@ -181,22 +182,21 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Retrieves for all available sections all forums with all relevant statistical information. This information is stored per forum in a
-		/// DataView which is stored in the returned Dictionary, with the SectionID where the forum is located in as Key.
+		/// Retrieves for all available sections all forums with all relevant statistical information. This information is stored per forum in an
+		/// AggregatedForumRow instance. The forum instances are indexed under their sectionid. Only forums which are vieable by the user are returned. 
 		/// </summary>
 		/// <param name="availableSections">SectionCollection with all available sections</param>
 		/// <param name="accessableForums">List of accessable forums IDs.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>
-		/// Dictionary with per key (sectionID) a dataview with forum information of all the forums in that section.
+		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums displayable to the
+		/// user it's not present in the returned hashtable.
 		/// </returns>
-		/// <remarks>Uses dataviews because a dynamic list is executed to retrieve the information for the forums, which include aggregate info about
-		/// # of posts.</remarks>
-        public static Dictionary<int, DataView> GetAllAvailableForumsDataViews(SectionCollection availableSections, List<int> accessableForums,
+        public static MultiValueHashtable<int, AggregatedForumRow> GetAllAvailableForumsAggregatedData(SectionCollection availableSections, List<int> accessableForums,
 																			   List<int> forumsWithThreadsFromOthers, int userID)
         {
-			Dictionary<int, DataView> toReturn = new Dictionary<int, DataView>();
+			var toReturn = new MultiValueHashtable<int, AggregatedForumRow>();
 
             // return an empty list, if the user does not have a valid list of forums to access
             if (accessableForums == null || accessableForums.Count <= 0)
@@ -210,56 +210,52 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(ForumFields.ForumID, 
-								ForumFields.ForumName, 
-								ForumFields.ForumDescription, 
-								ForumFields.ForumLastPostingDate,
-								// add a scalar query which retrieves the # of threads in the specific forum. 
-								// this will result in the query:
-								// (
-								//		SELECT COUNT(ThreadID) FROM Thread 
-								//		WHERE ForumID = Forum.ForumID AND threadfilter. 
-								// ) As AmountThreads
-								qf.Create()
-										.Select(ThreadFields.ThreadID.Count())
-										.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
-										.Where(threadFilter)
-										.ToScalar().As("AmountThreads"),
-								// add a scalar query which retrieves the # of messages in the threads of this forum. 
-								// this will result in the query:
-								// (
-								//		SELECT COUNT(MessageID) FROM Message 
-								//		WHERE ThreadID IN
-								//		(
-								//			SELECT ThreadID FROM Thread WHERE ForumID = Forum.ForumID AND threadfilter
-								//		)
-								// ) AS AmountMessages
-								qf.Create()
-										.Select(MessageFields.MessageID.Count())
-										.Where(MessageFields.ThreadID.In(
-												qf.Create()
-													.Select(ThreadFields.ThreadID)
-													.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
-													.Where(threadFilter)))
-										.ToScalar().As("AmountMessages"),
-								ForumFields.HasRSSFeed, 
-								ForumFields.SectionID)
+						.Select(() => new AggregatedForumRow()
+									  {
+										ForumID = ForumFields.ForumID.ToValue<int>(), 
+										ForumName = ForumFields.ForumName.ToValue<string>(), 
+										ForumDescription = ForumFields.ForumDescription.ToValue<string>(), 
+										ForumLastPostingDate = ForumFields.ForumLastPostingDate.ToValue<DateTime?>(),
+										// add a scalar query which retrieves the # of threads in the specific forum. 
+										// this will result in the query:
+										// (
+										//		SELECT COUNT(ThreadID) FROM Thread 
+										//		WHERE ForumID = Forum.ForumID AND threadfilter. 
+										// ) As AmountThreads
+										AmountThreads = qf.Create()
+															.Select(ThreadFields.ThreadID.Count())
+															.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+															.Where(threadFilter)
+															.ToScalar().As("AmountThreads").ToValue<int>(),
+										// add a scalar query which retrieves the # of messages in the threads of this forum. 
+										// this will result in the query:
+										// (
+										//		SELECT COUNT(MessageID) FROM Message 
+										//		WHERE ThreadID IN
+										//		(
+										//			SELECT ThreadID FROM Thread WHERE ForumID = Forum.ForumID AND threadfilter
+										//		)
+										// ) AS AmountMessages
+							 			AmountMessages = qf.Create()
+												.Select(MessageFields.MessageID.Count())
+												.Where(MessageFields.ThreadID.In(
+														qf.Create()
+															.Select(ThreadFields.ThreadID)
+															.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+															.Where(threadFilter)))
+												.ToScalar().As("AmountMessages").ToValue<int>(),
+										HasRSSFeed = ForumFields.HasRSSFeed.ToValue<bool>(), 
+										SectionID = ForumFields.SectionID.ToValue<int>()
+									})
 						.Where(ForumFields.ForumID == accessableForums)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
 
-			var results = new TypedListDAO().FetchAsDataTable(q);
+			var results = new TypedListDAO().FetchQuery(q);
 
-			// Now per section create a new DataView in memory using in-memory filtering on the DataTable. 
-            foreach(SectionEntity section in availableSections)
-            {
-                // Create view for current section and filter out rows we don't want. Do this with in-memory filtering of the dataview, so we don't
-				// have to execute multiple queries. 
-                DataView forumsInSection = new DataView(results, "SectionID=" + section.SectionID, string.Empty, DataViewRowState.CurrentRows);
-                // add to sorted list with SectionID as key
-                toReturn.Add(section.SectionID, forumsInSection);
-            }
-
-            // return the dictionary
+			foreach(var forum in results)
+			{
+				toReturn.Add(forum.SectionID, forum);
+			}
             return toReturn;
         }
 

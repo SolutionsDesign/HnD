@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "HnD | Login";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li><a href="~/">Home</a></li>
+				<li class="active">Log in</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+			<h1 class="br-bottom mt30">Log in</h1>
+
+			<div class="mb40">
+				<form>
+					<div class="form-group">
+						<input name="customerId" type="text" maxlength="50" required="" class="form-control" placeholder=" Nickname" autofocus="" />
+					</div>
+					<div class="form-group">
+						<input name="password" type="password" maxlength="50" required="" class="form-control" placeholder=" Password" />
+					</div>
+					<div class="checkbox">
+						<label>
+							<input id="autologinCheckBox" name="autologin" type="checkbox" />
+							Remember me
+						</label>
+					</div>
+
+					<div class="mt20">
+						<button type="submit" class="btn btn-default"> Log in </button>
+						<div class="pull-right">
+							<a href="resetpassword.html" class="forgot"><small>Forgot your password?</small></a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
