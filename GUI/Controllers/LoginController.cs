@@ -3,76 +3,81 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
+using SD.HnD.BL;
+using SD.HnD.DAL.EntityClasses;
+using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
     public class LoginController : Controller
     {
-        // GET: Login
-        public ActionResult Index()
-        {
-            return View();
-        }
+		[AllowAnonymous]
+		public ActionResult Login(string returnUrl)
+		{
+			ViewBag.ReturnUrl = returnUrl;
+			return View();
+		}
 
 
-        // POST: Login/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+		[ValidateAntiForgeryToken]
+        public ActionResult Login([Bind(Include="NickName, Password, RememberMe")] LoginModel data, string returnUrl)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+	        if(!ModelState.IsValid)
+	        {
+		        return View(data);
+	        }
+	        var result = PerformLogin(data);
+	        switch(result)
+	        {
+				case SecurityManager.AuthenticateResult.AllOk:
+					return RedirectToLocal(returnUrl);
+				default:
+			        return View(data);
+	        }
         }
 
-        // GET: Login/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
 
-        // POST: Login/Edit/5
-        [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
+		private SecurityManager.AuthenticateResult PerformLogin(LoginModel data)
+	    {
+			UserEntity user = null;
+			SecurityManager.AuthenticateResult result = SecurityManager.AuthenticateUser(data.NickName, data.Password, out user);
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+			switch(result)
+			{
+				case SecurityManager.AuthenticateResult.AllOk:
+					// authenticated
+					// Save session cacheable data
+					SessionAdapter.LoadUserSessionData(user);
+					// update last visit date in db
+					UserManager.UpdateLastVisitDateForUser(user.UserID);
+					// done
+					FormsAuthentication.SetAuthCookie(user.NickName, data.RememberMe);
+					// Audit the login action, if it was defined to be logged for this role.
+					if(SessionAdapter.CheckIfNeedsAuditing(AuditActions.AuditLogin))
+					{
+						SecurityManager.AuditLogin(SessionAdapter.GetUserID());
+					}
+					break;
+				case SecurityManager.AuthenticateResult.IsBanned:
+					ModelState.AddModelError(string.Empty, "You are banned. Login won't work for you.");
+					break;
+				case SecurityManager.AuthenticateResult.WrongUsernamePassword:
+					ModelState.AddModelError(string.Empty, "You specified a wrong User name - Password combination. Please try again.");
+					break;
+			}
+			return result;
+	    }
 
-        // GET: Login/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
 
-        // POST: Login/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
-        }
+		private ActionResult RedirectToLocal(string returnUrl)
+		{
+			if(Url.IsLocalUrl(returnUrl))
+			{
+				return Redirect(returnUrl);
+			}
+			return RedirectToAction("Index", "Home");
+		}
     }
 }
