@@ -49,25 +49,49 @@
 						</div>
 						<div id="idMainMenu" class="collapse navbar-collapse navbar-right">
 							<ul class="nav navbar-nav">
-								<li><a href="#">Register</a></li>
-								<li><a href="~/login/login">Login</a></li>
+								@if(Request.IsAuthenticated)
+								{
+									<li><a href="~/Account/Logout">Log out</a></li>
+								}
+								else
+								{
+									<li><a href="#">Register</a></li>
+									<li><a href="~/Account/Login">Log in</a></li>
+								}
 								<li><a href="activethreads.html">Active Threads</a></li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administrate<span class="caret"></span></a>
-									<ul class="dropdown-menu menu submenu" role="menu">
-										<li><a href="#">Approve Attachments</a></li>
-										<li><a href="#">Support Queues</a></li>
-									</ul>
-								</li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My Account<span class="caret"></span></a>
-									<ul class="dropdown-menu menu submenu" role="menu">
-										<li><a href="bookmarks.html">My Bookmarks</a></li>
-										<li><a href="mythreads.html">My Threads</a></li>
-										<li><a href="#">My Profile</a></li>
-										<li><a href="#">Logout</a></li>
-									</ul>
-								</li>
+								@if(SessionAdapter.ShouldSeeAdministrateMenu())
+								{
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administrate<span class="caret"></span></a>
+										<ul class="dropdown-menu menu submenu" role="menu">
+											@if(SessionAdapter.CanApproveAttachment())
+											{
+												<li><a href="#">Approve Attachments</a></li>
+											}
+											@if(SessionAdapter.CanDoQueueContentMangement())
+											{
+												<li><a href="#">Support Queues</a></li>
+											}
+											@if(SessionAdapter.CanAdministrate())
+											{
+												<li role="presentation" class="divider"></li>
+												<li role="presentation">Admin placeholder</li>
+											}
+										</ul>
+									</li>
+								}
+								@if(Request.IsAuthenticated)
+								{
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">My Account<span class="caret"></span></a>
+										<ul class="dropdown-menu menu submenu" role="menu">
+											<li><a href="bookmarks.html">My Bookmarks</a></li>
+											<li><a href="mythreads.html">My Threads</a></li>
+											<li><a href="#">My Profile</a></li>
+											<li><a href="#">Logout</a></li>
+										</ul>
+									</li>
+								}
 								<li><a href="#">Help</a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
@@ -89,8 +113,15 @@
 								<h3 class="footer-title">@ApplicationAdapter.GetSiteName()</h3>
 								<ul class="footer-links clearfix">
 									<li><a href="~/">Home</a></li>
-									<li><a href="#">Register</a></li>
-									<li><a href="~/login/login">Log in</a></li>
+									@if(Request.IsAuthenticated)
+									{
+										<li><a href="~/Account/Logout">Log out</a></li>
+									}
+									else
+									{
+										<li><a href="#">Register</a></li>
+										<li><a href="~/Account/Login">Log in</a></li>
+									}
 									<li><a href="#">Active Threads</a></li>
 									<li><a href="#">Search</a></li>
 								</ul>

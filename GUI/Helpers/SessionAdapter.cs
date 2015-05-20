@@ -32,6 +32,7 @@ using SD.HnD.BL;
 using SD.HnD.DAL;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DAL.HelperClasses;
 
@@ -218,31 +219,35 @@ namespace SD.HnD.Gui
         #endregion
 
         #region Managing SystemActionRights Session object
-        /// <summary>
-        /// Adds the system action rights collection to the session.
-        /// If the object already exists, it is overwritten with the new value.
-        /// </summary>
-        /// <param name="actionRights">The action rights.</param>
-        private static void AddSystemActionRights(ActionRightCollection actionRights)
-        {
-            //Adds a new item to the session-state collection.
-            //If the name parameter refers to an existing session state item, the existing item is overwritten with the specified value.
-            HttpContext.Current.Session.Add("systemActionRights", actionRights);
-        }
+		/// <summary>
+		/// Helper method which returns true if the Adminstrate menu should show, which is the case if the user can administrate or approve an attachment or can do queue content management.
+		/// </summary>
+		/// <returns></returns>
+	    public static bool ShouldSeeAdministrateMenu()
+	    {
+		    return CanAdministrate() || CanApproveAttachment() || CanDoQueueContentMangement();
+	    }
 
-        /// <summary>
-        /// Gets the system action rights from the session.
-        /// </summary>
-        /// <returns>ActionRightCollection if available otherwise returns null.</returns>
-        private static ActionRightCollection GetSystemActionRights()
-        {
-            if (HttpContext.Current.Session["systemActionRights"] != null)
-            {
-                return (ActionRightCollection)HttpContext.Current.Session["systemActionRights"];
-            }
 
-            return null;
-        }
+		/// <summary>
+		/// Determines whether the active user can perform queue content management
+		/// </summary>
+		/// <returns></returns>
+		public static bool CanDoQueueContentMangement()
+		{
+			return SessionAdapter.HasSystemActionRight(ActionRights.QueueContentManagement);
+		}
+
+
+		/// <summary>
+		/// Determines whether the active user can approve in at least one forum attachments on posts.
+		/// </summary>
+		/// <returns></returns>
+		public static bool CanApproveAttachment()
+		{
+			var forumsWithApprovalRight = SessionAdapter.GetForumsWithActionRight(ActionRights.ApproveAttachment);
+			return ((forumsWithApprovalRight != null) && (forumsWithApprovalRight.Count > 0));
+		}
 
 
 		/// <summary>
@@ -301,6 +306,34 @@ namespace SD.HnD.Gui
 
             return false;
         }
+
+
+		/// <summary>
+		/// Adds the system action rights collection to the session.
+		/// If the object already exists, it is overwritten with the new value.
+		/// </summary>
+		/// <param name="actionRights">The action rights.</param>
+		private static void AddSystemActionRights(ActionRightCollection actionRights)
+		{
+			//Adds a new item to the session-state collection.
+			//If the name parameter refers to an existing session state item, the existing item is overwritten with the specified value.
+			HttpContext.Current.Session.Add("systemActionRights", actionRights);
+		}
+
+
+		/// <summary>
+		/// Gets the system action rights from the session.
+		/// </summary>
+		/// <returns>ActionRightCollection if available otherwise returns null.</returns>
+		private static ActionRightCollection GetSystemActionRights()
+		{
+			if(HttpContext.Current.Session["systemActionRights"] != null)
+			{
+				return (ActionRightCollection)HttpContext.Current.Session["systemActionRights"];
+			}
+
+			return null;
+		}
         #endregion
 
         #region Managing AuditActions Session object

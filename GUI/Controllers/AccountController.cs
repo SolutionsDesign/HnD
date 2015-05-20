@@ -10,7 +10,7 @@ using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
-    public class LoginController : Controller
+    public class AccountController : Controller
     {
 		[AllowAnonymous]
 		public ActionResult Login(string returnUrl)
@@ -18,6 +18,15 @@ namespace SD.HnD.Gui.Controllers
 			ViewBag.ReturnUrl = returnUrl;
 			return View();
 		}
+
+
+	    [Authorize]
+	    public ActionResult Logout()
+	    {
+		    FormsAuthentication.SignOut();
+			SessionAdapter.Abandon();
+			return RedirectToLocal("~/");
+	    }
 
 
         [HttpPost]

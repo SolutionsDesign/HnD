@@ -18,7 +18,7 @@
 			<h1 class="br-bottom mt30">Log in</h1>
 
 			<div class="mb40">
-				@using(Html.BeginForm("Login", "Login", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {role = "form"}))
+				@using(Html.BeginForm("Login", "Account", new {ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post, new {role = "form"}))
 				{
 					@Html.AntiForgeryToken()
 					@Html.ValidationSummary(true, "", new { @class = "text-danger" })
