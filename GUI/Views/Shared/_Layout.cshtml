@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using SD.HnD.BL
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -59,20 +60,20 @@
 									<li><a href="~/Account/Login">Log in</a></li>
 								}
 								<li><a href="activethreads.html">Active Threads</a></li>
-								@if(SessionAdapter.ShouldSeeAdministrateMenu())
+								@if(LoggedInUserAdapter.ShouldSeeAdministrateMenu())
 								{
 									<li class="dropdown">
 										<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Administrate<span class="caret"></span></a>
 										<ul class="dropdown-menu menu submenu" role="menu">
-											@if(SessionAdapter.CanApproveAttachment())
+											@if(LoggedInUserAdapter.CanApproveAttachment())
 											{
 												<li><a href="#">Approve Attachments</a></li>
 											}
-											@if(SessionAdapter.CanDoQueueContentMangement())
+											@if(LoggedInUserAdapter.CanDoQueueContentMangement())
 											{
 												<li><a href="#">Support Queues</a></li>
 											}
-											@if(SessionAdapter.CanAdministrate())
+											@if(LoggedInUserAdapter.CanAdministrate())
 											{
 												<li role="presentation" class="divider"></li>
 												<li role="presentation">Admin placeholder</li>
@@ -130,7 +131,7 @@
 						<div class="col-sm-4 col-sm-offset-2">
 							<div class="footer-widget">
 								<div class="clearfix">
-									Powered by <a href="https://github.com/SolutionsDesign/HnD" target="_blank">HnD</a> v3.0<br />&copy;2002-2015
+									Powered by <a href="https://github.com/SolutionsDesign/HnD" target="_blank">HnD</a> @Globals.VersionFull<br />&copy;2002-2015
 									<a href="http://www.sd.nl/" target="_blank">Solutions Design bv</a><br />
 									<a href="https://github.com/SolutionsDesign/HnD" target="_blank">HnD</a> uses
 									<a href="http://www.llblgen.com" target="_blank">LLBLGen Pro</a><br /><br />

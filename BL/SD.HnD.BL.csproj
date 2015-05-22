@@ -176,6 +176,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TypedDataClasses\AggregatedForumRow.cs" />
+    <Compile Include="TypedDataClasses\AggregatedActiveThreadRow.cs" />
+    <Compile Include="TypedDataClasses\AggregatedThreadRow.cs" />
     <Compile Include="UserGuiHelper.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -60,95 +60,39 @@ namespace SD.HnD.BL
 
 		
 		/// <summary>
-		/// Returns a DataView object that contains a complete list of threads list for
-		/// the requested forum and required date & time interval
+		/// Returns a DataView object that contains a complete list of threads list for the requested forum and page
 		/// </summary>
 		/// <param name="forumID">ID of Forum for which the Threadlist is required</param>
-		/// <param name="limiter">Limits the Threadlist to between now and; last 48 Hrs, Last Week, Last Month, Last Year</param>
-		/// <param name="minNumberOfThreadsToFetch">The minimum number of threads to fetch if there are less threads available in the limiter interval</param>
-		/// <param name="minNumberOfNonStickyVisibleThreads">The minimum number of non-sticky visible threads to show. If the # of threads is lower than 
-		/// this number (due to the limiter value), the minNumberOfThreadsToFetch are fetched</param>
+		/// <param name="pageNumber">The page number to fetch, which is used to fetch non-sticky posts</param>
+		/// <param name="pageSize">The number of rows to fetch for the page. </param>
 		/// <param name="canViewNormalThreadsStartedByOthers">If set to true, the user calling the method has the right to view threads started by others.
 		/// Otherwise only the threads started by the user calling the method are returned.</param>
 		/// <param name="userID">The userid of the user calling the method.</param>
-		/// <returns>DataView with all the threads</returns>
-		public static DataView GetAllThreadsInForumAsDataView(int forumID, ThreadListInterval limiter, short minNumberOfThreadsToFetch, 
-				short minNumberOfNonStickyVisibleThreads, bool canViewNormalThreadsStartedByOthers, int userID)
+		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted on the top.</returns>
+		public static List<AggregatedThreadRow> GetAllThreadsInForumAsDataView(int forumID, int pageNumber, int pageSize, bool canViewNormalThreadsStartedByOthers, int userID)
 		{
-			DateTime limiterDate;
-
-			// convert the limiter enum to a datetime which we can use in the filters on the thread data, where we'll use the limiter date
-			// as a filter for the last posting date of a post in a given thread. 
-            switch (limiter)
-            {
-				case ThreadListInterval.Last24Hours:
-					limiterDate = DateTime.Today.AddHours(-24);
-					break;
-                case ThreadListInterval.Last48Hours:
-					limiterDate = DateTime.Today.AddHours(-48);
-                    break;
-                case ThreadListInterval.LastWeek:
-					limiterDate = DateTime.Today.AddDays(-7);
-                    break;
-                case ThreadListInterval.LastMonth:
-					limiterDate = DateTime.Today.AddMonths(-1);
-                    break;
-                case ThreadListInterval.LastYear:
-					limiterDate = DateTime.Today.AddYears(-1);
-                    break;
-				default:
-					limiterDate = DateTime.Today.AddHours(-48);
-					break;
-            }
-
+			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
+			// then sort the sticky threads at the top and page through the resultset.
 			var qf = new QueryFactory();
-			var q = qf.Create();
-			q.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
-			q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf));
-			q.Where(((ThreadFields.IsSticky == true).Or(ThreadFields.ThreadLastPostingDate >= limiterDate)).And(ThreadFields.ForumID == forumID));
-			// if the user can't view threads started by others, filter out threads started by users different from userID
-			if(!canViewNormalThreadsStartedByOthers)
+			var q = qf.Create()
+						  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+						  .Where(ThreadFields.ForumID == forumID)
+						  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
+						  .Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+						  .Distinct()
+						  .Page(pageNumber <= 0 ? 1 : pageNumber, pageSize <= 0 ? 1 : pageSize);
+
+			// if the user can't view threads started by others, filter out threads started by users different from userID. Otherwise just filter on forumid and stickyness.
+			if(canViewNormalThreadsStartedByOthers)
 			{
 				// caller can't view threads started by others: add a filter so that threads not started by calling user aren't enlisted. 
 				// however sticky threads are always returned so the filter contains a check so the limit is only applied on threads which aren't sticky
-				// add a filter for sticky threads, add it with 'OR', so sticky threads are always accepted
+				// add a filter for sticky threads, add it with 'OR', so sticky threads are always accepted. The whole expression is and-ed to the already existing
+				// expression
 				q.AndWhere((ThreadFields.StartedByUserID == userID).Or(ThreadFields.IsSticky == true));
 			}
-			q.OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.IsClosed.Ascending(), ThreadFields.ThreadLastPostingDate.Descending());
 			var dao = new TypedListDAO();
-			var threads = dao.FetchAsDataTable(q);
-
-			// count # non-sticky threads. If it's below a given minimum, refetch everything, but now don't fetch on date filtered but at least the
-			// set minimum. Do this ONLY if the user can view other user's threads. If that's NOT the case, don't refetch anything.
-			DataView stickyThreads = new DataView(threads, ThreadFieldIndex.IsSticky.ToString() + "=false", "", DataViewRowState.CurrentRows);
-			if((stickyThreads.Count < minNumberOfNonStickyVisibleThreads) && canViewNormalThreadsStartedByOthers)
-			{
-				// not enough threads available, fetch again, 
-				// first fetch the sticky threads. 
-				q = qf.Create();
-				q.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
-				q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf));
-				q.Where((ThreadFields.IsSticky == true).And(ThreadFields.ForumID == forumID));
-				q.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
-				threads = dao.FetchAsDataTable(q);
-
-				// then fetch the rest. Fetch it into the same datatable object to append the rows to the already fetched sticky threads (if any)
-				q = qf.Create();
-				q.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
-				q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf));
-				q.Where((ThreadFields.IsSticky == false).And(ThreadFields.ForumID == forumID));
-				q.Limit(minNumberOfThreadsToFetch);
-				q.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
-				dao.FetchAsDataTable(q, threads);
-
-				// sort closed threads to the bottom. Do this in-memory as it's a sort operation after projection. Doing it on the server would mean
-				// a sort operation before projection.
-				return new DataView(threads, string.Empty, ThreadFieldIndex.IsClosed.ToString() + " ASC", DataViewRowState.CurrentRows);
-			}
-			else
-			{
-				return threads.DefaultView;
-			}
+			return dao.FetchQuery(q);
 		}
 
 

@@ -29,20 +29,28 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Version of HnD
 		/// </summary>
-		public static readonly string Version = "3.5";
+		public static readonly string Version = "3.0";
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "06062012";
+		public static readonly string Build = "22-May-2015";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
-		public static readonly string ReleaseType = "Final";
+		public static readonly string ReleaseType = "Alpha";
 		/// <summary>
 		/// The UserID to deny login rights, since this is the Anonymous Coward user, which is
 		/// used for non-logged in users.
 		/// </summary>
 		public static readonly int UserIDToDenyLogin = 0;
+		/// <summary>
+		/// Returns a representable string which displays the version in full in textual format: vVersion (Build, ReleaseType).
+		/// </summary>
+		public static readonly string VersionFull = string.Format("v{0} ({1} {2})", Version, Build, ReleaseType);
+		/// <summary>
+		/// The default max number of messages per page if it's not configured for a forum.
+		/// </summary>
+		public static readonly int DefaultMaxNumberOfMessagesPerPage = 25;
 	}
 
 
@@ -78,7 +86,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Enum for specifying the ordering of the search results.
 	/// </summary>
-	public enum SearchResultsOrderSetting:int
+	public enum SearchResultsOrderSetting
 	{
 		LastPostDateDescending,
 		LastPostDateAscending,
@@ -92,7 +100,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Enum for defining the search target for a search. 
 	/// </summary>
-	public enum SearchTarget : int
+	public enum SearchTarget
 	{
 		MessageText,
 		ThreadSubject,
@@ -103,7 +111,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Audit actions
 	/// </summary>
-	public enum AuditActions:int
+	public enum AuditActions
 	{
 		AuditLogin=1,
 		AuditNewMessage=2,
@@ -131,7 +139,7 @@ namespace SD.HnD.BL
 	/// the actionrights definitions from the database. These are defined system wide, and
 	/// are not mutated at runtime. 
 	/// </summary>
-	public enum ActionRights:int
+	public enum ActionRights
 	{
 		AddAndEditMessage = 1,
 		AccessForum,
@@ -159,7 +167,7 @@ namespace SD.HnD.BL
     /// MailTemplate constants. The generated emails supported by the application. A dedicated helper 
     /// will get the corresponding template file path
     /// </summary>
-    public enum EmailTemplate : int
+    public enum EmailTemplate
     {
         RegistrationReply = 1,
         ThreadUpdatedNotification = 2

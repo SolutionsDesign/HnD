@@ -64,9 +64,9 @@ namespace SD.HnD.Gui.Controllers
 					// done
 					FormsAuthentication.SetAuthCookie(user.NickName, data.RememberMe);
 					// Audit the login action, if it was defined to be logged for this role.
-					if(SessionAdapter.CheckIfNeedsAuditing(AuditActions.AuditLogin))
+					if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 					{
-						SecurityManager.AuditLogin(SessionAdapter.GetUserID());
+						SecurityManager.AuditLogin(LoggedInUserAdapter.GetUserID());
 					}
 					break;
 				case SecurityManager.AuthenticateResult.IsBanned:

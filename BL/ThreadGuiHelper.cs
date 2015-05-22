@@ -22,8 +22,9 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Web;
-
+using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DAL.EntityClasses;
 using SD.HnD.DAL.CollectionClasses;
 using SD.HnD.DAL.FactoryClasses;
@@ -201,8 +202,7 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf)) { ForumFields.ForumName }
-											.ToArray())
+						.Select(ThreadGuiHelper.BuildQueryProjectionForAllActiveThreadsWithStats(qf))
 						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
 								.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
 						.Where((ThreadFields.ForumID == accessableForums)
@@ -415,30 +415,62 @@ namespace SD.HnD.BL
 		/// <param name="qf">The query factory to use.</param>
 		/// <returns>The fields for the projection</returns>
 		/// <remarks>Doesn't add the forum fields</remarks>
-		internal static object[] BuildQueryProjectionForAllThreadsWithStats(QueryFactory qf)
+		internal static Expression<Func<AggregatedThreadRow>>  BuildQueryProjectionForAllThreadsWithStats(QueryFactory qf)
 		{
-			var toReturn = new List<object>() 
+			return () => new AggregatedThreadRow() 
 			{ 
-				ThreadFields.ThreadID,
-				ThreadFields.ForumID,
-				ThreadFields.Subject,
-				ThreadFields.StartedByUserID,
-				ThreadFields.ThreadLastPostingDate,
-				ThreadFields.IsSticky,
-				ThreadFields.IsClosed,
-				ThreadFields.MarkedAsDone,
-				ThreadFields.NumberOfViews,
-				UserFields.NickName.Source("ThreadStarterUser"),
-				qf.Create()
-					.Select(MessageFields.MessageID.Count())
-					.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
-					.ToScalar()
-					.As("AmountMessages"),
-				UserFields.UserID.Source("LastPostingUser").As("LastPostingByUserID"),
-				UserFields.NickName.Source("LastPostingUser").As("NickNameLastPosting"),
-				MessageFields.MessageID.Source("LastMessage").As("LastMessageID")
+			 	ThreadID = ThreadFields.ThreadID.ToValue<int>(),
+				ForumID = ThreadFields.ForumID.ToValue<int>(),
+				Subject = ThreadFields.Subject.ToValue<string>(),
+				StartedByUserID = ThreadFields.StartedByUserID.ToValue<int>(),
+				DateLastPost = ThreadFields.ThreadLastPostingDate.ToValue<DateTime?>(),
+				IsSticky = ThreadFields.IsSticky.ToValue<bool>(),
+				IsClosed = ThreadFields.IsClosed.ToValue<bool>(),
+				MarkedAsDone = ThreadFields.MarkedAsDone.ToValue<bool>(),
+				NumberOfViews = ThreadFields.NumberOfViews.ToValue<int>(),
+				StartedByNickName = UserFields.NickName.Source("ThreadStarterUser").ToValue<string>(),
+				AmountMessages = qf.Create()
+									.Select(MessageFields.MessageID.Count())
+									.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
+									.ToScalar()
+									.As("AmountMessages").ToValue<int>(),
+				UserIDLastPost = UserFields.UserID.Source("LastPostingUser").As("LastPostingByUserID").ToValue<int>(),
+				NickNameLastPost = UserFields.NickName.Source("LastPostingUser").As("NickNameLastPosting").ToValue<string>(),
+				MessageIDLastPost = MessageFields.MessageID.Source("LastMessage").As("LastMessageID").ToValue<int>()
 			};
-			return toReturn.ToArray();
+		}
+		
+
+		/// <summary>
+		/// Builds the projection for a dynamic query which contains active thread and statistics information.
+		/// </summary>
+		/// <param name="qf">The query factory to use.</param>
+		/// <returns>The fields for the projection</returns>
+		/// <remarks>Doesn't add the forum fields</remarks>
+		internal static Expression<Func<AggregatedActiveThreadRow>> BuildQueryProjectionForAllActiveThreadsWithStats(QueryFactory qf)
+		{
+			return () => new AggregatedActiveThreadRow()
+			{
+				ThreadID = ThreadFields.ThreadID.ToValue<int>(),
+				ForumID = ThreadFields.ForumID.ToValue<int>(),
+				Subject = ThreadFields.Subject.ToValue<string>(),
+				StartedByUserID = ThreadFields.StartedByUserID.ToValue<int>(),
+				DateLastPost = ThreadFields.ThreadLastPostingDate.ToValue<DateTime?>(),
+				IsSticky = ThreadFields.IsSticky.ToValue<bool>(),
+				IsClosed = ThreadFields.IsClosed.ToValue<bool>(),
+				MarkedAsDone = ThreadFields.MarkedAsDone.ToValue<bool>(),
+				NumberOfViews = ThreadFields.NumberOfViews.ToValue<int>(),
+				StartedByNickName = UserFields.NickName.Source("ThreadStarterUser").ToValue<string>(),
+				AmountMessages = qf.Create()
+									.Select(MessageFields.MessageID.Count())
+									.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
+									.ToScalar()
+									.As("AmountMessages").ToValue<int>(),
+				UserIDLastPost = UserFields.UserID.Source("LastPostingUser").As("LastPostingByUserID").ToValue<int>(),
+				NickNameLastPost = UserFields.NickName.Source("LastPostingUser").As("NickNameLastPosting").ToValue<string>(),
+				MessageIDLastPost = MessageFields.MessageID.Source("LastMessage").As("LastMessageID").ToValue<int>(),
+				ForumName = ForumFields.ForumName.ToValue<string>()
+			};
 		}
 
 

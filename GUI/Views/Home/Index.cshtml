@@ -1,4 +1,5 @@
-﻿@using SD.Tools.BCLExtensions.CollectionsRelated
+﻿@using SD.HnD.Gui
+@using SD.Tools.BCLExtensions.CollectionsRelated
 @model SD.HnD.Gui.Models.HomeData
 
 @{
@@ -35,7 +36,7 @@
 				Welcome <strong>@Model.NickName</strong>!<br/>
 				Below you'll find several sections with forums where you can ask your question. Please use the search to see whether your question has already
 				been asked before.<br/>
-				@if(!SessionAdapter.IsAnonymousUser())
+				@if(!LoggedInUserAdapter.IsAnonymousUser())
 				{
 					<span>Your last session here started on: <strong>@Model.LastVisitedDateTime.ToString("dd-MMM-yyyy HH:mm")</strong></span>
 				}
@@ -47,7 +48,7 @@
 {
 	string id = string.Format("id{0}SectionContent", sectionObject.SectionID);
 	var forumView = Model.ForumDataPerDisplayedSection.GetValue(sectionObject.SectionID);
-	var lastVisitDate = SessionAdapter.GetLastVisitDate();
+	var lastVisitDate = LoggedInUserAdapter.GetLastVisitDate();
 	<section class="fs mt20">
 		<div class="container">
 			<div class="row">
@@ -56,9 +57,9 @@
 						<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
 						<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
 					</a>
-					@sectionObject.SectionName
+					@Html.Encode(sectionObject.SectionName)
 					<div class="pull-right">
-						<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@sectionObject.SectionDescription">
+						<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@Html.Encode(sectionObject.SectionDescription)">
 							<i class="fa fa-info-circle"></i>
 						</a>
 					</div>
@@ -86,7 +87,7 @@
 						}
 						<div class="row fs-row">
 							<div class="col-sm-8 col-xs-8">
-								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID" class="plr10">@forumRow.ForumName</a>
+								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@Html.Encode(forumRow.ForumName)</a>
 							</div>
 							<div class="col-sm-1 notonmobile">@forumRow.AmountThreads</div>
 							<div class="col-sm-1 notonmobile">@forumRow.AmountMessages</div>

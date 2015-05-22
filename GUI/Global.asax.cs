@@ -116,9 +116,9 @@ namespace SD.HnD.Gui
 			visitCookie.Path = "/";		// cookie path is set to '/', to avoid path name casing mismatches. The cookie has a unique name anyway.
 			Response.Cookies.Add(visitCookie);
 
-			if(SessionAdapter.CheckIfNeedsAuditing(AuditActions.AuditLogin))
+			if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 			{
-				SecurityManager.AuditLogin(SessionAdapter.GetUserID());
+				SecurityManager.AuditLogin(LoggedInUserAdapter.GetUserID());
 			}
 		}
 	}

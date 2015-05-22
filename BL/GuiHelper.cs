@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
@@ -44,29 +45,25 @@ namespace SD.HnD.BL
 	public static class GuiHelper
 	{						
 		/// <summary>
-		/// Loads the noise words into hashtable. Noise words are words which can be ignored during message indexing and searches.
+		/// Loads the noise words into hashset. Noise words are words which can be ignored during message indexing and searches.
 		/// </summary>
 		/// <param name="dataFilesPath">Path to the datafiles folder</param>
-		/// <returns>A hashtable with all the noisewords found in the file Datafiles/Noise.txt</returns>
-		public static Hashtable LoadNoiseWordsIntoHashtable(string dataFilesPath)
+		/// <returns>A hashset with all the noisewords found in the file Datafiles/Noise.txt</returns>
+		public static HashSet<string> LoadNoiseWordsIntoHashSet(string dataFilesPath)
 		{
 			string fullPath = Path.Combine(dataFilesPath, "Noise.txt");
 			StreamReader reader = new StreamReader(fullPath);
 			bool eofReached = false;
-			Hashtable noiseWords = new Hashtable(256);
+			var noiseWords = new HashSet<string>();
 			while(!eofReached)
 			{
 				string noiseWord = reader.ReadLine();
 				eofReached=(noiseWord==null);
 				if(!eofReached)
 				{
-					if(!noiseWords.ContainsKey(noiseWord))
-					{
-						noiseWords.Add(noiseWord, null);
-					}
+					noiseWords.Add(noiseWord);
 				}
 			}
-
 			return noiseWords;
 		}
 	}

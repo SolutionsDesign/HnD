@@ -47,96 +47,77 @@ namespace SD.HnD.Gui
         /// <returns>maxAmountMessagesPerPage if available, otherwise 25</returns>
         public static int GetMaxAmountMessagesPerPage()
         {
-            if (HttpContext.Current.Application["maxAmountMessagesPerPage"] != null)
-            {
-                return (int)HttpContext.Current.Application["maxAmountMessagesPerPage"];
-            }
-            return 25;
+	        var toReturn = HttpContext.Current.Application["maxAmountMessagesPerPage"];
+	        return toReturn == null ? Globals.DefaultMaxNumberOfMessagesPerPage : (int)toReturn;
         }
 
-        /// <summary>
+
+	    /// <summary>
         /// Gets the default from mail address.
         /// </summary>
         /// <returns>defaultFromEmailAddress if available, otherwise an empty string</returns>
         private static string GetDefaultFromEmailAddress()
         {
-            if (HttpContext.Current.Application["defaultFromEmailAddress"] != null)
-            {
-                return HttpContext.Current.Application["defaultFromEmailAddress"].ToString();
-            }
-            return string.Empty;
+			return (HttpContext.Current.Application["defaultFromEmailAddress"] as string) ?? string.Empty;
         }
 
-        /// <summary>
+
+	    /// <summary>
         /// Gets the default to mail address.
         /// </summary>
         /// <returns>defaultToEmailAddress if available, otherwise an empty string</returns>
         private static string GetDefaultToEmailAddress()
         {
-            if (HttpContext.Current.Application["defaultToEmailAddress"] != null)
-            {
-                return HttpContext.Current.Application["defaultToEmailAddress"].ToString();
-            }
-            return string.Empty;
+			return (HttpContext.Current.Application["defaultToEmailAddress"] as string) ?? string.Empty;
         }
 
-        /// <summary>
+
+	    /// <summary>
         /// Gets the email password subject.
         /// </summary>
         /// <returns>emailPasswordSubject if available, otherwise an empty string</returns>
         private static string GetEmailPasswordSubject()
         {
-			if(HttpContext.Current.Application["emailPasswordSubject"] != null)
-            {
-				return HttpContext.Current.Application["emailPasswordSubject"].ToString();
-            }
-            return string.Empty;
+			return (HttpContext.Current.Application["emailPasswordSubject"] as string) ?? string.Empty;
         }
 
 
-		/// <summary>
+	    /// <summary>
 		/// Gets the email thread notification subject.
 		/// </summary>
 		/// <returns>the threadnodification email subject, or an empty string if not found.</returns>
 		private static string GetEmailThreadNotificationSubject()
 		{
-			if(HttpContext.Current.Application["emailThreadNotificationSubject"] != null)
-			{
-				return HttpContext.Current.Application["emailThreadNotificationSubject"].ToString();
-			}
-			return string.Empty;
+			return (HttpContext.Current.Application["emailThreadNotificationSubject"] as string) ?? string.Empty;
 		}
 
 
-        /// <summary>
+	    /// <summary>
         /// Gets the name of the site.
         /// </summary>
         /// <returns>siteName if available, otherwise an empty string</returns>
         public static string GetSiteName()
         {
-            if (HttpContext.Current.Application["siteName"] != null)
-            {
-                return HttpContext.Current.Application["siteName"].ToString();
-            }
-            return string.Empty;
+	        return (HttpContext.Current.Application["siteName"] as string) ?? string.Empty;
         }
 
-        /// <summary>
+
+	    /// <summary>
         /// Gets the virtual root.
         /// </summary>
         /// <returns>virtualRoot if available, otherwise an empty string</returns>
         public static string GetVirtualRoot()
         {
-            if (HttpContext.Current.Application["virtualRoot"] != null)
-            {
-                string toReturn = HttpContext.Current.Application["virtualRoot"].ToString();
-				if(!toReturn.EndsWith(@"/"))
-				{
-					toReturn += @"/";
-				}
-				return toReturn;
-            }
-            return string.Empty;
+		    if(HttpContext.Current.Application["virtualRoot"] == null)
+		    {
+			    return string.Empty;
+		    }
+		    string toReturn = HttpContext.Current.Application["virtualRoot"].ToString();
+		    if(!toReturn.EndsWith(@"/"))
+		    {
+			    toReturn += @"/";
+		    }
+		    return toReturn;
         }
 		
 
@@ -146,15 +127,11 @@ namespace SD.HnD.Gui
         /// <returns>the data files folder MapPath if available, otherwise an empty string</returns>
         public static string GetDataFilesMapPath()
         {
-            if (HttpContext.Current.Application["datafilesMapPath"] != null)
-            {
-                return HttpContext.Current.Application["datafilesMapPath"].ToString();
-            }
-            return string.Empty;
+	        return (HttpContext.Current.Application["datafilesMapPath"] as string) ?? string.Empty;
         }
 
-		
-        /// <summary>
+
+	    /// <summary>
         /// Gets an email template file path given the template type from the corresponding enum.
         /// </summary>
         /// <returns>the email template file path </returns>
@@ -198,86 +175,70 @@ namespace SD.HnD.Gui
 		/// <returns>A XslTransform if available, otherwise null</returns>
 		private static XslCompiledTransform GetMessageStyle()
 		{
-			if (HttpContext.Current.Application["messageStyle"] != null)
-			{
-				return (XslCompiledTransform)HttpContext.Current.Application["messageStyle"];
-			}
-			return null;
+			return HttpContext.Current.Application["messageStyle"] as XslCompiledTransform;
 		}
 
-		/// <summary>
+
+	    /// <summary>
 		/// Gets the signature style.
 		/// </summary>
 		/// <returns>A XslTransform if available, otherwise null</returns>
 		private static XslCompiledTransform GetSignatureStyle()
-		{
-			if (HttpContext.Current.Application["signatureStyle"] != null)
-			{
-				return (XslCompiledTransform)HttpContext.Current.Application["signatureStyle"];
-			}
-			return null;
-		}
+	    {
+		    return HttpContext.Current.Application["signatureStyle"] as XslCompiledTransform;
+	    }
 
-		/// <summary>
+
+	    /// <summary>
 		/// Create a DTO of all needed e-mail default data.
 		/// </summary>
 		/// <returns>a dictionary of the following keys (grammar, actionTable, gotoTable, messageStyle, signatureStyle)</returns>
 		public static ParserData GetParserData()
 		{
-			ParserData data = new ParserData();
-			data.MessageStyle = GetMessageStyle();
-			data.SignatureStyle = GetSignatureStyle();
-
-			return data;
+		    return new ParserData {MessageStyle = GetMessageStyle(), SignatureStyle = GetSignatureStyle()};
 		}
 
 		/// <summary>
 		/// Gets the noise words.
 		/// </summary>
 		/// <returns>Hashtable of noise words if available, otherwise null</returns>
-		public static Hashtable GetNoiseWords()
+		public static HashSet<string> GetNoiseWords()
 		{
-			if (HttpContext.Current.Application["noiseWords"] != null)
-			{
-				return (Hashtable)HttpContext.Current.Application["noiseWords"];
-			}
-			return null;
+			return HttpContext.Current.Application["noiseWords"] as HashSet<string>;
 		}
 
-		/// <summary>
+
+	    /// <summary>
 		/// Gets the IP ban complain email address.
 		/// </summary>
 		/// <returns>IPBanComplainEmailAddress if available, otherwise string.Empty</returns>
 		public static string GetIPBanComplainEmailAddress()
-		{
-			if (HttpContext.Current.Application["IPBanComplainEmailAddress"] != null)
-			{
-				return HttpContext.Current.Application["IPBanComplainEmailAddress"].ToString();
-			}
-			return string.Empty;
-		}
+	    {
+		    return (HttpContext.Current.Application["IPBanComplainEmailAddress"] as string) ?? string.Empty;
+	    }
 
-		/// <summary>
-		/// Gets the cache flags.
+
+	    /// <summary>
+		/// Gets the cache flags per forumid
 		/// </summary>
-		/// <returns>Hashtable of cahce flags if available, otherwise null</returns>
-		public static Hashtable GetCacheFlags()
-		{
-			if (HttpContext.Current.Application["cacheFlags"] != null)
-			{
-				return (Hashtable)HttpContext.Current.Application["cacheFlags"];
-			}
-			return null;
-		}
+		/// <returns>Dictionary of cahce flags if available, otherwise null</returns>
+		public static Dictionary<int, bool> GetCacheFlags()
+	    {
+		    return HttpContext.Current.Application["cacheFlags"]  as Dictionary<int, bool>;
+	    }
 
-		/// <summary>
+
+	    /// <summary>
 		/// sets the flag for the cached RSS feed for the given forum to false, so the cache will be invalidated for that forum rss feed
 		/// </summary>
 		/// <param name="forumID">ID of forum which rss feed to invalidate</param>
 		public static void InvalidateCachedForumRSS(int forumID)
 		{
-			Hashtable cacheFlags = GetCacheFlags();
-
+			Dictionary<int, bool> cacheFlags = GetCacheFlags();
+		    if(cacheFlags == null)
+		    {
+			    return;
+		    }
 			try
 			{
 				HttpContext.Current.Application.Lock();
@@ -297,7 +258,7 @@ namespace SD.HnD.Gui
 		/// <returns>true if the user has to be logged out by force, false otherwise.</returns>
 		public static bool UserHasToBeLoggedOutByForce(string nickName)
 		{
-			return ((Hashtable)HttpContext.Current.Application["usersToLogoutByForce"]).ContainsKey(nickName);
+			return ((HashSet<string>)HttpContext.Current.Application["usersToLogoutByForce"]).Contains(nickName);
 		}
 
 
@@ -307,15 +268,15 @@ namespace SD.HnD.Gui
 		/// <param name="nickName">Name of the nick.</param>
 		public static void AddUserToListToBeLoggedOutByForce(string nickName)
 		{
-			Hashtable usersToLogOutByForce = (Hashtable)HttpContext.Current.Application["usersToLogoutByForce"];
-			if(usersToLogOutByForce.ContainsKey(nickName))
+			var usersToLogOutByForce = (HashSet<string>)HttpContext.Current.Application["usersToLogoutByForce"];
+			if(usersToLogOutByForce.Contains(nickName))
 			{
 				return;
 			}
 			try
 			{
 				HttpContext.Current.Application.Lock();
-				usersToLogOutByForce.Add(nickName, null);
+				usersToLogOutByForce.Add(nickName);
 			}
 			finally
 			{
@@ -330,8 +291,8 @@ namespace SD.HnD.Gui
 		/// <param name="nickName">Name of the nick.</param>
 		public static void RemoveUserFromListToBeLoggedOutByForce(string nickName)
 		{
-			Hashtable usersToLogOutByForce = (Hashtable)HttpContext.Current.Application["usersToLogoutByForce"];
-			if(!usersToLogOutByForce.ContainsKey(nickName))
+			var usersToLogOutByForce = (HashSet<string>)HttpContext.Current.Application["usersToLogoutByForce"];
+			if(!usersToLogOutByForce.Contains(nickName))
 			{
 				return;
 			}
@@ -357,19 +318,19 @@ namespace SD.HnD.Gui
             NameValueCollection appSettingsCollection = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
 
             // read data from web.config
-            string defaultFromEmailAddress = appSettingsCollection["DefaultFromEmailAddress"].ToString();
-            string defaultToEmailAddress = appSettingsCollection["DefaultToEmailAddress"].ToString();
-			string emailPasswordSubject = appSettingsCollection["EmailPasswordSubject"].ToString();
-			string emailThreadNotificationSubject = appSettingsCollection["EmailThreadNotificationSubject"].ToString();
-			string siteName = appSettingsCollection["SiteName"].ToString();
-            string virtualRoot = appSettingsCollection["VirtualRoot"].ToString();
+            string defaultFromEmailAddress = appSettingsCollection["DefaultFromEmailAddress"];
+            string defaultToEmailAddress = appSettingsCollection["DefaultToEmailAddress"];
+			string emailPasswordSubject = appSettingsCollection["EmailPasswordSubject"];
+			string emailThreadNotificationSubject = appSettingsCollection["EmailThreadNotificationSubject"];
+			string siteName = appSettingsCollection["SiteName"];
+            string virtualRoot = appSettingsCollection["VirtualRoot"];
 
-            string ipBanComplainEmailAddress = appSettingsCollection["IPBanComplainEmailAddress"].ToString();
+            string ipBanComplainEmailAddress = appSettingsCollection["IPBanComplainEmailAddress"];
             int maxAmountMessagesPerPage = Convert.ToInt32(appSettingsCollection["MaxAmountMessagesPerPage"]);
 
-            string datafilesPath = currentHttpContext.Server.MapPath(appSettingsCollection["DatafilesPath"].ToString());
-            string ubbMessageTransformXSLPathFilename = appSettingsCollection["UBBMessageTransformXSLPathFilename"].ToString();
-            string ubbSignatureTransformXSLPathFilename = appSettingsCollection["UBBSignatureTransformXSLPathFilename"].ToString();
+            string datafilesPath = currentHttpContext.Server.MapPath(appSettingsCollection["DatafilesPath"]);
+            string ubbMessageTransformXSLPathFilename = appSettingsCollection["UBBMessageTransformXSLPathFilename"];
+            string ubbSignatureTransformXSLPathFilename = appSettingsCollection["UBBSignatureTransformXSLPathFilename"];
 
             // Load XML -> HTML transformation XSL
 			XslCompiledTransform messageStyle = new XslCompiledTransform();
@@ -378,28 +339,25 @@ namespace SD.HnD.Gui
 			messageStyle.Load(Path.Combine(datafilesPath, ubbMessageTransformXSLPathFilename));
 			signatureStyle.Load(Path.Combine(datafilesPath, ubbSignatureTransformXSLPathFilename));
 
-            Hashtable noiseWords = GuiHelper.LoadNoiseWordsIntoHashtable(datafilesPath);
+            var noiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(datafilesPath);
 
             string registrationReplyMailTemplate = File.ReadAllText(Path.Combine(datafilesPath, "RegistrationReplyMail.template"));
             string threadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(datafilesPath, "ThreadUpdatedNotification.template"));
 			// add other email templates here. 
 
-			// fetch all banned users and store them in the set of users to logout by force.
 			DataView bannedNicknames = UserGuiHelper.GetAllBannedUserNicknamesAsDataView();
-			Hashtable usersToLogoutByForce = new Hashtable();
+			var usersToLogoutByForce = new HashSet<string>();
 			foreach(DataRowView row in bannedNicknames)
 			{
-				usersToLogoutByForce.Add(row["Nickname"].ToString(), null);
+				usersToLogoutByForce.Add(row["Nickname"].ToString());
 			}
-
-            // store them into the application object.
             HttpApplicationState applicationState = currentHttpContext.Application;
             try
             {
                 applicationState.Lock();
 
                 applicationState.Add("defaultFromEmailAddress", defaultFromEmailAddress);
-				applicationState.Add("defaultToEmailAddress", defaultFromEmailAddress);
+				applicationState.Add("defaultToEmailAddress", defaultToEmailAddress);
                 applicationState.Add("siteName", siteName);
                 applicationState.Add("virtualRoot", virtualRoot);
                 applicationState.Add("datafilesMapPath", datafilesPath);
@@ -412,7 +370,7 @@ namespace SD.HnD.Gui
                 applicationState.Add("noiseWords", noiseWords);
                 applicationState.Add("maxAmountMessagesPerPage", maxAmountMessagesPerPage);
                 applicationState.Add("IPBanComplainEmailAddress", ipBanComplainEmailAddress);
-                applicationState.Add("cacheFlags", new Hashtable());
+				applicationState.Add("cacheFlags", new Dictionary<int, bool>());
 				applicationState.Add("usersToLogoutByForce", usersToLogoutByForce);
 				applicationState.Add("registrationReplyMailTemplate", registrationReplyMailTemplate);
                 applicationState.Add("threadUpdatedNotificationTemplate", threadUpdatedNotificationTemplate);

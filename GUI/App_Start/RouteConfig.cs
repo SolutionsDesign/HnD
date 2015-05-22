@@ -13,7 +13,7 @@ namespace SD.HnD.Gui
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-			routes.MapRoute("Forum", "Forum/{id}", new { controller="Forum", action="Index", id = UrlParameter.Optional });
+			routes.MapRoute("Forum", "Forum/{id}/{pageNo}", new { controller="Forum", action="Index", id = UrlParameter.Optional, pageNo=1 });
 
 			routes.MapRoute(
 				name: "Default",

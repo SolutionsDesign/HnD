@@ -18,20 +18,14 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
-using System.Data;
-using System.Configuration;
 using System.Web;
-using System.Web.Security;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.WebControls.WebParts;
-using System.Web.UI.HtmlControls;
 using SD.HnD.DAL.CollectionClasses;
 using System.Web.Caching;
 using SD.HnD.BL;
 using SD.HnD.DAL.EntityClasses;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 using SD.HnD.DAL.HelperClasses;
 
 namespace SD.HnD.Gui
@@ -57,7 +51,7 @@ namespace SD.HnD.Gui
 				// not there, store it.
 				toReturn = SectionGuiHelper.GetAllSections();
 
-				// just store it in the cache without any dependency, as it's hardly changing. 
+				// just store it in the cache without any dependency, as it's not changing often. 
 				activeCache.Insert(CacheKeys.AllSections, toReturn);
 			}
 
@@ -74,19 +68,8 @@ namespace SD.HnD.Gui
 		public static string GetSectionName(int sectionID)
 		{
 			SectionCollection cachedSections = CacheManager.GetAllSections();
-
-			// use in-memory filtering. 
-			List<int> matches = cachedSections.FindMatches((SectionFields.SectionID == sectionID));
-
-			// 0 or 1 matches
-			if(matches.Count > 0)
-			{
-				return cachedSections[matches[0]].SectionName;
-			}
-			else
-			{
-				return string.Empty;
-			}
+			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionID);
+			return matchingSection == null ? string.Empty : matchingSection.SectionName;
 		}
 
 
@@ -143,7 +126,6 @@ namespace SD.HnD.Gui
 		/// </summary>
 		/// <returns>A SupportQueueCollection with all supportqueue Entity instances of the support queues of the forum system. This collection has to be threated as
 		/// a readonly collection with readonly objects</returns>
-		/// </summary>
 		public static SupportQueueCollection GetAllSupportQueues()
 		{
 			Cache activeCache = HttpRuntime.Cache;
@@ -153,7 +135,7 @@ namespace SD.HnD.Gui
 				// not there, store it.
 				toReturn = SupportQueueGuiHelper.GetAllSupportQueues();
 
-				// just store it in the cache without any dependency, as it's hardly changing. 
+				// just store it in the cache without any dependency, as it's not changing often. 
 				activeCache.Insert(CacheKeys.AllSupportQueues, toReturn);
 			}
 
@@ -234,7 +216,6 @@ namespace SD.HnD.Gui
 							// illegal range, ignore
 							continue;
 					}
-
 					if(!ipAddresses.ContainsKey(key))
 					{
 						ipAddresses.Add(key, currentIPBan);

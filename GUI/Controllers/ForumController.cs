@@ -9,10 +9,10 @@ namespace SD.HnD.Gui.Controllers
 {
     public class ForumController : Controller
     {
-        public ActionResult Index(int id=0)
+        public ActionResult Index(int id=0, int pageNo=1)
         {
 			// do forum security checks on authorized user.
-			bool userHasAccess = SessionAdapter.CanPerformForumActionRight(id, ActionRights.AccessForum);
+			bool userHasAccess = LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.AccessForum);
 			if(!userHasAccess)
 			{
 				// doesn't have access to this forum. redirect
