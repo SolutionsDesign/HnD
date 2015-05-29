@@ -18,29 +18,16 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Web;
-using System.Web.SessionState;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.HtmlControls;
-
-using SD.HnD.BL;
-using SD.HnD.DAL.TypedListClasses;
 using SD.HnD.Utility;
-using SD.HnD.DAL.EntityClasses;
 
 namespace SD.HnD.Gui
 {
-	public partial class Rssforum : System.Web.UI.Page
+	public partial class Rssforum : Page
 	{
-		protected void Page_Load(object sender, System.EventArgs e)
+		protected void Page_Load(object sender, EventArgs e)
 		{
-			int forumID = HnDGeneralUtils.TryConvertToInt(Request.QueryString["ForumID"]);
-			Response.RedirectPermanent("~/RssForum/" + forumID);
+			Response.RedirectPermanent("~/RssForum/" + HnDGeneralUtils.TryConvertToInt(Request.QueryString["ForumID"]));
 		}
 	}
 }

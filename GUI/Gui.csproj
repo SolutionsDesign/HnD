@@ -130,9 +130,6 @@
       <DependentUpon>Rssforum.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Rssforum.aspx.designer.cs">
-      <DependentUpon>Rssforum.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\general_colors.css" />
