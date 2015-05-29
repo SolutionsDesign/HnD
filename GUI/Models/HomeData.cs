@@ -15,8 +15,8 @@ namespace SD.HnD.Gui.Models
 	public class HomeData
 	{
 		public string NickName { get; set; }
-		public DateTime LastVisitedDateTime { get; set; }
 		public EntityView<SectionEntity> SectionsFiltered { get; set; }
-		public MultiValueHashtable<int, AggregatedForumRow> ForumDataPerDisplayedSection { get; set; } 
+		public MultiValueHashtable<int, AggregatedForumRow> ForumDataPerDisplayedSection { get; set; }
+		public DateTime UserLastVisitDate { get; set; }
 	}
 }

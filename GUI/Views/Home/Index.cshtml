@@ -1,5 +1,4 @@
-﻿@using SD.HnD.Gui
-@using SD.Tools.BCLExtensions.CollectionsRelated
+﻿@using SD.Tools.BCLExtensions.CollectionsRelated
 @model SD.HnD.Gui.Models.HomeData
 
 @{
@@ -38,7 +37,7 @@
 				been asked before.<br/>
 				@if(!LoggedInUserAdapter.IsAnonymousUser())
 				{
-					<span>Your last session here started on: <strong>@Model.LastVisitedDateTime.ToString("dd-MMM-yyyy HH:mm")</strong></span>
+					<span>Your last session here started on: <strong>@Model.UserLastVisitDate.ToString("dd-MMM-yyyy HH:mm")</strong></span>
 				}
 			</p>
 		</div>
@@ -48,7 +47,6 @@
 {
 	string id = string.Format("id{0}SectionContent", sectionObject.SectionID);
 	var forumView = Model.ForumDataPerDisplayedSection.GetValue(sectionObject.SectionID);
-	var lastVisitDate = LoggedInUserAdapter.GetLastVisitDate();
 	<section class="fs mt20">
 		<div class="container">
 			<div class="row">
@@ -57,9 +55,9 @@
 						<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
 						<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
 					</a>
-					@Html.Encode(sectionObject.SectionName)
+					@sectionObject.SectionName
 					<div class="pull-right">
-						<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@Html.Encode(sectionObject.SectionDescription)">
+						<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@sectionObject.SectionDescription">
 							<i class="fa fa-info-circle"></i>
 						</a>
 					</div>
@@ -80,14 +78,14 @@
 						if(forumRow.ForumLastPostingDate.HasValue)
 						{
 							lastPostingDateAsString = forumRow.ForumLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
-							if(forumRow.ForumLastPostingDate.Value > lastVisitDate)
+							if(forumRow.ForumLastPostingDate.Value > Model.UserLastVisitDate)
 							{
 								iconClass = "icon-newpost";
 							}
 						}
 						<div class="row fs-row">
 							<div class="col-sm-8 col-xs-8">
-								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@Html.Encode(forumRow.ForumName)</a>
+								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@forumRow.ForumName</a>
 							</div>
 							<div class="col-sm-1 notonmobile">@forumRow.AmountThreads</div>
 							<div class="col-sm-1 notonmobile">@forumRow.AmountMessages</div>

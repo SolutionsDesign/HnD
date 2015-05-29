@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
+using SD.HnD.DAL.EntityClasses;
+using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -19,8 +21,30 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
+	        var forum = CacheManager.GetForum(id);
+	        if(forum == null)
+	        {
+				return RedirectToAction("Index", "Home");
+	        }
 
-            return View();
+	        var pageSize = CacheManager.GetSystemData().MinNumberOfThreadsToFetch;
+	        var data = new ForumData
+					   {
+						   ForumDescription = forum.ForumDescription, 
+						   ForumID = id, 
+						   ForumName = forum.ForumName, 
+						   HasRSSFeed = forum.HasRSSFeed,
+						   PageNo = pageNo,
+						   SectionName = CacheManager.GetSectionName(forum.SectionID),
+						   PageSize = pageSize, 
+						   UserCanCreateThreads = (LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.AddNormalThread) ||
+													LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.AddStickyThread)),
+						   UserLastVisitDate = LoggedInUserAdapter.GetLastVisitDate(),
+						   ThreadRows = ForumGuiHelper.GetAllThreadsInForumAggregatedData(id, pageNo, pageSize,
+																						   LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.ViewNormalThreadsStartedByOthers),
+																						   LoggedInUserAdapter.GetUserID())
+					   };
+	        return View(data);
         }
     }
 }

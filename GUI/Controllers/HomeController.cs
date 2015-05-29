@@ -18,25 +18,19 @@ namespace SD.HnD.Gui.Controllers
 	{
 		public ActionResult Index()
 		{
-			var model = new HomeData();
-			BuildData(model);
-			return View(model);
-		}
-
-
-		private void BuildData(HomeData model)
-		{
-			List<int> accessableForums = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum);
-			List<int> forumsWithThreadsFromOthers = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers);
+			var accessableForums = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum);
+			var forumsWithThreadsFromOthers = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers);
 			var allSections = CacheManager.GetAllSections();
-            model.ForumDataPerDisplayedSection = ForumGuiHelper.GetAllAvailableForumsAggregatedData(allSections, accessableForums, forumsWithThreadsFromOthers, LoggedInUserAdapter.GetUserID());
+			var model = new HomeData();
+			model.ForumDataPerDisplayedSection = ForumGuiHelper.GetAllAvailableForumsAggregatedData(allSections, accessableForums, forumsWithThreadsFromOthers, LoggedInUserAdapter.GetUserID());
 
 			// create a view on the sections to display and filter the view with a filter on sectionid: a sectionid must be part of the list of ids in the hashtable with per sectionid 
 			// aggregate forum data. 
 			model.SectionsFiltered = new EntityView<SectionEntity>(allSections, SectionFields.SectionID == model.ForumDataPerDisplayedSection.Keys.ToList());
 
 			model.NickName = LoggedInUserAdapter.GetUserNickName();
-			model.LastVisitedDateTime = LoggedInUserAdapter.GetLastVisitDate();
+			model.UserLastVisitDate = LoggedInUserAdapter.GetLastVisitDate();
+			return View(model);
 		}
 	}
 }

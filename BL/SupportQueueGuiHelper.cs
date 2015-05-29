@@ -157,34 +157,37 @@ namespace SD.HnD.BL
 		public static DataView GetAllThreadsInSupportQueueAsDataView(List<int> accessableForums, int supportQueueID)
 		{
 			// return null, if the user does not have a valid list of forums to access
-			if(accessableForums == null || accessableForums.Count <= 0)
-			{
-				return null;
-			}
-			var qf = new QueryFactory();
-			var q = qf.Create();
-			var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
-			projectionFields.AddRange(new[] { 
-								ForumFields.ForumName,
-								UserFields.NickName.Source("PlacedInQueueUser").As("NickNamePlacedInQueue"),
-								SupportQueueThreadFields.PlacedInQueueByUserID,
-								SupportQueueThreadFields.PlacedInQueueOn,
-								UserFields.NickName.Source("ClaimedThreadUser").As("NickNameClaimedThread"),
-								SupportQueueThreadFields.ClaimedByUserID,
-								SupportQueueThreadFields.ClaimedOn});
-			q.Select(projectionFields.ToArray());
-			q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-					.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID)
-					.InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID == SupportQueueThreadFields.ThreadID)
-					.InnerJoin(qf.User.As("PlacedInQueueUser"))
-							.On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
-					.LeftJoin(qf.User.As("ClaimedThreadUser"))
-							.On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")));
-			q.Where((ThreadFields.ForumID == accessableForums).And(SupportQueueThreadFields.QueueID == supportQueueID));
-			q.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
-			TypedListDAO dao = new TypedListDAO();
-			var threadsInQueue = dao.FetchAsDataTable(q);
-			return threadsInQueue.DefaultView;
+#warning IMPLEMENT
+			return null;
+
+			//if(accessableForums == null || accessableForums.Count <= 0)
+			//{
+			//	return null;
+			//}
+			//var qf = new QueryFactory();
+			//var q = qf.Create();
+			//var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf));
+			//projectionFields.AddRange(new[] { 
+			//					ForumFields.ForumName,
+			//					UserFields.NickName.Source("PlacedInQueueUser").As("NickNamePlacedInQueue"),
+			//					SupportQueueThreadFields.PlacedInQueueByUserID,
+			//					SupportQueueThreadFields.PlacedInQueueOn,
+			//					UserFields.NickName.Source("ClaimedThreadUser").As("NickNameClaimedThread"),
+			//					SupportQueueThreadFields.ClaimedByUserID,
+			//					SupportQueueThreadFields.ClaimedOn});
+			//q.Select(projectionFields.ToArray());
+			//q.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+			//		.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID)
+			//		.InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID == SupportQueueThreadFields.ThreadID)
+			//		.InnerJoin(qf.User.As("PlacedInQueueUser"))
+			//				.On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
+			//		.LeftJoin(qf.User.As("ClaimedThreadUser"))
+			//				.On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")));
+			//q.Where((ThreadFields.ForumID == accessableForums).And(SupportQueueThreadFields.QueueID == supportQueueID));
+			//q.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
+			//TypedListDAO dao = new TypedListDAO();
+			//var threadsInQueue = dao.FetchAsDataTable(q);
+			//return threadsInQueue.DefaultView;
 		}
 
 

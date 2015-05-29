@@ -53,14 +53,15 @@ namespace SD.HnD.BL
 		{
 			var qf = new QueryFactory();
 			var q = qf.GetForumMessagesTypedList()
-							  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
-							  .OrderBy(MessageFields.PostingDate.Ascending());
+						  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
+						  .OrderBy(MessageFields.PostingDate.Descending())
+						  .Limit(amount);
 			return new TypedListDAO().FetchQuery(q);
 		}
 
 		
 		/// <summary>
-		/// Returns a DataView object that contains a complete list of threads list for the requested forum and page
+		/// Returns a list with aggregated data objects, one per thread, for the requested forum and page
 		/// </summary>
 		/// <param name="forumID">ID of Forum for which the Threadlist is required</param>
 		/// <param name="pageNumber">The page number to fetch, which is used to fetch non-sticky posts</param>
@@ -68,8 +69,8 @@ namespace SD.HnD.BL
 		/// <param name="canViewNormalThreadsStartedByOthers">If set to true, the user calling the method has the right to view threads started by others.
 		/// Otherwise only the threads started by the user calling the method are returned.</param>
 		/// <param name="userID">The userid of the user calling the method.</param>
-		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted on the top.</returns>
-		public static List<AggregatedThreadRow> GetAllThreadsInForumAsDataView(int forumID, int pageNumber, int pageSize, bool canViewNormalThreadsStartedByOthers, int userID)
+		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted to the top.</returns>
+		public static List<AggregatedThreadRow> GetAllThreadsInForumAggregatedData(int forumID, int pageNumber, int pageSize, bool canViewNormalThreadsStartedByOthers, int userID)
 		{
 			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
 			// then sort the sticky threads at the top and page through the resultset.
@@ -83,7 +84,7 @@ namespace SD.HnD.BL
 						  .Page(pageNumber <= 0 ? 1 : pageNumber, pageSize <= 0 ? 1 : pageSize);
 
 			// if the user can't view threads started by others, filter out threads started by users different from userID. Otherwise just filter on forumid and stickyness.
-			if(canViewNormalThreadsStartedByOthers)
+			if(!canViewNormalThreadsStartedByOthers)
 			{
 				// caller can't view threads started by others: add a filter so that threads not started by calling user aren't enlisted. 
 				// however sticky threads are always returned so the filter contains a check so the limit is only applied on threads which aren't sticky

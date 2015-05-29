@@ -239,20 +239,23 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static DataView GetBookmarksAsDataView(int userID)
 		{
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
-									{
-										ForumFields.ForumName,
-										ForumFields.SectionID
-									}.ToArray())
-						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-								.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
-						.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
-						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
-			var dao = new TypedListDAO();
-			var bookmarkedThreads = dao.FetchAsDataTable(q);
-			return bookmarkedThreads.DefaultView;
+#warning IMPLEMENT
+			return null;
+
+			//var qf = new QueryFactory();
+			//var q = qf.Create()
+			//			.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+			//						{
+			//							ForumFields.ForumName,
+			//							ForumFields.SectionID
+			//						}.ToArray())
+			//			.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+			//					.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
+			//			.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
+			//			.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+			//var dao = new TypedListDAO();
+			//var bookmarkedThreads = dao.FetchAsDataTable(q);
+			//return bookmarkedThreads.DefaultView;
 		}
 
 

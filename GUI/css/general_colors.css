@@ -129,6 +129,9 @@ mark {
 .inpageDropDown {
   border-top: 1px solid #066a8b;
 }
+.stickyThread {
+  background-color: #eefafe;
+}
 @media (max-width: 767px) {
   .menu > li > a:hover,
   .menu > li > a:focus {

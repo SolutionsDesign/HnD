@@ -13,7 +13,12 @@ namespace SD.HnD.Gui
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+			// This informs MVC Routing Engine to send any requests for .aspx page to the WebForms engine
+			routes.IgnoreRoute("{resource}.aspx/{*pathInfo}");
+			routes.IgnoreRoute("{resource}.aspx");
+
 			routes.MapRoute("Forum", "Forum/{id}/{pageNo}", new { controller="Forum", action="Index", id = UrlParameter.Optional, pageNo=1 });
+			routes.MapRoute("RssForum", "RssForum/{id}", new {controller = "RssForum", action = "Index", id = UrlParameter.Optional});
 
 			routes.MapRoute(
 				name: "Default",

@@ -422,18 +422,18 @@ namespace SD.HnD.BL
 			 	ThreadID = ThreadFields.ThreadID.ToValue<int>(),
 				ForumID = ThreadFields.ForumID.ToValue<int>(),
 				Subject = ThreadFields.Subject.ToValue<string>(),
-				StartedByUserID = ThreadFields.StartedByUserID.ToValue<int>(),
+				UserIDThreadStarter = ThreadFields.StartedByUserID.As("UserIDThreadStarter").ToValue<int>(),
+				NickNameThreadStarter = UserFields.NickName.Source("ThreadStarterUser").As("NickNameThreadStarter").ToValue<string>(),
 				DateLastPost = ThreadFields.ThreadLastPostingDate.ToValue<DateTime?>(),
 				IsSticky = ThreadFields.IsSticky.ToValue<bool>(),
 				IsClosed = ThreadFields.IsClosed.ToValue<bool>(),
 				MarkedAsDone = ThreadFields.MarkedAsDone.ToValue<bool>(),
 				NumberOfViews = ThreadFields.NumberOfViews.ToValue<int>(),
-				StartedByNickName = UserFields.NickName.Source("ThreadStarterUser").ToValue<string>(),
-				AmountMessages = qf.Create()
+				NumberOfMessages = qf.Create()
 									.Select(MessageFields.MessageID.Count())
 									.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
 									.ToScalar()
-									.As("AmountMessages").ToValue<int>(),
+									.As("NumberOfMessages").ToValue<int>(),
 				UserIDLastPost = UserFields.UserID.Source("LastPostingUser").As("LastPostingByUserID").ToValue<int>(),
 				NickNameLastPost = UserFields.NickName.Source("LastPostingUser").As("NickNameLastPosting").ToValue<string>(),
 				MessageIDLastPost = MessageFields.MessageID.Source("LastMessage").As("LastMessageID").ToValue<int>()
@@ -454,14 +454,14 @@ namespace SD.HnD.BL
 				ThreadID = ThreadFields.ThreadID.ToValue<int>(),
 				ForumID = ThreadFields.ForumID.ToValue<int>(),
 				Subject = ThreadFields.Subject.ToValue<string>(),
-				StartedByUserID = ThreadFields.StartedByUserID.ToValue<int>(),
+				UserIDThreadStarter = ThreadFields.StartedByUserID.ToValue<int>(),
 				DateLastPost = ThreadFields.ThreadLastPostingDate.ToValue<DateTime?>(),
 				IsSticky = ThreadFields.IsSticky.ToValue<bool>(),
 				IsClosed = ThreadFields.IsClosed.ToValue<bool>(),
 				MarkedAsDone = ThreadFields.MarkedAsDone.ToValue<bool>(),
 				NumberOfViews = ThreadFields.NumberOfViews.ToValue<int>(),
-				StartedByNickName = UserFields.NickName.Source("ThreadStarterUser").ToValue<string>(),
-				AmountMessages = qf.Create()
+				NickNameThreadStarter = UserFields.NickName.Source("ThreadStarterUser").ToValue<string>(),
+				NumberOfMessages = qf.Create()
 									.Select(MessageFields.MessageID.Count())
 									.CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
 									.ToScalar()
