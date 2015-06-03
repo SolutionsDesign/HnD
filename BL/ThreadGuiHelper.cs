@@ -367,7 +367,9 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Creates the thread filter. Filters on the threads viewable by the passed in userid, which is the caller of the method. 
 		/// If a forum isn't in the list of forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should 
-		/// be counted / taken into account. 
+		/// be counted / taken into account. Which comes down to: (ForumID in forumsWithThreadsFromOthers) OR IsSticky Or StartedBy==Userid.
+		/// It's ok it doesn't filter on forums not visible to the user, as this filter is used in combination of a filter on forums with a filter on visible forums
+		/// by the user.
 		/// </summary>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="userID">The user ID.</param>
@@ -377,9 +379,7 @@ namespace SD.HnD.BL
 			var threadFilter = new PredicateExpression();
 			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
 			{
-				PredicateExpression onlyOwnThreadsFilter = new PredicateExpression();
-
-				// accept only those threads who aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
+				// accept only those threads which aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
 				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
 				if(forumsWithThreadsFromOthers.Count == 1)
 				{
@@ -387,17 +387,14 @@ namespace SD.HnD.BL
 					// databases, but we'll get a WHERE Field == @param
 					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
 					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers[0]);
 				}
 				else
 				{
 					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
 					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-					onlyOwnThreadsFilter.Add(ThreadFields.ForumID != forumsWithThreadsFromOthers);
 				}
 				// the filter on either sticky or threads started by the calling user
-				onlyOwnThreadsFilter.AddWithAnd((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
-				threadFilter.AddWithOr(onlyOwnThreadsFilter);
+				threadFilter.AddWithOr((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
 			}
 			else
 			{

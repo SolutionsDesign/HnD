@@ -14,7 +14,7 @@ namespace SD.HnD.Gui
 		protected void Application_Start()
 		{
 #if DEBUG
-			SD.Tools.OrmProfiler.Interceptor.InterceptorCore.Initialize("HnD_3.5 Dev");
+			SD.Tools.OrmProfiler.Interceptor.InterceptorCore.Initialize("HnD 3.0 Dev");
 #endif
 			AreaRegistration.RegisterAllAreas();
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
