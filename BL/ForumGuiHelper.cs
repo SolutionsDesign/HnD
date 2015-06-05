@@ -81,7 +81,8 @@ namespace SD.HnD.BL
 						  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
 						  .Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
 						  .Distinct()
-						  .Page(pageNumber <= 0 ? 1 : pageNumber, pageSize <= 0 ? 1 : pageSize);
+						  .Offset(pageSize * (pageNumber-1))		// skip the pages we don't need.
+						  .Limit(pageSize+1);						// fetch 1 row extra, which we can use to determine whether there are more pages left.
 
 			// if the user can't view threads started by others, filter out threads started by users different from userID. Otherwise just filter on forumid and stickyness.
 			if(!canViewNormalThreadsStartedByOthers)

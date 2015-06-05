@@ -9,7 +9,9 @@
 	{
 		newerButtonDisabledClass = "disabled";
 	}
-	if(Model.ThreadRows.Count < Model.PageSize)
+	// we fetch 1 row extra each time. If the # of rows is equal to the page size, we know there's no extra page (as there would othewise
+	// be 1 row extra). In that case disable the older button.
+	if(Model.ThreadRows.Count <= Model.PageSize)
 	{
 		olderButtonDisabledClass = "disabled";
 	}

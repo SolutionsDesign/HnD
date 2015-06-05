@@ -27,6 +27,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 	        }
 
+	        var pageNoToUse = pageNo >= 0 ? pageNo : 1;
 	        var pageSize = CacheManager.GetSystemData().MinNumberOfThreadsToFetch;
 	        var data = new ForumData
 					   {
@@ -34,13 +35,13 @@ namespace SD.HnD.Gui.Controllers
 						   ForumID = id, 
 						   ForumName = forum.ForumName, 
 						   HasRSSFeed = forum.HasRSSFeed,
-						   PageNo = pageNo,
+						   PageNo = pageNoToUse,
 						   SectionName = CacheManager.GetSectionName(forum.SectionID),
 						   PageSize = pageSize, 
 						   UserCanCreateThreads = (LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.AddNormalThread) ||
 													LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.AddStickyThread)),
 						   UserLastVisitDate = LoggedInUserAdapter.GetLastVisitDate(),
-						   ThreadRows = ForumGuiHelper.GetAllThreadsInForumAggregatedData(id, pageNo, pageSize,
+						   ThreadRows = ForumGuiHelper.GetAllThreadsInForumAggregatedData(id, pageNoToUse, pageSize,
 																						   LoggedInUserAdapter.CanPerformForumActionRight(id, ActionRights.ViewNormalThreadsStartedByOthers),
 																						   LoggedInUserAdapter.GetUserID())
 					   };
