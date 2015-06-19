@@ -109,6 +109,8 @@
   <ItemGroup>
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\RssForumController.cs" />
+    <Compile Include="Controllers\SupportQueueController.cs" />
+    <Compile Include="Controllers\ThreadController.cs" />
     <Compile Include="Helpers\ApplicationAdapter.cs" />
     <Compile Include="Helpers\AuditingAdapter.cs" />
     <Compile Include="Helpers\CacheManager.cs" />
@@ -125,6 +127,7 @@
     <Compile Include="Models\HomeData.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\RssForumData.cs" />
+    <Compile Include="Models\ThreadData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rssforum.aspx.cs">
       <DependentUpon>Rssforum.aspx</DependentUpon>
@@ -163,6 +166,7 @@
   <ItemGroup>
     <Folder Include="Admin\" />
     <Folder Include="App_Data\" />
+    <Folder Include="Views\SupportQueue\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -202,6 +206,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\RssForum\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Thread\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\MessagePager.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

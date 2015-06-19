@@ -1,0 +1,276 @@
+﻿@using System.Globalization
+@model SD.HnD.Gui.Models.ThreadData
+
+@{
+	ViewBag.Title = string.Format("HnD | {0}, Page {1}", Model.Thread.Subject, Model.PageNo);
+}
+<a id="top"></a>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li><a href="~/">Home</a></li>
+				<li>@Model.SectionName</li>
+				<li><a href="~/Forum/@Model.Thread.ForumID/1">@Model.ForumName</a></li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 pt0 mt0">
+			<h2 class="br-bottom pt0 mt0 mb0 pb0 subject">@Model.Thread.Subject</h2>
+		</div>
+	</div>
+</div>
+@if(Model.UserMayManageSupportQueueContents)
+{
+	<section class="as">
+		<div class="container mt20">
+			<div class="row">
+				<div class="col-sm-12 as-header">
+					Support Queue Management
+				</div>
+			</div>
+			<div class="row as-row">
+				<div class="col-sm-12">
+					<div class="form-group mb0 mt5">
+						@if((Model.SupportQueueThreadInfo != null) && Model.SupportQueueThreadInfo.ClaimedByUserID.HasValue)
+						{
+							var claimDate = Model.SupportQueueThreadInfo.ClaimedOn ?? DateTime.Now;
+							<span class="as-label">
+								Claimed by <a href="~/User/@Model.SupportQueueThreadInfo.ClaimedByUserID">@Model.SupportQueueThreadInfo.ClaimedByUser.NickName</a> on
+								@claimDate.ToString("dd-MMM-yyyy HH:mm.ss", DateTimeFormatInfo.InvariantInfo)&nbsp;&nbsp;&nbsp;
+							</span>
+							<a class="btn btn-default mt5 plr20" id="releaseButton" href="~/SupportQueue/ReleaseThread/@Model.Thread.ThreadID/@Model.PageNo"> Release </a>
+						}
+						else
+						{
+							<span class="as-label">Not claimed</span>@Html.Raw("&nbsp;&nbsp;&nbsp;")
+							 if(Model.SupportQueueThreadInfo != null)
+							 {
+								 <a class="btn btn-default mt5 plr20" id="claimButton" href="~/SupportQueue/ClaimThread/@Model.Thread.ThreadID/@Model.PageNo"> Claim </a>
+							 }
+						}
+						&nbsp;&nbsp;&nbsp;
+						<div class="btn-group">
+							@if(Model.ActiveQueue == null)
+							{
+								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
+									Not in queue <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+									@foreach(var queue in Model.AllSupportQueues)
+									{
+										<li><a href="~/SupportQueue/MoveToQueue/@queue.QueueID/@Model.Thread.ThreadID/@Model.PageNo">@queue.QueueName</a></li>
+									}
+								</ul>
+							}
+							else
+							{
+								var activeQueue = Model.ActiveQueue;
+								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
+									@activeQueue.QueueName <span class="caret"></span>
+								</button>
+								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+									<li><a href="~/SupportQueue/MoveToQueue/0/@Model.Thread.ThreadID/@Model.PageNo">No queue</a></li>
+									@if(Model.AllSupportQueues.Count > 1)
+									{
+										<li class="divider"></li>
+									}
+									@foreach(var queue in Model.AllSupportQueues.Where(q => q.QueueID != activeQueue.QueueID))
+									{
+										<li><a href="~/SupportQueue/MoveToQueue/@queue.QueueID/@Model.Thread.ThreadID/@Model.PageNo">@queue.QueueName</a></li>
+									}
+								</ul>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="as">
+		<div class="container mt20">
+			<div class="row">
+				<div class="col-sm-12 as-header">
+					Memo&nbsp;&nbsp;&nbsp;<a href="#" title="Edit post" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
+				</div>
+			</div>
+			<div class="row as-row">
+				<div class="col-sm-12">@Html.Raw(Model.MemoAsHTML)</div>
+			</div>
+		</div>
+	</section>
+}
+
+<section class="fs mt20">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 fs-header">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-8 p0">
+							<div class="fs-thread-header">
+								<span class="plr7">Posts</span>&nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="fs-thread-pager">@Html.Partial("MessagePager", Model)</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="threadtools pull-right">
+								<div class="btn-group">
+									<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
+										<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+									</a>&nbsp;
+									<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Move thread</a></li>
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete thread</a></li>
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
+										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Edit thread properties</a></li>
+									</ul>
+								</div>
+								<a href="#" class="fs-tooltip" title="Mark thread as done"><i class="fa fa-check"></i></a>&nbsp;&nbsp;
+								<a href="#" class="fs-tooltip dimmed" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>&nbsp;&nbsp;
+								<a href="#" class="fs-tooltip active" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>&nbsp;&nbsp;
+								<a href="#" class="fs-tooltip" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>&nbsp;&nbsp;
+								<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>&nbsp;
+								<br class="clear" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row ps">
+			<div class="col-sm-12 plr0">
+				<div class="ps-poster">
+					<img src="https://pbs.twimg.com/profile_images/561881164982403073/rv4PtnVK.png" class="ps-poster-avatar" alt="Otis avatar" />
+					<div class="ps-poster-name">
+						<a href="#">Otis</a><br />
+						<span class="ps-poster-title">LLBLGen Pro Team</span>
+					</div>
+					<div class="ps-poster-stats">
+						<span class="ps-poster-info"><b>Posts:</b> 33421</span><br />
+						<span class="ps-poster-info"><b>Joined:</b> 17-aug-2003</span><br />
+						<span class="ps-poster-info"><b>IP:</b> 41.48.57.212</span>
+					</div>
+				</div>
+				<div class="ps-message">
+					<div class="ps-message-title">
+						<div class="pull-left">
+							<a href="#">#</a> Posted on: 23-mar-2015 18:50:53
+						</div>
+						<div class="ps-message-tools">
+							<a href="#" title="Manage / View Attachments"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#" title="Delete post"><i class="fa fa-trash-o"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#" title="Edit post"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<a href="#" title="Quote and reply to post"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
+						</div>
+					</div>
+					<div class="ps-message-content">
+
+						I've removed every option from crypto obfuscator to have the less obfuscated dll possible, so only the rename (test mode, it only add CO_ to name) left. I still get the problem.
+						<br /><br />
+						Then I've decompiled the obfuscated DLL to compare the code with the original DLL. I've cleaned (undo rename etc.) and everything are the same except 1 line:<br /><br />
+						ThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylongline
+						<br /><br />
+						I must say I don't know why this is. The aliases are not created from names, so that's not it. It looks like the query is just not properly handled by the linq provider, but why it goes wrong is not clear. Keep in mind though that when you reference a local variable in a linq query, it will be an obfuscated element. Perhaps that's it, not sure.
+						<br /><br />
+						We are using: LLBLGen Version 4.2.14.1212<br /> / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008.<br /> We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+						We are using: LLBLGen Versio<br />n 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen<br /> Version 4.2.14.1212 / SQL Server 2008
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using:<br /> LLBLGen Version 4.2.14.1212 / SQL Server 2008
+					</div>
+					<div class="ps-message-signature">
+						<span>
+							<b>Frans Bouma</b><br>LLBLGen Pro / <a href="http://www.ormprofiler.com" target="_blank">ORM Profiler</a>
+							Lead Developer | <a href="http://weblogs.asp.net/fbouma" target="_blank">Blog</a> |
+							<a href="http://twitter.com/FransBouma" target="_blank">Twitter</a>
+						</span>
+						<div class="pull-right">
+							<a href="#top" title="Go to top of page"><i class="fa fa-arrow-up"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row ps">
+			<div class="col-sm-12 plr0">
+				<div class="ps-poster">
+					<div class="ps-poster-name">
+						<a href="#">Sjaaq</a><br />
+						<span class="ps-poster-title">Lamer</span>
+					</div>
+					<div class="ps-poster-stats">
+						<span class="ps-poster-info"><b>Posts:</b> 1</span><br />
+						<span class="ps-poster-info"><b>Joined:</b> 17-aug-2014</span>
+					</div>
+				</div>
+				<div class="ps-message">
+					<div class="ps-message-title">
+						<a href="#">#</a> Posted on: 23-mar-2015 18:50:53, from IP: 41.48.57.212
+						<div style="float: right">
+							<a href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+							<a href="#"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
+							<a href="#"><i class="fa fa-trash-o"></i></a>
+						</div>
+					</div>
+					<div class="ps-message-content">
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. Verder niet zoveel te melden, ik kan namelijk
+						helemaal niks.
+					</div>
+					<div class="ps-message-signature">
+						<span>
+							I'm a nutcase, ignore me.
+						</span>
+						<div class="pull-right">
+							<a href="#top"><i class="fa fa-arrow-up"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row ps">
+			<div class="col-sm-12 plr0">
+				<div class="ps-poster">
+					<div class="ps-poster-name">
+						<a href="#">VIDb</a><br />
+						<span class="ps-poster-title">Le Douche</span>
+					</div>
+					<div class="ps-poster-stats">
+						<span class="ps-poster-info"><b>Posts:</b> 2</span><br />
+						<span class="ps-poster-info"><b>Joined:</b> 13-aug-2012</span>
+					</div>
+				</div>
+				<div class="ps-message">
+					<div class="ps-message-title">
+						<a href="#">#</a> Posted on: 23-mar-2015 18:50:53, from IP: 41.48.57.212
+						<div style="float: right">
+							<a href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
+							<a href="#"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
+							<a href="#"><i class="fa fa-trash-o"></i></a>
+						</div>
+					</div>
+					<div class="ps-message-content">
+						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. Verder niet zoveel te melden, ik kan namelijk
+						helemaal niks.
+					</div>
+					<div class="ps-message-signature">
+						<span>&nbsp;</span>
+						<div class="pull-right">
+							<a href="#top"><i class="fa fa-arrow-up"></i></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 pull-center pt20">
+				<button class="btn btn-sm btn-default"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Previous page </button>
+				<button class="btn btn-sm btn-default"> Next page&nbsp;&nbsp;<i class="fa fa-arrow-right"></i> </button>
+			</div>
+		</div>
+	</div>
+</section>
+

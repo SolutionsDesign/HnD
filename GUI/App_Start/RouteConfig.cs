@@ -19,6 +19,13 @@ namespace SD.HnD.Gui
 
 			routes.MapRoute("Forum", "Forum/{id}/{pageNo}", new { controller="Forum", action="Index", id = UrlParameter.Optional, pageNo=1 });
 			routes.MapRoute("RssForum", "RssForum/{id}", new {controller = "RssForum", action = "Index", id = UrlParameter.Optional});
+			routes.MapRoute("Thread", "Thread/{id}/{pageNo}", new {controller = "Thread", action = "Index", id = UrlParameter.Optional, pageNo = 1});
+			routes.MapRoute("MoveToQueue", "SupportQueue/MoveToQueue/{queueId}/{id}/{pageNo}", new
+																							{
+																								controller = "SupportQueue", action="MoveToQueue", queueId = UrlParameter.Optional, id = UrlParameter.Optional, pageNo = 1
+																							});
+			routes.MapRoute("ClaimThread", "SupportQueue/ClaimThread/{id}/{pageNo}", new { controller = "SupportQueue", action = "ClaimThread", id = UrlParameter.Optional, pageNo = 1 });
+			routes.MapRoute("ReleaseThread", "SupportQueue/ReleaseThread/{id}/{pageNo}", new { controller = "SupportQueue", action = "ReleaseThread", id = UrlParameter.Optional, pageNo = 1 });
 
 			routes.MapRoute(
 				name: "Default",

@@ -23,7 +23,6 @@
 			<ol class="breadcrumb plr0">
 				<li><a href="~/">Home</a></li>
 				<li>@Model.SectionName</li>
-				<li class="active">@Model.ForumName</li>
 			</ol>
 		</div>
 	</div>
@@ -103,7 +102,15 @@
 						<div class="col-sm-8 col-xs-8">
 							<div class="column-wrapper">
 								<div class="column-fixed">
-									<span class="empty-space-unanswered">&nbsp;</span><i class="fa @iconType @iconClass"></i>
+									@if(threadRow.MarkedAsDone)
+									{
+										<i class="fa fa-check icon-thread-answered"></i>@Html.Raw("&nbsp;")
+									}
+									else
+									{
+										<span class="empty-space-unanswered">&nbsp;</span>
+									}
+									<i class="fa @iconType @iconClass"></i>
 								</div>
 								<div class="column-fluent">
 									<a href="~/Thread/@threadRow.ThreadID/1">@threadRow.Subject</a>
