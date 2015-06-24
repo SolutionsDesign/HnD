@@ -68,10 +68,10 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Adds the thread to bookmarks.
 		/// </summary>
-		/// <param name="userID">User ID.</param>
 		/// <param name="threadID">Thread ID.</param>
+		/// <param name="userID">User ID.</param>
 		/// <returns>true if save succeeded, false otherwise</returns>
-		public static bool AddThreadToBookmarks(int userID, int threadID)
+		public static bool AddThreadToBookmarks(int threadID, int userID)
 		{
 			BookmarkEntity newBookmark = new BookmarkEntity();
 			newBookmark.UserID = userID;

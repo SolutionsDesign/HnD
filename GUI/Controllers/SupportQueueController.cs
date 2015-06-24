@@ -36,6 +36,20 @@ namespace SD.HnD.Gui.Controllers
 
 
 	    [Authorize]
+	    public ActionResult EditMemo(int id = 0, int pageNo = 1)
+	    {
+		    var result = PerformSecurityCheck(id);
+		    if(result != null)
+		    {
+			    return result;
+		    }
+
+#warning IMPLEMENT WHEN MESSAGE EDITOR HAS BEEN ADDED.
+			return RedirectToAction("Index", "Thread");
+	    }
+
+
+	    [Authorize]
 	    public ActionResult MoveToQueue(int queueId=0, int id=0, int pageNo=1)
 	    {
 			var result = PerformSecurityCheck(id);

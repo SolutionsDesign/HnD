@@ -10,7 +10,8 @@ a.sectiontoggle {
 a.fs-tooltip {
   color: #ffffff;
 }
-.threadtools > a.dimmed {
+.threadtools > a.dimmed,
+.threadtools > i.dimmed {
   color: rgba(255, 255, 255, 0.4);
 }
 .threadtools > a.dimmed:hover {

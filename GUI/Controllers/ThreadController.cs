@@ -15,29 +15,15 @@ namespace SD.HnD.Gui.Controllers
     {
         public ActionResult Index(int id=0, int pageNo=1)
         {
-			var thread = ThreadGuiHelper.GetThread(id);
-			if(thread == null)
+	        ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
 			{
-				// not found, return to start page
-				return RedirectToAction("Index", "Home");
+				return result;
 			}
 			var forum = CacheManager.GetForum(thread.ForumID);
 			if(forum == null)
 			{
-				return RedirectToAction("Index", "Home");
-			}
-			// Check credentials
-			bool userHasAccess = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum);
-			if(!userHasAccess)
-			{
-				// doesn't have access to this forum. redirect
-				return RedirectToAction("Index", "Home");
-			}
-			// check if the user can view this thread. If not, don't continue.
-			if((thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) && !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
-				!thread.IsSticky)
-			{
-				// can't view this thread, it isn't visible to the user
 				return RedirectToAction("Index", "Home");
 			}
 
@@ -79,6 +65,109 @@ namespace SD.HnD.Gui.Controllers
 	        FillMemoInformation(threadData);
             return View(threadData);
         }
+
+
+		public ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id))
+			{
+				UserManager.RemoveSingleSubscription(id, userID);
+			}
+			else
+			{
+				UserManager.AddThreadToSubscriptions(id, userID, null);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
+
+
+		public ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id))
+			{
+				UserManager.RemoveSingleBookmark(id, userID);
+			}
+			else
+			{
+				UserManager.AddThreadToBookmarks(id, userID);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
+
+
+		public ActionResult ToggleMarkAsDone(int id=0, int pageNo=1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+	        var userID = LoggedInUserAdapter.GetUserID();
+			if(!(LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.FlagThreadAsDone) || (thread.StartedByUserID == userID)))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(thread.MarkedAsDone)
+			{
+				ThreadManager.UnMarkThreadAsDone(thread.ThreadID, userID);
+			}
+			else
+			{
+				ThreadManager.MarkThreadAsDone(thread.ThreadID);
+			}
+			return RedirectToAction("Index", "Thread", new {id = id, pageNo = pageNo});
+		}
+
+
+		/// <summary>
+		/// Performs the basic security check for the logged in user if that user has any access rights to this thread at all. It doesn't check specific thread actions. 
+		/// </summary>
+		/// <param name="id">the thread id</param>
+		/// <param name="thread">the thread object related to id</param>
+		/// <returns>An action result to redirect to if the current user shouldn't be here, otherwise null</returns>
+	    private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
+	    {
+			 thread = ThreadGuiHelper.GetThread(id);
+			if(thread == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			// check if the user can view this thread. If not, don't continue.
+			if((thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) && !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
+				!thread.IsSticky)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+		    return null;
+	    }
 
 
 		private void FillMemoInformation(ThreadData container)

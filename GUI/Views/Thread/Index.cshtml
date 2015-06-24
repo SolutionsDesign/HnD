@@ -45,10 +45,10 @@
 						else
 						{
 							<span class="as-label">Not claimed</span>@Html.Raw("&nbsp;&nbsp;&nbsp;")
-							 if(Model.SupportQueueThreadInfo != null)
-							 {
-								 <a class="btn btn-default mt5 plr20" id="claimButton" href="~/SupportQueue/ClaimThread/@Model.Thread.ThreadID/@Model.PageNo"> Claim </a>
-							 }
+							if(Model.SupportQueueThreadInfo != null)
+							{
+								<a class="btn btn-default mt5 plr20" id="claimButton" href="~/SupportQueue/ClaimThread/@Model.Thread.ThreadID/@Model.PageNo"> Claim </a>
+							}
 						}
 						&nbsp;&nbsp;&nbsp;
 						<div class="btn-group">
@@ -92,7 +92,7 @@
 		<div class="container mt20">
 			<div class="row">
 				<div class="col-sm-12 as-header">
-					Memo&nbsp;&nbsp;&nbsp;<a href="#" title="Edit post" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
+					Memo&nbsp;&nbsp;&nbsp;<a href="~/SupportQueue/EditMemo/@Model.Thread.ThreadID/@Model.PageNo" title="Edit post" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
 				</div>
 			</div>
 			<div class="row as-row">
@@ -116,22 +116,46 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="threadtools pull-right">
-								<div class="btn-group">
-									<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
-										<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-									</a>&nbsp;
-									<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
-										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Move thread</a></li>
-										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete thread</a></li>
-										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
-										<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Edit thread properties</a></li>
-									</ul>
-								</div>
-								<a href="#" class="fs-tooltip" title="Mark thread as done"><i class="fa fa-check"></i></a>&nbsp;&nbsp;
-								<a href="#" class="fs-tooltip dimmed" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>&nbsp;&nbsp;
-								<a href="#" class="fs-tooltip active" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>&nbsp;&nbsp;
-								<a href="#" class="fs-tooltip" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>&nbsp;&nbsp;
-								<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>&nbsp;
+								@if(Model.UserMayDoForumSpecificThreadManagement || Model.UserMayDoSystemWideThreadManagement)
+								{
+									<div class="btn-group">
+										<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
+											<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+										</a>&nbsp;
+										<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+											@if(Model.UserMayDoSystemWideThreadManagement)
+											{
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Move thread</a></li>
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete thread</a></li>
+											}
+											@if(!Model.Thread.IsClosed && Model.UserMayAddNewMessages)
+											{
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
+											}
+											<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Edit thread properties</a></li>
+										</ul>
+									</div>
+								}
+								@if(Model.UserMayMarkThreadAsDone)
+								{
+									string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
+									<a href="~/Thread/ToggleMarkAsDone/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
+								}
+								else
+								{
+									<i class="fa fa-check @if(!Model.Thread.MarkedAsDone) { @Html.Raw("dimmed")}"></i>@Html.Raw("&nbsp; &nbsp;")
+								}
+								@if(Model.UserMayDoBasicThreadOperations)
+								{
+									string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
+									string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
+									<a href="~/Thread/ToggleSubscribe/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
+									<a href="~/Thread/ToggleBookmark/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
+								}
+								@if(Model.UserMayAddNewMessages)
+								{
+									<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
+								}
 								<br class="clear" />
 							</div>
 						</div>
