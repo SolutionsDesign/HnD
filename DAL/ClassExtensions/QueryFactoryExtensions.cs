@@ -33,7 +33,7 @@ namespace SD.HnD.DAL.FactoryClasses
 							JoinDate = UserFields.JoinDate.ToValue<Nullable<System.DateTime>>(),
 							AmountOfPostings = UserFields.AmountOfPostings.ToValue<Nullable<System.Int32>>(),
 							UserTitleDescription = UserTitleFields.UserTitleDescription.ToValue<System.String>(),
-							AmountOfAttachments = this.Create().Select(AttachmentFields.AttachmentID.Count())
+							NumberOfAttachments = this.Create().Select(AttachmentFields.AttachmentID.Count())
 													   		   .Where(AttachmentFields.MessageID == MessageFields.MessageID).ToScalar()
 															   .ToValue<int>()
 						})

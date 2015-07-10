@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ForumController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\RssForumController.cs" />
     <Compile Include="Controllers\SupportQueueController.cs" />
     <Compile Include="Controllers\ThreadController.cs" />
@@ -166,6 +167,7 @@
   <ItemGroup>
     <Folder Include="Admin\" />
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Message\" />
     <Folder Include="Views\SupportQueue\" />
   </ItemGroup>
   <ItemGroup>

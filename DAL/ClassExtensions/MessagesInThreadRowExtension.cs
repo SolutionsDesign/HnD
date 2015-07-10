@@ -31,28 +31,11 @@ namespace SD.HnD.DAL.TypedListClasses
 	/// </summary>
 	public partial class MessagesInThreadRow
 	{
-		//protected override void OnResultsetBuilt(IEntityFields fields)
-		//{
-		//	// expand the fields with 1 slot, so we can add our scalar query expression to that slot
-		//	int index = fields.Count;
-		//	fields.Expand(1);
-		//	// add a scalar query expression to the list of fields in the typedlist. The scalar query expression 
-		//	// performs a SELECT COUNT(AttachmentID) FROM Attachments WHERE MessageID = Message.MessageID
-		//	// query. Pass a type to the CTor as well, as otherwise the type isn't properly determinable. 
-		//	fields.DefineField(new EntityField("AmountOfAttachments",
-		//						new ScalarQueryExpression(AttachmentFields.AttachmentID.SetAggregateFunction(AggregateFunction.Count),
-		//							(AttachmentFields.MessageID == MessageFields.MessageID)), typeof(int)), index);
-
-		//	// done
-		//	base.OnResultsetBuilt(fields);
-		//}
-
-
 		#region Class Property Declarations
 		/// <summary>
 		/// Gets or sets the amount of attachments column.
 		/// </summary>
-		public int AmountOfAttachments { get; set; }
+		public int NumberOfAttachments { get; set; }
 		#endregion
 	}
 }

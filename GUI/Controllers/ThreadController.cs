@@ -26,7 +26,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-
+	        int pageNoToFetch = pageNo < 1 ? 1 : pageNo;
 	        var numberOfMessages = ThreadGuiHelper.GetTotalNumberOfMessagesInThread(id);
 	        var numberOfMessagesPerPage = LoggedInUserAdapter.GetUserDefaultNumberOfMessagesPerPage();
 	        var userID = LoggedInUserAdapter.GetUserID();
@@ -54,6 +54,7 @@ namespace SD.HnD.Gui.Controllers
 								 UserMayDoBasicThreadOperations = !LoggedInUserAdapter.IsAnonymousUser(),
 								 ThreadIsBookmarked = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id),
 								 ThreadIsSubscribed = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id),
+								 ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(id, pageNoToFetch, numberOfMessagesPerPage),
 							 };
 			if(!thread.IsClosed)
 			{
@@ -67,6 +68,7 @@ namespace SD.HnD.Gui.Controllers
         }
 
 
+		[Authorize]
 		public ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
@@ -92,6 +94,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+		[Authorize]
 		public ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
@@ -117,7 +120,8 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-		public ActionResult ToggleMarkAsDone(int id=0, int pageNo=1)
+		[Authorize]
+		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);

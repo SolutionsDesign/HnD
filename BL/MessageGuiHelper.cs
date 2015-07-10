@@ -95,16 +95,8 @@ namespace SD.HnD.BL
 		/// <returns>Filled messageentity if found, otherwise null</returns>
 		public static MessageEntity GetMessage(int messageID)
 		{
-			// load the entity from the database
 			MessageEntity message = new MessageEntity(messageID);
-
-			//check if the entity is new (not found in the database), then return null.
-			if(message.IsNew == true)
-			{
-				return null;
-			}
-
-			return message;
+			return message.IsNew ? null : message;
 		}
 
 

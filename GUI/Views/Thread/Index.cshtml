@@ -3,6 +3,17 @@
 
 @{
 	ViewBag.Title = string.Format("HnD | {0}, Page {1}", Model.Thread.Subject, Model.PageNo);
+	
+	var nextPageButtonDisabledClass = string.Empty;
+	var previousPageButtonDisabledClass = string.Empty;
+	if(Model.PageNoNewerMessages <1)
+	{
+		nextPageButtonDisabledClass = "disabled";
+	}
+	if(Model.PageNoOlderMessages < 1)
+	{
+		previousPageButtonDisabledClass = "disabled";
+	}
 }
 <a id="top"></a>
 <div class="container">
@@ -92,10 +103,17 @@
 		<div class="container mt20">
 			<div class="row">
 				<div class="col-sm-12 as-header">
-					Memo&nbsp;&nbsp;&nbsp;<a href="~/SupportQueue/EditMemo/@Model.Thread.ThreadID/@Model.PageNo" title="Edit post" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
+					<a href="#@Html.Raw("MemoContents" + @Model.Thread.ThreadID)" data-toggle="collapse" aria-expanded="true" aria-controls="@Html.Raw("MemoContents" + @Model.Thread.ThreadID)" class="areatoggle fs-tooltip">
+						<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+					</a>
+					Memo&nbsp;&nbsp;&nbsp;
+					<span class="pull-right">
+						<a href="~/SupportQueue/EditMemo/@Model.Thread.ThreadID/@Model.PageNo" title="Edit memo" class="fs-tooltip"><i class="fa fa-pencil"></i></a>
+					</span>
 				</div>
 			</div>
-			<div class="row as-row">
+			<div class="row as-row collapse in" id="@Html.Raw("MemoContents" + @Model.Thread.ThreadID)">
 				<div class="col-sm-12">@Html.Raw(Model.MemoAsHTML)</div>
 			</div>
 		</div>
@@ -143,7 +161,10 @@
 								}
 								else
 								{
-									<i class="fa fa-check @if(!Model.Thread.MarkedAsDone) { @Html.Raw("dimmed")}"></i>@Html.Raw("&nbsp; &nbsp;")
+									<i class="fa fa-check @if(!Model.Thread.MarkedAsDone)
+									                      {
+										                      @Html.Raw("dimmed")
+									                      }"></i>@Html.Raw("&nbsp; &nbsp;")
 								}
 								@if(Model.UserMayDoBasicThreadOperations)
 								{
@@ -156,145 +177,137 @@
 								{
 									<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
 								}
-								<br class="clear" />
+								<br class="clear"/>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="row ps">
-			<div class="col-sm-12 plr0">
-				<div class="ps-poster">
-					<img src="https://pbs.twimg.com/profile_images/561881164982403073/rv4PtnVK.png" class="ps-poster-avatar" alt="Otis avatar" />
-					<div class="ps-poster-name">
-						<a href="#">Otis</a><br />
-						<span class="ps-poster-title">LLBLGen Pro Team</span>
+		@for(int i = 0; i < Model.ThreadMessages.Count; i++)
+		{
+			var currentMessage = Model.ThreadMessages[i];
+			<a id="@currentMessage.MessageID"></a>
+			<div class="row ps">
+				<div class="col-sm-12 plr0">
+					<div class="ps-poster" id="@Html.Raw("MessagePoster" + currentMessage.MessageID)">
+						@if(!string.IsNullOrWhiteSpace(currentMessage.IconURL))
+						{
+							var fullURL = "http://" + currentMessage.IconURL;
+							<img src="@fullURL" class="ps-poster-avatar" alt="@currentMessage.NickName avatar" />
+						}
+						<div class="ps-poster-name">
+							<a href="~/User/@currentMessage.UserID">@currentMessage.NickName</a><br />
+							<span class="ps-poster-title">@currentMessage.UserTitleDescription</span>
+						</div>
+						<div class="ps-poster-stats">
+							<span class="ps-poster-info"><b>Posts:</b> @currentMessage.AmountOfPostings</span><br />
+							@if(currentMessage.JoinDate.HasValue)
+							{
+								<span class="ps-poster-info"><b>Joined:</b> @currentMessage.JoinDate.Value.ToString("dd-MMM-yyyy")</span>
+								<br />
+							}
+							@if(Model.ShowIPAddresses)
+							{
+								<span class="ps-poster-info"><b>IP:</b> @currentMessage.PostedFromIP</span>
+							}
+						</div>
 					</div>
-					<div class="ps-poster-stats">
-						<span class="ps-poster-info"><b>Posts:</b> 33421</span><br />
-						<span class="ps-poster-info"><b>Joined:</b> 17-aug-2003</span><br />
-						<span class="ps-poster-info"><b>IP:</b> 41.48.57.212</span>
+					<div class="ps-message">
+						<div class="ps-message-title">
+							<div class="pull-left">
+								<a href="~/Message/@currentMessage.ThreadID/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
+								@if(Model.ShowDeleteMessageLink && ((Model.PageNo > 1) || (i > 0)))
+								{
+									<a href="#" data-toggle="modal" data-target="#confirmMessageDeleteModal" data-messageid="@currentMessage.MessageID" title="Delete post"><i class="fa fa-trash-o"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+								}
+							</div>
+							<div class="ps-message-tools">
+								@if(currentMessage.NumberOfAttachments > 0)
+								{
+									<a href="#" title="View Attachments"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+								}
+								@if(Model.ForumAllowsAttachments && Model.UserMayAddAttachments && (LoggedInUserAdapter.GetUserID() == currentMessage.UserID))
+								{
+									<a href="#" title="Manage Attachments"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+								}
+								@if(Model.ShowEditMessageLink || (!LoggedInUserAdapter.IsAnonymousUser() && (currentMessage.UserID == LoggedInUserAdapter.GetUserID())))
+								{
+									<a href="#" title="Edit post"><i class="fa fa-pencil"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+								}
+								@if(Model.ShowQuoteMessageLink)
+								{
+									<a href="#" title="Quote and reply to post"><i class="fa fa-reply"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;")
+								}
+							</div>
+						</div>
+						<div class="ps-message-content" id="@Html.Raw("MessageContents" + currentMessage.MessageID)">
+							@Html.Raw(@currentMessage.MessageTextAsHTML)
+						</div>
+						<div class="ps-message-signature">
+							@Html.Raw(@currentMessage.SignatureAsHTML)
+							<div class="pull-right">
+								<a href="#top" title="Go to top of page"><i class="fa fa-arrow-up"></i></a>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="ps-message">
-					<div class="ps-message-title">
-						<div class="pull-left">
-							<a href="#">#</a> Posted on: 23-mar-2015 18:50:53
-						</div>
-						<div class="ps-message-tools">
-							<a href="#" title="Manage / View Attachments"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="#" title="Delete post"><i class="fa fa-trash-o"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="#" title="Edit post"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="#" title="Quote and reply to post"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
-						</div>
-					</div>
-					<div class="ps-message-content">
+			</div>
+		}
 
-						I've removed every option from crypto obfuscator to have the less obfuscated dll possible, so only the rename (test mode, it only add CO_ to name) left. I still get the problem.
-						<br /><br />
-						Then I've decompiled the obfuscated DLL to compare the code with the original DLL. I've cleaned (undo rename etc.) and everything are the same except 1 line:<br /><br />
-						ThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylonglineThisisaverylongline
-						<br /><br />
-						I must say I don't know why this is. The aliases are not created from names, so that's not it. It looks like the query is just not properly handled by the linq provider, but why it goes wrong is not clear. Keep in mind though that when you reference a local variable in a linq query, it will be an obfuscated element. Perhaps that's it, not sure.
-						<br /><br />
-						We are using: LLBLGen Version 4.2.14.1212<br /> / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008.<br /> We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-						We are using: LLBLGen Versio<br />n 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using: LLBLGen<br /> Version 4.2.14.1212 / SQL Server 2008
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. We are using:<br /> LLBLGen Version 4.2.14.1212 / SQL Server 2008
-					</div>
-					<div class="ps-message-signature">
-						<span>
-							<b>Frans Bouma</b><br>LLBLGen Pro / <a href="http://www.ormprofiler.com" target="_blank">ORM Profiler</a>
-							Lead Developer | <a href="http://weblogs.asp.net/fbouma" target="_blank">Blog</a> |
-							<a href="http://twitter.com/FransBouma" target="_blank">Twitter</a>
-						</span>
-						<div class="pull-right">
-							<a href="#top" title="Go to top of page"><i class="fa fa-arrow-up"></i></a>
-						</div>
-					</div>
+		@if(Model.NumberOfPages > 1)
+		{
+			<div class="row">
+				<div class="col-sm-12 pull-center pt20">
+					<a class="btn btn-sm btn-default @previousPageButtonDisabledClass" href="~/Thread/@Model.Thread.ThreadID/@Model.PageNoOlderMessages"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Previous page </a>
+					<a class="btn btn-sm btn-default @nextPageButtonDisabledClass" href="~/Thread/@Model.Thread.ThreadID/@Model.PageNoNewerMessages"> Next page&nbsp;&nbsp;<i class="fa fa-arrow-right"></i> </a>
 				</div>
 			</div>
-		</div>
-		<div class="row ps">
-			<div class="col-sm-12 plr0">
-				<div class="ps-poster">
-					<div class="ps-poster-name">
-						<a href="#">Sjaaq</a><br />
-						<span class="ps-poster-title">Lamer</span>
-					</div>
-					<div class="ps-poster-stats">
-						<span class="ps-poster-info"><b>Posts:</b> 1</span><br />
-						<span class="ps-poster-info"><b>Joined:</b> 17-aug-2014</span>
-					</div>
-				</div>
-				<div class="ps-message">
-					<div class="ps-message-title">
-						<a href="#">#</a> Posted on: 23-mar-2015 18:50:53, from IP: 41.48.57.212
-						<div style="float: right">
-							<a href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
-							<a href="#"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
-							<a href="#"><i class="fa fa-trash-o"></i></a>
-						</div>
-					</div>
-					<div class="ps-message-content">
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. Verder niet zoveel te melden, ik kan namelijk
-						helemaal niks.
-					</div>
-					<div class="ps-message-signature">
-						<span>
-							I'm a nutcase, ignore me.
-						</span>
-						<div class="pull-right">
-							<a href="#top"><i class="fa fa-arrow-up"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="row ps">
-			<div class="col-sm-12 plr0">
-				<div class="ps-poster">
-					<div class="ps-poster-name">
-						<a href="#">VIDb</a><br />
-						<span class="ps-poster-title">Le Douche</span>
-					</div>
-					<div class="ps-poster-stats">
-						<span class="ps-poster-info"><b>Posts:</b> 2</span><br />
-						<span class="ps-poster-info"><b>Joined:</b> 13-aug-2012</span>
-					</div>
-				</div>
-				<div class="ps-message">
-					<div class="ps-message-title">
-						<a href="#">#</a> Posted on: 23-mar-2015 18:50:53, from IP: 41.48.57.212
-						<div style="float: right">
-							<a href="#"><i class="fa fa-pencil"></i></a>&nbsp;&nbsp;&nbsp;
-							<a href="#"><i class="fa fa-reply"></i></a>&nbsp;&nbsp;&nbsp;
-							<a href="#"><i class="fa fa-trash-o"></i></a>
-						</div>
-					</div>
-					<div class="ps-message-content">
-						We are using: LLBLGen Version 4.2.14.1212 / SQL Server 2008. Verder niet zoveel te melden, ik kan namelijk
-						helemaal niks.
-					</div>
-					<div class="ps-message-signature">
-						<span>&nbsp;</span>
-						<div class="pull-right">
-							<a href="#top"><i class="fa fa-arrow-up"></i></a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12 pull-center pt20">
-				<button class="btn btn-sm btn-default"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Previous page </button>
-				<button class="btn btn-sm btn-default"> Next page&nbsp;&nbsp;<i class="fa fa-arrow-right"></i> </button>
-			</div>
-		</div>
+		}
 	</div>
 </section>
 
+@if(Model.ShowDeleteMessageLink)
+{
+	<div class="modal fade" id="confirmMessageDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmMessageDeleteModalLabel">
+		<div class="row">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="confirmMessageDeleteModalLabel">Confirm message delete</h4>
+					</div>
+					<div class="mb0 pb0">
+						<div class="col-sm-12 plr0 ps">
+							<div class="ps-poster" id="confirmMessageDeleteModalMessagePoster">
+							</div>
+							<div class="ps-message">
+								<div class="ps-message-content ps-message-modal" id="confirmMessageDeleteModalMessageContents">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="pull-center mb20">
+						<a class="btn btn-primary" data-dismiss="modal">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>&nbsp;&nbsp;
+						<a class="btn btn-default" href="~/Message/Delete/" id="confirmMessageDeleteLink"> Delete </a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+@section scripts
+{
+	<script type="text/javascript">
+		$('#confirmMessageDeleteModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget); // Button that triggered the modal
+			var messageid = button.data('messageid');
+			var modalMessageContentsDiv = document.getElementById('confirmMessageDeleteModalMessageContents');
+			modalMessageContentsDiv.innerHTML = document.getElementById('MessageContents' + messageid).innerHTML;
+			var modalPosterDiv = document.getElementById('confirmMessageDeleteModalMessagePoster');
+			modalPosterDiv.innerHTML = document.getElementById('MessagePoster' + messageid).innerHTML;
+			var deleteLink = document.getElementById('confirmMessageDeleteLink');
+			deleteLink.setAttribute('href', deleteLink.getAttribute('href') + messageid);
+		})
+	</script>
+}

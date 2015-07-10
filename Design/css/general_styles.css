@@ -407,15 +407,15 @@ img.ps-poster-avatar {
 	}
 	
 	/* toggles for the forum section headers */
-	.sectiontoggle.collapsed .glyphicon-chevron-up {
+	.areatoggle.collapsed .glyphicon-chevron-up {
 		display: none;
 	}
 
-	.sectiontoggle.collapsed .glyphicon-chevron-down {
+	.areatoggle.collapsed .glyphicon-chevron-down {
 		display: inline-block;
 	}
 
-	.sectiontoggle .glyphicon-chevron-down {
+	.areatoggle .glyphicon-chevron-down {
 		display: none;
 	}
 	

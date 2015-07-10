@@ -245,18 +245,6 @@ namespace SD.HnD.BL
 			}
 			return messages[0];
 		}
-
-		
-		/// <summary>
-		/// Constructs a TypedList with all the messages in the thread given. Poster info is included, so the
-		/// returned dataview is bindable at once to the message list repeater.
-		/// </summary>
-		/// <param name="threadID">ID of Thread which messages should be returned</param>
-		/// <returns>TypedList with all messages in the thread</returns>
-		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID)
-		{
-			return GetAllMessagesInThreadAsTypedList(threadID, 0, 0);
-		}
 		
 
 		/// <summary>
@@ -269,11 +257,11 @@ namespace SD.HnD.BL
 		/// <returns>TypedList with all messages in the thread for the page specified</returns>
 		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID, int pageNo, int pageSize)
 		{
-			// we'll use a typedlist, MessagesInThread to pull the necessary data from the db. The typedlist contains fields from message, user and usertitle. 
+			// we'll use an extended typedlist. We've extended the typed list with a scalar query to pull the # of attachments in the same query. 
 			var qf = new QueryFactory();
-			var q = qf.GetMessagesInThreadTypedList()
+			var q = qf.GetMessagesInThreadExtendedTypedList()
 						  .Where(MessageFields.ThreadID == threadID)			// create the filter with the threadID passed to the method.
-						  .OrderBy(MessageFields.PostingDate.Descending())		// Sort Messages on posting date, ascending, so the first post is located on top. 
+						  .OrderBy(MessageFields.PostingDate.Ascending())		// Sort Messages on posting date, ascending, so the first post is located on top. 
 						  .Page(pageNo, pageSize)								// Pass in the paging information as well, to perform server-side paging. 
 						  .Distinct();											// Use distinct to avoid duplicates as we're paging.
 			var messages = new TypedListDAO().FetchQuery(q);					// fetch the data into the typedlist. 
@@ -286,8 +274,7 @@ namespace SD.HnD.BL
 			updater.IsNew = false;
 
 			// update the entity directly, and filter on the PK
-			ThreadCollection threads = new ThreadCollection();
-			threads.UpdateMulti(updater, (ThreadFields.ThreadID == threadID));
+			new ThreadCollection().UpdateMulti(updater, (ThreadFields.ThreadID == threadID));
 			
 			// return the constructed typedlist
 			return messages;

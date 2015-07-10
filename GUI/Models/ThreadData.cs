@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using SD.HnD.DAL.EntityClasses;
+using SD.HnD.DAL.TypedListClasses;
 
 namespace SD.HnD.Gui.Models
 {
@@ -11,6 +12,7 @@ namespace SD.HnD.Gui.Models
 	/// </summary>
 	public class ThreadData
 	{
+		public int CurrentUserID { get; set; }
 		public string ForumName { get; set; }
 		public string SectionName { get; set; }
 		public int PageNo { get; set; }
@@ -44,6 +46,24 @@ namespace SD.HnD.Gui.Models
 		public SupportQueueThreadEntity SupportQueueThreadInfo { get; set; }
 		public bool ThreadIsBookmarked { get; set; }
 		public bool ThreadIsSubscribed { get; set; }
+		public List<MessagesInThreadRow> ThreadMessages { get; set; }
+
+		public int PageNoOlderMessages
+		{
+			get
+			{
+				if(this.PageNo >= this.NumberOfPages)
+				{
+					return this.NumberOfPages - 1;
+				}
+				return this.PageNo <= 1 ? 0 : this.PageNo - 1;
+			}
+		}
+
+		public int PageNoNewerMessages
+		{
+			get { return this.PageNo >= this.NumberOfPages ? 0 : this.PageNo + 1; }
+		}
 
 		public SupportQueueEntity ActiveQueue
 		{

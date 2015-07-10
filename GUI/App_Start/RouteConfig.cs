@@ -32,6 +32,8 @@ namespace SD.HnD.Gui
 			routes.MapRoute("ReleaseThread", "SupportQueue/ReleaseThread/{id}/{pageNo}", new { controller = "SupportQueue", action = "ReleaseThread", id = UrlParameter.Optional, pageNo = 1 });
 			routes.MapRoute("EditMemo", "SupportQueue/EditMemo/{id}/{pageNo}", new {controller = "SupportQueue", action = "EditMemo", id = UrlParameter.Optional, pageNo = 1});
 
+			routes.MapRoute("DeleteMessage", "Message/Delete/{id}", new {controller = "Message", action = "Delete", id = UrlParameter.Optional});
+
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",
