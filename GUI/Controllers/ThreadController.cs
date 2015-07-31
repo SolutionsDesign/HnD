@@ -13,6 +13,7 @@ namespace SD.HnD.Gui.Controllers
 {
     public class ThreadController : Controller
     {
+		[HttpGet]
         public ActionResult Index(int id=0, int pageNo=1)
         {
 	        ThreadEntity thread;
@@ -67,7 +68,7 @@ namespace SD.HnD.Gui.Controllers
             return View(threadData);
         }
 
-
+#warning POSSIBLE CROSS-SITE REQUEST FORGERY. Perhaps solveable with form and 1 method, and the buttons are submitbuttons to this form, then check here which button was clicked.
 		[Authorize]
 		public ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
 		{
@@ -94,6 +95,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+#warning POSSIBLE CROSS-SITE REQUEST FORGERY.
 		[Authorize]
 		public ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
 		{
@@ -120,6 +122,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+#warning POSSIBLE CROSS-SITE REQUEST FORGERY.
 		[Authorize]
 		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
 		{
@@ -145,6 +148,31 @@ namespace SD.HnD.Gui.Controllers
 			}
 			return RedirectToAction("Index", "Thread", new {id = id, pageNo = pageNo});
 		}
+
+
+	    [Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+	    public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
+	    {
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+		    if((newSectionId <= 0) || (newForumId <= 0))
+		    {
+				return RedirectToAction("Index", "Home");
+			}
+		    ThreadManager.MoveThread(id, newForumId);
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
+		}
+
 
 
 		/// <summary>

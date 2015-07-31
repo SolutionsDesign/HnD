@@ -1,12 +1,13 @@
 ﻿@using System.Globalization
+@using SD.HnD.DAL.EntityClasses
 @model SD.HnD.Gui.Models.ThreadData
 
 @{
 	ViewBag.Title = string.Format("HnD | {0}, Page {1}", Model.Thread.Subject, Model.PageNo);
-	
+
 	var nextPageButtonDisabledClass = string.Empty;
 	var previousPageButtonDisabledClass = string.Empty;
-	if(Model.PageNoNewerMessages <1)
+	if(Model.PageNoNewerMessages < 1)
 	{
 		nextPageButtonDisabledClass = "disabled";
 	}
@@ -43,57 +44,53 @@
 			</div>
 			<div class="row as-row">
 				<div class="col-sm-12">
-					<div class="form-group mb0 mt5">
+					<div class="mb0 mt5">
 						@if((Model.SupportQueueThreadInfo != null) && Model.SupportQueueThreadInfo.ClaimedByUserID.HasValue)
 						{
 							var claimDate = Model.SupportQueueThreadInfo.ClaimedOn ?? DateTime.Now;
-							<span class="as-label">
-								Claimed by <a href="~/User/@Model.SupportQueueThreadInfo.ClaimedByUserID">@Model.SupportQueueThreadInfo.ClaimedByUser.NickName</a> on
-								@claimDate.ToString("dd-MMM-yyyy HH:mm.ss", DateTimeFormatInfo.InvariantInfo)&nbsp;&nbsp;&nbsp;
-							</span>
-							<a class="btn btn-default mt5 plr20" id="releaseButton" href="~/SupportQueue/ReleaseThread/@Model.Thread.ThreadID/@Model.PageNo"> Release </a>
+							<form action="~/SupportQueue/ReleaseThread/@Model.Thread.ThreadID/@Model.PageNo" method="post" role="form" class="block-leftside pr40">
+								@Html.AntiForgeryToken()
+								<span class="as-label">
+									Claimed by <a href="~/User/@Model.SupportQueueThreadInfo.ClaimedByUserID">@Model.SupportQueueThreadInfo.ClaimedByUser.NickName</a> on
+									@claimDate.ToString("dd-MMM-yyyy HH:mm.ss", DateTimeFormatInfo.InvariantInfo)&nbsp;&nbsp;&nbsp;
+								</span>
+								<button class="btn btn-default mt5 plr20" id="releaseButton" type="submit"> Release </button>
+							</form>
 						}
 						else
 						{
-							<span class="as-label">Not claimed</span>@Html.Raw("&nbsp;&nbsp;&nbsp;")
-							if(Model.SupportQueueThreadInfo != null)
+							if(Model.ActiveQueue != null)
 							{
-								<a class="btn btn-default mt5 plr20" id="claimButton" href="~/SupportQueue/ClaimThread/@Model.Thread.ThreadID/@Model.PageNo"> Claim </a>
+								<form action="~/SupportQueue/ClaimThread/@Model.Thread.ThreadID/@Model.PageNo" method="post" role="form" class="block-leftside pr40">
+									@Html.AntiForgeryToken()
+									<span class="as-label">Not claimed</span>@Html.Raw("&nbsp;&nbsp;&nbsp;")
+									@if(Model.SupportQueueThreadInfo != null)
+									{
+										<button class="btn btn-default mt5 plr20" id="claimButton" type="submit"> Claim </button>
+									}
+								</form>
 							}
 						}
-						&nbsp;&nbsp;&nbsp;
-						<div class="btn-group">
-							@if(Model.ActiveQueue == null)
-							{
-								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
-									Not in queue <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+						<form class="block-rightside form-inline" action="~/SupportQueue/MoveToQueue/@Model.Thread.ThreadID/@Model.PageNo" method="POST" role="form">
+							@Html.AntiForgeryToken()
+							<div class="form-group mt5">
+								<select id="queueComboBox" name="queueId" class="form-control no-roundcorners">
+									@{
+										var noQueueSelectedString = Model.ActiveQueue == null ? "selected" : string.Empty;
+									}
+									<option value="0" @noQueueSelectedString>Not in a queue</option>
 									@foreach(var queue in Model.AllSupportQueues)
 									{
-										<li><a href="~/SupportQueue/MoveToQueue/@queue.QueueID/@Model.Thread.ThreadID/@Model.PageNo">@queue.QueueName</a></li>
+										var selectedString = queue == Model.ActiveQueue ? "selected" : string.Empty;
+										<option value="@queue.QueueID" @selectedString>@queue.QueueName</option>
 									}
-								</ul>
-							}
-							else
-							{
-								var activeQueue = Model.ActiveQueue;
-								<button type="button" class="btn btn-default dropdown-toggle mt5" data-toggle="dropdown" aria-expanded="false">
-									@activeQueue.QueueName <span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
-									<li><a href="~/SupportQueue/MoveToQueue/0/@Model.Thread.ThreadID/@Model.PageNo">No queue</a></li>
-									@if(Model.AllSupportQueues.Count > 1)
-									{
-										<li class="divider"></li>
-									}
-									@foreach(var queue in Model.AllSupportQueues.Where(q => q.QueueID != activeQueue.QueueID))
-									{
-										<li><a href="~/SupportQueue/MoveToQueue/@queue.QueueID/@Model.Thread.ThreadID/@Model.PageNo">@queue.QueueName</a></li>
-									}
-								</ul>
-							}
-						</div>
+								</select>
+							</div>
+							<div class="form-group">
+								&nbsp;
+								<button class="btn btn-default mt5 plr20" id="claimButton" type="submit"> Set </button>
+							</div>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -143,7 +140,7 @@
 										<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
 											@if(Model.UserMayDoSystemWideThreadManagement)
 											{
-												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Move thread</a></li>
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#moveThreadModal" title="Move thread">Move thread</a></li>
 												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete thread</a></li>
 											}
 											@if(!Model.Thread.IsClosed && Model.UserMayAddNewMessages)
@@ -177,7 +174,7 @@
 								{
 									<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
 								}
-								<br class="clear"/>
+								<br class="clear" />
 							</div>
 						</div>
 					</div>
@@ -271,43 +268,112 @@
 {
 	<div class="modal fade" id="confirmMessageDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmMessageDeleteModalLabel">
 		<div class="row">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="confirmMessageDeleteModalLabel">Confirm message delete</h4>
-					</div>
-					<div class="mb0 pb0">
-						<div class="col-sm-12 plr0 ps">
-							<div class="ps-poster" id="confirmMessageDeleteModalMessagePoster">
-							</div>
-							<div class="ps-message">
-								<div class="ps-message-content ps-message-modal" id="confirmMessageDeleteModalMessageContents">
+			<form action="~/Message/Delete/" method="post" role="form" id="confirmMessageDeleteForm">
+				@Html.AntiForgeryToken()
+				<div class="modal-dialog modal-lg" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="confirmMessageDeleteModalLabel">Confirm message delete</h4>
+						</div>
+						<div class="mb0 pb0">
+							<div class="col-sm-12 plr0 ps">
+								<div class="ps-poster" id="confirmMessageDeleteModalMessagePoster">
+								</div>
+								<div class="ps-message">
+									<div class="ps-message-content ps-message-modal" id="confirmMessageDeleteModalMessageContents">
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="pull-center mb20">
-						<a class="btn btn-primary" data-dismiss="modal">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>&nbsp;&nbsp;
-						<a class="btn btn-default" href="~/Message/Delete/" id="confirmMessageDeleteLink"> Delete </a>
+						<div class="pull-center mb20">
+							<a class="btn btn-primary" data-dismiss="modal">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>&nbsp;&nbsp;
+							<button class="btn btn-default" type="submit" id="confirmMessageDeleteLink"> Delete </button>
+						</div>
 					</div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 }
+@if(Model.UserMayDoSystemWideThreadManagement)
+{
+	<div class="modal fade" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="moveThreadModalLabel">
+		<div class="row">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="moveThreadModalLabel">Move thread</h4>
+						</div>
+						<form action="~/Thread/Move/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
+							@Html.AntiForgeryToken()
+							<div class="col-sm-12 pb20 pt20">
+								<div class="row">
+									<div class="col-sm-12">
+										To move the thread <strong>'@Model.Thread.Subject'</strong> to a different forum, please select the forum below to which you want to move the thread to and
+										click <em>Move</em>.
+									</div>
+								</div>
+								<div class="row pt30">
+									<div class="col-sm-3 plr10">
+										<span class="pull-right pt3">Section </span>
+									</div>
+									<div class="col-sm-9 plr0">
+										<select id="moveThreadSectionComboBox" class="form-control no-roundcorners" name="newSectionId">
+											<option value="0" selected>Please select a section...</option>
+											@foreach(SectionEntity s in CacheManager.GetAllSections())
+											{
+												<option value="@s.SectionID">@s.SectionName</option>
+											}
+										</select>
+									</div>
+								</div>
+								<div class="row pt10" id="moveThreadForumSelectorPlaceHolder">
+								</div>
+							</div>
+							<div class="pull-center mb20 pt20">
+								<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-primary btn-default disabled" id="moveThreadModalLink">&nbsp;&nbsp;Move&nbsp;&nbsp;</button>
+							</div>
+						</form>
+					</div>
+				</div>
+		</div>
+	</div>
+}
+
 @section scripts
 {
-	<script type="text/javascript">
-		$('#confirmMessageDeleteModal').on('show.bs.modal', function (event) {
-			var button = $(event.relatedTarget); // Button that triggered the modal
-			var messageid = button.data('messageid');
-			var modalMessageContentsDiv = document.getElementById('confirmMessageDeleteModalMessageContents');
-			modalMessageContentsDiv.innerHTML = document.getElementById('MessageContents' + messageid).innerHTML;
-			var modalPosterDiv = document.getElementById('confirmMessageDeleteModalMessagePoster');
-			modalPosterDiv.innerHTML = document.getElementById('MessagePoster' + messageid).innerHTML;
-			var deleteLink = document.getElementById('confirmMessageDeleteLink');
-			deleteLink.setAttribute('href', deleteLink.getAttribute('href') + messageid);
-		})
-	</script>
+	@if(Model.ShowDeleteMessageLink)
+	{
+		<script type="text/javascript">
+			$('#confirmMessageDeleteModal').on('show.bs.modal', function (event) {
+				var button = $(event.relatedTarget); // Button that triggered the modal
+				var messageid = button.data('messageid');
+				$('#confirmMessageDeleteModalMessageContents').html($('#MessageContents' + messageid).html());
+				$('#confirmMessageDeleteModalMessagePoster').html($('#MessagePoster' + messageid).html());
+				$('#confirmMessageDeleteForm').attr('action', $('#confirmMessageDeleteForm').attr('action') + messageid);
+			})
+		</script>
+	}
+	@if(Model.UserMayDoSystemWideThreadManagement)
+	{
+		<script type="text/javascript">
+			$('#moveThreadSectionComboBox').change(function () {
+				var selectedSectionID = $(this).val();
+				if (selectedSectionID > 0) {
+					$.get('@ApplicationAdapter.GetVirtualRoot()Section/Forums/' + selectedSectionID, function (data) {
+						$('#moveThreadForumSelectorPlaceHolder').html(data);
+						$('#moveThreadForumSelectorPlaceHolder').fadeIn('fast');
+						$('#moveThreadModalLink').removeClass("disabled");
+					});
+				} else {
+					$('#moveThreadForumSelectorPlaceHolder').html("");
+					$('#moveThreadForumSelectorPlaceHolder').fadeOut('fast');
+					$('#moveThreadModalLink').addClass("disabled");
+				}
+			});
+		</script>
+	}
 }

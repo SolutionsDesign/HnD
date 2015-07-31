@@ -1,0 +1,12 @@
+﻿@model SD.HnD.Gui.Models.ForumSelectorData
+<div class="col-sm-3 plr10">
+	<span class="pull-right pt3">Forum </span>
+</div>
+<div class="col-sm-9 plr0">
+	<select id="moveThreadForumSelectorComboBox" class="form-control no-roundcorners" name="newForumId">
+		@foreach(var forum in Model.Forums)
+		{
+			<option value="@forum.ForumID">@forum.ForumName</option>
+		}
+	</select>
+</div>

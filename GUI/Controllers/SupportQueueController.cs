@@ -10,7 +10,9 @@ namespace SD.HnD.Gui.Controllers
     public class SupportQueueController : Controller
     {
 		[Authorize]
-	    public ActionResult ClaimThread(int id, int pageNo)
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		public ActionResult ClaimThread(int id, int pageNo)
 	    {
 			var result = PerformSecurityCheck(id);
 			if(result != null)
@@ -23,6 +25,8 @@ namespace SD.HnD.Gui.Controllers
 
 
 		[Authorize]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
 		public ActionResult ReleaseThread(int id, int pageNo)
 		{
 			var result = PerformSecurityCheck(id);
@@ -36,7 +40,9 @@ namespace SD.HnD.Gui.Controllers
 
 
 	    [Authorize]
-	    public ActionResult EditMemo(int id = 0, int pageNo = 1)
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		public ActionResult EditMemo(int id = 0, int pageNo = 1)
 	    {
 		    var result = PerformSecurityCheck(id);
 		    if(result != null)
@@ -50,7 +56,9 @@ namespace SD.HnD.Gui.Controllers
 
 
 	    [Authorize]
-	    public ActionResult MoveToQueue(int queueId=0, int id=0, int pageNo=1)
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		public ActionResult MoveToQueue(int id = 0, int pageNo = 1, int queueId = 0)
 	    {
 			var result = PerformSecurityCheck(id);
 			if(result != null)

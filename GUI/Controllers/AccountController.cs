@@ -13,6 +13,7 @@ namespace SD.HnD.Gui.Controllers
     public class AccountController : Controller
     {
 		[AllowAnonymous]
+		[HttpGet]
 		public ActionResult Login(string returnUrl)
 		{
 			ViewBag.ReturnUrl = returnUrl;

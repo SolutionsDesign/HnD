@@ -10,6 +10,8 @@ namespace SD.HnD.Gui.Controllers
     public class MessageController : Controller
     {
 		[Authorize]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
 		public ActionResult Delete(int id = 0)
 		{
 			if(LoggedInUserAdapter.IsAnonymousUser())

@@ -78,7 +78,8 @@ input[type=password],
 input[type=email],
 input[type=file],
 input[type=number],
-input[type=search] {
+input[type=search]
+{
 	border-radius:0;
 }
 
@@ -142,6 +143,7 @@ input[type=checkbox] {
 	.mt40 { margin-top: 40px;}
 
 	.pt0 { padding-top: 0;}
+	.pt3 { padding-top: 3px;}
 	.pt10 { padding-top: 10px;}
 	.pt20 { padding-top: 20px;}
 	.pt30 { padding-top: 30px;}
@@ -172,6 +174,12 @@ input[type=checkbox] {
 	.pl40 { padding-left: 40px;}
 	.pl50 { padding-left: 50px;}
 	.pl70 { padding-left: 70px;}
+	
+	.pr20 { padding-right: 20px;}
+	.pr30 { padding-right: 30px;}
+	.pr40 { padding-right: 40px;}
+	.pr50 { padding-right: 50px;}
+	.pr70 { padding-right: 70px;}
 
 	.p0 { padding: 0;}
 	.p5 { padding: 5px;}
@@ -201,6 +209,16 @@ input[type=checkbox] {
 		-webkit-transition:all 0.2s easeout; transition:all 0.2s ease-out;
 	}
 	
+	/* to be used with block-rightside to place two blocks / forms side by side.*/
+	.block-leftside {
+		float: left;
+	}
+
+	.block-rightside {
+		display: inline-block;
+	}
+
+
 	/* gives a small line at the left, under the text it is applied to*/
 	.br-bottom:after {
 		content:"";
@@ -274,6 +292,10 @@ input[type=checkbox] {
 
 	.list-row-description {
 		font-size: 14px;
+	}
+
+	.no-roundcorners {
+		border-radius: 0;
 	}
 
 	.page-header {

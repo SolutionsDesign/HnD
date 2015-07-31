@@ -11,6 +11,7 @@ namespace SD.HnD.Gui.Controllers
 {
     public class ForumController : Controller
     {
+		[HttpGet]
         public ActionResult Index(int id=0, int pageNo=1)
         {
 			// do forum security checks on authorized user.
