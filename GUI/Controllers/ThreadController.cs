@@ -11,12 +11,12 @@ using SD.HnD.Utility;
 
 namespace SD.HnD.Gui.Controllers
 {
-    public class ThreadController : Controller
-    {
+	public class ThreadController : Controller
+	{
 		[HttpGet]
-        public ActionResult Index(int id=0, int pageNo=1)
-        {
-	        ThreadEntity thread;
+		public ActionResult Index(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
 			{
@@ -27,52 +27,52 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-	        int pageNoToFetch = pageNo < 1 ? 1 : pageNo;
-	        var numberOfMessages = ThreadGuiHelper.GetTotalNumberOfMessagesInThread(id);
-	        var numberOfMessagesPerPage = LoggedInUserAdapter.GetUserDefaultNumberOfMessagesPerPage();
-	        var userID = LoggedInUserAdapter.GetUserID();
+			int pageNoToFetch = pageNo < 1 ? 1 : pageNo;
+			var numberOfMessages = ThreadGuiHelper.GetTotalNumberOfMessagesInThread(id);
+			var numberOfMessagesPerPage = LoggedInUserAdapter.GetUserDefaultNumberOfMessagesPerPage();
+			var userID = LoggedInUserAdapter.GetUserID();
 			var threadData = new ThreadData()
-							 {
-								 Thread = thread,
-								 ForumName = forum.ForumName,
-								 SectionName = CacheManager.GetSectionName(forum.SectionID),
-								 PageNo = pageNo,
-								 PageSize = numberOfMessagesPerPage,
-								 NumberOfPages = ((numberOfMessages - 1) / numberOfMessagesPerPage) + 1,
-								 ShowIPAddresses = (LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemManagement) ||
-													LoggedInUserAdapter.HasSystemActionRight(ActionRights.SecurityManagement) ||
-													LoggedInUserAdapter.HasSystemActionRight(ActionRights.UserManagement)),
-								 ForumAllowsAttachments = (forum.MaxNoOfAttachmentsPerMessage > 0),
-								 ThreadStartedByCurrentUser = thread.StartedByUserID == userID,
-								 UserMayAddAttachments = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddAttachment),
-								 UserCanCreateThreads = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddNormalThread) ||
-														LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddStickyThread),
-								 UserMayDoForumSpecificThreadManagement = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ForumSpecificThreadManagement),
-								 UserMayDoSystemWideThreadManagement = LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement),
-								 UserMayEditMemo = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.EditThreadMemo),
-								 UserMayMarkThreadAsDone = (LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.FlagThreadAsDone) || (thread.StartedByUserID==userID)),
-								 UserMayManageSupportQueueContents = LoggedInUserAdapter.HasSystemActionRight(ActionRights.QueueContentManagement),
-								 UserMayDoBasicThreadOperations = !LoggedInUserAdapter.IsAnonymousUser(),
-								 ThreadIsBookmarked = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id),
-								 ThreadIsSubscribed = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id),
-								 ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(id, pageNoToFetch, numberOfMessagesPerPage),
-							 };
+			{
+				Thread = thread,
+				ForumName = forum.ForumName,
+				SectionName = CacheManager.GetSectionName(forum.SectionID),
+				PageNo = pageNo,
+				PageSize = numberOfMessagesPerPage,
+				NumberOfPages = ((numberOfMessages - 1) / numberOfMessagesPerPage) + 1,
+				ShowIPAddresses = (LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemManagement) ||
+								   LoggedInUserAdapter.HasSystemActionRight(ActionRights.SecurityManagement) ||
+								   LoggedInUserAdapter.HasSystemActionRight(ActionRights.UserManagement)),
+				ForumAllowsAttachments = (forum.MaxNoOfAttachmentsPerMessage > 0),
+				ThreadStartedByCurrentUser = thread.StartedByUserID == userID,
+				UserMayAddAttachments = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddAttachment),
+				UserCanCreateThreads = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddNormalThread) ||
+									   LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddStickyThread),
+				UserMayDoForumSpecificThreadManagement = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ForumSpecificThreadManagement),
+				UserMayDoSystemWideThreadManagement = LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement),
+				UserMayEditMemo = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.EditThreadMemo),
+				UserMayMarkThreadAsDone = (LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.FlagThreadAsDone) || (thread.StartedByUserID == userID)),
+				UserMayManageSupportQueueContents = LoggedInUserAdapter.HasSystemActionRight(ActionRights.QueueContentManagement),
+				UserMayDoBasicThreadOperations = !LoggedInUserAdapter.IsAnonymousUser(),
+				ThreadIsBookmarked = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id),
+				ThreadIsSubscribed = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id),
+				ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(id, pageNoToFetch, numberOfMessagesPerPage),
+			};
 			if(!thread.IsClosed)
 			{
-				threadData.UserMayAddNewMessages = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, thread.IsSticky ? ActionRights.AddAndEditMessageInSticky 
+				threadData.UserMayAddNewMessages = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, thread.IsSticky ? ActionRights.AddAndEditMessageInSticky
 																																  : ActionRights.AddAndEditMessage);
 				threadData.ShowEditMessageLink = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.EditDeleteOtherUsersMessages);
 			}
 			FillSupportQueueInformation(threadData);
-	        FillMemoInformation(threadData);
-            return View(threadData);
-        }
+			FillMemoInformation(threadData);
+			return View(threadData);
+		}
 
 
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleFlag(int id = 0, int pageNo = 1, string actionSelected="")
+		public ActionResult ToggleFlag(int id = 0, int pageNo = 1, string actionSelected = "")
 		{
 			if(LoggedInUserAdapter.IsAnonymousUser())
 			{
@@ -90,13 +90,13 @@ namespace SD.HnD.Gui.Controllers
 			}
 			return RedirectToAction("Index", "Home");
 		}
-		
 
-	    [Authorize]
+
+		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-	    public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
-	    {
+		public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
+		{
 			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
@@ -107,11 +107,11 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-		    if((newSectionId <= 0) || (newForumId <= 0))
-		    {
+			if((newSectionId <= 0) || (newForumId <= 0))
+			{
 				return RedirectToAction("Index", "Home");
 			}
-		    ThreadManager.MoveThread(id, newForumId);
+			ThreadManager.MoveThread(id, newForumId);
 			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
 		}
 
@@ -198,9 +198,9 @@ namespace SD.HnD.Gui.Controllers
 		/// <param name="id">the thread id</param>
 		/// <param name="thread">the thread object related to id</param>
 		/// <returns>An action result to redirect to if the current user shouldn't be here, otherwise null</returns>
-	    private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
-	    {
-			 thread = ThreadGuiHelper.GetThread(id);
+		private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
+		{
+			thread = ThreadGuiHelper.GetThread(id);
 			if(thread == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -215,8 +215,8 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-		    return null;
-	    }
+			return null;
+		}
 
 
 		private void FillMemoInformation(ThreadData container)
@@ -231,12 +231,12 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-	    private void FillSupportQueueInformation(ThreadData container)
-	    {
-		    if(!container.UserMayManageSupportQueueContents)
-		    {
-			    return;
-		    }
+		private void FillSupportQueueInformation(ThreadData container)
+		{
+			if(!container.UserMayManageSupportQueueContents)
+			{
+				return;
+			}
 			// fill support queue management area with data.
 			container.AllSupportQueues = CacheManager.GetAllSupportQueues().ToList();
 			container.ContainingSupportQueue = SupportQueueGuiHelper.GetQueueOfThread(container.Thread.ThreadID);
@@ -245,6 +245,6 @@ namespace SD.HnD.Gui.Controllers
 				// get claim info
 				container.SupportQueueThreadInfo = SupportQueueGuiHelper.GetSupportQueueThreadInfo(container.Thread.ThreadID, true);
 			}
-	    }
-    }
+		}
+	}
 }
