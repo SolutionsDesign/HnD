@@ -133,7 +133,7 @@
 							<div class="threadtools pull-right">
 								@if(Model.UserMayDoForumSpecificThreadManagement || Model.UserMayDoSystemWideThreadManagement)
 								{
-									<div class="btn-group">
+									<div class="btn-group pt3">
 										<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
 											<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
 										</a>&nbsp;
@@ -151,29 +151,36 @@
 										</ul>
 									</div>
 								}
-								@if(Model.UserMayMarkThreadAsDone)
-								{
-									string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
-									<a href="~/Thread/ToggleMarkAsDone/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
-								}
-								else
-								{
-									<i class="fa fa-check @if(!Model.Thread.MarkedAsDone)
-									                      {
-										                      @Html.Raw("dimmed")
-									                      }"></i>@Html.Raw("&nbsp; &nbsp;")
-								}
-								@if(Model.UserMayDoBasicThreadOperations)
-								{
-									string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
-									string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
-									<a href="~/Thread/ToggleSubscribe/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
-									<a href="~/Thread/ToggleBookmark/@Model.Thread.ThreadID/@Model.PageNo" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
-								}
-								@if(Model.UserMayAddNewMessages)
-								{
-									<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
-								}
+								<form method="POST" role="form" class="block-rightside" action="~/Thread/ToggleFlag/@Model.Thread.ThreadID/@Model.PageNo" id="threadFlagsForm">
+									@Html.AntiForgeryToken()
+									<input type="hidden" id="actionSelectedValue" name="actionSelected" value=""/>
+									<div class="threadtools">
+										@if(Model.UserMayMarkThreadAsDone)
+										{
+											string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
+											<a href="#" id="markDoneButton" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
+										}
+										else
+										{
+											<i class="fa fa-check @if(!Model.Thread.MarkedAsDone)
+											                      {
+												                      @Html.Raw("dimmed")
+											                      }"></i>@Html.Raw("&nbsp; &nbsp;")
+
+										}
+										@if(Model.UserMayDoBasicThreadOperations)
+										{
+											string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
+											string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
+											<a href="#" id="subscribeButton" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
+											<a href="#" id="bookmarkButton" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
+										}
+										@if(Model.UserMayAddNewMessages)
+										{
+											<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
+										}
+								</div>
+								</form>
 								<br class="clear" />
 							</div>
 						</div>
@@ -373,6 +380,29 @@
 					$('#moveThreadForumSelectorPlaceHolder').fadeOut('fast');
 					$('#moveThreadModalLink').addClass("disabled");
 				}
+			});
+		</script>
+	}
+	@if(Model.UserMayMarkThreadAsDone)
+	{
+		<script type="text/javascript">
+			$('#markDoneButton').bind("click", function () {
+				$('#actionSelectedValue').val('MarkAsDone');
+				$('#threadFlagsForm').submit();
+			})
+		</script>
+	}
+	@if(Model.UserMayDoBasicThreadOperations)
+	{
+		<script type="text/javascript">
+			$('#subscribeButton').bind("click", function() {
+				$('#actionSelectedValue').val('Subscribe');
+				$('#threadFlagsForm').submit();
+			});
+
+			$('#bookmarkButton').bind("click", function() {
+				$('#actionSelectedValue').val('Bookmark');
+				$('#threadFlagsForm').submit();
 			});
 		</script>
 	}

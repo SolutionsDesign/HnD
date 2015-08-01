@@ -68,87 +68,29 @@ namespace SD.HnD.Gui.Controllers
             return View(threadData);
         }
 
-#warning POSSIBLE CROSS-SITE REQUEST FORGERY. Perhaps solveable with form and 1 method, and the buttons are submitbuttons to this form, then check here which button was clicked.
+
 		[Authorize]
-		public ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult ToggleFlag(int id = 0, int pageNo = 1, string actionSelected="")
 		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
-			if(result != null)
-			{
-				return result;
-			}
-			var userID = LoggedInUserAdapter.GetUserID();
 			if(LoggedInUserAdapter.IsAnonymousUser())
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			if(UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id))
+			// security checks are done in the methods called. 
+			switch(actionSelected)
 			{
-				UserManager.RemoveSingleSubscription(id, userID);
+				case "Subscribe":
+					return ToggleSubscribe(id, pageNo);
+				case "Bookmark":
+					return ToggleBookmark(id, pageNo);
+				case "MarkAsDone":
+					return ToggleMarkAsDone(id, pageNo);
 			}
-			else
-			{
-				UserManager.AddThreadToSubscriptions(id, userID, null);
-			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			return RedirectToAction("Index", "Home");
 		}
-
-
-#warning POSSIBLE CROSS-SITE REQUEST FORGERY.
-		[Authorize]
-		public ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
-		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
-			if(result != null)
-			{
-				return result;
-			}
-			var userID = LoggedInUserAdapter.GetUserID();
-			if(LoggedInUserAdapter.IsAnonymousUser())
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			if(UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id))
-			{
-				UserManager.RemoveSingleBookmark(id, userID);
-			}
-			else
-			{
-				UserManager.AddThreadToBookmarks(id, userID);
-			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
-		}
-
-
-#warning POSSIBLE CROSS-SITE REQUEST FORGERY.
-		[Authorize]
-		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
-		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
-			if(result != null)
-			{
-				return result;
-			}
-	        var userID = LoggedInUserAdapter.GetUserID();
-			if(!(LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.FlagThreadAsDone) || (thread.StartedByUserID == userID)))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			if(thread.MarkedAsDone)
-			{
-				ThreadManager.UnMarkThreadAsDone(thread.ThreadID, userID);
-			}
-			else
-			{
-				ThreadManager.MarkThreadAsDone(thread.ThreadID);
-			}
-			return RedirectToAction("Index", "Thread", new {id = id, pageNo = pageNo});
-		}
-
+		
 
 	    [Authorize]
 		[HttpPost]
@@ -173,6 +115,81 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
 		}
 
+
+		private ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id))
+			{
+				UserManager.RemoveSingleSubscription(id, userID);
+			}
+			else
+			{
+				UserManager.AddThreadToSubscriptions(id, userID, null);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
+
+
+		private ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id))
+			{
+				UserManager.RemoveSingleBookmark(id, userID);
+			}
+			else
+			{
+				UserManager.AddThreadToBookmarks(id, userID);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
+
+
+		private ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(!(LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.FlagThreadAsDone) || (thread.StartedByUserID == userID)))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(thread.MarkedAsDone)
+			{
+				ThreadManager.UnMarkThreadAsDone(thread.ThreadID, userID);
+			}
+			else
+			{
+				ThreadManager.MarkThreadAsDone(thread.ThreadID);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
 
 
 		/// <summary>
