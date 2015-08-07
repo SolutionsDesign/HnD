@@ -72,29 +72,6 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleFlag(int id = 0, int pageNo = 1, string actionSelected = "")
-		{
-			if(LoggedInUserAdapter.IsAnonymousUser())
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			// security checks are done in the methods called. 
-			switch(actionSelected)
-			{
-				case "Subscribe":
-					return ToggleSubscribe(id, pageNo);
-				case "Bookmark":
-					return ToggleBookmark(id, pageNo);
-				case "MarkAsDone":
-					return ToggleMarkAsDone(id, pageNo);
-			}
-			return RedirectToAction("Index", "Home");
-		}
-
-
-		[Authorize]
-		[HttpPost]
-		[ValidateAntiForgeryToken]
 		public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
 		{
 			ThreadEntity thread;
@@ -116,7 +93,10 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-		private ActionResult ToggleSubscribe(int id = 0, int pageNo = 1)
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Delete(int id = 0)
 		{
 			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);
@@ -124,37 +104,34 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return result;
 			}
-			var userID = LoggedInUserAdapter.GetUserID();
-			if(LoggedInUserAdapter.IsAnonymousUser())
+			if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			if(UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id))
-			{
-				UserManager.RemoveSingleSubscription(id, userID);
-			}
-			else
-			{
-				UserManager.AddThreadToSubscriptions(id, userID, null);
-			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			int forumId = thread.ForumID;
+			ThreadManager.DeleteThread(id);
+			return RedirectToAction("Index", "Forum", new { id = forumId });
 		}
 
 
-		private ActionResult ToggleBookmark(int id = 0, int pageNo = 1)
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult ToggleBookmark(int id = 0)
 		{
 			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
 			{
-				return result;
+				return Json(new { success = false });
 			}
 			var userID = LoggedInUserAdapter.GetUserID();
-			if(LoggedInUserAdapter.IsAnonymousUser())
+			if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
 			{
-				return RedirectToAction("Index", "Home");
+				return Json(new { success = false });
 			}
-			if(UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id))
+			bool currentState = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id);
+			if(currentState)
 			{
 				UserManager.RemoveSingleBookmark(id, userID);
 			}
@@ -162,11 +139,43 @@ namespace SD.HnD.Gui.Controllers
 			{
 				UserManager.AddThreadToBookmarks(id, userID);
 			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			return Json(new {success = true, newstate = !currentState});
 		}
 
 
-		private ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult ToggleSubscribe(int id = 0)
+		{
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return Json(new {success = false});
+			}
+			var userID = LoggedInUserAdapter.GetUserID();
+			if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
+			{
+				return Json(new { success = false });
+			}
+			var currentState = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id);
+			if(currentState)
+			{
+				UserManager.RemoveSingleSubscription(id, userID);
+			}
+			else
+			{
+				UserManager.AddThreadToSubscriptions(id, userID, null);
+			}
+			return Json(new { success = true, newstate = !currentState });
+		}
+
+		
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
 			var result = PerformSecurityCheck(id, out thread);
@@ -201,16 +210,13 @@ namespace SD.HnD.Gui.Controllers
 		private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
 		{
 			thread = ThreadGuiHelper.GetThread(id);
-			if(thread == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
+			if((thread == null) || LoggedInUserAdapter.IsAnonymousUser() || !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 			// check if the user can view this thread. If not, don't continue.
-			if((thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) && !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
+			if((thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) &&
+				!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
 				!thread.IsSticky)
 			{
 				return RedirectToAction("Index", "Home");

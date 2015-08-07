@@ -131,57 +131,61 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="threadtools pull-right">
-								@if(Model.UserMayDoForumSpecificThreadManagement || Model.UserMayDoSystemWideThreadManagement)
-								{
-									<div class="btn-group pt3">
-										<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
-											<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-										</a>&nbsp;
-										<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
-											@if(Model.UserMayDoSystemWideThreadManagement)
-											{
-												<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#moveThreadModal" title="Move thread">Move thread</a></li>
-												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete thread</a></li>
-											}
-											@if(!Model.Thread.IsClosed && Model.UserMayAddNewMessages)
-											{
-												<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
-											}
-											<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Edit thread properties</a></li>
-										</ul>
-									</div>
-								}
-								<form method="POST" role="form" class="block-rightside" action="~/Thread/ToggleFlag/@Model.Thread.ThreadID/@Model.PageNo" id="threadFlagsForm">
-									@Html.AntiForgeryToken()
-									<input type="hidden" id="actionSelectedValue" name="actionSelected" value=""/>
-									<div class="threadtools">
-										@if(Model.UserMayMarkThreadAsDone)
+								<div class="block-leftside"><span>&nbsp;</span>
+									@if(Model.UserMayDoForumSpecificThreadManagement || Model.UserMayDoSystemWideThreadManagement)
+									{
+										<div class="btn-group pt3">
+											<a href="#" class="fs-tooltip dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Thread options">
+												<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+											</a>&nbsp;
+											<ul class="dropdown-menu menu submenu inpageDropDown" role="menu">
+												@if(Model.UserMayDoSystemWideThreadManagement)
+												{
+													<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#moveThreadModal" title="Move thread">Move thread</a></li>
+													<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#deleteThreadModal" title="Delete thread">Delete thread</a></li>
+												}
+												@if(!Model.Thread.IsClosed && Model.UserMayAddNewMessages)
+												{
+													<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
+												}
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#editThreadPropertiesModal" title="Edit thread properties">Edit thread properties</a></li>
+											</ul>
+										</div>
+									}
+								</div>
+								<div class="threadtools block-rightside">
+									@{
+										string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
+										if(Model.UserMayMarkThreadAsDone)
 										{
-											string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
-											<a href="#" id="markDoneButton" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
+											<form method="POST" role="form" class="block-leftside" action="~/Thread/ToggleMarkAsDone/@Model.Thread.ThreadID/@Model.PageNo" id="threadFlagsForm">
+												<div class="threadtools">
+													@Html.AntiForgeryToken()
+													<a href="#" id="markDoneButton" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
+												</div>
+											</form>
 										}
 										else
 										{
-											<i class="fa fa-check @if(!Model.Thread.MarkedAsDone)
-											                      {
-												                      @Html.Raw("dimmed")
-											                      }"></i>@Html.Raw("&nbsp; &nbsp;")
-
+											<i class="fa fa-check @dimmedClass"></i><span>&nbsp;&nbsp;</span>
 										}
-										@if(Model.UserMayDoBasicThreadOperations)
-										{
-											string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
-											string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
-											<a href="#" id="subscribeButton" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
-											<a href="#" id="bookmarkButton" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
-										}
-										@if(Model.UserMayAddNewMessages)
-										{
-											<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
-										}
+									}
+									@if(Model.UserMayDoBasicThreadOperations)
+									{
+										string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
+										string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
+										<a href="#" id="subscribeButton" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
+										<a href="#" id="bookmarkButton" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
+									}
+									@if(Model.UserMayAddNewMessages)
+									{
+										<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
+									}
+									@{
+										// leave following nbsp; in the HTML to make sure Chrome knows this div is not empty, otherwise it will show 30px extra in the header. Why? Who knows!
+									}
+									<span>&nbsp;</span>
 								</div>
-								</form>
-								<br class="clear" />
 							</div>
 						</div>
 					</div>
@@ -307,45 +311,109 @@
 {
 	<div class="modal fade" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="moveThreadModalLabel">
 		<div class="row">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="moveThreadModalLabel">Move thread</h4>
-						</div>
-						<form action="~/Thread/Move/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
-							@Html.AntiForgeryToken()
-							<div class="col-sm-12 pb20 pt20">
-								<div class="row">
-									<div class="col-sm-12">
-										To move the thread <strong>'@Model.Thread.Subject'</strong> to a different forum, please select the forum below to which you want to move the thread to and
-										click <em>Move</em>.
-									</div>
-								</div>
-								<div class="row pt30">
-									<div class="col-sm-3 plr10">
-										<span class="pull-right pt3">Section </span>
-									</div>
-									<div class="col-sm-9 plr0">
-										<select id="moveThreadSectionComboBox" class="form-control no-roundcorners" name="newSectionId">
-											<option value="0" selected>Please select a section...</option>
-											@foreach(SectionEntity s in CacheManager.GetAllSections())
-											{
-												<option value="@s.SectionID">@s.SectionName</option>
-											}
-										</select>
-									</div>
-								</div>
-								<div class="row pt10" id="moveThreadForumSelectorPlaceHolder">
-								</div>
-							</div>
-							<div class="pull-center mb20 pt20">
-								<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
-								<button type="submit" class="btn btn-primary btn-default disabled" id="moveThreadModalLink">&nbsp;&nbsp;Move&nbsp;&nbsp;</button>
-							</div>
-						</form>
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="moveThreadModalLabel">Move thread</h4>
 					</div>
+					<form action="~/Thread/Move/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
+						@Html.AntiForgeryToken()
+						<div class="col-sm-12 pb20 pt20">
+							<div class="row">
+								<div class="col-sm-12">
+									To move the thread <strong>'@Model.Thread.Subject'</strong> to a different forum, please select the forum below to which you want to move the thread to and
+									click <em>Move</em>.
+								</div>
+							</div>
+							<div class="row pt30">
+								<div class="col-sm-3 plr10">
+									<span class="pull-right pt3">Section </span>
+								</div>
+								<div class="col-sm-9 plr0">
+									<select id="moveThreadSectionComboBox" class="form-control no-roundcorners" name="newSectionId">
+										<option value="0" selected>Please select a section...</option>
+										@foreach(SectionEntity s in CacheManager.GetAllSections())
+										{
+											<option value="@s.SectionID">@s.SectionName</option>
+										}
+									</select>
+								</div>
+							</div>
+							<div class="row pt10" id="moveThreadForumSelectorPlaceHolder">
+							</div>
+						</div>
+						<div class="pull-center mb20 pt20">
+							<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
+							<button type="submit" class="btn btn-primary btn-default disabled" id="moveThreadModalLink">&nbsp;&nbsp;Move&nbsp;&nbsp;</button>
+						</div>
+					</form>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="deleteThreadModal" tabindex="-1" role="dialog" aria-labelledby="deleteThreadModalLabel">
+		<div class="row">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="deleteThreadModalLabel">Delete thread</h4>
+					</div>
+					<form action="~/Thread/Delete/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
+						@Html.AntiForgeryToken()
+						<div class="col-sm-12 pb20 pt20">
+							<div class="row">
+								<div class="col-sm-12">
+									To delete the thread <strong>'@Model.Thread.Subject'</strong>, please click <em>Delete</em>. To keep the thread, click <em>Keep</em>
+								</div>
+							</div>
+						</div>
+						<div class="pull-center mb20 pt20">
+							<a class="btn btn-default btn-primary" data-dismiss="modal">&nbsp;Keep&nbsp;</a>&nbsp;&nbsp;
+							<button type="submit" class="btn btn-default" id="deleteThreadModalLink">&nbsp;&nbsp;Delete&nbsp;&nbsp;</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="editThreadPropertiesModal" tabindex="-1" role="dialog" aria-labelledby="editThreadPropertiesModalLabel">
+		<div class="row">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="editThreadPropertiesModalLabel">Edit thread properties</h4>
+					</div>
+					<form action="~/Thread/EditProperties/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
+						@Html.AntiForgeryToken()
+						<div class="col-sm-12 pb20 pt20">
+							<div class="row pt30">
+								<div class="col-sm-3 plr20">
+									<span class="pull-right pt3">Subject </span>
+								</div>
+								<div class="col-sm-9 plr0">
+									<div class="form-group">
+										<input autofocus="" size="60" class="form-control" data-val="true" data-val-maxlength="The field Subject must be a string or array type with a maximum length of &#39;250&#39;." 
+											   data-val-maxlength-max="250" data-val-required="The Subject field is required." id="subjectTextBox" name="Subject" type="text" value="@Model.Thread.Subject" />
+										<span class="field-validation-valid text-danger" data-valmsg-for="Subject" data-valmsg-replace="true"></span>
+									</div>
+								</div>
+							</div>
+							<div class="row pt10" id="moveThreadForumSelectorPlaceHolder">
+
+							</div>
+						</div>
+						<div class="pull-center mb20 pt20">
+							<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
+							<button type="submit" class="btn btn-default btn-primary" id="updateThreadPropertiesModalLink">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 }
@@ -355,7 +423,7 @@
 	@if(Model.ShowDeleteMessageLink)
 	{
 		<script type="text/javascript">
-			$('#confirmMessageDeleteModal').on('show.bs.modal', function (event) {
+			$('#confirmMessageDeleteModal').on('show.bs.modal', function(event) {
 				var button = $(event.relatedTarget); // Button that triggered the modal
 				var messageid = button.data('messageid');
 				$('#confirmMessageDeleteModalMessageContents').html($('#MessageContents' + messageid).html());
@@ -367,10 +435,10 @@
 	@if(Model.UserMayDoSystemWideThreadManagement)
 	{
 		<script type="text/javascript">
-			$('#moveThreadSectionComboBox').change(function () {
+			$('#moveThreadSectionComboBox').change(function() {
 				var selectedSectionID = $(this).val();
 				if (selectedSectionID > 0) {
-					$.get('@ApplicationAdapter.GetVirtualRoot()Section/Forums/' + selectedSectionID, function (data) {
+					$.get('@ApplicationAdapter.GetVirtualRoot()Section/Forums/' + selectedSectionID, function(data) {
 						$('#moveThreadForumSelectorPlaceHolder').html(data);
 						$('#moveThreadForumSelectorPlaceHolder').fadeIn('fast');
 						$('#moveThreadModalLink').removeClass("disabled");
@@ -386,8 +454,7 @@
 	@if(Model.UserMayMarkThreadAsDone)
 	{
 		<script type="text/javascript">
-			$('#markDoneButton').bind("click", function () {
-				$('#actionSelectedValue').val('MarkAsDone');
+			$('#markDoneButton').bind("click", function() {
 				$('#threadFlagsForm').submit();
 			})
 		</script>
@@ -395,14 +462,11 @@
 	@if(Model.UserMayDoBasicThreadOperations)
 	{
 		<script type="text/javascript">
-			$('#subscribeButton').bind("click", function() {
-				$('#actionSelectedValue').val('Subscribe');
-				$('#threadFlagsForm').submit();
+			$('#subscribeButton').bind("click", function () {
+				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID', '#subscribeButton');
 			});
-
-			$('#bookmarkButton').bind("click", function() {
-				$('#actionSelectedValue').val('Bookmark');
-				$('#threadFlagsForm').submit();
+			$('#bookmarkButton').bind("click", function () {
+				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID', '#bookmarkButton');
 			});
 		</script>
 	}
