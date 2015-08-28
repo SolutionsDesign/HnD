@@ -48,6 +48,16 @@ namespace SD.HnD.Gui.Models
 		public bool ThreadIsSubscribed { get; set; }
 		public List<MessagesInThreadRow> ThreadMessages { get; set; }
 
+		public bool IsClosed
+		{
+			get { return this.Thread.IsClosed; }
+		}
+
+		public bool IsSticky
+		{
+			get { return this.Thread.IsSticky; }
+		}
+
 		public int PageNoOlderMessages
 		{
 			get

@@ -17,7 +17,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult Index(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, true, out thread);
 			if(result != null)
 			{
 				return result;
@@ -72,10 +72,35 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		public ActionResult EditProperties([Bind(Include = "Subject, IsSticky, IsClosed")] ThreadPropertiesModel properties, int id = 0)
+		{
+			if(!ModelState.IsValid)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, false, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+			if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			ThreadManager.ModifyThreadProperties(id, properties.Subject, properties.IsSticky, properties.IsClosed);
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
+		}
+
+
+
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, false, out thread);
 			if(result != null)
 			{
 				return result;
@@ -99,7 +124,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult Delete(int id = 0)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, false, out thread);
 			if(result != null)
 			{
 				return result;
@@ -120,7 +145,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult ToggleBookmark(int id = 0)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, false, out thread);
 			if(result != null)
 			{
 				return Json(new { success = false });
@@ -149,7 +174,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult ToggleSubscribe(int id = 0)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, false, out thread);
 			if(result != null)
 			{
 				return Json(new {success = false});
@@ -178,7 +203,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
 		{
 			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var result = PerformSecurityCheck(id, false, out thread);
 			if(result != null)
 			{
 				return result;
@@ -205,12 +230,13 @@ namespace SD.HnD.Gui.Controllers
 		/// Performs the basic security check for the logged in user if that user has any access rights to this thread at all. It doesn't check specific thread actions. 
 		/// </summary>
 		/// <param name="id">the thread id</param>
+		/// <param name="allowAnonymous">if set to true, anonymous users are allowed, otherwise they're denied access</param>
 		/// <param name="thread">the thread object related to id</param>
 		/// <returns>An action result to redirect to if the current user shouldn't be here, otherwise null</returns>
-		private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
+		private ActionResult PerformSecurityCheck(int id, bool allowAnonymous, out ThreadEntity thread)
 		{
 			thread = ThreadGuiHelper.GetThread(id);
-			if((thread == null) || LoggedInUserAdapter.IsAnonymousUser() || !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
+			if((thread == null) || (!allowAnonymous && LoggedInUserAdapter.IsAnonymousUser()) || !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
 			{
 				return RedirectToAction("Index", "Home");
 			}

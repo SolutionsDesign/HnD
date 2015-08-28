@@ -86,6 +86,10 @@ input[type=search]
 input[type=checkbox] {
 	margin-top: 7px;	/* to align the label with the checkbox. Hurray for HTML! such an advanced system... */
 }
+
+label {
+	font-weight: normal;
+}
 /* #endregion */
 
 /* #region id defines */

@@ -309,7 +309,7 @@
 }
 @if(Model.UserMayDoSystemWideThreadManagement)
 {
-	<div class="modal fade" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="moveThreadModalLabel">
+	<div class="modal" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="moveThreadModalLabel">
 		<div class="row">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -353,7 +353,8 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="deleteThreadModal" tabindex="-1" role="dialog" aria-labelledby="deleteThreadModalLabel">
+
+	<div class="modal" id="deleteThreadModal" tabindex="-1" role="dialog" aria-labelledby="deleteThreadModalLabel">
 		<div class="row">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -380,7 +381,8 @@
 		</div>
 	</div>
 
-	<div class="modal fade" id="editThreadPropertiesModal" tabindex="-1" role="dialog" aria-labelledby="editThreadPropertiesModalLabel">
+
+	<div class="modal" id="editThreadPropertiesModal" tabindex="-1" role="dialog" aria-labelledby="editThreadPropertiesModalLabel">
 		<div class="row">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -388,30 +390,35 @@
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 						<h4 class="modal-title" id="editThreadPropertiesModalLabel">Edit thread properties</h4>
 					</div>
-					<form action="~/Thread/EditProperties/@Model.Thread.ThreadID" method="post" role="form" class="form-inline">
-						@Html.AntiForgeryToken()
-						<div class="col-sm-12 pb20 pt20">
-							<div class="row pt30">
-								<div class="col-sm-3 plr20">
-									<span class="pull-right pt3">Subject </span>
-								</div>
-								<div class="col-sm-9 plr0">
-									<div class="form-group">
-										<input autofocus="" size="60" class="form-control" data-val="true" data-val-maxlength="The field Subject must be a string or array type with a maximum length of &#39;250&#39;." 
-											   data-val-maxlength-max="250" data-val-required="The Subject field is required." id="subjectTextBox" name="Subject" type="text" value="@Model.Thread.Subject" />
-										<span class="field-validation-valid text-danger" data-valmsg-for="Subject" data-valmsg-replace="true"></span>
-									</div>
+					<div class="modal-body">
+						<form action="~/Thread/EditProperties/@Model.Thread.ThreadID" method="post" role="form" class="form-horizontal">
+							@Html.AntiForgeryToken()
+							<div class="form-group">
+								<label for="subjectTextBox" class="col-sm-2 plr20 pt3">Subject</label>
+								<div class="col-sm-9">
+									<input size="60" class="form-control" data-val="true" data-val-maxlength="The field Subject must be a string or array type with a maximum length of &#39;250&#39;."
+											data-val-maxlength-max="250" data-val-required="The Subject field is required." id="subjectTextBox" name="Subject" type="text" value="@Model.Thread.Subject" />
+									<span class="field-validation-valid text-danger" data-valmsg-for="Subject" data-valmsg-replace="true"></span>
 								</div>
 							</div>
-							<div class="row pt10" id="moveThreadForumSelectorPlaceHolder">
-
+							<div class="form-group pt0">
+								<label class="col-sm-offset-2 col-sm-9">
+									@Html.CheckBoxFor(m=>m.IsClosed)
+									Is closed
+								</label>
 							</div>
-						</div>
-						<div class="pull-center mb20 pt20">
-							<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
-							<button type="submit" class="btn btn-default btn-primary" id="updateThreadPropertiesModalLink">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>
-						</div>
-					</form>
+							<div class="form-group pt0">
+								<label class="col-sm-offset-2 col-sm-9">
+									@Html.CheckBoxFor(m => m.IsSticky)
+									Is sticky / pinned
+								</label>
+							</div>
+							<div class="pull-center mb20 pt20">
+								<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
+								<button type="submit" class="btn btn-default btn-primary" id="updateThreadPropertiesModalLink">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
