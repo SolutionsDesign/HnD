@@ -89,13 +89,13 @@
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DAL" />
+        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DALAdapter" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
         <PlatformName Value=".NET 4.5.2" />
-        <PresetName Value="SD.Presets.SelfServicing.General" />
-        <RootNamespace Value="SD.HnD.DAL" />
-        <TemplateGroup Value="SelfServicing" />
+        <PresetName Value="SD.Presets.Adapter.General" />
+        <RootNamespace Value="SD.HnD.DALAdapter" />
+        <TemplateGroup Value="Adapter" />
         <TemplateBindings>
           <Binding Name="SD.TemplateBindings.SharedTemplates.Deprecated" />
           <Binding Name="SD.TemplateBindings.SharedTemplates.NET45x" />

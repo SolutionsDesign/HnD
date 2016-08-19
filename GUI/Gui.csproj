@@ -55,11 +55,11 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.OrmProfiler.Interceptor.NET45, Version=1.5.0.0, Culture=neutral, PublicKeyToken=f175dc08f093a9ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150209\lib\net45\SD.Tools.OrmProfiler.Interceptor.NET45.dll</HintPath>
+      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150715\lib\net45\SD.Tools.OrmProfiler.Interceptor.NET45.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.OrmProfiler.Shared, Version=1.5.0.0, Culture=neutral, PublicKeyToken=f175dc08f093a9ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150209\lib\net45\SD.Tools.OrmProfiler.Shared.dll</HintPath>
+      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150715\lib\net45\SD.Tools.OrmProfiler.Shared.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -153,6 +153,14 @@
     <Content Include="pics\logo%402x.png" />
     <Content Include="pics\logo.png" />
     <Content Include="Rssforum.aspx" />
+    <None Include="Scripts\jquery-3.1.0.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.0.js" />
+    <Content Include="Scripts\jquery-3.1.0.min.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.js" />
+    <Content Include="Scripts\jquery-3.1.0.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -221,6 +229,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\ForumSelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-3.1.0.slim.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-3.1.0.min.map" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
