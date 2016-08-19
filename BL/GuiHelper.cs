@@ -20,19 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Data;
-using System.Globalization;
-using System.Configuration;
-using System.Xml.Xsl;
 using System.IO;
-using System.Text.RegularExpressions;
-
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.DaoClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.BL
 {

@@ -29,8 +29,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription("HnD's Business Logic Layer")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Solutions Design")]
-[assembly: AssemblyProduct("HnD, a .NET 2.0 Forum system using LLBLGen Pro")]
-[assembly: AssemblyCopyright("(c)2002-2006 Solutions Design")]
+[assembly: AssemblyProduct("HnD, a .NET Forum system using LLBLGen Pro")]
+[assembly: AssemblyCopyright("(c)2002-2016 Solutions Design")]
 [assembly: AssemblyTrademark("HnD, LLBLGen and LLBLGen Pro are trademarks of Solutions Design.")]
 [assembly: AssemblyCulture("")]		
 
@@ -45,7 +45,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

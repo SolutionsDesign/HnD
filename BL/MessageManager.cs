@@ -19,17 +19,18 @@
 */
 using System;
 using System.Data;
+using System.Net.Mail;
 using SD.HnD.Utility;
 
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.DaoClasses;
-using SD.HnD.DAL.FactoryClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -45,43 +46,37 @@ namespace SD.HnD.BL
 		/// <returns>True if succeeded, false otherwise</returns>
 		public static bool DeleteMessage(int messageID)
 		{
-			Transaction trans = new Transaction(IsolationLevel.ReadCommitted, "DeleteMessage");
-
-            try
+			using(var adapter = new DataAccessAdapter())
 			{
-				// formulate a filter so we can re-use the delete routine for all messages in threads matching a filter. 
-				PredicateExpression messageFilter = new PredicateExpression(MessageFields.MessageID == messageID);
-
-				// call the routine which is used to delete 1 or more messages and related data from the db.
-				DeleteMessages(messageFilter, trans);
-				trans.Commit();
-				return true;
-			}
-			catch(Exception)
-			{
-				trans.Rollback();
-				throw;
-			}
-			finally
-			{
-				trans.Dispose();
+				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteMessage");
+				try
+				{
+					DeleteMessages(MessageFields.MessageID == messageID, adapter);
+					adapter.Commit();
+					return true;
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Deletes all messages in threads which match the passed in filter. 
 		/// </summary>
 		/// <param name="threadFilter">The thread filter.</param>
-		/// <param name="trans">The transaction to use.</param>
-		internal static void DeleteAllMessagesInThreads(PredicateExpression threadFilter, Transaction trans)
+		/// <param name="adapter">The adapter to use for persistence activity.</param>
+		internal static void DeleteAllMessagesInThreads(PredicateExpression threadFilter, IDataAccessAdapter adapter)
 		{
 			// fabricate the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
 			// WHERE Message.ThreadID IN (SELECT ThreadID FROM Thread WHERE threadFilter)
 			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create()
 																.Select(ThreadFields.ThreadID)
 																.Where(threadFilter));
-			DeleteMessages(messageFilter, trans);
+			DeleteMessages(messageFilter, adapter);
 		}
 
 
@@ -89,29 +84,25 @@ namespace SD.HnD.BL
 		/// Deletes the messages matching the messagefilter passed in
 		/// </summary>
 		/// <param name="messageFilter">The message filter.</param>
-		/// <param name="trans">The transaction to use.</param>
-		private static void DeleteMessages(IPredicate messageFilter, Transaction trans)
+		/// <param name="adapter">The adapter to use for persistence activity.</param>
+		private static void DeleteMessages(IPredicate messageFilter, IDataAccessAdapter adapter)
 		{
 			// first delete all audit info for these message. This isn't done by a batch call directly on the db, as this is a targetperentity hierarchy
 			// which can't be deleted directly into the database in all cases, so we first fetch the entities to delete. 
-			AuditDataMessageRelatedCollection messageAudits = new AuditDataMessageRelatedCollection();
-			trans.Add(messageAudits);
-			// use a fieldcompareset predicate to get the auditdata related to this message and then delete all of them using the collection.
-			messageAudits.GetMulti(new FieldCompareSetPredicate(AuditDataMessageRelatedFields.MessageID, MessageFields.MessageID, SetOperator.In, messageFilter));
-			messageAudits.DeleteMulti();
+			var qf = new QueryFactory();
+			var q = qf.AuditDataMessageRelated
+							.Where(AuditDataMessageRelatedFields.MessageID.In(qf.Create()
+																					.Select(MessageFields.MessageID)
+																					.Where(messageFilter)));
+			var messageAudits = adapter.FetchQuery(q);
+			adapter.DeleteEntityCollection(messageAudits);
 
 			// delete all attachments for this message. This can be done directly onto the db.
-			AttachmentCollection attachments = new AttachmentCollection();
-			trans.Add(attachments);
-			// delete these directly from the db, using a fieldcompareset predicate
-			attachments.DeleteMulti(new FieldCompareSetPredicate(AttachmentFields.MessageID, MessageFields.MessageID, SetOperator.In, messageFilter));
-
-			// delete the message/messages
-			MessageCollection messages = new MessageCollection();
-			trans.Add(messages);
-			// use the passed in filter to remove the messages
-			messages.DeleteMulti(messageFilter);
-
+			adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity),
+										   new RelationPredicateBucket(AttachmentFields.MessageID.In(qf.Create()
+																									   .Select(MessageFields.MessageID)
+																									   .Where(messageFilter))));
+			adapter.DeleteEntitiesDirectly(typeof(MessageEntity), new RelationPredicateBucket(messageFilter));
 			// don't commit the transaction, leave that to the caller.
 		}
 

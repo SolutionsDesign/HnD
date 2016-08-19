@@ -26,14 +26,12 @@ using System.ComponentModel;
 using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.TypedListClasses;
-using SD.HnD.DAL.FactoryClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.DaoClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -56,7 +54,12 @@ namespace SD.HnD.BL
 						  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
 						  .OrderBy(MessageFields.PostingDate.Descending())
 						  .Limit(amount);
-			return new TypedListDAO().FetchQuery(q);
+			List<ForumMessagesRow> toReturn;
+			using(var adapter = new DataAccessAdapter())
+			{
+				toReturn = adapter.FetchQuery(q);
+			}
+			return toReturn;
 		}
 
 		
@@ -93,8 +96,12 @@ namespace SD.HnD.BL
 				// expression
 				q.AndWhere((ThreadFields.StartedByUserID == userID).Or(ThreadFields.IsSticky == true));
 			}
-			var dao = new TypedListDAO();
-			return dao.FetchQuery(q);
+			List<AggregatedThreadRow> toReturn;
+			using(var adapter = new DataAccessAdapter())
+			{
+				toReturn = adapter.FetchQuery(q);
+			}
+			return toReturn;
 		}
 
 
@@ -107,7 +114,12 @@ namespace SD.HnD.BL
 			var qf = new QueryFactory();
 			var q = qf.GetForumsWithSectionNameTypedList()
 							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
-			return new TypedListDAO().FetchQuery(q);
+			List<ForumsWithSectionNameRow> toReturn;
+			using(var adapter = new DataAccessAdapter())
+			{
+				toReturn = adapter.FetchQuery(q);
+			}
+			return toReturn;
 		}
 
 
@@ -116,13 +128,16 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="sectionID">The section ID from which forums should be retrieved</param>
 		/// <returns>Entity collection with entities for all forums in this section sorted alphabitacally</returns>
-		public static ForumCollection GetAllForumsInSection(int sectionID)
+		public static EntityCollection<ForumEntity> GetAllForumsInSection(int sectionID)
 		{
 			var q = new QueryFactory().Forum
 						.Where(ForumFields.SectionID == sectionID)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
-			var toReturn = new ForumCollection();
-			toReturn.GetMulti(q);
+			var toReturn = new EntityCollection<ForumEntity>();
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.FetchQuery(q, toReturn);
+			}
 			return toReturn;
 		}
 
@@ -139,7 +154,7 @@ namespace SD.HnD.BL
 		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums displayable to the
 		/// user it's not present in the returned hashtable.
 		/// </returns>
-        public static MultiValueHashtable<int, AggregatedForumRow> GetAllAvailableForumsAggregatedData(SectionCollection availableSections, List<int> accessableForums,
+        public static MultiValueHashtable<int, AggregatedForumRow> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections, List<int> accessableForums,
 																			   List<int> forumsWithThreadsFromOthers, int userID)
         {
 			var toReturn = new MultiValueHashtable<int, AggregatedForumRow>();
@@ -195,14 +210,15 @@ namespace SD.HnD.BL
 									})
 						.Where(ForumFields.ForumID == accessableForums)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
-
-			var results = new TypedListDAO().FetchQuery(q);
-
-			foreach(var forum in results)
+			using(var adapter = new DataAccessAdapter())
 			{
-				toReturn.Add(forum.SectionID, forum);
+				var results = adapter.FetchQuery(q);
+				foreach(var forum in results)
+				{
+					toReturn.Add(forum.SectionID, forum);
+				}
 			}
-            return toReturn;
+			return toReturn;
         }
 
 

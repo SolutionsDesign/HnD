@@ -6,14 +6,14 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SD.HnD.DALAdapter")]
+[assembly: AssemblyDescription("HnD's entity model")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]		
+[assembly: AssemblyCompany("Solutions Design")]
+[assembly: AssemblyProduct("HnD, a .NET Forum system using LLBLGen Pro")]
+[assembly: AssemblyCopyright("(c)2002-2016 Solutions Design")]
+[assembly: AssemblyTrademark("HnD, LLBLGen and LLBLGen Pro are trademarks of Solutions Design.")]
+[assembly: AssemblyCulture("")]
 [assembly: System.CLSCompliant(true)]
 
 //
@@ -27,7 +27,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("3.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

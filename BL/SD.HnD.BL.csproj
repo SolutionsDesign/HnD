@@ -114,9 +114,13 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\DAL\SD.HnD.DAL.csproj">
-      <Project>{43C8451A-A377-4589-BF7D-73BE386E7B4D}</Project>
-      <Name>SD.HnD.DAL</Name>
+    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapter.csproj">
+      <Project>{2b4058f7-26d3-4bda-b5ff-be048fdce94c}</Project>
+      <Name>SD.HnD.DALAdapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapterDBSpecific.csproj">
+      <Project>{ce055bc5-bfd4-4b66-8178-fbfb01492105}</Project>
+      <Name>SD.HnD.DALAdapterDBSpecific</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj">
       <Name>Util</Name>
