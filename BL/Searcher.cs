@@ -19,26 +19,16 @@
 */
 using System;
 using System.Collections;
-using System.Data;
 using System.Text;
-using System.Globalization;
-
-using System.Xml;
-
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.TypedListClasses;
-using SD.HnD.DAL.FactoryClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.DaoClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
-using SD.HnD.Utility;
 using System.Collections.Generic;
-using System.Data.Common;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -81,23 +71,23 @@ namespace SD.HnD.BL
 				// Message contents filter
 				searchTermFilter.Add(ThreadFields.ThreadID.In(qf.Create()
 																.Select(MessageFields.ThreadID)
-																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, FullTextSearchOperator.Contains, searchTerms))));
+																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, null, FullTextSearchOperator.Contains, searchTerms))));
 			}
 			if(searchSubject)
 			{
 				// Thread subject filter
 				if(searchMessageText)
 				{
-					searchTermFilter.AddWithOr(new FieldFullTextSearchPredicate(ThreadFields.Subject, FullTextSearchOperator.Contains, searchTerms));
+					searchTermFilter.AddWithOr(new FieldFullTextSearchPredicate(ThreadFields.Subject, null, FullTextSearchOperator.Contains, searchTerms));
 				}
 				else
 				{
-					searchTermFilter.Add(new FieldFullTextSearchPredicate(ThreadFields.Subject, FullTextSearchOperator.Contains, searchTerms));
+					searchTermFilter.Add(new FieldFullTextSearchPredicate(ThreadFields.Subject, null, FullTextSearchOperator.Contains, searchTerms));
 				}
 			}
 			var q = qf.GetSearchResultTypedList()
 					  .Where(searchTermFilter
-								  .And(ForumFields.ForumID == forumIDs)
+								  .And(ForumFields.ForumID.In(forumIDs))
 								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
 					  .Limit(500)
 					  .OrderBy(CreateSearchSortClause(orderFirstElement));
@@ -111,7 +101,10 @@ namespace SD.HnD.BL
 			try
 			{
 				// get the data from the db. 
-				toReturn = new TypedListDAO().FetchQuery(q);
+				using(var adapter = new DataAccessAdapter())
+				{
+					toReturn = adapter.FetchQuery(q);
+				}
 			}
 			catch
 			{
@@ -129,7 +122,7 @@ namespace SD.HnD.BL
 		/// <returns>search terms string, prepare for CONTAINS usage.</returns>
 		private static string PrepareSearchTerms(string searchTerms)
 		{
-			ArrayList termsToProcess = new ArrayList();
+			var termsToProcess = new List<string>();
 			string[] terms = searchTerms.Split(' ');
 			// now traverse from front to back. Collide any sequence of terms where the start term starts with a '"' and the end term ends with a '"'.
 			for(int i=0;i<terms.Length;i++)

@@ -20,17 +20,14 @@
 using System;
 using System.Data;
 
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
-using SD.HnD.DALAdapter.Linq;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
@@ -48,7 +45,7 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return new LinqMetaData(adapter).Message.Count();
+				return adapter.FetchScalar<int>(new QueryFactory().Message.Select(Functions.CountRow()));
 			}
 		}
 
@@ -100,8 +97,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				var message = new MessageEntity(messageID);
-				var result = adapter.FetchEntity(message);
-				return result ? message : null;
+				return adapter.FetchEntity(message) ? message : null;
 			}
 		}
 
@@ -139,8 +135,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				var attachment = new AttachmentEntity(attachmentID);
-				var result = adapter.FetchEntity(attachment);
-				return result ? attachment : null;
+				return adapter.FetchEntity(attachment) ? attachment : null;
 			}
 		}
 

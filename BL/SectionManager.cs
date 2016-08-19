@@ -18,11 +18,10 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
-
+using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.BL
 {
@@ -42,24 +41,14 @@ namespace SD.HnD.BL
 		/// </returns>
         public static int AddNewSection(string name, string description, short orderNo)
 		{
-            SectionEntity section = new SectionEntity();
-
-            // fill the entity fields with data
+            var section = new SectionEntity();
             section.SectionName = name;
             section.SectionDescription = description;
 			section.OrderNo = orderNo;
-            
-            // try to save the entity
-            bool saveResult = section.Save();
-			
-			// if succeeds return the new ID, else return Zero.
-			if(saveResult == true)
+
+			using(var adapter = new DataAccessAdapter())
 			{
-				return section.SectionID;
-			}
-			else
-			{
-				return 0;
+				return adapter.SaveEntity(section) ? section.SectionID : 0;
 			}
 		}
 		
@@ -75,21 +64,19 @@ namespace SD.HnD.BL
 		public static bool ModifySection(int ID, string name, string description, short orderNo)
 		{
             // load the entity from the database
-            SectionEntity section = new SectionEntity(ID);
-
-            //check if the entity is new (not found in the database), then return false.
-			if(section.IsNew == true)
+            var section = new SectionEntity(ID);
+			using(var adapter = new DataAccessAdapter())
 			{
-				return false;
+				var result = adapter.FetchEntity(section);
+				if(!result)
+				{
+					return false;
+				}
+				section.SectionName = name;
+				section.SectionDescription = description;
+				section.OrderNo = orderNo;
+				return adapter.SaveEntity(section);
 			}
-
-            // update the fields with new values
-            section.SectionName = name;
-            section.SectionDescription = description;
-			section.OrderNo = orderNo;
-          
-            //try to save the changes
-            return section.Save();
 		}
 		
 		
@@ -100,16 +87,15 @@ namespace SD.HnD.BL
 		/// <returns>True if succeeded, false otherwise</returns>
 		public static bool DeleteSection(int ID)
 		{
-			// trying to delete the entity directly from the database without first loading it.
-			// for that we use an entity collection and use the DeleteMulti method with a filter on the PK.
-			SectionCollection sections = new SectionCollection();
-            // try to delete the entity
-			int deletedRows = sections.DeleteMulti(SectionFields.SectionID == ID);
+			using(var adapter = new DataAccessAdapter())
+			{
+				// trying to delete the entity directly from the database without first loading it.
+				var numberOfDeletedRows = adapter.DeleteEntitiesDirectly(typeof(SectionEntity), new RelationPredicateBucket(SectionFields.SectionID == ID));
 
-			// there should only be one deleted row, since we are filtering by the PK.
-			// return true if there's 1, otherwise false.
-			return (deletedRows == 1); 
+				// there should only be one deleted row, since we are filtering by the PK.
+				// return true if there's 1, otherwise false.
+				return (numberOfDeletedRows == 1);
+			}
 		}
-		
 	}
 }

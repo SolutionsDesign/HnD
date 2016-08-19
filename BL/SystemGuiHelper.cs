@@ -19,8 +19,7 @@
 */
 using System;
 using System.Data;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
+using SD.HnD.DALAdapter.EntityClasses;
 
 
 namespace SD.HnD.BL

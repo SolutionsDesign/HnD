@@ -20,16 +20,12 @@
 using System;
 using System.Data;
 using System.Collections;
-
-using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.DaoClasses;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
-using SD.HnD.DAL.FactoryClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 
 namespace SD.HnD.BL
@@ -72,9 +68,10 @@ namespace SD.HnD.BL
 			{
 				q.AndWhere(qf.Field("ForumCountList", "ForumCount")!=0);
 			}
-			TypedListDAO dao = new TypedListDAO();
-			var results = dao.FetchAsDataTable(q);
-			return results.DefaultView;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q).DefaultView;
+			}
 		}
 
 
@@ -82,12 +79,13 @@ namespace SD.HnD.BL
         /// Gets all sections. 
         /// </summary>
         /// <returns>SectionCollection</returns>
-        public static SectionCollection GetAllSections()
+        public static EntityCollection<SectionEntity> GetAllSections()
         {
 			var q = new QueryFactory().Section.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
-			SectionCollection sections = new SectionCollection();
-			sections.GetMulti(q);
-            return sections;
+	        using(var adapter = new DataAccessAdapter())
+	        {
+		        return adapter.FetchQuery(q, new EntityCollection<SectionEntity>());
+	        }
         }
 
 
@@ -98,13 +96,11 @@ namespace SD.HnD.BL
 		/// <returns>loaded sectionentity or null if not found</returns>
 		public static SectionEntity GetSection(int sectionID)
 		{
-			SectionEntity toReturn = new SectionEntity(sectionID);
-			if(toReturn.IsNew)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				var section = new SectionEntity(sectionID);
+				return adapter.FetchEntity(section) ? section : null;
 			}
-			return toReturn;
 		}
 	}
 }

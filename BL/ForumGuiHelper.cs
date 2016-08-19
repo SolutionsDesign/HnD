@@ -18,11 +18,7 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
-using System.Data;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
@@ -54,12 +50,10 @@ namespace SD.HnD.BL
 						  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
 						  .OrderBy(MessageFields.PostingDate.Descending())
 						  .Limit(amount);
-			List<ForumMessagesRow> toReturn;
 			using(var adapter = new DataAccessAdapter())
 			{
-				toReturn = adapter.FetchQuery(q);
+				return adapter.FetchQuery(q);
 			}
-			return toReturn;
 		}
 
 		
@@ -96,12 +90,10 @@ namespace SD.HnD.BL
 				// expression
 				q.AndWhere((ThreadFields.StartedByUserID == userID).Or(ThreadFields.IsSticky == true));
 			}
-			List<AggregatedThreadRow> toReturn;
 			using(var adapter = new DataAccessAdapter())
 			{
-				toReturn = adapter.FetchQuery(q);
+				return adapter.FetchQuery(q);
 			}
-			return toReturn;
 		}
 
 
@@ -114,12 +106,10 @@ namespace SD.HnD.BL
 			var qf = new QueryFactory();
 			var q = qf.GetForumsWithSectionNameTypedList()
 							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
-			List<ForumsWithSectionNameRow> toReturn;
 			using(var adapter = new DataAccessAdapter())
 			{
-				toReturn = adapter.FetchQuery(q);
+				return adapter.FetchQuery(q);
 			}
-			return toReturn;
 		}
 
 
@@ -133,12 +123,10 @@ namespace SD.HnD.BL
 			var q = new QueryFactory().Forum
 						.Where(ForumFields.SectionID == sectionID)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
-			var toReturn = new EntityCollection<ForumEntity>();
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.FetchQuery(q, toReturn);
+				return adapter.FetchQuery(q, new EntityCollection<ForumEntity>());
 			}
-			return toReturn;
 		}
 
 
@@ -229,12 +217,11 @@ namespace SD.HnD.BL
 		/// <returns>forum entity with the data requested, or null if not found</returns>
 		public static ForumEntity GetForum(int forumID)
 		{
-			ForumEntity toReturn = new ForumEntity(forumID);
-			if(toReturn.Fields.State!=EntityState.Fetched)
+			using(var adapter = new DataAccessAdapter())
 			{
-				return null;
+				var forum = new ForumEntity(forumID);
+				return adapter.FetchEntity(forum) ? forum : null;
 			}
-			return toReturn;
 		}
 	}
 }

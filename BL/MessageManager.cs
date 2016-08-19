@@ -19,11 +19,9 @@
 */
 using System;
 using System.Data;
-using System.Net.Mail;
 using SD.HnD.Utility;
 
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter;
@@ -108,8 +106,7 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Updates the given message with the message passed, and logs the user passed as the changer of this
-		/// message.
+		/// Updates the given message with the message passed, and logs the user passed as the changer of this message.
 		/// </summary>
 		/// <param name="editorUserID">ID of user who changed the message</param>
 		/// <param name="editedMessageID">ID of message which was changed</param>
@@ -119,29 +116,39 @@ namespace SD.HnD.BL
 		/// change to keep evidence who made which change from which IP address</param>
 		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		/// <remarks>This routine is migrated to LLBLGen Pro</remarks>
-        public static bool UpdateEditedMessage(int editorUserID, int editedMessageID, string messageText, string messageAsHTML, 
-				string editorUserIDIPAddress, string messageAsXML)
+        public static bool UpdateEditedMessage(int editorUserID, int editedMessageID, string messageText, string messageAsHTML, string editorUserIDIPAddress, string messageAsXML)
 		{
-            // now save the message. First pull it from the db
-			MessageEntity message = new MessageEntity(editedMessageID);
+			using(var adapter = new DataAccessAdapter())
+			{
+				// now save the message. First pull it from the db
+				var message = new MessageEntity(editedMessageID);
+				var result = adapter.FetchEntity(message);
+				if(!result)
+				{
+					return false;
+				}
 
-            //update the fields with the new passed values
-			message.MessageText = messageText;
-			message.MessageTextAsHTML = messageAsHTML;
-			message.MessageTextAsXml = messageAsXML;
-			return message.Save();
+				//update the fields with the new passed values
+				message.MessageText = messageText;
+				message.MessageTextAsHTML = messageAsHTML;
+				message.MessageTextAsXml = messageAsXML;
+				return adapter.SaveEntity(message);
+			}
 		}
 
 
 		/// <summary>
 		/// Re-parses all messages from start date till now or when amountToIndex is reached. This routine will read messagetext for a message,
-		/// parse it, and update the MessageTextAsXML field with the parse result. 
+		/// parse it, and update the MessageTextAsXML field with the parse result. It's mainly used to apply a change in html output for given input, e.g. when 
+		/// xml templates for messages have been changed, and is not used often, hence it's simply processing one entity at a time, keeping the connection open.
 		/// </summary>
 		/// <param name="amountToParse">Amount to parse.</param>
 		/// <param name="startDate">Start date.</param>
 		/// <param name="reGenerateHTML">If true, the HTML is also re-generated and saved.</param>
-		/// <returns>the amount of messages re-parsed</returns>
+		/// <param name="parserData">The parser data to use with the text parser to parse messages.</param>
+		/// <returns>
+		/// the amount of messages re-parsed
+		/// </returns>
 		public static int ReParseMessages(int amountToParse, DateTime startDate, bool reGenerateHTML, ParserData parserData)
 		{
 			// index is blocks of 100 messages.
@@ -156,50 +163,48 @@ namespace SD.HnD.BL
 				q.AndWhere(MessageFields.PostingDate <= DateTime.Now);
 			}
 
-			TypedListDAO dao = new TypedListDAO();
-
 			bool parsingFinished = false;
 			int amountProcessed = 0;
 			int pageSize = 100;
 			int pageNo = 1;
-
-			while(!parsingFinished)
+			using(var adapter = new DataAccessAdapter())
 			{
-				q.Page(pageNo, pageSize);
-				DataTable messagesToParse = dao.FetchAsDataTable(q);
-				parsingFinished = (messagesToParse.Rows.Count <= 0);
-
-				if(!parsingFinished)
+				while(!parsingFinished)
 				{
-					foreach(DataRow row in messagesToParse.Rows)
+					q.Page(pageNo, pageSize);
+					DataTable messagesToParse = adapter.FetchAsDataTable(q);
+					parsingFinished = (messagesToParse.Rows.Count <= 0);
+
+					if(!parsingFinished)
 					{
-						MessageEntity directUpdater = new MessageEntity();
-						directUpdater.IsNew = false;
-
-						string messageXML = string.Empty;
-						string messageHTML = string.Empty;
-						TextParser.ReParseMessage((string)row["MessageText"], reGenerateHTML, parserData, out messageXML, out messageHTML);
-
-						// use the directupdater entity to create an update query without fetching the entity first.
-						directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row["MessageID"]);
-						directUpdater.MessageTextAsXml = messageXML;
-
-						if(reGenerateHTML)
+						foreach(DataRow row in messagesToParse.Rows)
 						{
-							directUpdater.MessageTextAsHTML=messageHTML;
+							MessageEntity directUpdater = new MessageEntity();
+							directUpdater.IsNew = false;
+
+							string messageXML = string.Empty;
+							string messageHTML = string.Empty;
+							TextParser.ReParseMessage((string)row["MessageText"], reGenerateHTML, parserData, out messageXML, out messageHTML);
+
+							// use the in-memory message entity to create an update query without fetching the entity first.
+							directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row["MessageID"]);
+							directUpdater.MessageTextAsXml = messageXML;
+
+							if(reGenerateHTML)
+							{
+								directUpdater.MessageTextAsHTML = messageHTML;
+							}
+							directUpdater.Fields.IsDirty = true;
+							adapter.SaveEntity(directUpdater);
 						}
-						directUpdater.Fields.IsDirty=true;
 
-						// no transactional update.
-						directUpdater.Save();
-					}
+						amountProcessed += messagesToParse.Rows.Count;
+						pageNo++;
 
-					amountProcessed += messagesToParse.Rows.Count;
-					pageNo++;
-
-					if(amountToParse > 0)
-					{
-						parsingFinished = (amountToParse <= amountProcessed);
+						if(amountToParse > 0)
+						{
+							parsingFinished = (amountToParse <= amountProcessed);
+						}
 					}
 				}
 			}
@@ -213,9 +218,11 @@ namespace SD.HnD.BL
 		/// <param name="attachmentID">The attachment ID.</param>
 		public static void DeleteAttachment(int attachmentID)
 		{
-			// delete the attachment directly from the db, without loading it first into memory, so the attachment won't eat up memory unnecessary.
-			AttachmentCollection attachments = new AttachmentCollection();
-			attachments.DeleteMulti((AttachmentFields.AttachmentID == attachmentID));
+			// delete the attachment directly from the db, without loading it first into memory
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity), new RelationPredicateBucket(AttachmentFields.AttachmentID == attachmentID));
+			}
 		}
 
 
@@ -226,11 +233,11 @@ namespace SD.HnD.BL
 		/// <param name="approved">the new flag value for Approved</param>
 		public static void ModifyAttachmentApproval(int attachmentID, bool approved)
 		{
-			// we'll update the approved flag directly in the db, so we don't load the whole attachment into memory. 
-			AttachmentEntity updater = new AttachmentEntity();
-			AttachmentCollection attachments = new AttachmentCollection();
-			updater.Approved = approved;
-			attachments.UpdateMulti(updater, (AttachmentFields.AttachmentID == attachmentID));
+			// we'll update the approved flag directly in the db, so we don't have to load the entity into memory first. 
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.UpdateEntitiesDirectly(new AttachmentEntity {Approved = approved}, new RelationPredicateBucket(AttachmentFields.AttachmentID == attachmentID));
+			}
 		}
 
 
@@ -243,16 +250,18 @@ namespace SD.HnD.BL
 		/// <param name="approveValue">the value for the approved flag</param>
 		public static void AddAttachment(int messageID, string fileName, byte[] fileContents, bool approveValue)
 		{
-			AttachmentEntity newAttachment = new AttachmentEntity();
-			newAttachment.MessageID = messageID;
-			newAttachment.Filename = fileName;
-			newAttachment.Filecontents = fileContents;
-			newAttachment.Filesize = fileContents.Length;
-			newAttachment.Approved = approveValue;
-			newAttachment.AddedOn = DateTime.Now;
-
-			// save.
-			newAttachment.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.SaveEntity(new AttachmentEntity
+								   {
+									   MessageID = messageID,
+									   Filename = fileName,
+									   Filecontents = fileContents,
+									   Filesize = fileContents.Length,
+									   Approved = approveValue,
+									   AddedOn = DateTime.Now
+								   });
+			}
 		}
 
 
@@ -262,64 +271,58 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="userID">The user ID.</param>
-		/// <param name="transactionToUse">The transaction to use.</param>
+		/// <param name="adapter">The adapter to use, which is assumed to have a live transaction active</param>
 		/// <param name="postingDate">The posting date.</param>
 		/// <param name="addToQueueIfRequired">if set to true, the thread will be added to the default queue of the forum the thread is in, if the forum
 		/// has a default support queue and the thread isn't already in a queue.</param>
-		/// <remarks>Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
-		/// passed in transaction.</remarks>
-		internal static void UpdateStatisticsAfterMessageInsert(int threadID, int userID, Transaction transactionToUse, DateTime postingDate, bool addToQueueIfRequired, bool subscribeToThread)
+		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
+		/// <remarks>
+		/// Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
+		/// passed in transaction.
+		/// </remarks>
+		internal static void UpdateStatisticsAfterMessageInsert(int threadID, int userID, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, bool subscribeToThread)
 		{
 			// user statistics
-			UserEntity userUpdater = new UserEntity();
-			// set the amountofpostings field to an expression so it will be increased with 1. 
+			var userUpdater = new UserEntity();
+			// set the amountofpostings field to an expression so it will be increased with 1. Update the entity directly in the DB
 			userUpdater.Fields[(int)UserFieldIndex.AmountOfPostings].ExpressionToApply = (UserFields.AmountOfPostings + 1);
-			UserCollection users = new UserCollection();
-			transactionToUse.Add(users);
-			users.UpdateMulti(userUpdater, (UserFields.UserID == userID));	// update directly on the DB. 
+			adapter.UpdateEntitiesDirectly(userUpdater, new RelationPredicateBucket(UserFields.UserID == userID));
 
 			// thread statistics
-			ThreadEntity threadUpdater = new ThreadEntity();
+			var threadUpdater = new ThreadEntity();
 			threadUpdater.ThreadLastPostingDate = postingDate;
 			threadUpdater.MarkedAsDone = false;
-			ThreadCollection threads = new ThreadCollection();
-			transactionToUse.Add(threads);
-			threads.UpdateMulti(threadUpdater, (ThreadFields.ThreadID == threadID));
+			adapter.UpdateEntitiesDirectly(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID));
 
-			// forum statistics. Load the forum from the DB, as we need it later on. Use a fieldcompareset predicate to fetch the forum as we don't know the 
+			// forum statistics. Load the forum from the DB, as we need it later on. Use a nested query to fetch the forum as we don't know the 
 			// forumID as we haven't fetched the thread
-			ForumCollection forums = new ForumCollection();
-			transactionToUse.Add(forums);
-			// use a fieldcompare set predicate to select the forumid based on the thread. This filter is equal to
-			// WHERE ForumID == (SELECT ForumID FROM Thread WHERE ThreadID=@ThreadID)
-			var forumFilter = new FieldCompareSetPredicate(
-								ForumFields.ForumID, ThreadFields.ForumID, SetOperator.Equal, (ThreadFields.ThreadID == threadID));
-			forums.GetMulti(forumFilter);
-			ForumEntity containingForum = null;
-			if(forums.Count>0)
+			var qf = new QueryFactory();
+			var q = qf.Forum
+					  .Where(ForumFields.ForumID.In(qf.Create()
+													  .Select(ThreadFields.ForumID)
+													  .Where(ThreadFields.ThreadID.Equal(threadID))));
+			var containingForum = adapter.FetchFirst(q);
+			if(containingForum!=null)
 			{
-				// forum found. There's just one.
-				containingForum = forums[0];
 				containingForum.ForumLastPostingDate = postingDate;
-				// save the forum. Just save the collection
-				forums.SaveMulti();
-			}
-
-			if(addToQueueIfRequired)
-			{
-				// If the thread involved isn't in a queue, place it in the default queue of the forum (if applicable)
-				SupportQueueEntity containingQueue = SupportQueueGuiHelper.GetQueueOfThread(threadID, transactionToUse);
-				if((containingQueue == null) && (containingForum != null) && (containingForum.DefaultSupportQueueID.HasValue))
+				// save the forum.
+				adapter.SaveEntity(containingForum);
+				if(addToQueueIfRequired && containingForum.DefaultSupportQueueID.HasValue)
 				{
-					// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
-					SupportQueueManager.AddThreadToQueue(threadID, containingForum.DefaultSupportQueueID.Value, userID, transactionToUse);
+					// If the thread involved isn't in a queue, place it in the default queue of the forum (if applicable)
+					var containingQueue = SupportQueueGuiHelper.GetQueueOfThread(threadID, adapter);
+					if(containingQueue == null)
+					{
+						// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
+						SupportQueueManager.AddThreadToQueue(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
+					}
 				}
 			}
 
-            //subscribe to thread if indicated
-            if(subscribeToThread)
+			//subscribe to thread if indicated
+			if(subscribeToThread)
             {
-				UserManager.AddThreadToSubscriptions(threadID, userID, transactionToUse);
+				UserManager.AddThreadToSubscriptions(threadID, userID, adapter);
             }
 		}
 	}

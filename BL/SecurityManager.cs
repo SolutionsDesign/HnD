@@ -23,14 +23,17 @@ using System.Collections;
 using System.Security.Cryptography;
 
 using SD.HnD.Utility;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter;
+using SD.HnD.DALAdapter.HelperClasses;
 
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
+using System.Net.Mail;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -67,11 +70,16 @@ namespace SD.HnD.BL
 		/// <returns>true if the save was successful, false otherwise</returns>
 		public static bool AuditLogin(int userID)
 		{
-			AuditDataCoreEntity toLog = new AuditDataCoreEntity();
-			toLog.AuditActionID = (int)AuditActions.AuditLogin;
-			toLog.UserID = userID;
-			toLog.AuditedOn = DateTime.Now;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var toLog = new AuditDataCoreEntity
+							{
+								AuditActionID = (int)AuditActions.AuditLogin,
+								UserID = userID,
+								AuditedOn = DateTime.Now
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 		
@@ -83,12 +91,17 @@ namespace SD.HnD.BL
 		/// <returns>true if the save was successful, false otherwise</returns>
 		public static bool AuditNewThread(int userID, int threadID)
 		{
-			AuditDataThreadRelatedEntity toLog = new AuditDataThreadRelatedEntity();
-			toLog.AuditActionID = (int)AuditActions.AuditNewThread;
-			toLog.UserID = userID;
-			toLog.AuditedOn = DateTime.Now;
-			toLog.ThreadID = threadID;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var toLog = new AuditDataThreadRelatedEntity
+							{
+								AuditActionID = (int)AuditActions.AuditNewThread,
+								UserID = userID,
+								AuditedOn = DateTime.Now,
+								ThreadID = threadID
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 
@@ -100,12 +113,17 @@ namespace SD.HnD.BL
 		/// <returns>true if the save was successful, false otherwise</returns>
 		public static bool AuditEditMemo(int userID, int threadID)
 		{
-			AuditDataThreadRelatedEntity toLog = new AuditDataThreadRelatedEntity();
-			toLog.AuditActionID = (int)AuditActions.AuditEditMemo;
-			toLog.UserID = userID;
-			toLog.AuditedOn = DateTime.Now;
-			toLog.ThreadID = threadID;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var toLog = new AuditDataThreadRelatedEntity
+							{
+								AuditActionID = (int)AuditActions.AuditEditMemo,
+								UserID = userID,
+								AuditedOn = DateTime.Now,
+								ThreadID = threadID
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 
@@ -116,18 +134,21 @@ namespace SD.HnD.BL
 		/// <param name="attachmentID">The attachment ID.</param>
 		public static bool AuditApproveAttachment(int userID, int attachmentID)
 		{
-			AuditDataMessageRelatedEntity toLog = new AuditDataMessageRelatedEntity();
-
-			AttachmentCollection collection = new AttachmentCollection();
-			// use a scalar query to obtain the message id so we don't have to pull it completely in memory. An attachment can be big in size so we don't want to 
-			// read the entity to just read the messageid. We could use excluding fields to avoid the actual attachment data, but this query is really simple.
-			// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
-			int messageID = (int)collection.GetScalar(AttachmentFieldIndex.MessageID, null, AggregateFunction.None, (AttachmentFields.AttachmentID==attachmentID));
-			toLog.AuditActionID = (int)AuditActions.AuditApproveAttachment;
-			toLog.UserID = userID;
-			toLog.MessageID = messageID;
-			toLog.AuditedOn = DateTime.Now;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				// use a scalar query to obtain the message id so we don't have to pull it completely in memory. An attachment can be big in size so we don't want to 
+				// read the entity to just read the messageid. We could use excluding fields to avoid the actual attachment data, but this query is really simple.
+				// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
+				int messageID = adapter.FetchScalar<int>(new QueryFactory().Create().Select(AttachmentFieldIndex.MessageID).Where(AttachmentFields.AttachmentID == attachmentID));
+				var toLog = new AuditDataMessageRelatedEntity
+							{
+								AuditActionID = (int)AuditActions.AuditApproveAttachment,
+								UserID = userID,
+								MessageID = messageID,
+								AuditedOn = DateTime.Now
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 
@@ -139,12 +160,17 @@ namespace SD.HnD.BL
 		/// <returns>true if the save was successful, false otherwise</returns>
 		public static bool AuditNewMessage(int userID, int messageID)
 		{
-			AuditDataMessageRelatedEntity toLog = new AuditDataMessageRelatedEntity();
-			toLog.AuditActionID = (int)AuditActions.AuditNewMessage;
-			toLog.UserID = userID;
-			toLog.AuditedOn = DateTime.Now;
-			toLog.MessageID = messageID;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var toLog = new AuditDataMessageRelatedEntity
+							{
+								AuditActionID = (int)AuditActions.AuditNewMessage,
+								UserID = userID,
+								AuditedOn = DateTime.Now,
+								MessageID = messageID
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 
@@ -156,12 +182,17 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static bool AuditAlteredMessage(int userID, int messageID)
 		{
-			AuditDataMessageRelatedEntity toLog = new AuditDataMessageRelatedEntity();
-			toLog.AuditActionID = (int)AuditActions.AuditAlteredMessage;
-			toLog.UserID = userID;
-			toLog.AuditedOn = DateTime.Now;
-			toLog.MessageID = messageID;
-			return toLog.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var toLog = new AuditDataMessageRelatedEntity
+							{
+								AuditActionID = (int)AuditActions.AuditAlteredMessage,
+								UserID = userID,
+								AuditedOn = DateTime.Now,
+								MessageID = messageID
+							};
+				return adapter.SaveEntity(toLog);
+			}
 		}
 
 
@@ -171,10 +202,10 @@ namespace SD.HnD.BL
 		/// PerformWork event is raised and this UoW contains the changes to persist. This routine persists these changes. 
 		/// </summary>
 		/// <param name="uow">The unitofwork object which contains 1 or more changes (with standard .NET controls, this is 1) to persist.</param>
-		public static void PersistIPBanUnitOfWork(UnitOfWork uow)
+		public static void PersistIPBanUnitOfWork(UnitOfWork2 uow)
 		{
 			// pass a new transaction to the commit routine and auto-commit this transaction when the transaction is complete.
-			uow.Commit(new Transaction(IsolationLevel.ReadCommitted, "PersistIPBans"), true);
+			uow.Commit(new DataAccessAdapter(), true);
 		}
 
 
@@ -191,18 +222,11 @@ namespace SD.HnD.BL
 				// is already present
 				return 0;
 			}
-
-			RoleEntity newRole = new RoleEntity();
-			newRole.RoleDescription = roleDescription;
-
-			int toReturn = 0;
-			bool result = newRole.Save();
-			if(result)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// save was succesful, read back the ID that was just created so we can return that to the caller. 
-				toReturn = newRole.RoleID;
+				var newRole = new RoleEntity {RoleDescription = roleDescription};
+				return adapter.SaveEntity(newRole) ? newRole.RoleID : 0;
 			}
-			return toReturn;
 		}
 
 

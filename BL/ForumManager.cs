@@ -25,7 +25,6 @@ using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
-using SD.HnD.DALAdapter.FactoryClasses;
 
 namespace SD.HnD.BL
 {
@@ -55,27 +54,23 @@ namespace SD.HnD.BL
 										int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage, 
 										string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
-			ForumEntity newForum = new ForumEntity();
-			newForum.SectionID = sectionID;
-			newForum.ForumDescription = forumDescription;
-			newForum.ForumName = forumName;
-			newForum.HasRSSFeed = hasRSSFeed;
-			newForum.DefaultSupportQueueID = defaultSupportQueueID;
-			newForum.DefaultThreadListInterval = Convert.ToByte(defaultThreadListInterval);
-			newForum.OrderNo = orderNo;
-			newForum.MaxAttachmentSize = maxAttachmentSize;
-			newForum.MaxNoOfAttachmentsPerMessage = maxNoOfAttachmentsPerMessage;
-			newForum.NewThreadWelcomeText = newThreadWelcomeText;
-			newForum.NewThreadWelcomeTextAsHTML = newThreadWelcomeTextAsHTML;
+			var newForum = new ForumEntity
+						   {
+							   SectionID = sectionID,
+							   ForumDescription = forumDescription,
+							   ForumName = forumName,
+							   HasRSSFeed = hasRSSFeed,
+							   DefaultSupportQueueID = defaultSupportQueueID,
+							   DefaultThreadListInterval = Convert.ToByte(defaultThreadListInterval),
+							   OrderNo = orderNo,
+							   MaxAttachmentSize = maxAttachmentSize,
+							   MaxNoOfAttachmentsPerMessage = maxNoOfAttachmentsPerMessage,
+							   NewThreadWelcomeText = newThreadWelcomeText,
+							   NewThreadWelcomeTextAsHTML = newThreadWelcomeTextAsHTML
+						   };
 			using(var adapter = new DataAccessAdapter())
 			{
-				bool result = adapter.SaveEntity(newForum);
-				if(result)
-				{
-					// succeeded
-					return newForum.ForumID;
-				}
-				return 0;
+				return adapter.SaveEntity(newForum) ? newForum.ForumID : 0;
 			}
 		}
 
@@ -100,7 +95,7 @@ namespace SD.HnD.BL
 										int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
 										string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
-			ForumEntity forum = ForumGuiHelper.GetForum(forumID);
+			var forum = ForumGuiHelper.GetForum(forumID);
 			if(forum==null)
 			{
 				// not found
@@ -137,7 +132,7 @@ namespace SD.HnD.BL
 				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteForum");
 				try
 				{
-					ThreadManager.DeleteAllThreadsInForum(forumID, trans);
+					ThreadManager.DeleteAllThreadsInForum(forumID, adapter);
 
 					// remove all ForumRoleForumActionRight entities for this forum
 					adapter.DeleteEntitiesDirectly(typeof(ForumRoleForumActionRightEntity), new RelationPredicateBucket(ForumRoleForumActionRightFields.ForumID == forumID));
@@ -175,13 +170,15 @@ namespace SD.HnD.BL
 		public static int CreateNewThreadInForum(int forumID, int userID, string subject, string messageText, string messageAsHTML, bool isSticky, 
 												string userIDIPAddress, int? defaultSupportQueueID, bool subscribeToThread, out int messageID)
 		{
-			var newThread = new ThreadEntity();
-			newThread.ForumID = forumID;
-			newThread.IsClosed = false;
-			newThread.IsSticky = isSticky;
-			newThread.StartedByUserID = userID;
-			newThread.Subject = subject;
-			newThread.ThreadLastPostingDate = DateTime.Now;
+			var newThread = new ThreadEntity
+							{
+								ForumID = forumID,
+								IsClosed = false,
+								IsSticky = isSticky,
+								StartedByUserID = userID,
+								Subject = subject,
+								ThreadLastPostingDate = DateTime.Now
+							};
 
 			if(defaultSupportQueueID.HasValue)
 			{
@@ -195,13 +192,15 @@ namespace SD.HnD.BL
 				supportQueueThread.Thread = newThread;
 			}
 
-			var newMessage = new MessageEntity();
-			newMessage.MessageText = messageText;
-			newMessage.MessageTextAsHTML = messageAsHTML;
-			newMessage.PostedByUserID = userID;
-			newMessage.PostingDate = DateTime.Now;
-			newMessage.PostedFromIP = userIDIPAddress;
-			newMessage.Thread = newThread;
+			var newMessage = new MessageEntity
+							 {
+								 MessageText = messageText,
+								 MessageTextAsHTML = messageAsHTML,
+								 PostedByUserID = userID,
+								 PostingDate = DateTime.Now,
+								 PostedFromIP = userIDIPAddress,
+								 Thread = newThread
+							 };
 
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -215,7 +214,7 @@ namespace SD.HnD.BL
 
 					// update thread statistics, this is the task for the message manager, and we pass the transaction object so the actions will run in
 					// the same transaction.
-					MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, trans, DateTime.Now, false, subscribeToThread);
+					MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, DateTime.Now, false, subscribeToThread);
 
 					adapter.Commit();
 					return newThread.ThreadID;
