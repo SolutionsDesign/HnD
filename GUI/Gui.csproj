@@ -13,13 +13,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SD.HnD.Gui</RootNamespace>
     <AssemblyName>SD.HnD.Gui</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,16 +42,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=4.2.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.4.2.20150416\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
+    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.0.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.0.5\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SD.Tools.Algorithmia, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.Algorithmia.1.1.0\lib\SD.Tools.Algorithmia.dll</HintPath>
+    <Reference Include="SD.Tools.Algorithmia, Version=1.2.0.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.Tools.Algorithmia.1.2.1\lib\net35\SD.Tools.Algorithmia.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SD.Tools.BCLExtensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.BCLExtensions.1.0.0\lib\SD.Tools.BCLExtensions.dll</HintPath>
+    <Reference Include="SD.Tools.BCLExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.Tools.BCLExtensions.1.1.0\lib\net35\SD.Tools.BCLExtensions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.OrmProfiler.Interceptor.NET45, Version=1.5.0.0, Culture=neutral, PublicKeyToken=f175dc08f093a9ae, processorArchitecture=MSIL">
@@ -62,10 +64,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
       <Private>True</Private>
@@ -90,9 +94,7 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
@@ -105,6 +107,7 @@
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\ForumController.cs" />

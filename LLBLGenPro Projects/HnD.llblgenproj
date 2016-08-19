@@ -1,18 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--LLBLGen Pro v4.2 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
-<Project Version="4.2" TargetFrameworkName="LLBLGen Pro Runtime Framework">
+<!--LLBLGen Pro v5.0 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
+<Project Version="5.0" TargetFrameworkName="LLBLGen Pro Runtime Framework">
   <Properties>
     <Abbreviations />
     <Property Name="AdditionalTaskPerformerFolder" Value="" />
     <Property Name="AdditionalTasksFolder" Value="" />
     <Property Name="AdditionalTemplatesFolder" Value="" />
     <Property Name="AdditionalTypeConverterFolder" Value="" />
-    <Property Name="AddNewElementsAfterRefresh" Value="0" />
-    <Property Name="AddNewFieldsAfterRefresh" Value="0" />
-    <Property Name="AddNewViewsAsEntitiesAfterRefresh" Value="0" />
+    <Property Name="AddNewElementsAfterRefresh_v5" Value="false" />
+    <Property Name="AddNewElementsAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="AddNewFieldsAfterRefresh_v5" Value="true" />
+    <Property Name="AddNewFieldsAfterRelationalModelDataSync_v5" Value="true" />
+    <Property Name="AddNewViewsAsEntitiesAfterRefresh_v5" Value="false" />
+    <Property Name="AddNewViewsAsEntitiesAfterRelationalModelDataSync_v5" Value="false" />
     <Property Name="AutoAddManyToManyRelationships" Value="false" />
     <Property Name="AutoAssignSequencesToIntegerPks" Value="true" />
-    <Property Name="AutoAssignTypeConverterToFieldMapping" Value="false" />
+    <Property Name="AutoAssignTypeConverterToFieldMapping" Value="true" />
     <Property Name="CleanUpVsNetProjects" Value="true" />
     <Property Name="ConnectionStringKeyNamePattern" Value="Main.ConnectionString.{$ProviderName}" />
     <Property Name="DefaultDeleteRuleAction" Value="1" />
@@ -29,10 +32,10 @@
     <Property Name="ForeignKeyConstraintPattern" Value="FK_{$Guid}" />
     <Property Name="ForeignKeyFieldPattern" Value="{$NavigatorName}{$RelatedFieldName}" />
     <Property Name="GroupUsage" Value="0" />
-    <Property Name="IdentifyingFieldsFollowDBPrimaryKeyConstraints" Value="0" />
+    <Property Name="IdentifyingFieldsFollowDBPrimaryKeyConstraints_v5" Value="true" />
     <Property Name="InsertUnderscoreAtWordBreakCaseInsensitiveDBs" Value="false" />
     <Property Name="InsertUnderscoreAtWordBreakCaseSensitiveDBs" Value="false" />
-    <Property Name="LengthPrecisionScaleFollowDBLengthPrecisionScale" Value="0" />
+    <Property Name="LengthPrecisionScaleFollowDBLengthPrecisionScale_v5" Value="true" />
     <Property Name="MakeElementNamePascalCasing" Value="false" />
     <Property Name="NavigatorMappedOntoManyToManyPattern" Value="{$EndEntityName}CollectionVia{$IntermediateEntityName}" />
     <Property Name="NavigatorMappedOntoOneManyToOnePattern" Value="{$EndEntityName}" />
@@ -45,13 +48,16 @@
     <Property Name="PrimaryKeyConstraintPattern" Value="PK_{$Guid}" />
     <Property Name="ProjectCreator" Value="FB" />
     <Property Name="ProjectName" Value="HnD" />
-    <Property Name="ReflectNullabilityOfElementFieldInTargetField" Value="0" />
+    <Property Name="ReflectNullabilityOfElementFieldInTargetField_v5" Value="false" />
+    <Property Name="ReflectTypeOfElementFieldInTargetField_v5" Value="true" />
     <Property Name="RelationalModelDataElementNameCasingCaseInsensitiveDBs" Value="3" />
     <Property Name="RelationalModelDataElementNameCasingCaseSensitiveDBs" Value="3" />
-    <Property Name="RelationshipsFollowDBForeignKeyConstraints" Value="0" />
+    <Property Name="RelationshipsFollowDBForeignKeyConstraints_v5" Value="true" />
     <Property Name="RemoveUnderscoresFromElementName" Value="false" />
-    <Property Name="RemoveUnmappedElementsAfterRefresh" Value="0" />
-    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRefresh" Value="true" />
+    <Property Name="RemoveUnmappedElementsAfterRefresh_v5" Value="false" />
+    <Property Name="RemoveUnmappedElementsAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRefresh" Value="false" />
+    <Property Name="ResetFieldOrderBasedOnTargetOrderAtRelationalModelDataSync" Value="false" />
     <Property Name="RetrieveDBCustomProperties" Value="false" />
     <Property Name="RootNamespace" Value="" />
     <Property Name="SequenceNameMatchingPattern" Value="SEQ_{$TableName}" />
@@ -61,17 +67,20 @@
     <Property Name="SingularizeElementNames" Value="true" />
     <Property Name="StoredProcNameStripPattern" Value="{pr_}{}" />
     <Property Name="StoreTimeLastGeneratedIntoProject" Value="false" />
-    <Property Name="SyncMappedElementNamesAfterRefresh" Value="0" />
-    <Property Name="SyncRelationalModelDataElementNameAfterRename" Value="0" />
-    <Property Name="SyncRenamedMappedElementNamesAfterRefresh" Value="0" />
+    <Property Name="SyncMappedElementNamesAfterRefresh_v5" Value="false" />
+    <Property Name="SyncMappedElementNamesAfterRelationalModelDataSync_v5" Value="false" />
+    <Property Name="SyncRelationalModelDataElementNameWithModelElementName_v5" Value="false" />
+    <Property Name="SyncRenamedMappedElementNamesAfterRefresh_v5" Value="false" />
+    <Property Name="SyncRenamedMappedElementNamesAfterRelationalModelDataSync_v5" Value="false" />
     <Property Name="TableValuedFunctionNameStripPattern" Value="{fn_, pr_, sp_}{}" />
     <Property Name="TargetPerEntityEdgesRequireBackingFkConstraint" Value="true" />
     <Property Name="TypedViewFieldNameStripPattern" Value="{}{}" />
     <Property Name="TypedViewMappedOnResultsetPattern" Value="{$ProcFunctionName}{$ResultsetName}Result" />
     <Property Name="TypedViewNameStripPattern" Value="{vw_}{}" />
     <Property Name="UniqueConstraintPattern" Value="UC_{$Guid}" />
-    <Property Name="UniqueConstraintsFollowDBUniqueConstraints" Value="0" />
-    <Property Name="UpdateCustomPropertiesAfterRefresh" Value="0" />
+    <Property Name="UniqueConstraintsFollowDBUniqueConstraints_v5" Value="true" />
+    <Property Name="UpdateCustomPropertiesAfterRefresh_v5" Value="false" />
+    <Property Name="UpdateCustomPropertiesAfterRelationalModelDataSync_v5" Value="false" />
     <Property Name="UseCustomFieldOrderingOnNewElements" Value="true" />
   </Properties>
   <TypeShortcuts />
@@ -80,18 +89,18 @@
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\MyProjects\WebProjects\HnD\DAL" />
+        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DAL" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
-        <PlatformName Value=".NET 4.0" />
+        <PlatformName Value=".NET 4.5.2" />
         <PresetName Value="SD.Presets.SelfServicing.General" />
         <RootNamespace Value="SD.HnD.DAL" />
         <TemplateGroup Value="SelfServicing" />
         <TemplateBindings>
           <Binding Name="SD.TemplateBindings.SharedTemplates.Deprecated" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.NET45x" />
           <Binding Name="SD.TemplateBindings.SharedTemplates" />
           <Binding Name="SD.TemplateBindings.SqlServerSpecific" />
-          <Binding Name="SD.TemplateBindings.SharedTemplates.NET40" />
           <Binding Name="SD.TemplateBindings.General" />
         </TemplateBindings>
       </LastUsedPreferences>
@@ -653,7 +662,7 @@
     </TypedListDefinition>
   </TypedListDefinitions>
   <TargetDatabases>
-    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE">
+    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="2">
       <ConnectionElements>
         <ConnectionElement Name="ServerName" Value="nerd" />
         <ConnectionElement Name="CatalogName" Value="master" />
@@ -666,9 +675,9 @@
         <Sequence Name="@@IDENTITY" />
       </SystemSequences>
       <Catalogs>
-        <Catalog Name="HnD">
+        <Catalog Name="HnD" SyncSource="2">
           <Schemas>
-            <Schema Name="dbo">
+            <Schema Name="dbo" SyncSource="2">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />

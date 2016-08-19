@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 4.2
+// Code is generated using LLBLGen Pro version: 5.0
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
@@ -244,6 +244,7 @@ namespace SD.HnD.DAL.FactoryClasses
 			get { return Create<UserTitleEntity>(); }
 		}
 
+
  
 		/// <summary>Gets the query to fetch the typed list ForumMessages</summary>
 		/// <returns>Dynamic Query which fetches <see cref="SD.HnD.DAL.TypedListClasses.ForumMessagesRow"/> instances </returns>
@@ -330,7 +331,6 @@ namespace SD.HnD.DAL.FactoryClasses
 								.InnerJoin(this.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID))
 								.InnerJoin(this.Section).On(ForumFields.SectionID.Equal(SectionFields.SectionID)));
 		}
-
 
 	}
 }
