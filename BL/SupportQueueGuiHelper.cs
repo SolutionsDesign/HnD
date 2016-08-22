@@ -19,17 +19,16 @@
 */
 using System;
 using System.Collections.Generic;
-using System.Text;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.HelperClasses;
 using System.Data;
-using SD.HnD.DAL.DaoClasses;
-using SD.HnD.DAL;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
-using SD.HnD.DAL.FactoryClasses;
+using System.Text;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -45,14 +44,11 @@ namespace SD.HnD.BL
 		/// <returns>the supportqueue entity requested or null if not found.</returns>
 		public static SupportQueueEntity GetSupportQueue(int queueID)
 		{
-			// fetch using the constructor. 
-			SupportQueueEntity toReturn = new SupportQueueEntity(queueID);
-			if(toReturn.IsNew)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				var supportQueue = new SupportQueueEntity(queueID);
+				return adapter.FetchEntity(supportQueue) ? supportQueue : null;
 			}
-			return toReturn;
 		}
 
 
@@ -60,12 +56,14 @@ namespace SD.HnD.BL
 		/// Gets all support queues known in the system, sorted by orderno, ascending.
 		/// </summary>
 		/// <returns>filled collection with entities requested.</returns>
-		public static SupportQueueCollection GetAllSupportQueues()
+		public static EntityCollection<SupportQueueEntity> GetAllSupportQueues()
 		{
-			SupportQueueCollection toReturn = new SupportQueueCollection();
-			// fetch all supportqueue entities and sort on the orderno fields
-			toReturn.GetMulti(null, 0, new SortExpression(SupportQueueFields.OrderNo.Ascending()));
-			return toReturn;
+			var qf = new QueryFactory();
+			var q = qf.SupportQueue.OrderBy(SupportQueueFields.OrderNo.Ascending());
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q, new EntityCollection<SupportQueueEntity>());
+			}
 		}
 
 
@@ -84,37 +82,32 @@ namespace SD.HnD.BL
 		/// Gets the support queue of the thread with the threadID specified.
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
-		/// <param name="trans">The transaction currently in progress. Can be null if no transaction is in progress.</param>
+		/// <param name="adapter">The live adapter with a transaction currently in progress. Can be null if no transaction is in progress.</param>
 		/// <returns>
 		/// The requested supportqueue entity, or null if the thread isn't in a support queue.
 		/// </returns>
-		public static SupportQueueEntity GetQueueOfThread(int threadID, Transaction trans)
+		public static SupportQueueEntity GetQueueOfThread(int threadID, IDataAccessAdapter adapter)
 		{
 			// the relation supportqueue - thread is stored in a SupportQueueThread entity. Use that entity as a filter for the support queue. If
 			// that entity doesn't exist, the thread isn't in a supportqueue.
 			var qf = new QueryFactory();
-			var q = qf.SupportQueueThread
-						.From(QueryTarget.InnerJoin(qf.SupportQueue).On(SupportQueueThreadFields.QueueID == SupportQueueFields.QueueID))
+			var q = qf.SupportQueue
+						.From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID == SupportQueueFields.QueueID))
 						.Where(SupportQueueThreadFields.ThreadID == threadID);
 
-			// use a supportqueue collection to fetch the support queue, which will contain 0 or 1 entities after the fetch
-			SupportQueueCollection supportQueues = new SupportQueueCollection();
-			// if a transaction has been specified, we've to add the collection to the transaction so the fetch takes place inside the same transaction so no
-			// deadlocks occur on sqlserver
-			if(trans != null)
+			bool localAdapter = adapter == null;
+			var adapterToUse = adapter ?? new DataAccessAdapter();
+			try
 			{
-				trans.Add(supportQueues);
+				var toReturn = adapterToUse.FetchFirst(q);
+				return toReturn;
 			}
-			supportQueues.GetMulti(q);
-			if(supportQueues.Count > 0)
+			finally
 			{
-				// in a queue, return the instance
-				return supportQueues[0];
-			}
-			else
-			{
-				// not in a queue, return null
-				return null;
+				if(localAdapter)
+				{
+					adapterToUse.Dispose();
+				}
 			}
 		}
 
@@ -127,23 +120,16 @@ namespace SD.HnD.BL
 		/// <returns>fetched entity if found, otherwise null</returns>
 		public static SupportQueueThreadEntity GetSupportQueueThreadInfo(int threadID, bool prefetchClaimUser)
 		{
-			SupportQueueThreadEntity toReturn = new SupportQueueThreadEntity();
-			PrefetchPath path = null;
+			var qf = new QueryFactory();
+			var q = qf.SupportQueueThread.Where(SupportQueueThreadFields.ThreadID.Equal(threadID));
 			if(prefetchClaimUser)
 			{
-				// prefetch the user who claimed this thread (if any)
-				path = new PrefetchPath((int)EntityType.SupportQueueThreadEntity);
-				path.Add(SupportQueueThreadEntity.PrefetchPathClaimedByUser);
+				q.WithPath(SupportQueueThreadEntity.PrefetchPathClaimedByUser);
 			}
-
-			// now fetch the entity using the unique constraint on Thread by specifying the threadID passed in. Also specify the prefetch path (if any)
-			toReturn.FetchUsingUCThreadID(threadID, path);
-			if(toReturn.IsNew)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				return adapter.FetchFirst(q);
 			}
-			return toReturn;
 		}
 		
 
@@ -209,9 +195,11 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 						.Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"))
 						.From(qf.SupportQueueThread.InnerJoin(qf.Thread).On(SupportQueueThreadFields.ThreadID == ThreadFields.ThreadID))
-						.Where(ThreadFields.ForumID == accessableForums);
-			var dao = new TypedListDAO();
-			return dao.GetScalar<int>(q, null);
+						.Where(ThreadFields.ForumID.In(accessableForums));
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int>(q);
+			}
 		}
 	}
 }

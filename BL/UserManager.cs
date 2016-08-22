@@ -22,44 +22,18 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using SD.HnD.Utility;
-using SD.HnD.DAL;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.FactoryClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.RelationClasses;
-using SD.HnD.DAL.DaoClasses;
-using SD.LLBLGen.Pro.ORMSupportClasses;
-using System.Security.Cryptography;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using System.Web;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
-	/// <summary>
-	/// Special exception which is thrown when a password reset action was executed but the nickname specified wasn't found.
-	/// </summary>
-	public class NickNameNotFoundException: System.ApplicationException
-	{
-		public NickNameNotFoundException(string sMessage):base(sMessage)
-		{
-		}
-	}
-
-
-	/// <summary>
-	/// Special exception which is thrown when a password reset action was executed but the email specified doesn't match the nickname specified.
-	/// </summary>
-	public class EmailAddressDoesntMatchException: System.ApplicationException
-	{
-		public EmailAddressDoesntMatchException(string sMessage):base(sMessage)
-		{
-		}
-	}
-
-
 	/// <summary>
 	/// General class for Usermanagement related tasks
 	/// </summary>
@@ -73,10 +47,14 @@ namespace SD.HnD.BL
 		/// <returns>true if save succeeded, false otherwise</returns>
 		public static bool AddThreadToBookmarks(int threadID, int userID)
 		{
-			BookmarkEntity newBookmark = new BookmarkEntity();
-			newBookmark.UserID = userID;
-			newBookmark.ThreadID = threadID;
-			return newBookmark.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.SaveEntity(new BookmarkEntity
+										  {
+											  UserID = userID,
+											  ThreadID = threadID
+										  });
+			}
 		}
 
 		
@@ -88,16 +66,16 @@ namespace SD.HnD.BL
 		/// <returns>true if delete succeeded, false otherwise</returns>
 		public static bool RemoveSingleSubscription(int threadID, int userID)
 		{
-			ThreadSubscriptionEntity subscription = ThreadGuiHelper.GetThreadSubscription(threadID, userID);
+			var subscription = ThreadGuiHelper.GetThreadSubscription(threadID, userID);
 			if(subscription != null)
 			{
 				// there's a subscription, delete it
-				return subscription.Delete();
+				using(var adapter = new DataAccessAdapter())
+				{
+					return adapter.DeleteEntity(subscription);
+				}
 			}
-			else
-			{
-				return true;
-			}
+			return true;
 		}
 
 
@@ -107,23 +85,19 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="userID">The user ID.</param>
-		/// <param name="transactionToUse">The transaction to use. If no transaction is specified, no transaction is created</param>
+		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local adapter is used.</param>
 		/// <returns></returns>
-		public static bool AddThreadToSubscriptions(int threadID, int userID, Transaction transactionToUse)
+		public static bool AddThreadToSubscriptions(int threadID, int userID, IDataAccessAdapter adapter)
 		{
 			// check if this user is already subscribed to this thread. If not, add a new subscription.
-			ThreadSubscriptionEntity subscription = ThreadGuiHelper.GetThreadSubscription(threadID, userID, transactionToUse);
-			if(subscription == null)
+			if(ThreadGuiHelper.GetThreadSubscription(threadID, userID, adapter) == null)
 			{
 				// user isn't yet subscribed, add the subscription
-				subscription = new ThreadSubscriptionEntity();
-				subscription.UserID = userID;
-				subscription.ThreadID = threadID;
-				if(transactionToUse != null)
-				{
-					transactionToUse.Add(subscription);
-				}
-				return subscription.Save();
+				return adapter.SaveEntity(new ThreadSubscriptionEntity
+										  {
+											  UserID = userID,
+											  ThreadID = threadID
+										  });
 			}
 			// already subscribed, no-op.
 			return true;
@@ -136,15 +110,17 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user ID of the user to update the date for.</param>
 		public static void UpdateLastVisitDateForUser(int userID)
 		{
-			UserEntity user = UserGuiHelper.GetUser(userID);
+			var user = UserGuiHelper.GetUser(userID);
 			if(user == null)
 			{
 				// not found
 				return;
 			}
 			user.LastVisitedDate = DateTime.Now;
-			user.Save();
-			return;
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.SaveEntity(user);
+			}
 		}
 
 
@@ -152,19 +128,24 @@ namespace SD.HnD.BL
 		/// Toggles the ban flag value.
 		/// </summary>
 		/// <param name="userID">The user ID of the user to toggle the ban flag.</param>
-		/// <returns>true if toggle was succesful, false otherwise</returns>
+		/// <param name="newBanFlagValue">the new value of the ban flag for this user</param>
+		/// <returns>
+		/// true if toggle was succesful, false otherwise
+		/// </returns>
 		public static bool ToggleBanFlagValue(int userID, out bool newBanFlagValue)
 		{
 			newBanFlagValue = false;
-			UserEntity user = UserGuiHelper.GetUser(userID);
+			var user = UserGuiHelper.GetUser(userID);
 			if(user == null)
 			{
 				return false;
 			}
-
 			newBanFlagValue = !user.IsBanned;
 			user.IsBanned = newBanFlagValue;
-			return user.Save();
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.SaveEntity(user);
+			}
 		}
 
 
@@ -182,91 +163,63 @@ namespace SD.HnD.BL
 				return false;
 			}
 
-			UserEntity toDelete = UserGuiHelper.GetUser(userID);
+			var toDelete = UserGuiHelper.GetUser(userID);
 			if(toDelete==null)
 			{
 				// user doesn't exist
 				return false;
 			}
+			using(var adapter = new DataAccessAdapter())
+			{ 
+				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteUser");
+				try
+				{
+					// we'll first update all PostedByUserId fields of all messages which are posted by the user to delete. 
+					var messageUpdater = new MessageEntity {PostedByUserID = 0};
+					// reset to AC.
+					adapter.UpdateEntitiesDirectly(messageUpdater, new RelationPredicateBucket(MessageFields.PostedByUserID == userID));
+					
+					// set the startuser of threads started by this user to 0
+					var threadUpdater = new ThreadEntity {StartedByUserID = 0};
+					adapter.UpdateEntitiesDirectly(threadUpdater, new RelationPredicateBucket(ThreadFields.StartedByUserID == userID));
 
-			// all actions have to take place in a transaction.
-			Transaction trans = new Transaction(IsolationLevel.ReadCommitted, "DeleteUser");
+					// remove the user from the UserRoles set, as the user shouldn't be in any roles. 
+					adapter.DeleteEntitiesDirectly(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID == userID));
 
-			try
-			{
-				// we'll first update all PostedByUserId fields of all messages which are posted by the user to delete. 
-				MessageEntity messageUpdater = new MessageEntity();
-				messageUpdater.PostedByUserID = 0;	// reset to AC.
-				MessageCollection messages = new MessageCollection();
-				trans.Add(messages);	// add to the transaction
-				// update all entities directly in the DB, which match the following filter and update them with the new values set in messageUpdater.
-				messages.UpdateMulti(messageUpdater, (MessageFields.PostedByUserID == userID));
-				
-				// set the startuser of threads started by this user to 0
-				ThreadEntity threadUpdater = new ThreadEntity();
-				threadUpdater.StartedByUserID = 0;
-				ThreadCollection threads = new ThreadCollection();
-				trans.Add(threads);
-				threads.UpdateMulti(threadUpdater, (ThreadFields.StartedByUserID == userID));
+					// delete all bookmarks of user
+					adapter.DeleteEntitiesDirectly(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.UserID == userID));
 
-				// remove the user from the UserRoles set, as the user shouldn't be in any roles. 
-				RoleUserCollection roleUsersDeleter = new RoleUserCollection();
-				trans.Add(roleUsersDeleter);
-				// delete all entities directly from the DB which match the following filter. 
-				roleUsersDeleter.DeleteMulti(RoleUserFields.UserID == userID);
+					// delete all audit data
+					// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
+					// be deleted directly from the db.
+					var qf = new QueryFactory();
+					var auditData = adapter.FetchQuery(qf.User.Where(AuditDataCoreFields.UserID == userID));
+					adapter.DeleteEntityCollection(auditData);
 
-				// delete all bookmarks of user
-				BookmarkCollection bookmarkDeleter = new BookmarkCollection();
-				trans.Add(bookmarkDeleter);
-				// delete all bookmarks for this user directly from the DB using the following filter. 
-				bookmarkDeleter.DeleteMulti(BookmarkFields.UserID == userID);
+					// set IP bans set by this user to userid 0
+					var ipbanUpdater = new IPBanEntity {IPBanSetByUserID = 0};
+					adapter.UpdateEntitiesDirectly(ipbanUpdater, new RelationPredicateBucket(IPBanFields.IPBanSetByUserID == userID));
 
-				// delete all audit data
-				AuditDataCoreCollection auditDataDeleter = new AuditDataCoreCollection();
-				// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
-				// be deleted directly from the db.
-				trans.Add(auditDataDeleter);
-				auditDataDeleter.GetMulti(AuditDataCoreFields.UserID == userID);
-				auditDataDeleter.DeleteMulti();
+					// delete threadsubscriptions
+					adapter.DeleteEntitiesDirectly(typeof(ThreadSubscriptionEntity), new RelationPredicateBucket(ThreadSubscriptionFields.UserID == userID));
 
-				// set IP bans set by this user to userid 0
-				IPBanEntity ipbanUpdater = new IPBanEntity();
-				ipbanUpdater.IPBanSetByUserID = 0;
-				IPBanCollection ipBans = new IPBanCollection();
-				trans.Add(ipBans);
-				ipBans.UpdateMulti(ipbanUpdater, (IPBanFields.IPBanSetByUserID == userID));
+					// remove supportqueuethread claims
+					adapter.DeleteEntitiesDirectly(typeof(SupportQueueThreadEntity), new RelationPredicateBucket(SupportQueueThreadFields.ClaimedByUserID == userID));
 
-				// delete threadsubscriptions
-				ThreadSubscriptionCollection threadSubscriptionsDeleter = new ThreadSubscriptionCollection();
-				trans.Add(threadSubscriptionsDeleter);
-				threadSubscriptionsDeleter.DeleteMulti(ThreadSubscriptionFields.UserID == userID);
+					// set all placed in queue references to userid 0, so the threads stay in the queues.
+					var supportQueueThreadUpdater = new SupportQueueThreadEntity {PlacedInQueueByUserID = 0};
+					adapter.UpdateEntitiesDirectly(supportQueueThreadUpdater, new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID == userID));
 
-				// remove supportqueuethread claims
-				SupportQueueThreadCollection supportQueueThreads = new SupportQueueThreadCollection();
-				trans.Add(supportQueueThreads);
-				supportQueueThreads.DeleteMulti(SupportQueueThreadFields.ClaimedByUserID == userID);
-
-				// set all placed in queue references to userid 0, so the threads stay in the queues.
-				SupportQueueThreadEntity supportQueueThreadUpdater = new SupportQueueThreadEntity();
-				supportQueueThreadUpdater.PlacedInQueueByUserID=0;
-				supportQueueThreads.UpdateMulti(supportQueueThreadUpdater, (SupportQueueThreadFields.PlacedInQueueByUserID == userID));
-
-				// now delete the actual user entity
-				trans.Add(toDelete);
-				toDelete.Delete();
-
-				// all done
-				trans.Commit();
-				return true;
-			}
-			catch
-			{
-				trans.Rollback();
-				throw;
-			}
-			finally
-			{
-				trans.Dispose();
+					// now delete the actual user entity
+					adapter.DeleteEntity(toDelete);
+					adapter.Commit();
+					return true;
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
 			}
 		}
 
@@ -276,11 +229,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadIDsToRemove">Thread I ds to remove.</param>
 		/// <param name="userID">user for whom these bookmarks have to be deleted</param>
-		public static void RemoveBookmarks(ArrayList threadIDsToRemove, int userID)
+		public static void RemoveBookmarks(List<int> threadIDsToRemove, int userID)
 		{
-			BookmarkCollection bookmarks = new BookmarkCollection();
-			// delete the bookmarks matching the filter directly from the database. 
-			bookmarks.DeleteMulti((BookmarkFields.ThreadID == threadIDsToRemove).And(BookmarkFields.UserID == userID));
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.DeleteEntitiesDirectly(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.ThreadID.In(threadIDsToRemove).And(BookmarkFields.UserID == userID)));
+			}
 		}
 
 
@@ -292,9 +246,10 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static void RemoveSingleBookmark(int threadID, int userID)
 		{
-			BookmarkCollection bookmarks = new BookmarkCollection();
-			// delete the bookmark directly from the database, no need for fetching it first.
-			bookmarks.DeleteMulti((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
+			using(var adapter = new DataAccessAdapter())
+			{
+				adapter.DeleteEntitiesDirectly(typeof(BookmarkEntity), new RelationPredicateBucket((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID)));
+			}
 		}
 
 
@@ -313,38 +268,36 @@ namespace SD.HnD.BL
 		/// with the emailaddress specified.</exception>
 		public static bool ResetPassword(string nickName, string emailAddress, string emailTemplate, Dictionary<string, string> emailData)
 		{
-			UserEntity user = new UserEntity();
-			// fetch the user using the unique constraint fetch logic on nickname
-			bool fetchResult = user.FetchUsingUCNickName(nickName);
-			if(!fetchResult)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				throw new NickNameNotFoundException("Nickname: '" + nickName + "' not found");
+				var user = adapter.FetchFirst(new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)));
+				if(user==null)
+				{
+					// not found
+					throw new NickNameNotFoundException("Nickname: '" + nickName + "' not found");
+				}
+				// check emailaddress
+				if(!string.Equals(user.EmailAddress, emailAddress, StringComparison.InvariantCultureIgnoreCase))
+				{
+					// no match
+					throw new EmailAddressDoesntMatchException("Emailaddress '" + emailAddress + "' doesn't match.");
+				}
+
+				// does match, reset the password
+				string newPassword = HnDGeneralUtils.GenerateRandomPassword();
+#warning UPDATE FOR #4
+				// hash the password with an MD5 hash and store that hashed value into the database.
+				user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(newPassword);
+
+				// store it
+				bool result = adapter.SaveEntity(user);
+				if(result)
+				{
+					// mail it
+					result = HnDGeneralUtils.EmailPassword(newPassword, emailAddress, emailTemplate, emailData);
+				}
+				return result;
 			}
-
-			// check emailaddress
-			if(user.EmailAddress.ToLowerInvariant() != emailAddress.ToLowerInvariant())
-			{
-				// no match
-				throw new EmailAddressDoesntMatchException("Emailaddress '" + emailAddress + "' doesn't match.");
-			}
-
-			// does match, reset the password
-			string newPassword = HnDGeneralUtils.GenerateRandomPassword();
-
-			// hash the password with an MD5 hash and store that hashed value into the database.
-			user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(newPassword);
-
-			// store it
-			bool result = user.Save();
-			if(result)
-			{
-				// mail it
-				result = HnDGeneralUtils.EmailPassword(newPassword, emailAddress, emailTemplate, emailData);
-			}
-				
-			//done
-			return result;
 		}
 
 
@@ -367,10 +320,10 @@ namespace SD.HnD.BL
         /// <param name="defaultMessagesPerPage">Messages per page to display</param>
 		/// <returns>true if succeeded, false otherwise</returns>
 		public static bool UpdateUserProfile(int userID, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
-				string location, string occupation, string password, string signature, string website, int userTitleID, ParserData parserData,
-                bool autoSubscribeThreads, short defaultMessagesPerPage)
+											string location, string occupation, string password, string signature, string website, int userTitleID, ParserData parserData,
+											bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
-            UserEntity user = UserGuiHelper.GetUser(userID);
+            var user = UserGuiHelper.GetUser(userID);
             if (user == null)
             {
                 // not found
@@ -390,15 +343,7 @@ namespace SD.HnD.BL
 				user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
 			}
 			user.Signature = signature;
-			if(!string.IsNullOrEmpty(signature))
-			{
-				user.SignatureAsHTML = TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
-			}
-			else
-			{
-				user.SignatureAsHTML = "";
-			}
-
+			user.SignatureAsHTML = string.IsNullOrWhiteSpace(signature) ? string.Empty : TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
 			user.Website = website;
 
             //Preferences
@@ -408,8 +353,10 @@ namespace SD.HnD.BL
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(user);
 
-			// Update the record
-			return user.Save(true);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.SaveEntity(user);
+			}
 		}
 
 
@@ -428,67 +375,59 @@ namespace SD.HnD.BL
 		/// <param name="website">The website.</param>
 		/// <param name="emailTemplatePath">The email template path.</param>
 		/// <param name="emailData">The email data.</param>
-        /// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
-        /// <param name="defaultMessagesPerPage">Messages per page to display</param>
-        /// <returns>
+		/// <param name="parserData">The parser data.</param>
+		/// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
+		/// <param name="defaultMessagesPerPage">Messages per page to display</param>
+		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
-		public static int RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
-				string ipNumber, string location, string occupation, string signature, string website, string emailTemplatePath, Dictionary<string, string> emailData, ParserData parserData,
-                bool autoSubscribeThreads, short defaultMessagesPerPage)
+		public static int RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, string ipNumber, string location, 
+										  string occupation, string signature, string website, string emailTemplatePath, Dictionary<string, string> emailData, ParserData parserData,
+											bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
-			UserEntity newUser = new UserEntity();
+			var newUser = new UserEntity
+						  {
+							  AmountOfPostings = 0,
+							  DateOfBirth = dateOfBirth,
+							  EmailAddress = emailAddress,
+							  EmailAddressIsPublic = emailAddressIsPublic,
+							  IPNumber = ipNumber,
+							  IconURL = iconURL,
+							  IsBanned = false,
+							  JoinDate = DateTime.Now,
+							  Location = location,
+							  NickName = nickName,
+							  Occupation = occupation,
+							  Signature = signature,
+							  Website = website
+						  };
 
-			// initialize objects
-			newUser.AmountOfPostings = 0;
-			newUser.DateOfBirth = dateOfBirth;
-			newUser.EmailAddress = emailAddress;
-			newUser.EmailAddressIsPublic = emailAddressIsPublic;
-			newUser.IPNumber = ipNumber;
-			newUser.IconURL = iconURL;
-			newUser.IsBanned = false;
-			newUser.JoinDate = DateTime.Now;
-			newUser.Location = location;
-			newUser.NickName = nickName;
-			newUser.Occupation = occupation;			
-			newUser.Signature = signature;
-            newUser.Website = website;
-            string password = HnDGeneralUtils.GenerateRandomPassword();
-            newUser.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
+			string password = HnDGeneralUtils.GenerateRandomPassword();
+#warning UPDATE FOR #4
+			newUser.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
 
             //Preferences
             newUser.AutoSubscribeToThread = autoSubscribeThreads;
             newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
+			newUser.SignatureAsHTML = string.IsNullOrWhiteSpace(signature) ? string.Empty : TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
 
-			if(!string.IsNullOrEmpty(signature))
-			{
-				newUser.SignatureAsHTML = TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
-			}
-			else
-			{
-				newUser.SignatureAsHTML = "";
-			}
-            //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser"
-            // as the roleID of the newly created RoleUserEntity.
-            SystemDataEntity systemData = SystemGuiHelper.GetSystemSettings();
+            //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly created RoleUserEntity.
+            var systemData = SystemGuiHelper.GetSystemSettings();
             newUser.UserTitleID = systemData.DefaultUserTitleNewUser;
-
-			RoleUserEntity roleUser = new RoleUserEntity();
-			roleUser.RoleID = systemData.DefaultRoleNewUser;
-			roleUser.User = newUser;
+			newUser.RoleUser.Add(new RoleUserEntity { RoleID = systemData.DefaultRoleNewUser});
 
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(newUser);
 
-			// now save the new user entity and the new RoleUser entity recursively in one go. This will create a transaction for us
-			// under the hood so we don't have to do that ourselves. 
-            if (newUser.Save(true))
-            {
-                // all ok, Email the password
-				bool result = HnDGeneralUtils.EmailPassword(password, emailAddress, emailTemplatePath, emailData);
-
-            }
-
+			// now save the new user entity and the new RoleUser entity recursively in one go. 
+			using(var adapter = new DataAccessAdapter())
+			{
+				if(adapter.SaveEntity(newUser))
+				{
+					// all ok, Email the password
+					HnDGeneralUtils.EmailPassword(password, emailAddress, emailTemplatePath, emailData);
+				}
+			}
 			return newUser.UserID;
 		}
 

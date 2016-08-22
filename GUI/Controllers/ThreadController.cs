@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
-using SD.HnD.DAL.EntityClasses;
+using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Models;
 using SD.HnD.Utility;
 

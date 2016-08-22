@@ -27,6 +27,7 @@ using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
+using SD.Tools.BCLExtensions.CollectionsRelated;
 
 namespace SD.HnD.Utility
 {
@@ -127,9 +128,7 @@ namespace SD.HnD.Utility
 		public static bool SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, 
 				Dictionary<string, string> emailData, bool sendAsynchronically)
 		{
-			string defaultToMailAddress = string.Empty;
-			emailData.TryGetValue("defaultToEmailAddress", out defaultToMailAddress);
-
+			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? string.Empty;
 			MailMessage messageToSend = new MailMessage(fromAddress, defaultToMailAddress);
 			messageToSend.Subject=subject;
 			messageToSend.Body = message;
@@ -166,27 +165,21 @@ namespace SD.HnD.Utility
 		{
 			StringBuilder mailBody = new StringBuilder(emailTemplate);
 
-			string applicationURL = string.Empty;
-			emailData.TryGetValue("applicationURL", out applicationURL);
+			string applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
+#warning POTENTIAL CLONE OF SD.HnD.BL.ThreadManager.SendThreadReplyNotifications's HANDLING OF TEMPLATE.
 
-			if (!string.IsNullOrEmpty(emailTemplate))
+			if(!string.IsNullOrEmpty(emailTemplate))
 			{
 				// Use the existing template to format the body
-				string siteName = string.Empty;
-				emailData.TryGetValue("siteName", out siteName);
-
+				string siteName = emailData.GetValue("siteName") ?? string.Empty;
 				mailBody.Replace("[URL]", applicationURL);
 				mailBody.Replace("[SiteName]", siteName);
 				mailBody.Replace("[Password]", password);
 			}
 
 			// format the subject
-			string subject = string.Empty;
-			emailData.TryGetValue("emailPasswordSubject", out subject);
-			subject += applicationURL;
-
-			string fromAddress = string.Empty;
-			emailData.TryGetValue("defaultFromEmailAddress", out fromAddress);
+			string subject = (emailData.GetValue("emailPasswordSubject") ?? string.Empty) + applicationURL ;
+			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 			// send it
 			// host and smtp credentials are set in .config file

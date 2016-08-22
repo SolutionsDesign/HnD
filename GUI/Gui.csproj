@@ -203,9 +203,9 @@
       <Project>{dcf9e35b-d377-4b8c-a0bb-d31cd6a7ec1a}</Project>
       <Name>SD.HnD.BL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DAL\SD.HnD.DAL.csproj">
-      <Project>{43c8451a-a377-4589-bf7d-73be386e7b4d}</Project>
-      <Name>SD.HnD.DAL</Name>
+    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapter.csproj">
+      <Project>{2b4058f7-26d3-4bda-b5ff-be048fdce94c}</Project>
+      <Name>SD.HnD.DALAdapter</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj">
       <Project>{aaeb0829-9929-4706-b7fb-f4e8bfcc32c2}</Project>

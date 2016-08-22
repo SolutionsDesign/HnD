@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using SD.HnD.DAL.CollectionClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui.Models
 {
 	public class ForumSelectorData
 	{
-		public ForumCollection Forums { get; set; } 
+		public EntityCollection<ForumEntity> Forums { get; set; } 
 	}
 }

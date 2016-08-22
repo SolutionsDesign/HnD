@@ -19,7 +19,10 @@
 */
 using System;
 using System.Data;
+using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 
 namespace SD.HnD.BL
@@ -35,12 +38,10 @@ namespace SD.HnD.BL
 		/// <returns>DataTable with 1 row with the system settings. See TF_SystemData.</returns>
 		public static SystemDataEntity GetSystemSettings()
 		{
-			SystemDataCollection systemData = new SystemDataCollection();
-			// get all entities, there's just 1
-			systemData.GetMulti(null);
-
-			// if the system is setup correctly, there's one entity
-			return systemData[0];
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchFirst(new QueryFactory().SystemData);
+			}
 		}
 	}
 }

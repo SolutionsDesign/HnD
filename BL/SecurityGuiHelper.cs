@@ -356,14 +356,12 @@ namespace SD.HnD.BL
 					ipTemp.Append(".");
 				}
 				ipTemp.Append(ipAddressSegments[i]);
-
-				allCachedIPBans.TryGetValue(8*(i+1), out rangeBans);
+				rangeBans = allCachedIPBans.GetValue(8*(i+1));
 				if(rangeBans==null)
 				{
 					// no range bans with this range, continue
 					continue;
 				}
-
 				if(rangeBans.TryGetValue(ipTemp.ToString(), out toReturn))
 				{
 					// we have a match!

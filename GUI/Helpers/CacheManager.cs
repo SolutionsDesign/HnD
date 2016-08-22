@@ -19,14 +19,13 @@
 */
 using System;
 using System.Web;
-using SD.HnD.DAL.CollectionClasses;
 using System.Web.Caching;
 using SD.HnD.BL;
-using SD.HnD.DAL.EntityClasses;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui
 {
@@ -42,10 +41,10 @@ namespace SD.HnD.Gui
 		/// </summary>
 		/// <returns>A SectionCollection with all SectionEntity instances of the sections of the forum system. This collection has to be threated as
 		/// a readonly collection with readonly objects</returns>
-		public static SectionCollection GetAllSections()
+		public static EntityCollection<SectionEntity> GetAllSections()
 		{
 			Cache activeCache = HttpRuntime.Cache;
-			SectionCollection toReturn = (SectionCollection)activeCache[CacheKeys.AllSections];
+			var toReturn = (EntityCollection<SectionEntity>)activeCache[CacheKeys.AllSections];
 			if(toReturn == null)
 			{
 				// not there, store it.
@@ -67,7 +66,7 @@ namespace SD.HnD.Gui
 		/// <returns>name of the section passed in.</returns>
 		public static string GetSectionName(int sectionID)
 		{
-			SectionCollection cachedSections = CacheManager.GetAllSections();
+			var cachedSections = CacheManager.GetAllSections();
 			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionID);
 			return matchingSection == null ? string.Empty : matchingSection.SectionName;
 		}
@@ -126,10 +125,10 @@ namespace SD.HnD.Gui
 		/// </summary>
 		/// <returns>A SupportQueueCollection with all supportqueue Entity instances of the support queues of the forum system. This collection has to be threated as
 		/// a readonly collection with readonly objects</returns>
-		public static SupportQueueCollection GetAllSupportQueues()
+		public static EntityCollection<SupportQueueEntity> GetAllSupportQueues()
 		{
 			Cache activeCache = HttpRuntime.Cache;
-			SupportQueueCollection toReturn = (SupportQueueCollection)activeCache[CacheKeys.AllSupportQueues];
+			var toReturn = (EntityCollection<SupportQueueEntity>)activeCache[CacheKeys.AllSupportQueues];
 			if(toReturn == null)
 			{
 				// not there, store it.
@@ -183,7 +182,7 @@ namespace SD.HnD.Gui
 			if(toReturn == null)
 			{
 				// not there, store it.
-				IPBanCollection allIPBans = SecurityGuiHelper.GetAllIPBans(0, 0, false);
+				var allIPBans = SecurityGuiHelper.GetAllIPBans(0, 0, false);
 				toReturn = new Dictionary<int, Dictionary<string, IPBanEntity>>();
 				foreach(IPBanEntity currentIPBan in allIPBans)
 				{

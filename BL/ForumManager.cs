@@ -19,8 +19,6 @@
 */
 using System;
 using System.Data;
-using System.Text;
-using System.Collections;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;

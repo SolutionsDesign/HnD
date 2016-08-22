@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using SD.HnD.BL;
-using SD.HnD.DAL.EntityClasses;
+using SD.HnD.DALAdapter.EntityClasses;
 
 namespace SD.HnD.Gui
 {

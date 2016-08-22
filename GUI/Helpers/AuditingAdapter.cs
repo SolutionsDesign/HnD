@@ -1,7 +1,8 @@
 using System.Linq;
 using System.Web;
 using SD.HnD.BL;
-using SD.HnD.DAL.CollectionClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui
 {
@@ -12,7 +13,7 @@ namespace SD.HnD.Gui
 		/// If the object already exists, it is overwritten with the new value.
 		/// </summary>
 		/// <param name="auditActions">The audit actions to store.</param>
-		internal static void AddAuditActions(AuditActionCollection auditActions)
+		internal static void AddAuditActions(EntityCollection<AuditActionEntity> auditActions)
 		{
 			HttpContext.Current.Session.Add("auditActions", auditActions);
 		}
@@ -22,9 +23,9 @@ namespace SD.HnD.Gui
 		/// Gets the audit actions from the session.
 		/// </summary>
 		/// <returns>AuditActionCollection if available otherwise returns null.</returns>
-		internal static AuditActionCollection GetAuditActions()
+		internal static EntityCollection<AuditActionEntity> GetAuditActions()
 		{
-			return HttpContext.Current.Session["auditActions"] as AuditActionCollection;
+			return HttpContext.Current.Session["auditActions"] as EntityCollection<AuditActionEntity>;
 		}
 
 
@@ -35,7 +36,7 @@ namespace SD.HnD.Gui
 		/// <returns>true if the user needs auditing, otherwise false</returns>
 		public static bool CheckIfNeedsAuditing(AuditActions auditActionID)
 		{
-			AuditActionCollection auditActions = GetAuditActions();
+			var auditActions = GetAuditActions();
 			if (auditActions != null && auditActions.Count > 0)
 			{
 				return auditActions.Any(a=>a.AuditActionID==(int)auditActionID);

@@ -5,12 +5,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
-using SD.HnD.BL.TypedDataClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.Gui.Models;
 using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -26,7 +25,7 @@ namespace SD.HnD.Gui.Controllers
 
 			// create a view on the sections to display and filter the view with a filter on sectionid: a sectionid must be part of the list of ids in the hashtable with per sectionid 
 			// aggregate forum data. 
-			model.SectionsFiltered = new EntityView<SectionEntity>(allSections, SectionFields.SectionID == model.ForumDataPerDisplayedSection.Keys.ToList());
+			model.SectionsFiltered = new EntityView2<SectionEntity>(allSections, SectionFields.SectionID.In(model.ForumDataPerDisplayedSection.Keys.ToList()));
 
 			model.NickName = LoggedInUserAdapter.GetUserNickName();
 			model.UserLastVisitDate = LoggedInUserAdapter.GetLastVisitDate();

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
-using SD.HnD.DAL.EntityClasses;
 using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers

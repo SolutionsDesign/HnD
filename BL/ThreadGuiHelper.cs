@@ -25,15 +25,15 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web;
 using SD.HnD.BL.TypedDataClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.FactoryClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.DaoClasses;
-using SD.HnD.DAL.HelperClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.TypedListClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
 using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
 namespace SD.HnD.BL
@@ -50,16 +50,11 @@ namespace SD.HnD.BL
 		/// <returns>Thread object or null if not found</returns>
 		public static ThreadEntity	GetThread(int ID)
 		{
-            // load the entity from the database
-            ThreadEntity thread = new ThreadEntity(ID);
-
-            //check if the entity is new (not found in the database), then return null.
-			if(thread.IsNew == true)
+			using(var adapter = new DataAccessAdapter())
 			{
-				return null;
+				var thread = new ThreadEntity(ID);
+				return adapter.FetchEntity(thread) ? thread : null;
 			}
-
-            return thread;
 		}
 
 
@@ -80,29 +75,26 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="userID">The user ID.</param>
-		/// <param name="transactionToUse">The transaction to use. Pass in the transaction object if this fetch has to take place inside a transaction</param>
+		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local adapter is used.</param>
 		/// <returns>
 		/// requested Threadsubscription entity or null if not found
 		/// </returns>
-		public static ThreadSubscriptionEntity GetThreadSubscription(int threadID, int userID, Transaction transactionToUse)
+		public static ThreadSubscriptionEntity GetThreadSubscription(int threadID, int userID, IDataAccessAdapter adapter)
 		{
-			ThreadSubscriptionEntity toReturn = new ThreadSubscriptionEntity();
-			if(transactionToUse != null)
+			bool localAdapter = adapter == null;
+			var adapterToUse = adapter ?? new DataAccessAdapter();
+			try
 			{
-				// transaction in progress, add entity to it so it's not blocked
-				transactionToUse.Add(toReturn);
+				var threadSubscription = new ThreadSubscriptionEntity(userID, threadID);
+				return adapterToUse.FetchEntity(threadSubscription) ? threadSubscription : null;
 			}
-
-			// fetch the data
-			toReturn.FetchUsingPK(userID, threadID);
-			if(toReturn.IsNew)
+			finally
 			{
-				// not found
-				return null;
+				if(localAdapter)
+				{
+					adapterToUse.Dispose();
+				}
 			}
-
-			// done. Don't commit a passed in transaction here, it's controlled by the caller.
-			return toReturn;
 		}
 
 
@@ -113,24 +105,27 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static int GetTotalNumberOfMessagesInThread(int threadID)
 		{
-			MessageCollection messages = new MessageCollection();
-			return messages.GetDbCount((MessageFields.ThreadID == threadID));
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int>(qf.Message.Select(Functions.CountRow()).Where(MessageFields.ThreadID.Equal(threadID)));
+			}
 		}
 
 
+#warning OBSOLETE?
 		/// <summary>
 		/// Gets the active threads with statistics.
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
 		/// <param name="hoursThreshold">The hours threshold for the query to fetch the active threads. All threads within this threshold's period of time (in hours)
 		/// are fetched.</param>
-		/// <param name="forumsWithOnlyOwnThreads">The forums for which the calling user can view other users' threads. Can be null</param>
+		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>
 		/// a dataTable of Active threads with statistics
 		/// </returns>
-		public static DataTable GetActiveThreadsStatisticsAsDataTable(List<int> accessableForums, short hoursThreshold, 
-				List<int> forumsWithThreadsFromOthers, int userID)
+		public static DataTable GetActiveThreadsStatisticsAsDataTable(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
 		{
             // return null, if the user does not have a valid list of forums to access
             if (accessableForums == null || accessableForums.Count <= 0)
@@ -149,48 +144,20 @@ namespace SD.HnD.BL
 								.And(ThreadFields.MarkedAsDone == false)
 								.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
 								.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)));
-			var dao = new TypedListDAO();
-			return dao.FetchAsDataTable(q);
-
-
-			//// create dyn. list and pull statistics using that list.
-			//ResultsetFields fields = new ResultsetFields(3);
-			//fields.DefineField(ThreadFields.ThreadID, 0, "AmountThreads", string.Empty, AggregateFunction.CountDistinct);
-			//fields.DefineField(MessageFields.MessageID, 1, "AmountPostings", string.Empty, AggregateFunction.Count);
-			//fields.DefineField(ThreadFields.ThreadLastPostingDate, 2, "LastPostingDate", string.Empty, AggregateFunction.Max);
-			
-			//RelationCollection relations = new RelationCollection();
-			//relations.Add(ThreadEntity.Relations.MessageEntityUsingThreadID);
-
-			//PredicateExpression filter = new PredicateExpression();
-			//// only the forums the user has access to
-			//filter.Add(ThreadFields.ForumID == accessableForums.ToArray());
-			//// only the threads which are not closed
-			//filter.AddWithAnd(ThreadFields.IsClosed == false);
-			//// only the threads which are active (== not done)
-			//filter.AddWithAnd(ThreadFields.MarkedAsDone == false);
-			//// only threads which have been updated in the last Globals.HoursForActiveThreadsTreshold hours
-			//filter.AddWithAnd(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold));
-
-			//// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
-			//// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			//IPredicateExpression threadFilter = ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID);
-			//filter.AddWithAnd(threadFilter);
-
-			//TypedListDAO dao = new TypedListDAO();
-			//DataTable toReturn = new DataTable();
-			//dao.GetMultiAsDataTable(fields, toReturn, 0, null, filter, relations, true, null, null, 0, 0);
-            //return toReturn;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q);
+			}
 		}
 
-
-        /// <summary>
-        /// Gets the active threads.
-        /// </summary>
-        /// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
+#warning CONVERT TO List<AggregatedActiveThreadRow>() RETURNING METHOD
+		/// <summary>
+		/// Gets the active threads.
+		/// </summary>
+		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
 		/// <param name="hoursThreshold">The hours threshold for the query to fetch the active threads. All threads within this threshold's period of time (in hours)
 		/// are fetched.</param>
-		/// <param name="forumsWithOnlyOwnThreads">The forums for which the calling user can view other users' threads. Can be null</param>
+		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>a dataView of Active threads</returns>
 		public static DataView GetActiveThreadsAsDataView(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
@@ -211,9 +178,10 @@ namespace SD.HnD.BL
 									.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
 									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
-			var dao = new TypedListDAO();
-			var activeThreads = dao.FetchAsDataTable(q);
-			return activeThreads.DefaultView;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q).DefaultView;
+			}
 		}
 
 
@@ -221,7 +189,7 @@ namespace SD.HnD.BL
 		/// Gets the last message in thread, and prefetches the user + usertitle entities. 
 		/// </summary>
 		/// <param name="threadID">Thread ID.</param>
-        /// <returns>fetched messageentity with the userentity + usertitle entity fetched as well of the user who posted the message.</returns>
+		/// <returns>fetched messageentity with the userentity + usertitle entity fetched as well of the user who posted the message.</returns>
 		public static MessageEntity GetLastMessageInThreadWithUserInfo(int threadID)
 		{
 			var qf = new QueryFactory();
@@ -236,25 +204,21 @@ namespace SD.HnD.BL
 												.ToScalar()
 												.ForceRowLimit()))
 						.WithPath(MessageEntity.PrefetchPathPostedByUser.WithSubPath(UserEntity.PrefetchPathUserTitle));
-			MessageCollection messages = new MessageCollection();
-			messages.GetMulti(q);
-			if(messages.Count<=0)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				return adapter.FetchFirst(q);
 			}
-			return messages[0];
 		}
 		
 
 		/// <summary>
-		/// Constructs a TypedList with all the messages in the thread given. Poster info is included, so the
-		/// returned dataview is bindable at once to the message list repeater.
+		/// Constructs a poco typed list with all the messages in the thread given. Poster info is included, so the
+		/// returned list is bindable at once to the message list repeater.
 		/// </summary>
 		/// <param name="threadID">ID of Thread which messages should be returned</param>
 		/// <param name="pageNo">The page no.</param>
 		/// <param name="pageSize">Size of the page.</param>
-		/// <returns>TypedList with all messages in the thread for the page specified</returns>
+		/// <returns>List with all messages in the thread for the page specified</returns>
 		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID, int pageNo, int pageSize)
 		{
 			// we'll use an extended typedlist. We've extended the typed list with a scalar query to pull the # of attachments in the same query. 
@@ -263,21 +227,18 @@ namespace SD.HnD.BL
 						  .Where(MessageFields.ThreadID == threadID)			// create the filter with the threadID passed to the method.
 						  .OrderBy(MessageFields.PostingDate.Ascending())		// Sort Messages on posting date, ascending, so the first post is located on top. 
 						  .Page(pageNo, pageSize)								// Pass in the paging information as well, to perform server-side paging. 
-						  .Distinct();											// Use distinct to avoid duplicates as we're paging.
-			var messages = new TypedListDAO().FetchQuery(q);					// fetch the data into the typedlist. 
+						  .Distinct();                                          // Use distinct to avoid duplicates as we're paging.
+			using(var adapter = new DataAccessAdapter())
+			{
+				var messages = adapter.FetchQuery(q);
 
-			// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
-			ThreadEntity updater = new ThreadEntity();
-
-			// set the NumberOfViews field to an expression which increases it by 1
-			updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
-			updater.IsNew = false;
-
-			// update the entity directly, and filter on the PK
-			new ThreadCollection().UpdateMulti(updater, (ThreadFields.ThreadID == threadID));
-			
-			// return the constructed typedlist
-			return messages;
+				// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
+				var updater = new ThreadEntity();
+				// set the NumberOfViews field to an expression which increases it by 1
+				updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
+				adapter.UpdateEntitiesDirectly(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID));
+				return messages;
+			}
 		}
 
 
@@ -294,33 +255,30 @@ namespace SD.HnD.BL
         {
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(MessageFields.MessageID)
+						.Select(()=>MessageFields.MessageID.ToValue<int>())
 						.Where(MessageFields.ThreadID == threadID)
 						.OrderBy(MessageFields.PostingDate.Ascending())
 						.Distinct();
-			var dao = new TypedListDAO();
-			var dynamicList = dao.FetchAsDataTable(q);
-           
-			int startAtMessage = 0;
-			int rowIndex = 0;
-            if (dynamicList.Rows.Count > 0)
-            {
-                // there are messages. Find the row with messageID. There can be only one row with this messageID                    
-                for (int i = 0; i < dynamicList.Rows.Count; i++)
-                {
-                    if (((int)dynamicList.Rows[i]["MessageID"]) == messageID)
-                    {
-                        // found the row
-                        rowIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            startAtMessage = (rowIndex / maxAmountMessagesPerPage) * maxAmountMessagesPerPage;
-
-            // done
-            return startAtMessage;
+	        using(var adapter = new DataAccessAdapter())
+	        {
+		        var messageIDs = adapter.FetchQuery(q);
+		        int startAtMessage = 0;
+		        int rowIndex = 0;
+		        if(messageIDs.Count > 0)
+		        {
+			        for(int i = 0; i < messageIDs.Count; i++)
+			        {
+				        if(messageIDs[i] == messageID)
+				        {
+					        // found the row
+					        rowIndex = i;
+					        break;
+				        }
+			        }
+			        startAtMessage = (rowIndex / maxAmountMessagesPerPage) * maxAmountMessagesPerPage;
+		        }
+		        return startAtMessage;
+	        }
         }
 
 
@@ -336,18 +294,15 @@ namespace SD.HnD.BL
 			// the first messageid. If that's not available or not equal to messageID, the messageID isn't the first post in the thread, otherwise it is.
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(MessageFields.MessageID)
+						.Select(()=>MessageFields.MessageID.ToValue<int>())
 						.Where(MessageFields.ThreadID == threadID)
 						.OrderBy(MessageFields.PostingDate.Ascending())
 						.Limit(1);
-			var dao = new TypedListDAO();
-			var firstMessageId = dao.GetScalar<int?>(q, null);
-			if(firstMessageId.HasValue)
+			using(var adapter = new DataAccessAdapter())
 			{
-				return firstMessageId.Value == messageID;
+				var firstMessageId = adapter.FetchScalar<int?>(q);
+				return firstMessageId.HasValue && firstMessageId.Value == messageID;
 			}
-			// not found.
-			return false;
 		}
 		
 
@@ -363,33 +318,14 @@ namespace SD.HnD.BL
 		/// <returns>ready to use thread filter.</returns>
 		internal static IPredicateExpression CreateThreadFilter(List<int> forumsWithThreadsFromOthers, int userID)
 		{
-			var threadFilter = new PredicateExpression();
 			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
 			{
-				// accept only those threads which aren't in the forumsWithThreadsFromOthers list and which are either started by userID or sticky.
-				// the filter on the threads not in the forums listed in the forumsWithThreadsFromOthers
-				if(forumsWithThreadsFromOthers.Count == 1)
-				{
-					// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
-					// databases, but we'll get a WHERE Field == @param
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers[0]));
-				}
-				else
-				{
-					// accept all threads which are in a forum located in the forumsWithThreadsFromOthers list 
-					threadFilter.Add((ThreadFields.ForumID == forumsWithThreadsFromOthers));
-				}
-				// the filter on either sticky or threads started by the calling user
-				threadFilter.AddWithOr((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
+				// accept only those threads which are in the forumsWithThreadsFromOthers list or which are either started by userID or sticky.
+				return ThreadFields.ForumID.In(forumsWithThreadsFromOthers).Or((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
 			}
-			else
-			{
-				// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
-				// sticky threads or threads started by the calling user.
-				threadFilter.Add((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
-			}
-			return threadFilter;
+			// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
+			// sticky threads or threads started by the calling user.
+			return (ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID);
 		}
 
 
@@ -399,7 +335,7 @@ namespace SD.HnD.BL
 		/// <param name="qf">The query factory to use.</param>
 		/// <returns>The fields for the projection</returns>
 		/// <remarks>Doesn't add the forum fields</remarks>
-		internal static Expression<Func<AggregatedThreadRow>>  BuildQueryProjectionForAllThreadsWithStats(QueryFactory qf)
+		internal static Expression<Func<AggregatedThreadRow>> BuildQueryProjectionForAllThreadsWithStats(QueryFactory qf)
 		{
 			return () => new AggregatedThreadRow() 
 			{ 

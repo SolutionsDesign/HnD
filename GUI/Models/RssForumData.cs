@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using SD.HnD.DAL.TypedListClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
 
 namespace SD.HnD.Gui.Models
 {

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using SD.HnD.BL;
-using SD.HnD.DAL.EntityClasses;
+using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers

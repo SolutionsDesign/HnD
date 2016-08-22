@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using SD.HnD.BL;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui
 {
@@ -141,7 +140,7 @@ namespace SD.HnD.Gui
 		/// <returns>true if the user can administrate system, user or security</returns>
 		public static bool CanAdministrate()
 		{
-			ActionRightCollection actionRights = GetSystemActionRights();
+			var actionRights = GetSystemActionRights();
 			if((actionRights == null) || (actionRights.Count <= 0))
 			{
 				return false;
@@ -159,7 +158,7 @@ namespace SD.HnD.Gui
 		/// </returns>
 		public static bool HasSystemActionRights()
 		{
-			ActionRightCollection actionRights = GetSystemActionRights();
+			var actionRights = GetSystemActionRights();
 			if(actionRights != null)
 			{
 				return (actionRights.Count > 0);
@@ -176,7 +175,7 @@ namespace SD.HnD.Gui
 		/// system, false otherwise.</returns>
 		public static bool HasSystemActionRight(ActionRights actionRightID)
 		{
-			ActionRightCollection actionRights = GetSystemActionRights();
+			var actionRights = GetSystemActionRights();
 			if(actionRights != null && actionRights.Count > 0)
 			{
 				return (actionRights.Any(a=>a.ActionRightID == (int)actionRightID));
@@ -190,7 +189,7 @@ namespace SD.HnD.Gui
 		/// If the object already exists, it is overwritten with the new value.
 		/// </summary>
 		/// <param name="actionRights">The action rights.</param>
-		internal static void AddSystemActionRights(ActionRightCollection actionRights)
+		internal static void AddSystemActionRights(EntityCollection<ActionRightEntity> actionRights)
 		{
 			HttpContext.Current.Session.Add("systemActionRights", actionRights);
 		}
@@ -199,10 +198,10 @@ namespace SD.HnD.Gui
 		/// <summary>
 		/// Gets the system action rights from the session.
 		/// </summary>
-		/// <returns>ActionRightCollection if available otherwise returns null.</returns>
-		internal static ActionRightCollection GetSystemActionRights()
+		/// <returns>collection with action rights if available otherwise returns null.</returns>
+		internal static EntityCollection<ActionRightEntity> GetSystemActionRights()
 		{
-			return HttpContext.Current.Session["systemActionRights"] as ActionRightCollection;
+			return HttpContext.Current.Session["systemActionRights"] as EntityCollection<ActionRightEntity>;
 		}
 
 

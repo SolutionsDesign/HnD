@@ -22,18 +22,16 @@ using System.Data;
 using System.Text;
 using System.Collections;
 
-using SD.HnD.DAL;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.FactoryClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.RelationClasses;
-using SD.HnD.DAL.DaoClasses;
+using SD.HnD.DALAdapter;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
+using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -58,8 +56,10 @@ namespace SD.HnD.BL
 								.InnerJoin(qf.Thread).On(BookmarkFields.ThreadID == ThreadFields.ThreadID)
 								.InnerJoin(qf.Message).On(ThreadFields.ThreadID == MessageFields.ThreadID))
 						.Where(BookmarkFields.UserID == userID);
-			var dao = new TypedListDAO();
-			return dao.FetchAsDataTable(q);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q);
+			}
 		}
 
 
@@ -75,9 +75,10 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 						.Select(UserFields.NickName)
 						.Where(UserFields.IsBanned == true);
-			var dao = new TypedListDAO();
-			var results = dao.FetchAsDataTable(q);
-			return results.DefaultView;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q).DefaultView;
+			}
 		}
 
 
@@ -91,8 +92,7 @@ namespace SD.HnD.BL
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a dataView of the threads requested</returns>
-		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-																List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
 		{
 			return GetLastThreadsForUserAsDataView(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
 		}
@@ -109,8 +109,8 @@ namespace SD.HnD.BL
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a dataView of the threads requested</returns>
-		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-															   List<int> forumsWithThreadsFromOthers, int callingUserID, int pageSize, int pageNumber)
+		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, 
+																int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -145,9 +145,10 @@ namespace SD.HnD.BL
 				// use paging
 				q.Page(pageNumber, numberOfThreadsToFetch);
 			}
-			var dao = new TypedListDAO();
-			var lastThreads = dao.FetchAsDataTable(q);
-			return lastThreads.DefaultView;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchAsDataTable(q).DefaultView;
+			}
 		}
 
 
@@ -160,25 +161,28 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <returns>a dataView of the threads requested</returns>
-		public static int GetRowCountLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID,
-																  List<int> forumsWithThreadsFromOthers, int callingUserID)
+		public static int GetRowCountLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
 		{
-			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
 			{
 				return 0;
 			}
 			var qf = new QueryFactory();
 			var q = qf.Create()
-							.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
-							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
-							.Where((ThreadFields.ForumID == accessableForums)
-									.And(ThreadFields.ThreadID.In(qf.Create()
-																		.Select(MessageFields.ThreadID)
-																		.Where(MessageFields.PostedByUserID == participantUserID)))
-									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID)));
-			var dao = new TypedListDAO();
-			return dao.GetScalar<int>(qf.Create().Select(Functions.CountRow()).From(q), null);
+						  .Select(Functions.CountRow())
+						  .From(
+								qf.Create()
+								  .Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+								  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+								  .Where((ThreadFields.ForumID == accessableForums)
+											 .And(ThreadFields.ThreadID.In(qf.Create()
+																			 .Select(MessageFields.ThreadID)
+																			 .Where(MessageFields.PostedByUserID == participantUserID)))
+											 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID))));
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int>(q);
+			}
 		}
 
 		
@@ -192,7 +196,7 @@ namespace SD.HnD.BL
 		/// <param name="filterOnEmailAddress"><see langword="true"/> if [filter on email address]; otherwise, <see langword="false"/>.</param>
 		/// <param name="emailAddress">Email address.</param>
 		/// <returns>User objects matching the query</returns>
-		public static UserCollection FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, string emailAddress)
+		public static EntityCollection<UserEntity> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, string emailAddress)
 		{
 			var qf = new QueryFactory();
 			var q = qf.User
@@ -203,15 +207,16 @@ namespace SD.HnD.BL
 			}
 			if(filterOnNickName)
 			{
-				q.AndWhere(UserFields.NickName.Like("%" + nickName + "%"));
+				q.AndWhere(UserFields.NickName.Contains(nickName));
 			}
 			if(filterOnEmailAddress)
 			{
-				q.AndWhere(UserFields.EmailAddress.Like("%" + emailAddress + "%"));
+				q.AndWhere(UserFields.EmailAddress.Contains(emailAddress));
 			}
-			UserCollection toReturn = new UserCollection();
-			toReturn.GetMulti(q);
-			return toReturn;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q, new EntityCollection<UserEntity>());
+			}
 		}
 
 
@@ -227,8 +232,10 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 						.Select(BookmarkFields.ThreadID)
 						.Where((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
-			var dao = new TypedListDAO();
-			return dao.GetScalar<int?>(q, null) != null;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int?>(q) != null;
+			}
 		}
 
 
@@ -263,41 +270,48 @@ namespace SD.HnD.BL
 		/// Retrieves all available usertitles.
 		/// </summary>
 		/// <returns>entitycollection with all the usertitles</returns>
-		public static UserTitleCollection GetAllUserTitles()
+		public static EntityCollection<UserTitleEntity> GetAllUserTitles()
 		{
-			UserTitleCollection userTitles = new UserTitleCollection();
-			userTitles.GetMulti(null);
-			return userTitles;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(new QueryFactory().UserTitle, new EntityCollection<UserTitleEntity>());
+			}
 		}
 
 		
 		/// <summary>
 		/// Checks if the given nickname is already taken. If so, true is returned, otherwise false.
 		/// </summary>
-		/// <param name="sNickName">NickName to check</param>
+		/// <param name="nickName">NickName to check</param>
 		/// <returns>true if nickname already exists in the database, false otherwise</returns>
 		public static bool CheckIfNickNameExists(string nickName)
 		{
-			UserEntity user = new UserEntity();
-			user.FetchUsingUCNickName(nickName);
-			return !user.IsNew;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int?>(new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)).Select(UserFields.UserID)) != null;
+			}
 		}
 
 
 		/// <summary>
-		/// Returns an entity collection with all User entities of users who are not currently in the given Role
+		/// Returns the users who are not currently in the given Role
 		/// </summary>
 		/// <param name="roleID">Role to use as filter</param>
 		/// <returns>entitycollection with data requested</returns>
-		public static UserCollection GetAllUsersNotInRole(int roleID)
+		public static EntityCollection<UserEntity> GetAllUsersNotInRole(int roleID)
 		{
-			var qf = new QueryFactory();
-			var q = qf.User
-						.Where(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)))
-						.OrderBy(UserFields.NickName.Ascending());
-			UserCollection users = new UserCollection();
-			users.GetMulti(q);
-			return users;
+			return GetAllUsersBasedOnRoleLogic(roleID, getUsersInRole: false);
+		}
+
+
+		/// <summary>
+		/// Returns the users who are currently in the given Role
+		/// </summary>
+		/// <param name="iRoleID">Role to use as filter</param>
+		/// <returns>UserCollection with data requested</returns>
+		public static EntityCollection<UserEntity> GetAllUsersInRole(int roleID)
+		{
+			return GetAllUsersBasedOnRoleLogic(roleID, getUsersInRole: true);
 		}
 
 
@@ -306,28 +320,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="range">Range with userids</param>
 		/// <returns></returns>
-		public static UserCollection GetAllUsersInRange(List<int> range)
+		public static EntityCollection<UserEntity> GetAllUsersInRange(List<int> range)
 		{
-			UserCollection users = new UserCollection();
-			users.GetMulti((UserFields.UserID==range));
-			return users;
-		}
-
-
-		/// <summary>
-		/// Returns a UserCollection with all User entities of users who are currently in the given Role
-		/// </summary>
-		/// <param name="iRoleID">Role to use as filter</param>
-		/// <returns>UserCollection with data requested</returns>
-		public static UserCollection GetAllUsersInRole(int roleID)
-		{
-			var qf = new QueryFactory();
-			var q = qf.User
-						.Where(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)))
-						.OrderBy(UserFields.NickName.Ascending());
-			UserCollection users = new UserCollection();
-			users.GetMulti(q);
-			return users;
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(new QueryFactory().User.Where(UserFields.UserID.In(range)), new EntityCollection<UserEntity>());
+			}
 		}
 
 
@@ -338,32 +336,28 @@ namespace SD.HnD.BL
 		/// <returns>entity with data requested or null if not found.</returns>
 		public static UserEntity GetUser(int userID)
 		{
-			UserEntity user = new UserEntity(userID);
-			if(user.IsNew)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				var user = new UserEntity(userID);
+				return adapter.FetchEntity(user) ? user : null;
 			}
-			return user;
 		}
 
         /// <summary>
         /// Returns the user entity of the user with ID userID, With A UserEntityTitle prefetched.
         /// </summary>
         /// <param name="userID">The user ID.</param>
-        /// <returns>entity with data requested</returns>
+        /// <returns>entity with data requested, or null if not found</returns>
         public static UserEntity GetUserWithTitleDescription(int userID)
         {
-            PrefetchPath prefetchPath = new PrefetchPath((int)EntityType.UserEntity);
-            prefetchPath.Add(UserEntity.PrefetchPathUserTitle);
-
-            UserEntity user = new UserEntity(userID, prefetchPath);
-			if(user.IsNew)
-			{
-				// not found
-				return null;
-			}
-            return user;
+	        var qf = new QueryFactory();
+	        var q = qf.User
+					  .Where(UserFields.UserID.Equal(userID))
+					  .WithPath(UserEntity.PrefetchPathUserTitle);
+	        using(var adapter = new DataAccessAdapter())
+	        {
+		        return adapter.FetchFirst(q);
+	        }
         }
 
 
@@ -376,6 +370,26 @@ namespace SD.HnD.BL
 		public static bool CheckIfThreadIsAlreadySubscribed(int userID, int threadID)
 		{
 			return (ThreadGuiHelper.GetThreadSubscription(threadID, userID) != null);
+		}
+
+
+		/// <summary>
+		/// Gets all users based on role logic.
+		/// </summary>
+		/// <param name="roleID">The role identifier.</param>
+		/// <param name="getUsersInRole">if set to <c>true</c> gets the users in the role specified. If false it will get the users not in the role specified</param>
+		/// <returns></returns>
+		private static EntityCollection<UserEntity> GetAllUsersBasedOnRoleLogic(int roleID, bool getUsersInRole)
+		{
+			var qf = new QueryFactory();
+			var q = qf.User
+						.OrderBy(UserFields.NickName.Ascending());
+			q.Where(getUsersInRole ? UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID))
+								   : UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)));
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q, new EntityCollection<UserEntity>());
+			}
 		}
 	}
 }

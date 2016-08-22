@@ -20,10 +20,10 @@
 using System;
 using System.Data;
 using System.Web;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
+using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
+using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
@@ -49,11 +49,11 @@ namespace SD.HnD.Gui
         public static void LoadUserSessionData(UserEntity user)
         {
 	        LoggedInUserAdapter.AddUserObject(user);
-			ActionRightCollection systemActionRights = SecurityGuiHelper.GetSystemActionRightsForUser(user.UserID);
+			var systemActionRights = SecurityGuiHelper.GetSystemActionRightsForUser(user.UserID);
             LoggedInUserAdapter.AddSystemActionRights(systemActionRights);
-			AuditActionCollection auditActions = SecurityGuiHelper.GetAuditActionsForUser(user.UserID);
+			var auditActions = SecurityGuiHelper.GetAuditActionsForUser(user.UserID);
 	        AuditingAdapter.AddAuditActions(auditActions);
-			ForumRoleForumActionRightCollection forumActionRights = SecurityGuiHelper.GetForumsActionRightsForUser(user.UserID);
+			var forumActionRights = SecurityGuiHelper.GetForumsActionRightsForUser(user.UserID);
             AddForumsActionRights(forumActionRights);
 			if((user.UserID > 0) && (user.LastVisitedDate.HasValue))
 			{
@@ -71,7 +71,7 @@ namespace SD.HnD.Gui
         /// </summary>
         public static void LoadAnonymousSessionData()
         {
-			ForumRoleForumActionRightCollection forumActionRights = SecurityGuiHelper.GetForumsActionRightsForUser(0); // 0 is the the Anonymous userID.
+			var forumActionRights = SecurityGuiHelper.GetForumsActionRightsForUser(0); // 0 is the the Anonymous userID.
             AddForumsActionRights(forumActionRights);
         }
 
@@ -171,7 +171,7 @@ namespace SD.HnD.Gui
 		/// action right 'Access forum', the ForumIDs 1, 3, 4, and 8 are placed. 
 		/// </summary>
 		/// <param name="forumsActionRights">The action rights.</param>
-		private static void AddForumsActionRights(ForumRoleForumActionRightCollection forumsActionRights)
+		private static void AddForumsActionRights(EntityCollection<ForumRoleForumActionRightEntity> forumsActionRights)
 		{
 			var forumsActionRightsInSession = new MultiValueHashtable<int, int>();
 
