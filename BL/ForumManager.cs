@@ -206,7 +206,7 @@ namespace SD.HnD.BL
 				try
 				{
 					// save the complete graph
-					adapter.SaveEntity(newMessage);
+					adapter.SaveEntity(newMessage, true);
 					messageID = newMessage.MessageID;
 					int threadID = newMessage.ThreadID;
 

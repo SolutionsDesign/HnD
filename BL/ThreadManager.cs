@@ -130,7 +130,7 @@ namespace SD.HnD.BL
 				adapter.StartTransaction(IsolationLevel.ReadCommitted, "MarkThreadUnDone");
 				try
 				{
-					adapter.SaveEntity(thread);
+					adapter.SaveEntity(thread, true);
 					var forum = new ForumEntity(thread.ForumID);
 					var result = adapter.FetchEntity(forum);
 					if(result && forum.DefaultSupportQueueID.HasValue)

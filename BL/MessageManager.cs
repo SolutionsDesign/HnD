@@ -306,7 +306,7 @@ namespace SD.HnD.BL
 			{
 				containingForum.ForumLastPostingDate = postingDate;
 				// save the forum.
-				adapter.SaveEntity(containingForum);
+				adapter.SaveEntity(containingForum, true);
 				if(addToQueueIfRequired && containingForum.DefaultSupportQueueID.HasValue)
 				{
 					// If the thread involved isn't in a queue, place it in the default queue of the forum (if applicable)

@@ -89,18 +89,31 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static bool AddThreadToSubscriptions(int threadID, int userID, IDataAccessAdapter adapter)
 		{
-			// check if this user is already subscribed to this thread. If not, add a new subscription.
-			if(ThreadGuiHelper.GetThreadSubscription(threadID, userID, adapter) == null)
+			bool localAdapter = adapter == null;
+			var adapterToUse = adapter ?? new DataAccessAdapter();
+			try
 			{
-				// user isn't yet subscribed, add the subscription
-				return adapter.SaveEntity(new ThreadSubscriptionEntity
-										  {
-											  UserID = userID,
-											  ThreadID = threadID
-										  });
+				// check if this user is already subscribed to this thread. If not, add a new subscription.
+				if(ThreadGuiHelper.GetThreadSubscription(threadID, userID, adapterToUse) == null)
+				{
+					// user isn't yet subscribed, add the subscription
+					return adapterToUse.SaveEntity(new ThreadSubscriptionEntity
+												   {
+													   UserID = userID,
+													   ThreadID = threadID
+												   });
+				}
+
+				// already subscribed, no-op.
+				return true;
 			}
-			// already subscribed, no-op.
-			return true;
+			finally
+			{
+				if(localAdapter)
+				{
+					adapterToUse.Dispose();
+				}
+			}
 		}
 
 
