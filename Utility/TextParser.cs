@@ -146,7 +146,6 @@ namespace SD.HnD.Utility
 					reader.Close();		// closes underlying stream as well. 
 
 					// replace any tab chars with 4 HTML spaces
-					htmlOutput.Replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
 					return htmlOutput.ToString();
 				}
 				else

@@ -158,6 +158,7 @@ namespace SD.HnD.Gui
 			emailData.Add("emailPasswordSubject", GetEmailPasswordSubject());
 			emailData.Add("emailThreadNotificationSubject", GetEmailThreadNotificationSubject());
             emailData.Add("siteName", GetSiteName());
+#warning UPDATE TO HANDLE https:// TOO
 			emailData.Add("applicationURL", "http://" + HttpContext.Current.Request.Url.Host + GetVirtualRoot());
 
             return emailData;
