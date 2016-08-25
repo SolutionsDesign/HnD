@@ -20,4 +20,17 @@ An allowed block-level tag
 <a href="javascript:blah">A disallowed span-level tag</a>
 </blockquote>
 
+<img src="http://example.com/blaat.jpg"/>
+
+<blockquote>
+1
+2
+3
+4
+5
+fdfdfd
+<a href="http://google.com">An allowed span-level tag</a>
+</blockquote>
+
+
 post

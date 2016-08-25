@@ -84,7 +84,7 @@ namespace MarkdownDeep
 
 		static string[] m_allowed_tags = new string [] {
 			"b","blockquote","code","dd","dt","dl","del","em","h1","h2","h3","h4","h5","h6","i","kbd","li","ol","ul",
-			"p", "pre", "s", "sub", "sup", "strong", "strike", "img", "a"
+			"p", "pre", "s", "sub", "sup", "strong", "strike"
 		};
 
 		static Dictionary<string, string[]> m_allowed_attributes = new Dictionary<string, string[]>() {
