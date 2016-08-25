@@ -475,7 +475,7 @@ namespace MarkdownDeep
 						break;
 
 					case '@':
-						if(m_Markdown.DocNetMode)
+						if(m_Markdown.DocNetMode || m_Markdown.HnDMode)
 						{
 							if(this.DoesMatch("@fa-"))
 							{

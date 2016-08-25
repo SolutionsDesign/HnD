@@ -846,6 +846,11 @@ namespace MarkdownDeep
 		/// </summary>
 		public bool DocNetMode { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the parser is in HnD mode. If set to true, it will handle '@' extensions from DocNet as well as specific extensions for HnD
+		/// </summary>
+		public bool HnDMode { get; set; }
+
 		// When set, all html block level elements automatically support
 		// markdown syntax within them.  
 		// (Similar to Pandoc's handling of markdown in html)

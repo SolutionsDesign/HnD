@@ -383,7 +383,7 @@ namespace MarkdownDeep
 					break;
 // DocNet Extensions
 				case BlockType.font_awesome:
-					if(m.DocNetMode)
+					if(m.DocNetMode || m.HnDMode)
 					{
 						b.Append("<i class=\"fa fa-");
 						b.Append(this.Data as string ?? string.Empty);
@@ -391,13 +391,13 @@ namespace MarkdownDeep
 					}
 					break;
 				case BlockType.alert:
-					if(m.DocNetMode)
+					if(m.DocNetMode || m.HnDMode)
 					{
 						RenderAlert(m, b);
 					}
 					break;
 				case BlockType.tabs:
-					if(m.DocNetMode)
+					if(m.DocNetMode || m.HnDMode)
 					{
 						RenderTabs(m, b);
 					}

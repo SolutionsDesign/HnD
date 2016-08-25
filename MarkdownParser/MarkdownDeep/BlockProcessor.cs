@@ -890,14 +890,13 @@ namespace MarkdownDeep
 				}
 			}
 
-			// DocNet '@' extensions
-			if(ch == '@' && m_markdown.DocNetMode)
+			// DocNet / HnD '@' extensions
+			if(ch == '@' && (m_markdown.DocNetMode || m_markdown.HnDMode))
 			{
-				if(HandleDocNetExtension(b))
+				if(HandleSDExtension(b))
 				{
 					return b.BlockType;
 				}
-
 				// Not valid, Rewind
 				Position = b.ContentStart;
 			}
@@ -1252,16 +1251,20 @@ namespace MarkdownDeep
 
 
 		/// <summary>
-		/// Handles the docnet extension, starting with '@'. This can be:
+		/// Handles the extensions added by Solutions Design, starting with '@'. These are added for DocNet and HnD. This can be:
 		/// * @fa-
 		/// * @alert
 		///   @end
 		/// * @tabs
 		///   @tabsend
+		/// * @offtopic
+		///   @end
+		/// * @quote
+		///   @end
 		/// </summary>
-		/// <param name="b">The b.</param>
+		/// <param name="b">The block to handle</param>
 		/// <returns>true if extension was correctly handled, false otherwise (error)</returns>
-		private bool HandleDocNetExtension(Block b)
+		private bool HandleSDExtension(Block b)
 		{
 			var initialStart = this.Position;
 			if(DoesMatch("@fa-"))
@@ -1281,7 +1284,29 @@ namespace MarkdownDeep
 			{
 				return HandleAlertExtension(b);
 			}
+			if(DoesMatch("@quote"))
+			{
+				return HandleQuoteExtension(b);
+			}
+			if(DoesMatch("@offtopic"))
+			{
+				return HandleOfftopicExtension(b);
+			}
 			return false;
+		}
+
+
+		private bool HandleOfftopicExtension(Block b)
+		{
+			return false;
+#warning IMPLEMENT
+		}
+
+
+		private bool HandleQuoteExtension(Block b)
+		{
+			return false;
+#warning IMPLEMENT
 		}
 
 

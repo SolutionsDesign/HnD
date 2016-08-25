@@ -32,5 +32,6 @@ fdfdfd
 <a href="http://google.com">An allowed span-level tag</a>
 </blockquote>
 
+<p>bla</p>
 
 post
