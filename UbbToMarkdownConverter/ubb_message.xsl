@@ -17,11 +17,6 @@
 <xsl:apply-templates select="./*" />
 @end
 </xsl:template>
-	<xsl:template match="quote[@nick][br]">
-@quote <xsl:value-of select="@nick" />
-<xsl:apply-templates select="./*" />
-@end
-</xsl:template>
 	<xsl:template match="quote">
 @quote<xsl:text>&#10;</xsl:text>
 <xsl:apply-templates select="./*" />
