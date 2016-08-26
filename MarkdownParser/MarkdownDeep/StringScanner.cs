@@ -27,6 +27,12 @@ namespace MarkdownDeep
 	 */
 	public class StringScanner
 	{
+		private string _str;
+		private int _start;
+		private int _pos;
+		private int _end;
+		private int _mark;
+
 		// Constructor
 		public StringScanner()
 		{
@@ -74,13 +80,13 @@ namespace MarkdownDeep
 			if (pos > str.Length)
 				pos = str.Length;
 
-			this.str = str;
-			this.start = pos;
-			this.pos = pos;
-			this.end = pos + len;
+			this._str = str;
+			this._start = pos;
+			this._pos = pos;
+			this._end = pos + len;
 
-			if (end > str.Length)
-				end = str.Length;
+			if (_end > str.Length)
+				_end = str.Length;
 		}
 
 		// Get the entire input string
@@ -88,7 +94,7 @@ namespace MarkdownDeep
 		{
 			get
 			{
-				return str;
+				return _str;
 			}
 		}
 
@@ -97,10 +103,10 @@ namespace MarkdownDeep
 		{
 			get
 			{
-				if (pos < start || pos >= end)
+				if (_pos < _start || _pos >= _end)
 					return '\0';
 				else
-					return str[pos];
+					return _str[_pos];
 			}
 		}
 
@@ -109,11 +115,11 @@ namespace MarkdownDeep
 		{
 			get
 			{
-				return pos;
+				return _pos;
 			}
 			set
 			{
-				pos = value;
+				_pos = value;
 			}
 		}
 
@@ -130,41 +136,41 @@ namespace MarkdownDeep
 		// Skip to the end of file
 		public void SkipToEof()
 		{
-			pos = end;
+			_pos = _end;
 		}
 
 
 		// Skip to the end of the current line
 		public void SkipToEol()
 		{
-			while (pos < end)
+			while (_pos < _end)
 			{
-				char ch=str[pos];
+				char ch=_str[_pos];
 				if (ch=='\r' || ch=='\n')
 					break;
-				pos++;
+				_pos++;
 			}
 		}
 
 		// Skip if currently at a line end
 		public bool SkipEol()
 		{
-			if (pos < end)
+			if (_pos < _end)
 			{
-				char ch = str[pos];
+				char ch = _str[_pos];
 				if (ch == '\r')
 				{
-					pos++;
-					if (pos < end && str[pos] == '\n')
-						pos++;
+					_pos++;
+					if (_pos < _end && _str[_pos] == '\n')
+						_pos++;
 					return true;
 				}
 
 				else if (ch == '\n')
 				{
-					pos++;
-					if (pos < end && str[pos] == '\r')
-						pos++;
+					_pos++;
+					if (_pos < _end && _str[_pos] == '\r')
+						_pos++;
 					return true;
 				}
 			}
@@ -183,19 +189,19 @@ namespace MarkdownDeep
 		// Or, \0 if out of range
 		public char CharAtOffset(int offset)
 		{
-			int index = pos + offset;
+			int index = _pos + offset;
 			
-			if (index < start)
+			if (index < _start)
 				return '\0';
-			if (index >= end)
+			if (index >= _end)
 				return '\0';
-			return str[index];
+			return _str[index];
 		}
 
 		// Skip a number of characters
 		public void SkipForward(int characters)
 		{
-			pos += characters;
+			_pos += characters;
 		}
 
 		// Skip a character if present
@@ -314,81 +320,81 @@ namespace MarkdownDeep
 		// Does current string position match a string
 		public bool DoesMatchI(string str)
 		{
-			return string.Compare(str, Substring(Position, str.Length), true) == 0;
+			return string.Compare(str, Substring(Position, str.Length), StringComparison.OrdinalIgnoreCase) == 0;
 		}
 
 		// Extract a substring
 		public string Substring(int start)
 		{
-			return str.Substring(start, end-start);
+			return _str.Substring(start, _end-start);
 		}
 
 		// Extract a substring
 		public string Substring(int start, int len)
 		{
-			if (start + len > end)
-				len = end - start;
+			if (start + len > _end)
+				len = _end - start;
 
-			return str.Substring(start, len);
+			return _str.Substring(start, len);
 		}
 
 		// Scan forward for a character
 		public bool Find(char ch)
 		{
-			if (pos >= end)
+			if (_pos >= _end)
 				return false;
 
 			// Find it
-			int index = str.IndexOf(ch, pos);
-			if (index < 0 || index>=end)
+			int index = _str.IndexOf(ch, _pos);
+			if (index < 0 || index>=_end)
 				return false;
 
 			// Store new position
-			pos = index;
+			_pos = index;
 			return true;
 		}
 
 		// Find any of a range of characters
 		public bool FindAny(char[] chars)
 		{
-			if (pos >= end)
+			if (_pos >= _end)
 				return false;
 
 			// Find it
-			int index = str.IndexOfAny(chars, pos);
-			if (index < 0 || index>=end)
+			int index = _str.IndexOfAny(chars, _pos);
+			if (index < 0 || index>=_end)
 				return false;
 
 			// Store new position
-			pos = index;
+			_pos = index;
 			return true;
 		}
 
 		// Forward scan for a string
 		public bool Find(string find)
 		{
-			if (pos >= end)
+			if (_pos >= _end)
 				return false;
 
-			int index = str.IndexOf(find, pos);
-			if (index < 0 || index > end-find.Length)
+			int index = _str.IndexOf(find, _pos, StringComparison.InvariantCulture);
+			if (index < 0 || index > _end-find.Length)
 				return false;
 
-			pos = index;
+			_pos = index;
 			return true;
 		}
 
 		// Forward scan for a string (case insensitive)
 		public bool FindI(string find)
 		{
-			if (pos >= end)
+			if (_pos >= _end)
 				return false;
 
-			int index = str.IndexOf(find, pos, StringComparison.InvariantCultureIgnoreCase);
-			if (index < 0 || index >= end - find.Length)
+			int index = _str.IndexOf(find, _pos, StringComparison.InvariantCultureIgnoreCase);
+			if (index < 0 || index >= _end - find.Length)
 				return false;
 
-			pos = index;
+			_pos = index;
 			return true;
 		}
 
@@ -397,7 +403,7 @@ namespace MarkdownDeep
 		{
 			get
 			{
-				return pos >= end;
+				return _pos >= _end;
 			}
 		}
 
@@ -415,34 +421,34 @@ namespace MarkdownDeep
 		{
 			get
 			{
-				return pos == start;
+				return _pos == _start;
 			}
 		}
 
 		// Mark current position
 		public void Mark()
 		{
-			mark = pos;
+			_mark = _pos;
 		}
 
 		// Extract string from mark to current position
 		public string Extract()
 		{
-			if (mark >= pos)
+			if (_mark >= _pos)
 				return "";
 
-			return str.Substring(mark, pos - mark);
+			return _str.Substring(_mark, _pos - _mark);
 		}
 
 		// Skip an identifier
 		public bool SkipIdentifier(ref string identifier)
 		{
 			int savepos = Position;
-			if (!Utils.ParseIdentifier(this.str, ref pos, ref identifier))
+			if (!Utils.ParseIdentifier(this._str, ref _pos, ref identifier))
 				return false;
-			if (pos >= end)
+			if (_pos >= _end)
 			{
-				pos = savepos;
+				_pos = savepos;
 				return false;
 			}
 			return true;
@@ -465,7 +471,7 @@ namespace MarkdownDeep
 					break;
 			}
 
-			if (Position > mark)
+			if (Position > _mark)
 			{
 				id = Extract().Trim();
 				if (!String.IsNullOrEmpty(id))
@@ -484,11 +490,11 @@ namespace MarkdownDeep
 		public bool SkipHtmlEntity(ref string entity)
 		{
 			int savepos = Position;
-			if (!Utils.SkipHtmlEntity(this.str, ref pos, ref entity))
+			if (!Utils.SkipHtmlEntity(this._str, ref _pos, ref entity))
 				return false;
-			if (pos > end)
+			if (_pos > _end)
 			{
-				pos = savepos;
+				_pos = savepos;
 				return false;
 			}
 			return true;
@@ -499,45 +505,7 @@ namespace MarkdownDeep
 		{
 			return ch == '\r' || ch == '\n' || ch=='\0';
 		}
-
-		bool IsUrlChar(char ch)
-		{
-			switch (ch)
-			{
-				case '+':
-				case '&':
-				case '@':
-				case '#':
-				case '/':
-				case '%':
-				case '?':
-				case '=':
-				case '~':
-				case '_':
-				case '|':
-				case '[':
-				case ']':
-				case '(':
-				case ')':
-				case '!':
-				case ':':
-				case ',':
-				case '.':
-				case ';':
-					return true;
-
-				default:
-					return Char.IsLetterOrDigit(ch);
-			}
-		}
-
-		// Attributes
-		string str;
-		int start;
-		int pos;
-		int end;
-		int mark;
-
+		
 
 		/// <summary>
 		/// Unskips the CRLF before position. This simply means it returns the new position calculated from the specified position if before the specified

@@ -29,4 +29,12 @@ This is an info text, it will be displayed in an info alert box!
 This is a tip, whether you like it or not!
 @end
 
+@alert tip
+This is a tip, whether you like it or not!
+@alert tip
+This is a nested tip, whether you like it or not!
+@end
+@end
+
+@end
 post

@@ -42,6 +42,7 @@ namespace MarkdownDeep
 		private Dictionary<string, bool> m_UsedHeaderIDs;
 		private Dictionary<string, Abbreviation> m_AbbreviationMap;
 		private List<Abbreviation> m_AbbreviationList;
+		private Dictionary<int, int> _sdTokenStartEndIndices;
 		private int _tabIdCounter;
 		#endregion
 
@@ -70,11 +71,11 @@ namespace MarkdownDeep
 			m_UsedHeaderIDs.Clear();
 			m_AbbreviationMap = null;
 			m_AbbreviationList = null;
+			_sdTokenStartEndIndices = this.DocNetMode || this.HnDMode ? new SDTokenPairFinder(str).FindPairs() : new Dictionary<int, int>();
 
 			// Process blocks
 			return new BlockProcessor(this, MarkdownInHtml).Process(str);
 		}
-
 
 		public string Transform(string str)
 		{
@@ -766,7 +767,6 @@ namespace MarkdownDeep
 			return m_StringBuilder;
 		}
 
-
 		#region Block Pooling
 
 		// We cache and re-use blocks for performance
@@ -1036,8 +1036,16 @@ namespace MarkdownDeep
 			get;
 			set;
 		}
-		#endregion
 
+
+		/// <summary>
+		/// Gets the sd token start end indices, which are start/end index pairs for the start tokens in the '@' token set extension for DocNet / HnD. 
+		/// </summary>
+		public Dictionary<int, int> SDTokenStartEndIndices
+		{
+			get { return _sdTokenStartEndIndices; }
+		}
+		#endregion
 	}
 
 }

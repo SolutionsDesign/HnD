@@ -82,6 +82,7 @@
     <Compile Include="MardownDeep.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="SDTokenPairFinder.cs" />
     <Compile Include="SpanFormatter.cs" />
     <Compile Include="StringScanner.cs" />
     <Compile Include="TableSpec.cs" />

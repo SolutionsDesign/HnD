@@ -1267,28 +1267,28 @@ namespace MarkdownDeep
 		private bool HandleSDExtension(Block b)
 		{
 			var initialStart = this.Position;
-			if(DoesMatch("@fa-"))
+			if(DoesMatchI("@fa-"))
 			{
 				return HandleFontAwesomeExtension(b);
 			}
 			// first match @tabs, and then @tab, as both are handled by this processor.
-			if(DoesMatch("@tabs"))
+			if(DoesMatchI("@tabs"))
 			{
 				return HandleTabsExtension(b);
 			}
-			if(DoesMatch("@tab"))
+			if(DoesMatchI("@tab"))
 			{
 				return HandleTabForTabsExtension(b);
 			}
-			if(DoesMatch("@alert"))
+			if(DoesMatchI("@alert"))
 			{
 				return HandleAlertExtension(b);
 			}
-			if(DoesMatch("@quote"))
+			if(DoesMatchI("@quote"))
 			{
 				return HandleQuoteExtension(b);
 			}
-			if(DoesMatch("@offtopic"))
+			if(DoesMatchI("@offtopic"))
 			{
 				return HandleOfftopicExtension(b);
 			}
@@ -1308,8 +1308,7 @@ namespace MarkdownDeep
 			return false;
 #warning IMPLEMENT
 		}
-
-
+		
 
 		/// <summary>
 		/// Handles the alert extension:
@@ -1324,8 +1323,9 @@ namespace MarkdownDeep
 		/// <returns></returns>
 		private bool HandleAlertExtension(Block b)
 		{
+			var startTokenIndex = this.Position;
 			// skip '@alert'
-			if(!SkipString("@alert"))
+			if(!SkipStringI("@alert"))
 			{
 				return false;
 			}
@@ -1338,11 +1338,14 @@ namespace MarkdownDeep
 			SkipToNextLine();
 			int startContent = this.Position;
 
-			// find @end.
-			if(!Find("@end"))
+			// Pull the end token index (the index '@end' is located) from the found start/end pairs. 
+			int endTokenIndex;
+			if(!m_markdown.SDTokenStartEndIndices.TryGetValue(startTokenIndex, out endTokenIndex))
 			{
 				return false;
 			}
+			// skip to index found
+			this.Position = endTokenIndex;
 			// Character before must be a eol char
 			if(!IsLineEnd(CharAtOffset(-1)))
 			{
@@ -1350,7 +1353,7 @@ namespace MarkdownDeep
 			}
 			int endContent = Position;
 			// skip @end
-			SkipString("@end");
+			SkipStringI("@end");
 			SkipLinespace();
 			if(!Eol)
 			{
@@ -1371,7 +1374,7 @@ namespace MarkdownDeep
 		private bool HandleTabsExtension(Block b)
 		{
 			// skip '@tabs'
-			if(!SkipString("@tabs"))
+			if(!SkipStringI("@tabs"))
 			{
 				return false;
 			}
@@ -1379,7 +1382,7 @@ namespace MarkdownDeep
 			SkipToNextLine();
 			int startContent = this.Position;
 			// find @end.
-			if(!Find("@endtabs"))
+			if(!FindI("@endtabs"))
 			{
 				return false;
 			}
@@ -1390,7 +1393,7 @@ namespace MarkdownDeep
 			}
 			int endContent = Position;
 			// skip @end
-			SkipString("@endtabs");
+			SkipStringI("@endtabs");
 			SkipLinespace();
 			if(!Eol)
 			{
@@ -1422,8 +1425,9 @@ namespace MarkdownDeep
 		/// <returns></returns>
 		private bool HandleTabForTabsExtension(Block b)
 		{
+			var startTokenIndex = this.Position;
 			// skip '@tab'
-			if(!SkipString("@tab"))
+			if(!SkipStringI("@tab"))
 			{
 				return false;
 			}
@@ -1435,11 +1439,14 @@ namespace MarkdownDeep
 			SkipToNextLine();
 			int startContent = this.Position;
 
-			// find @end.
-			if(!Find("@end"))
+			// Pull the end token index (the index '@end' is located) from the found start/end pairs. 
+			int endTokenIndex;
+			if(!m_markdown.SDTokenStartEndIndices.TryGetValue(startTokenIndex, out endTokenIndex))
 			{
 				return false;
 			}
+			// skip to index found
+			this.Position = endTokenIndex;
 			// Character before must be a eol char
 			if(!IsLineEnd(CharAtOffset(-1)))
 			{
@@ -1447,7 +1454,7 @@ namespace MarkdownDeep
 			}
 			int endContent = Position;
 			// skip @end
-			SkipString("@end");
+			SkipStringI("@end");
 			SkipLinespace();
 			if(!Eol)
 			{
