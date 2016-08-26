@@ -70,6 +70,7 @@
     <Compile Include="CodeSpanTests.cs" />
     <Compile Include="AutoLinkTests.cs" />
     <Compile Include="AutoHeaderIDTests.cs" />
+    <Compile Include="HnDMode.cs" />
     <Compile Include="DocNetMode.cs" />
     <Compile Include="GithubMode.cs" />
     <Compile Include="TableSpecTests.cs" />
@@ -476,6 +477,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="testfiles\mdtest11\Images%28Titled%29.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="testfiles\hndmode\Quote%28HnDMode%29.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="testfiles\hndmode\Quote%28HnDMode%29.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="testfiles\hndmode\Offtopic%28HnDMode%29.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="testfiles\hndmode\Offtopic%28HnDMode%29.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

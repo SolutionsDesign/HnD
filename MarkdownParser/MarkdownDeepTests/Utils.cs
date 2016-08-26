@@ -126,11 +126,25 @@ namespace MarkdownDeepTests
 			md.ExtraMode = resourceName.IndexOf("(ExtraMode)") >= 0;
 			md.GitHubCodeBlocks = resourceName.IndexOf("(GitHubMode)") >= 0;
 			md.DocNetMode = resourceName.IndexOf("(DocNetMode") >= 0;
+			md.HnDMode = resourceName.IndexOf("(HnDMode") >=0;
 			md.MarkdownInHtml = resourceName.IndexOf("(MarkdownInHtml)") >= 0;
 			md.AutoHeadingIDs = resourceName.IndexOf("(AutoHeadingIDs)") >= 0;
 			if(resourceName.IndexOf("(Titled)") >= 0)
 			{
 				md.HtmlClassTitledImages = "figure";
+			}
+			if(md.HnDMode)
+			{
+				md.SafeMode = true;
+				md.ExtraMode = true;
+				md.GitHubCodeBlocks = true;
+				md.MarkdownInHtml = false;
+				md.AutoHeadingIDs = false;
+			}
+			if(md.DocNetMode)
+			{
+				md.ExtraMode = true;
+				md.GitHubCodeBlocks = true;
 			}
 
 			string actual = md.Transform(input);

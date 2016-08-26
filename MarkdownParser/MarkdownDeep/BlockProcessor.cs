@@ -1295,20 +1295,118 @@ namespace MarkdownDeep
 			return false;
 		}
 
-
+		/// <summary>
+		/// Handles the offtopic extension:
+		/// @offtopic
+		/// text
+		/// @end
+		/// 
+		/// Text can be anything and has to be handled further. 
+		/// </summary>
+		/// <param name="b">The block to parse</param>
+		/// <returns></returns>
 		private bool HandleOfftopicExtension(Block b)
 		{
-			return false;
-#warning IMPLEMENT
+			var startTokenIndex = this.Position;
+			// skip '@offtopic'
+			if(!SkipStringI("@offtopic"))
+			{
+				return false;
+			}
+			// ignore all stuff after token.
+			SkipToNextLine();
+			int startContent = this.Position;
+
+			// Pull the end token index (the index '@end' is located) from the found start/end pairs. 
+			int endTokenIndex;
+			if(!m_markdown.SDTokenStartEndIndices.TryGetValue(startTokenIndex, out endTokenIndex))
+			{
+				return false;
+			}
+			// skip to index found
+			this.Position = endTokenIndex;
+			// Character before must be a eol char
+			if(!IsLineEnd(CharAtOffset(-1)))
+			{
+				return false;
+			}
+			int endContent = Position;
+			// skip @end
+			SkipStringI("@end");
+			SkipLinespace();
+			if(!Eol)
+			{
+				return false;
+			}
+
+			// Remove the trailing line end
+			endContent = UnskipCRLFBeforePos(endContent);
+			b.BlockType = BlockType.hnd_offtopic;
+			// scan the content, as it can contain markdown statements.
+			var contentProcessor = new BlockProcessor(m_markdown, m_markdown.MarkdownInHtml);
+			b.Children = contentProcessor.ScanLines(Input, startContent, endContent - startContent);
+			return true;
 		}
 
 
+		/// <summary>
+		/// Handles the quote extension:
+		/// @quote nick
+		/// text
+		/// @end
+		/// 
+		/// where nick is optional. Text can be anything and has to be handled further. 
+		/// </summary>
+		/// <param name="b">The block to parse</param>
+		/// <returns></returns>
 		private bool HandleQuoteExtension(Block b)
 		{
-			return false;
-#warning IMPLEMENT
+			var startTokenIndex = this.Position;
+			// skip '@quote'
+			if(!SkipStringI("@quote"))
+			{
+				return false;
+			}
+			SkipLinespace();
+			var nickName = string.Empty;
+			// nickname is optional, so we skip over it if it's there and automatically receive the value specified. 
+			SkipIdentifier(ref nickName);
+			SkipToNextLine();
+			int startContent = this.Position;
+
+			// Pull the end token index (the index '@end' is located) from the found start/end pairs. 
+			int endTokenIndex;
+			if(!m_markdown.SDTokenStartEndIndices.TryGetValue(startTokenIndex, out endTokenIndex))
+			{
+				return false;
+			}
+			// skip to index found
+			this.Position = endTokenIndex;
+			// Character before must be a eol char
+			if(!IsLineEnd(CharAtOffset(-1)))
+			{
+				return false;
+			}
+			int endContent = Position;
+			// skip @end
+			SkipStringI("@end");
+			SkipLinespace();
+			if(!Eol)
+			{
+				return false;
+			}
+
+			// Remove the trailing line end
+			endContent = UnskipCRLFBeforePos(endContent);
+			b.BlockType = BlockType.hnd_quote;
+			b.Data = nickName;
+			// scan the content, as it can contain markdown statements.
+			var contentProcessor = new BlockProcessor(m_markdown, m_markdown.MarkdownInHtml);
+			b.Children = contentProcessor.ScanLines(Input, startContent, endContent - startContent);
+			return true;
+
 		}
-		
+
 
 		/// <summary>
 		/// Handles the alert extension:
@@ -1319,7 +1417,7 @@ namespace MarkdownDeep
 		/// where text can be anything and has to be handled further. 
 		/// type is: danger, warning, info or neutral.
 		/// </summary>
-		/// <param name="b">The b.</param>
+		/// <param name="b">The block to parse</param>
 		/// <returns></returns>
 		private bool HandleAlertExtension(Block b)
 		{

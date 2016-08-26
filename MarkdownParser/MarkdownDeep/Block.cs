@@ -33,7 +33,7 @@ namespace MarkdownDeep
 		h6,
 		post_h1,		// setext heading lines (parse only)
 		post_h2,
-		quote,			// block quote (render and parse)
+		quote,			// block quote (render and parse). 
 		ol_li,			// list item in an ordered list	(render and parse)
 		ul_li,			// list item in an unordered list (render and parse)
 		p,				// paragraph (or plain line during parse)
@@ -61,6 +61,9 @@ namespace MarkdownDeep
 		alert,			// Data is the alert type specified.
 		tab,			// Data is the tab header text.
 		tabs,			// children are the tabs.
+		// HnD extensions
+		hnd_quote,		// Data is nickname (optional)
+		hnd_offtopic,
 	}
 
 	class Block
@@ -403,6 +406,31 @@ namespace MarkdownDeep
 					}
 					break;
 // End DocNet Extensions
+
+// HnD Extensions
+				case BlockType.hnd_quote:
+					b.Append("<blockquote>");
+					if(m.HnDMode)
+					{
+						var nickName = this.Data as string;
+						if(!string.IsNullOrWhiteSpace(nickName))
+						{
+							b.Append("<span class=\"quote-nickname\">");
+							b.Append(nickName);
+							b.Append(" wrote:</span>");
+						}
+					}
+					b.Append("\n");
+					RenderChildren(m, b);
+					b.Append("</blockquote>\n");
+					return;
+
+				case BlockType.hnd_offtopic:
+					b.Append("<div class=\"offtopic\">\n");
+					RenderChildren(m, b);
+					b.Append("</div>\n");
+					break;
+// End HnD Extensions
 				default:
 					b.Append("<" + BlockType.ToString() + ">");
 					m.SpanFormatter.Format(b, Buf, ContentStart, ContentLen);
