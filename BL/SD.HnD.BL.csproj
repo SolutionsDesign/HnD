@@ -27,7 +27,7 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <OldToolsVersion>2.0</OldToolsVersion>
     <PublishUrl>http://localhost/SD.HnD.BL/</PublishUrl>
     <Install>true</Install>
@@ -128,7 +128,7 @@
       <Name>SD.HnD.DALAdapterDBSpecific</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj">
-      <Name>Util</Name>
+      <Name>SD.HnD.Utility</Name>
       <Project>{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>

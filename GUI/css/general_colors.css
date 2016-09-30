@@ -2,13 +2,21 @@
 /* HnD main colors: @color: #970303; */
 /* no need to define anything below this point */
 a {
-  color: #066a8b;
+  color: #066A8B;
 }
 a.areatoggle {
   color: #c6effd;
 }
 a.fs-tooltip {
-  color: #ffffff;
+  color: #fff;
+}
+code {
+  color: #600;
+}
+code,
+pre.nocode {
+  background: #fff;
+  border: solid 1px #f1f1f1;
 }
 .threadtools > a.dimmed,
 .threadtools > i.dimmed {
@@ -18,7 +26,7 @@ a.fs-tooltip {
   color: #c6effd;
 }
 .threadtools > a.active {
-  color: #ffffff;
+  color: #fff;
 }
 body {
   background-color: #f1f1f1;
@@ -27,32 +35,32 @@ img.ps-poster-avatar {
   border: 1px #d2d2d2 solid;
 }
 mark {
-  background: #066a8b;
+  background: #066A8B;
 }
 ::-moz-selection {
-  background: #066a8b;
+  background: #066A8B;
 }
 ::selection {
-  background: #066a8b;
+  background: #066A8B;
 }
 .as-row {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .as-header {
   background-color: #868686;
-  color: #ffffff;
+  color: #fff;
 }
 .breadcrumb {
   background-color: #f1f1f1;
 }
 .br-bottom:after {
-  border-top: 2px solid #066a8b;
+  border-top: 2px solid #066A8B;
 }
 .br-bottom-center::after {
-  border-top: 2px solid #066a8b;
+  border-top: 2px solid #066A8B;
 }
 .br-bottom-center.large:after {
-  border-top: 5px solid #066a8b;
+  border-top: 5px solid #066A8B;
 }
 .footer-links > li > a:hover,
 .footer-links > li > a:focus,
@@ -60,7 +68,7 @@ mark {
   color: #088fbc;
 }
 .footer-title:after {
-  border-top: 2px solid #066a8b;
+  border-top: 2px solid #066A8B;
 }
 .footer-widget a,
 .footer-widget a:hover,
@@ -76,8 +84,8 @@ mark {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.001), 0 0 8px rgba(6, 106, 139, 0.7);
 }
 .fs-header {
-  background-color: #066a8b;
-  color: #ffffff;
+  background-color: #066A8B;
+  color: #fff;
 }
 .fs-thread-pager > a,
 .fs-thread-pager > a:hover,
@@ -86,7 +94,7 @@ mark {
 }
 .fs-row,
 .ps-message {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .fs-headingrow {
   background-color: #d2d2d2;
@@ -110,7 +118,7 @@ mark {
 .menu > li > a:hover,
 .menu > li > a:focus,
 .menu > li:hover > a {
-  color: #066a8b;
+  color: #066A8B;
 }
 .navbar-default {
   background-color: rgba(248, 248, 248, 0.9);
@@ -128,15 +136,58 @@ mark {
 }
 .submenu,
 .inpageDropDown {
-  border-top: 1px solid #066a8b;
+  border-top: 1px solid #066A8B;
 }
 .stickyThread {
   background-color: #eefafe;
 }
+/* #region Alert boxes*/
+.alert {
+  background: #e7f2fa;
+}
+.alert-title {
+  color: #fff;
+  background: #6ab0de;
+}
+.alert.alert-danger {
+  background: #fdf3f2;
+}
+.alert.alert-danger .alert-title {
+  background: #e22222;
+}
+.alert.alert-warning {
+  background: #ffedcc;
+}
+.alert.alert-warning .alert-title {
+  background: #f0b37e;
+}
+.alert.alert-info {
+  background: #e7f2fa;
+}
+.alert.alert-info .alert-title {
+  background: #6ab0de;
+}
+.alert.alert-neutral {
+  background: #f3f6f6;
+}
+.alert.alert-neutral .alert-title {
+  color: #404040;
+  background: #e1e4e5;
+}
+.alert.alert-neutral a {
+  color: #2980B9;
+}
+.alert.alert-tip {
+  background: #dbfaf4;
+}
+.alert.alert-tip .alert-title {
+  background: #1abc9c;
+}
+/* #endregion*/
 @media (max-width: 767px) {
   .menu > li > a:hover,
   .menu > li > a:focus {
-    color: #066a8b;
+    color: #066A8B;
   }
   .navbar-default {
     background-color: #f8f8f8;
@@ -146,7 +197,6 @@ mark {
   .header-transparent .menu > li > a:hover,
   .header-transparent .menu > li > a:focus,
   .header-transparent .menu > li:hover > a {
-    color: #066a8b;
+    color: #066A8B;
   }
 }
-/*# sourceMappingURL=general_colors.css.map */

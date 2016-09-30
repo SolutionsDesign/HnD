@@ -1,0 +1,45 @@
+﻿@using System.Globalization
+@using SD.HnD.DALAdapter.EntityClasses
+@model SD.HnD.Gui.Models.MessageData
+@{
+    ViewBag.Title = string.Format("HnD | Edit message in thread {0}", Model.ThreadSubject);
+}
+<a id="top"></a>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+                <li>@Model.SectionName</li>
+                <li><a href="~/Forum/@Model.ForumID/1">@Model.ForumName</a></li>
+                <li><a href="~/Thread/@Model.ThreadID/1">@Model.ThreadSubject</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0 mb0 pb0 subject">Edit Message</h2>
+        </div>
+    </div>
+</div>
+<section class="fs mt20">
+    <div class="container">
+        <div class="row ps">
+            <div class="col-sm-12">
+                @using(Html.BeginForm("Edit", "Message", FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.TextAreaFor(m => m.MessageText, 10, 110, new { @placeholder = "", @autofocus = "" })
+                        @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="mt20">
+                        <button type="submit" class="btn btn-default"> Post </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+

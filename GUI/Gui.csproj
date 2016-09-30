@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SD.HnD.Gui</RootNamespace>
     <AssemblyName>SD.HnD.Gui</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -132,6 +132,7 @@
     <Compile Include="Models\ForumSelectorData.cs" />
     <Compile Include="Models\HomeData.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\RssForumData.cs" />
     <Compile Include="Models\ThreadData.cs" />
     <Compile Include="Models\ThreadPropertiesModel.cs" />
@@ -145,10 +146,54 @@
     <Content Include="css\general_colors.css" />
     <Content Include="css\general_colors.min.css" />
     <Content Include="css\general_styles.css" />
+    <Content Include="css\styles\agate.css" />
+    <Content Include="css\styles\androidstudio.css" />
+    <Content Include="css\styles\arduino-light.css" />
+    <Content Include="css\styles\arta.css" />
+    <Content Include="css\styles\ascetic.css" />
+    <Content Include="css\styles\codepen-embed.css" />
+    <Content Include="css\styles\color-brewer.css" />
+    <Content Include="css\styles\dark.css" />
+    <Content Include="css\styles\darkula.css" />
+    <Content Include="css\styles\default.css" />
+    <Content Include="css\styles\docco.css" />
+    <Content Include="css\styles\far.css" />
+    <Content Include="css\styles\foundation.css" />
+    <Content Include="css\styles\github-gist.css" />
+    <Content Include="css\styles\github.css" />
+    <Content Include="css\styles\googlecode.css" />
+    <Content Include="css\styles\grayscale.css" />
+    <Content Include="css\styles\hopscotch.css" />
+    <Content Include="css\styles\hybrid.css" />
+    <Content Include="css\styles\idea.css" />
+    <Content Include="css\styles\ir-black.css" />
+    <Content Include="css\styles\kimbie.dark.css" />
+    <Content Include="css\styles\kimbie.light.css" />
+    <Content Include="css\styles\magula.css" />
+    <Content Include="css\styles\mono-blue.css" />
+    <Content Include="css\styles\monokai-sublime.css" />
+    <Content Include="css\styles\monokai.css" />
+    <Content Include="css\styles\obsidian.css" />
+    <Content Include="css\styles\paraiso-dark.css" />
+    <Content Include="css\styles\paraiso-light.css" />
+    <Content Include="css\styles\railscasts.css" />
+    <Content Include="css\styles\rainbow.css" />
+    <Content Include="css\styles\solarized-dark.css" />
+    <Content Include="css\styles\solarized-light.css" />
+    <Content Include="css\styles\sunburst.css" />
+    <Content Include="css\styles\tomorrow-night-blue.css" />
+    <Content Include="css\styles\tomorrow-night-bright.css" />
+    <Content Include="css\styles\tomorrow-night-eighties.css" />
+    <Content Include="css\styles\tomorrow-night.css" />
+    <Content Include="css\styles\tomorrow.css" />
+    <Content Include="css\styles\vs.css" />
+    <Content Include="css\styles\xcode.css" />
+    <Content Include="css\styles\zenburn.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="js\general.js" />
+    <Content Include="js\highlight.pack.js" />
     <Content Include="js\jquery.validate.unobtrusive.min.js" />
     <Content Include="pics\logo%402x.png" />
     <Content Include="pics\logo.png" />
@@ -221,6 +266,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\ForumSelector.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Message\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

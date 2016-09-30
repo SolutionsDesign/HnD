@@ -45,6 +45,15 @@ a.fs-tooltip {
 	color: @forecolor;
 }
 
+code {
+	color : #600;
+}
+
+code, pre.nocode {
+	background: @color-row;
+	border: solid 1px @color-light-grey;
+}
+
 .threadtools > a.dimmed,
 .threadtools > i.dimmed {
 	color: @forecolor-min-60;
@@ -194,6 +203,64 @@ mark {
 .stickyThread {
 	background-color : @color-plus68;
 }
+
+/* #region Alert boxes*/
+.alert {
+	background: #e7f2fa;
+}
+
+.alert-title {
+	color: #fff;
+	background: #6ab0de;
+}
+
+.alert.alert-danger {
+	background: #fdf3f2;
+}
+ 
+.alert.alert-danger .alert-title {
+	background: #e22222;
+}
+
+.alert.alert-warning {
+	background: #ffedcc;
+}
+
+.alert.alert-warning .alert-title {
+	background: #f0b37e;
+}
+
+.alert.alert-info {
+	background: #e7f2fa;
+}
+
+.alert.alert-info .alert-title {
+	background: #6ab0de;
+}
+
+.alert.alert-neutral {
+	background: #f3f6f6;
+}
+
+.alert.alert-neutral .alert-title {
+	color: #404040;
+	background: #e1e4e5;
+}
+
+.alert.alert-neutral a {
+	color: #2980B9;
+}
+
+.alert.alert-tip {
+	background:#dbfaf4;
+}
+
+.alert.alert-tip .alert-title {
+	background:#1abc9c;
+}
+
+/* #endregion*/
+
 
 @media (max-width: 767px) {
 	.menu > li > a:hover,

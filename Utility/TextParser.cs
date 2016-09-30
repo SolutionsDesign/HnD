@@ -25,6 +25,7 @@ using System.Text;
 
 using SD.HnD.UBBParser;
 using System.IO;
+using MarkdownDeep;
 
 namespace SD.HnD.Utility
 {
@@ -75,6 +76,24 @@ namespace SD.HnD.Utility
 		public static string TransformUBBMessageStringToHTML(string ubbString, ParserData parserData, out string parserLog, out bool errorsOccured, out string messageTextXML)
 		{
 			return TransformUBBStringToHTML(ubbString, true, true, parserData, out parserLog, out errorsOccured, out messageTextXML);
+		}
+
+		public static string TransformMarkdownToHtml(string messageText)
+		{
+			if(string.IsNullOrWhiteSpace(messageText))
+			{
+				return string.Empty;
+			}
+			var md = new Markdown()
+					 {
+						 HnDMode = true,
+						 SafeMode = true,
+						 ExtraMode = true,
+						 GitHubCodeBlocks = true,
+						 MarkdownInHtml = false,
+						 AutoHeadingIDs = false
+					 };
+			return md.Transform(messageText);
 		}
 
 

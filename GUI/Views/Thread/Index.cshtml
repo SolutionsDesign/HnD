@@ -241,7 +241,7 @@
 								}
 								@if(Model.ShowEditMessageLink || (!LoggedInUserAdapter.IsAnonymousUser() && (currentMessage.UserID == LoggedInUserAdapter.GetUserID())))
 								{
-									<a href="#" title="Edit post"><i class="fa fa-pencil"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+									<a href="~/Message/Edit/@currentMessage.MessageID" title="Edit post"><i class="fa fa-pencil"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
 								}
 								@if(Model.ShowQuoteMessageLink)
 								{
