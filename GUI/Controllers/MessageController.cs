@@ -106,6 +106,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+#warning CLONE OF CODE WHICH IS ALSO PRESENT IN 'Delete'. 
 			if(LoggedInUserAdapter.IsAnonymousUser())
 			{
 				return RedirectToAction("Index", "Home");

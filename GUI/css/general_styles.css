@@ -14,7 +14,7 @@ body {
 	min-height: 100%;
 	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 16px;
-	line-height: 26px;
+	line-height: 1.4;
 }
 
 blockquote {
@@ -168,6 +168,8 @@ pre.nocode {
 	line-height: 24px;
 	margin-bottom: 24px;
 	box-shadow: 0px 0px 8px rgba(10,10,10,0.1);
+	border-radius: 0;
+	border: 0;
 }
 
 .alert-title {
@@ -182,6 +184,216 @@ pre.nocode {
 	margin-bottom: 0;
 }
 /* #endregion*/
+
+/* #region Tabs*/
+/* Tab CSS by Joseph Fusco. http://codepen.io/fusco/pen/Wvzjrm, slightly adjusted to fit our style/theme. */
+.tab-wrap {
+	-webkit-transition: 0.2s box-shadow ease;
+	transition: 0.2s box-shadow ease;
+	max-width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	position: relative;
+	list-style: none;
+	margin: 30px 0;
+	box-shadow: 0px 0px 8px rgba(10,10,10,0.1);
+}
+
+.tab-wrap:hover {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.23), 0 2px 5px rgba(0, 0, 0, 0.19);
+}
+
+.tab {
+	display: none;
+}
+
+.tab:checked:nth-of-type(1) ~ .tab-content:nth-of-type(1) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(2) ~ .tab-content:nth-of-type(2) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(3) ~ .tab-content:nth-of-type(3) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(4) ~ .tab-content:nth-of-type(4) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(5) ~ .tab-content:nth-of-type(5) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(6) ~ .tab-content:nth-of-type(6) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(7) ~ .tab-content:nth-of-type(7) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+.tab:checked:nth-of-type(8) ~ .tab-content:nth-of-type(8) {
+	opacity: 1;
+	-webkit-transition: 0.1s opacity ease-in, 0.1s -webkit-transform ease;
+	transition: 0.1s opacity ease-in, 0.1s transform ease;
+	position: relative;
+	top: 0;
+	z-index: 100;
+	-webkit-transform: translateY(0px);
+	-ms-transform: translateY(0px);
+	transform: translateY(0px);
+}
+
+/* 
+	If you need more tabs (oh dear why would you!?) copy/paste the checked section above and increase the number, each tab has its own section
+	as this is a js less tab system.
+*/
+
+.tab:first-of-type:not(:last-of-type) + label {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.tab:not(:first-of-type):not(:last-of-type) + label {
+	border-radius: 0;
+}
+
+.tab:last-of-type:not(:first-of-type) + label {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.tab:checked + label {
+	box-shadow: 0 -1px 0 #fff inset;
+	cursor: default;
+}
+
+.tab:checked + label:hover {
+	box-shadow: 0 -1px 0 #fff inset;
+}
+
+.tab + label {
+	box-shadow: 0 -1px 0 #eee inset;
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+	-webkit-box-flex: 3;
+	-webkit-flex-grow: 3;
+	-ms-flex-positive: 3;
+	flex-grow: 3;
+	text-align: center;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	text-align: center;
+	-webkit-transition: 0.3s background-color ease, 0.3s box-shadow ease;
+	transition: 0.3s background-color ease, 0.3s box-shadow ease;
+	height: 40px;
+	box-sizing: border-box;
+	padding: 10px;
+}
+
+.tab + label:hover {
+	box-shadow: 0 1px 0 #f4f4f4 inset;
+}
+
+.tab-content {
+	padding: 10px 15px;
+	background-color: transparent;
+	position: absolute;
+	width: 100%;
+	z-index: -1;
+	opacity: 0;
+	left: 0;
+	-webkit-transform: translateY(-3px);
+	-ms-transform: translateY(-3px);
+	transform: translateY(-3px);
+}
+
+.tab-content > p:last-child {
+	margin-bottom:0;
+}
+
+.tab-content > pre {
+	margin-top: -12px;
+	margin-left: -15px;
+	margin-right: -15px;
+	margin-bottom: -8px;
+}
+
+.tab-content > pre > code {
+	box-shadow: initial;
+	border: 0;
+}
+
+
+/* #endregion*/
+
 
 /* #region pseudo-elements */
 ::-moz-selection {
@@ -364,12 +576,22 @@ pre.nocode {
 		-webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
 	}
 
+	.inpageDropDown {
+		margin-top: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+	
 	.list-row-description {
 		font-size: 14px;
 	}
 
 	.no-roundcorners {
 		border-radius: 0;
+	}
+
+	.offtopic {
+		font-size: 12px;
 	}
 
 	.page-header {
@@ -394,18 +616,12 @@ pre.nocode {
 		text-align:center;
 	}
 
-	.inpageDropDown {
-		margin-top: 0;
-		border-top-left-radius: 0;
-		border-top-right-radius: 0;
+	.quote-nickname {
+		font-weight: bold;
 	}
 
 	.text-nowrap-responsive {
 		white-space: nowrap;
-	}
-
-	.quote-nickname {
-		font-weight: bold;
 	}
 /* #endregion */
 
@@ -428,7 +644,6 @@ img.ps-poster-avatar {
 	.ps-message-content {
 		overflow: auto;
 		padding: 1px 8px 1px;
-		font-size: 16px;
 		min-height: 215px;
 	}
 

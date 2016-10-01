@@ -6,6 +6,19 @@
 @color-grey: #9f9f9f;
 @color-row: #fff;
 
+/* alert boxes colors */
+@alert-background: #e7f2fa;
+@alert-title-background: #6ab0de;
+@alert-tip: #1abc9c;
+@alert-tip-background: lighten(@alert-tip, 55%);
+@alert-neutral: #ddd;
+@alert-neutral-background: lighten(@alert-neutral, 55%);
+@alert-danger: #e22222;
+@alert-danger-background: lighten(@alert-danger, 55%);
+@alert-warning: #f0b37e;
+@alert-warning-background: lighten(@alert-warning, 50%);
+
+
 /* no need to define anything below this point */
 
 @menucolor-op90: fadeout(@menucolor, 10%);
@@ -178,6 +191,10 @@ mark {
 	background-color: @menucolor-op90;
 }
 
+.offtopic {
+    color: @color-grey;
+}
+
 .ps-poster {
 }
 
@@ -206,59 +223,80 @@ mark {
 
 /* #region Alert boxes*/
 .alert {
-	background: #e7f2fa;
+	background: @alert-background;
 }
 
 .alert-title {
-	color: #fff;
-	background: #6ab0de;
+	color: @forecolor;
+	background: @alert-title-background;
 }
 
 .alert.alert-danger {
-	background: #fdf3f2;
+	background: @alert-danger-background;
 }
  
 .alert.alert-danger .alert-title {
-	background: #e22222;
+	background: @alert-danger;
 }
 
 .alert.alert-warning {
-	background: #ffedcc;
+	background: @alert-warning-background;
 }
 
 .alert.alert-warning .alert-title {
-	background: #f0b37e;
+	background: @alert-warning;
 }
 
 .alert.alert-info {
-	background: #e7f2fa;
+	background: @alert-background;
 }
 
 .alert.alert-info .alert-title {
-	background: #6ab0de;
+	background: @alert-title-background;
 }
 
 .alert.alert-neutral {
-	background: #f3f6f6;
+	background: @alert-neutral-background;
 }
 
 .alert.alert-neutral .alert-title {
-	color: #404040;
-	background: #e1e4e5;
-}
-
-.alert.alert-neutral a {
-	color: #2980B9;
+	color: @color-grey-min40;
+	background: @alert-neutral;
 }
 
 .alert.alert-tip {
-	background:#dbfaf4;
+	background: @alert-tip-background;
 }
 
 .alert.alert-tip .alert-title {
-	background:#1abc9c;
+	background: @alert-tip;
 }
 
+/* #endregion*/
+
+
+/* #region Tabs*/
+/* 
+	Tab CSS by Joseph Fusco. http://codepen.io/fusco/pen/Wvzjrm, slightly adjusted to remove the round corners. 
+	Shadow colors are defined in theme.css, as they can only be defined with the shadow definition directly.
+*/
+
+.tab-wrap {
+	background-color: @color-row;
+}
+
+.tab:checked + label {
+	background-color: @color-row;
+}
+
+.tab + label {
+	color: @color-grey-min40;
+	background-color: @color-light-grey;
+}
+
+.tab + label:hover {
+	background-color: @color-grey-plus20;
+}
 /* #endregion*/
 
 

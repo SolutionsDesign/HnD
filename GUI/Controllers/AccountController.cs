@@ -32,7 +32,8 @@ namespace SD.HnD.Gui.Controllers
 
         [HttpPost]
 		[ValidateAntiForgeryToken]
-        public ActionResult Login([Bind(Include="NickName, Password, RememberMe")] LoginModel data, string returnUrl)
+		[ValidateInput(false)]
+		public ActionResult Login([Bind(Include="NickName, Password, RememberMe")] LoginModel data, string returnUrl)
         {
 	        if(!ModelState.IsValid)
 	        {

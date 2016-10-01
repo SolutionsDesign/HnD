@@ -1,5 +1,6 @@
 ﻿/* define colors here*/
 /* HnD main colors: @color: #970303; */
+/* alert boxes colors */
 /* no need to define anything below this point */
 a {
   color: #066A8B;
@@ -123,6 +124,9 @@ mark {
 .navbar-default {
   background-color: rgba(248, 248, 248, 0.9);
 }
+.offtopic {
+  color: #9f9f9f;
+}
 .ps {
   background-color: #fafafa;
 }
@@ -150,13 +154,13 @@ mark {
   background: #6ab0de;
 }
 .alert.alert-danger {
-  background: #fdf3f2;
+  background: #ffffff;
 }
 .alert.alert-danger .alert-title {
   background: #e22222;
 }
 .alert.alert-warning {
-  background: #ffedcc;
+  background: #ffffff;
 }
 .alert.alert-warning .alert-title {
   background: #f0b37e;
@@ -168,20 +172,36 @@ mark {
   background: #6ab0de;
 }
 .alert.alert-neutral {
-  background: #f3f6f6;
+  background: #ffffff;
 }
 .alert.alert-neutral .alert-title {
-  color: #404040;
-  background: #e1e4e5;
-}
-.alert.alert-neutral a {
-  color: #2980B9;
+  color: #393939;
+  background: #ddd;
 }
 .alert.alert-tip {
-  background: #dbfaf4;
+  background: #f1fdfb;
 }
 .alert.alert-tip .alert-title {
   background: #1abc9c;
+}
+/* #endregion*/
+/* #region Tabs*/
+/* 
+	Tab CSS by Joseph Fusco. http://codepen.io/fusco/pen/Wvzjrm, slightly adjusted to remove the round corners. 
+	Shadow colors are defined in theme.css, as they can only be defined with the shadow definition directly.
+*/
+.tab-wrap {
+  background-color: #fff;
+}
+.tab:checked + label {
+  background-color: #fff;
+}
+.tab + label {
+  color: #393939;
+  background-color: #f1f1f1;
+}
+.tab + label:hover {
+  background-color: #d2d2d2;
 }
 /* #endregion*/
 @media (max-width: 767px) {

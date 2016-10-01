@@ -415,9 +415,9 @@ namespace MarkdownDeep
 						var nickName = this.Data as string;
 						if(!string.IsNullOrWhiteSpace(nickName))
 						{
-							b.Append("<span class=\"quote-nickname\">");
+							b.Append("<p class=\"quote-nickname\">");
 							b.Append(nickName);
-							b.Append(" wrote:</span>");
+							b.Append(" wrote:</p>");
 						}
 					}
 					b.Append("\n");

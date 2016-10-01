@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Web;
 using System.Xml.Xsl;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.DatabaseSpecific;
@@ -112,7 +113,8 @@ dfdfd[quote nick=""sjaak""] fdfdfd [/quote]
 							}
 							else
 							{
-								message.MessageText = convertedText;
+								// html decode, so any &lt; etc. are converted back to the regular characters. 
+								message.MessageText = HttpUtility.HtmlDecode(convertedText);
 							}
 						}
 						Console.WriteLine("DONE");
