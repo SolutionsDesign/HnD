@@ -1,0 +1,11 @@
+﻿@model SD.HnD.Gui.Models.MessageData
+<div class="form-group">
+    @Html.TextAreaFor(m => m.MessageText, 20, 110, new
+                   {
+                       @placeholder = "",
+                       @autofocus = "",
+                       @class = "form-control"
+                   })
+    @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "text-danger" })
+</div>
+

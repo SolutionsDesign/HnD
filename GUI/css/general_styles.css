@@ -18,7 +18,6 @@ body {
 }
 
 blockquote {
-	background: #fafafa;
 	font-size: inherit;
 	padding: 10px 15px;
 }
@@ -139,6 +138,14 @@ pre.nocode {
 	margin: 0 9px 20px;
 	box-shadow: 0px 0px 5px rgba(10,10,10,0.07);
 	font-size: 13px;
+}
+
+textarea.form-control{
+	font-size: 16px;
+	border-radius: 0;
+	white-space: pre;
+	overflow-wrap: normal;
+	overflow-x: scroll;
 }
 /* #endregion */
 
@@ -524,6 +531,14 @@ pre.nocode {
 	}
 
 	.clear { clear: both; }
+
+	.CodeMirror
+	{
+		max-height: 440px;
+	}
+	.CodeMirror-scroll {
+		max-height: 400px;
+	}
 
 	.collapsing {
 		-webkit-transition: none;

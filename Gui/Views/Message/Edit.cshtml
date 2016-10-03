@@ -4,6 +4,11 @@
 @{
     ViewBag.Title = string.Format("HnD | Edit message in thread {0}", Model.ThreadSubject);
 }
+
+@section Stylesheets {
+    @Html.Partial("MarkdownEditor_CSS")
+}
+
 <a id="top"></a>
 <div class="container">
     <div class="row">
@@ -22,20 +27,18 @@
         </div>
     </div>
 </div>
-<section class="fs mt20">
+<section class="mt20">
     <div class="container">
-        <div class="row ps">
+        <div class="row">
             <div class="col-sm-12">
                 @using(Html.BeginForm("Edit", "Message", FormMethod.Post, new { role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        @Html.TextAreaFor(m => m.MessageText, 10, 110, new { @placeholder = "", @autofocus = "" })
-                        @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "text-danger" })
-                    </div>
+                    @Html.Partial("MarkdownEditor", Model)
                     <div class="mt20">
-                        <button type="submit" class="btn btn-default"> Post </button>
+                        <input type="submit" name="submitButton" value="Cancel" class="btn btn-default"/>&nbsp;&nbsp;&nbsp;
+                        <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default"/>
                     </div>
                 }
             </div>
@@ -43,3 +46,6 @@
     </div>
 </section>
 
+@section Scripts {
+    @Html.Partial("MarkdownEditor_JS")
+}

@@ -17,7 +17,9 @@ $(window).scroll(function () {
 
 // for remembering the collapse state of panels that can be collapsed. Stored in local storage. 
 $(document).ready(function () {
-    hljs.initHighlightingOnLoad();
+    $('pre code').each(function (i, block) {
+        hljs.highlightBlock(block);
+    });
 
 	$('.collapse')
 		.on('hidden.bs.collapse', function () {

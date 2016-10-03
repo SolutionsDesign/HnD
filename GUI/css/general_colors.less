@@ -5,6 +5,7 @@
 @menucolor: #f8f8f8;
 @color-grey: #9f9f9f;
 @color-row: #fff;
+@color-code: #600;
 
 /* alert boxes colors */
 @alert-background: #e7f2fa;
@@ -25,6 +26,7 @@
 @color-grey-plus10: lighten(@color-grey, 10%);
 @color-grey-plus20: lighten(@color-grey, 20%);
 @color-grey-plus30: lighten(@color-grey, 30%);
+@color-grey-plus35: lighten(@color-grey, 35%);
 @color-grey-min2: darken(@color-row, 2%);
 @color-grey-min10: darken(@color-grey, 10%);
 @color-grey-min40: darken(@color-grey, 40%);
@@ -58,8 +60,12 @@ a.fs-tooltip {
 	color: @forecolor;
 }
 
+blockquote {
+	background: @color-grey-plus35;
+}
+
 code {
-	color : #600;
+	color : @color-code;
 }
 
 code, pre.nocode {

@@ -100,7 +100,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		[ValidateInput(false)]
-		public ActionResult Edit([Bind(Include = "MessageText")] MessageData messageData, int id = 0)
+		public ActionResult Edit([Bind(Include = "MessageText")] MessageData messageData, string submitButton, int id = 0)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -131,13 +131,16 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			// allowed, proceed
-			// parse message text to html
-			var messageAsHtml = TextParser.TransformMarkdownToHtml(messageData.MessageText);
-			var result = MessageManager.UpdateEditedMessage(LoggedInUserAdapter.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml, Request.UserHostAddress, string.Empty);
-			if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
+			if(submitButton == "Post")
 			{
-				SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), message.MessageID);
+				// allowed, proceed
+				// parse message text to html
+				var messageAsHtml = TextParser.TransformMarkdownToHtml(messageData.MessageText);
+				var result = MessageManager.UpdateEditedMessage(LoggedInUserAdapter.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml, Request.UserHostAddress, string.Empty);
+				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
+				{
+					SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), message.MessageID);
+				}
 			}
 			return RedirectToAction("Index", "Thread", new {id = thread.ThreadID, pageNo = 1});
 		}

@@ -146,6 +146,7 @@
     <Content Include="css\general_colors.css" />
     <Content Include="css\general_colors.min.css" />
     <Content Include="css\general_styles.css" />
+    <Content Include="css\simplemde1.11.2.min.css" />
     <Content Include="css\styles\agate.css" />
     <Content Include="css\styles\androidstudio.css" />
     <Content Include="css\styles\arduino-light.css" />
@@ -193,8 +194,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="js\general.js" />
-    <Content Include="js\highlight.pack.js" />
+    <Content Include="js\highlight.9.7.pack.js" />
     <Content Include="js\jquery.validate.unobtrusive.min.js" />
+    <Content Include="js\simplemde.1.11.2.min.js" />
     <Content Include="pics\logo%402x.png" />
     <Content Include="pics\logo.png" />
     <Content Include="Rssforum.aspx" />
@@ -275,6 +277,9 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
+    <Content Include="Views\Shared\MarkdownEditor.cshtml" />
+    <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
+    <Content Include="Views\Shared\MarkdownEditor_JS.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

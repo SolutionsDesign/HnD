@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -14,6 +15,7 @@ namespace SD.HnD.Gui.Models
 		public int ThreadID { get; set; }
 		public string ForumName { get; set; }
 		public string ThreadSubject { get; set; }
+		[Required]
 		public string MessageText { get; set; }
 	}
 }

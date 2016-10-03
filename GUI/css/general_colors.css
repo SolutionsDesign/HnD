@@ -11,6 +11,9 @@ a.areatoggle {
 a.fs-tooltip {
   color: #fff;
 }
+blockquote {
+  background: #f8f8f8;
+}
 code {
   color: #600;
 }
