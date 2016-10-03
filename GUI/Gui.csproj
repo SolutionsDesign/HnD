@@ -143,6 +143,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="css\bootstrap.3.3.7.min.css" />
     <Content Include="css\general_colors.css" />
     <Content Include="css\general_colors.min.css" />
     <Content Include="css\general_styles.css" />
@@ -193,6 +194,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="js\bootstrap.3.3.7.min.js" />
     <Content Include="js\general.js" />
     <Content Include="js\highlight.9.7.pack.js" />
     <Content Include="js\jquery.validate.unobtrusive.min.js" />
