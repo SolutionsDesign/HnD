@@ -55,6 +55,9 @@ namespace MarkdownDeep
 
 		// DocNet Extensions
 		font_awesome,	// <i class="fa fa-name"></i>
+
+		// HnD Extensions
+		strikethrough_span, 
 	}
 
 	// Token

@@ -490,6 +490,10 @@
   <ItemGroup>
     <EmbeddedResource Include="testfiles\hndmode\Offtopic%28HnDMode%29.html" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="testfiles\hndmode\StrikeThrough%28HnDMode%29.html" />
+    <EmbeddedResource Include="testfiles\hndmode\StrikeThrough%28HnDMode%29.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

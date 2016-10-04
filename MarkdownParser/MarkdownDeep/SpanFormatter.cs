@@ -262,10 +262,18 @@ namespace MarkdownDeep
 						break;
 					}
 
+					// DocNet Extensions
 					case TokenType.font_awesome:
 						sb.Append("<i class=\"fa fa-");
 						sb.Append(str, t.startOffset, t.length);
 						sb.Append("\"></i>");
+						break;
+
+					// HnD Extensions
+					case TokenType.strikethrough_span:
+						sb.Append("<s>");
+						m_Markdown.HtmlEncode(sb, str, t.startOffset, t.length);
+						sb.Append("</s>");
 						break;
 				}
 
@@ -374,7 +382,13 @@ namespace MarkdownDeep
 							}
 						}
 						break;
-
+					case '~':
+						if(m_Markdown.HnDMode)
+						{
+							// scan for ~~text~~. 
+							token = ProcessStrikeThrough();
+						}
+						break;
 					case '`':
 						token = ProcessCodeSpan();
 						break;
@@ -544,6 +558,7 @@ namespace MarkdownDeep
 				ResolveEmphasisMarks(m_Tokens, emphasis_marks);
 			}
 		}
+
 
 		static bool IsEmphasisChar(char ch)
 		{
@@ -1105,7 +1120,7 @@ namespace MarkdownDeep
 		}
 
 		// Process a ``` code span ```
-		Token ProcessCodeSpan()
+		private Token ProcessCodeSpan()
 		{
 			int start = Position;
 
@@ -1140,6 +1155,32 @@ namespace MarkdownDeep
 			return ret;
 		}
 
+		/// <summary>
+		/// Processes the strike through, which is defined as ~~text~~. Only valid in HnD mode. Assumes token at Position is first ~.
+		/// </summary>
+		/// <returns>token for strike through text if valid, otherwise null</returns>
+		private Token ProcessStrikeThrough()
+		{
+			if(!m_Markdown.HnDMode)
+			{
+				return null;
+			}
+			int start = this.Position;
+			if(!this.SkipString("~~"))
+			{
+				return null;
+			}
+			int startOfText = this.Position;
+			if(!Find("~~"))
+			{
+				this.Position = start;
+				return null;
+			}
+			var toReturn = CreateToken(TokenType.strikethrough_span, startOfText, this.Position - startOfText);
+			this.Position += 2;
+			return toReturn;
+		}
+		
 
 		#region Token Pooling
 
