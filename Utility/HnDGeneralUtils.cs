@@ -27,6 +27,7 @@ using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
+using MarkdownDeep;
 using SD.Tools.BCLExtensions.CollectionsRelated;
 
 namespace SD.HnD.Utility
@@ -128,7 +129,7 @@ namespace SD.HnD.Utility
 		public static bool SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, 
 				Dictionary<string, string> emailData, bool sendAsynchronically)
 		{
-			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? string.Empty;
+			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? String.Empty;
 			MailMessage messageToSend = new MailMessage(fromAddress, defaultToMailAddress);
 			messageToSend.Subject=subject;
 			messageToSend.Body = message;
@@ -165,21 +166,21 @@ namespace SD.HnD.Utility
 		{
 			StringBuilder mailBody = new StringBuilder(emailTemplate);
 
-			string applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
+			string applicationURL = emailData.GetValue("applicationURL") ?? String.Empty;
 #warning POTENTIAL CLONE OF SD.HnD.BL.ThreadManager.SendThreadReplyNotifications's HANDLING OF TEMPLATE.
 
-			if(!string.IsNullOrEmpty(emailTemplate))
+			if(!String.IsNullOrEmpty(emailTemplate))
 			{
 				// Use the existing template to format the body
-				string siteName = emailData.GetValue("siteName") ?? string.Empty;
+				string siteName = emailData.GetValue("siteName") ?? String.Empty;
 				mailBody.Replace("[URL]", applicationURL);
 				mailBody.Replace("[SiteName]", siteName);
 				mailBody.Replace("[Password]", password);
 			}
 
 			// format the subject
-			string subject = (emailData.GetValue("emailPasswordSubject") ?? string.Empty) + applicationURL ;
-			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
+			string subject = (emailData.GetValue("emailPasswordSubject") ?? String.Empty) + applicationURL ;
+			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? String.Empty;
 
 			// send it
 			// host and smtp credentials are set in .config file
@@ -188,5 +189,28 @@ namespace SD.HnD.Utility
 			return true;
 		}
 
+
+		/// <summary>
+		/// Transforms the markdown specified into HTML using the markdowndeep parser (which has been adjusted for HnD).
+		/// </summary>
+		/// <param name="messageText">The message text.</param>
+		/// <returns></returns>
+		public static string TransformMarkdownToHtml(string messageText)
+		{
+			if(String.IsNullOrWhiteSpace(messageText))
+			{
+				return String.Empty;
+			}
+			var md = new Markdown()
+					 {
+						 HnDMode = true,
+						 SafeMode = true,
+						 ExtraMode = true,
+						 GitHubCodeBlocks = true,
+						 MarkdownInHtml = false,
+						 AutoHeadingIDs = false
+					 };
+			return md.Transform(messageText);
+		}
 	}
 }

@@ -33,6 +33,7 @@ namespace UbbToMarkdownConverter
 			{
 				LoadXsltTemplates();
 				//PerformTestConversion();
+				ConvertThreadMemos();
 				ConvertUsers();
 				ConvertMessages();
 			}
@@ -42,24 +43,70 @@ namespace UbbToMarkdownConverter
 			}
 		}
 
-		/// <summary>
-		/// Helper method to iron out issues with the conversion xslt. 
-		/// </summary>
-		private static void PerformTestConversion()
+		private static void ConvertThreadMemos()
 		{
-			string messageText = @"This is a test [quote]blabla[/quote].fd fdfd
-[quote nick=""sjaak""]hoera![/quote] dfdfdfd
-dfdf [quote nick=""sjaak""]
-dfdfd
-[/quote]
-dfdfd[quote nick=""sjaak""] fdfdfd [/quote]
-";
-			string parserLog;
-			string messageAsXml;
-			bool errorsOccurred;
-			string convertedText = TextParser.TransformUBBMessageStringToHTML(messageText, _parserData, out parserLog, out errorsOccurred, out messageAsXml);
-			Console.WriteLine(convertedText);
+			Console.WriteLine("Converting thread memos. ");
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var totalNumberOfThreads = adapter.FetchScalar<int>(qf.Thread.Select(Functions.CountRow()));
+				var numberOfBatches = (totalNumberOfThreads / BATCHSIZE) + 1;
+				Console.WriteLine("Total # of threads to process: {0}. Using batch size: {1}", numberOfBatches, BATCHSIZE);
+				var q = qf.Thread.OrderBy(ThreadFields.ThreadID.Ascending());
+				adapter.StartTransaction(IsolationLevel.ReadCommitted, "Converting UBB to Markdown");
+				adapter.KeepTrackOfTransactionParticipants = false;
+				try
+				{
+					var threads = new EntityCollection<ThreadEntity>();
+					for(int batchNo = 1; batchNo <= numberOfBatches; batchNo++)
+					{
+						threads.Clear();
+						Console.WriteLine("Batch {0} of {1}", batchNo, numberOfBatches);
+						q.Page(batchNo, BATCHSIZE);
+						Console.Write("\tFetching threads...");
+						adapter.FetchQuery(q, threads);
+						Console.WriteLine("DONE. Threads fetched: {0}", threads.Count);
+						Console.Write("\tParsing memos on threads...");
+						foreach(var thread in threads)
+						{
+							var toConvert = thread.Memo;
+							if(string.IsNullOrWhiteSpace(toConvert))
+							{
+								continue;
+							}
+							// replace CRLF with <space><space>CRLF, as the markdown parser will otherwise collide it with the previous lines which we don't want
+							toConvert = toConvert.Replace(Environment.NewLine, "  " + Environment.NewLine);
+							string parserLog;
+							string messageAsXml;
+							bool errorsOccurred;
+							string convertedText = TextParser.TransformUBBMessageStringToHTML(toConvert, _parserData, out parserLog, out errorsOccurred, out messageAsXml);
+							if(errorsOccurred)
+							{
+								Console.WriteLine("\nERRORS: {0}", parserLog);
+								Console.WriteLine("ThreadID: {0}\nThread memo as text:\n{1}--------------\n", thread.ThreadID, thread.Memo);
+							}
+							else
+							{
+								// html decode, so any &lt; etc. are converted back to the regular characters. 
+								thread.Memo = HttpUtility.HtmlDecode(convertedText);
+							}
+
+						}
+						Console.WriteLine("DONE");
+						Console.Write("\tPersisting batch...");
+						adapter.SaveEntityCollection(threads);
+						Console.WriteLine("DONE\n");
+					}
+					adapter.Commit();
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
+			}
 		}
+
 
 		private static void ConvertUsers()
 		{

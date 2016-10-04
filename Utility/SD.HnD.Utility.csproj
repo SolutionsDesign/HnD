@@ -100,10 +100,6 @@
     <Reference Include="MarkdownDeep">
       <HintPath>..\MarkdownParser\MarkdownDeep\bin\Debug\MarkdownDeep.dll</HintPath>
     </Reference>
-    <Reference Include="SD.HnD.UBBParser, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ParserAssemblies\SD.HnD.UBBParser.dll</HintPath>
-    </Reference>
     <Reference Include="SD.Tools.BCLExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
       <HintPath>..\packages\SD.Tools.BCLExtensions.1.1.0\lib\net35\SD.Tools.BCLExtensions.dll</HintPath>
       <Private>True</Private>
@@ -127,9 +123,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HnDGeneralUtils.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TextParser.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

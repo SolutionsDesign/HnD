@@ -256,9 +256,7 @@ namespace SD.HnD.Gui.Controllers
 			if(container.UserMayEditMemo && (container.Thread.Memo.Length > 0))
 			{
 				// convert memo contents to HTML so it's displayed above the thread. 
-				string parserLog, messageTextXml;
-				bool errorsOccured;
-				container.MemoAsHTML = TextParser.TransformUBBMessageStringToHTML(container.Thread.Memo, ApplicationAdapter.GetParserData(), out parserLog, out errorsOccured, out messageTextXml);
+				container.MemoAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(container.Thread.Memo);
 			}
 		}
 

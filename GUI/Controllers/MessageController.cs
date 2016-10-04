@@ -105,8 +105,7 @@ namespace SD.HnD.Gui.Controllers
 							  };
 			return View(messageData);
 		}
-
-
+		
 
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -118,7 +117,6 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-#warning CLONE OF CODE WHICH IS ALSO PRESENT IN 'Delete'. 
 			if(LoggedInUserAdapter.IsAnonymousUser())
 			{
 				return RedirectToAction("Index", "Home");
@@ -147,7 +145,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				// allowed, proceed
 				// parse message text to html
-				var messageAsHtml = TextParser.TransformMarkdownToHtml(messageData.MessageText);
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText);
 				var result = MessageManager.UpdateEditedMessage(LoggedInUserAdapter.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml, Request.UserHostAddress, string.Empty);
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
 				{

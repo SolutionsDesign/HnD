@@ -328,12 +328,11 @@ namespace SD.HnD.BL
 		/// <param name="signature">The signature.</param>
 		/// <param name="website">The website.</param>
 		/// <param name="userTitleID">The user title ID.</param>
-        /// <param name="parserData">The parser data.</param>
         /// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
         /// <param name="defaultMessagesPerPage">Messages per page to display</param>
 		/// <returns>true if succeeded, false otherwise</returns>
 		public static bool UpdateUserProfile(int userID, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
-											string location, string occupation, string password, string signature, string website, int userTitleID, ParserData parserData,
+											string location, string occupation, string password, string signature, string website, int userTitleID, 
 											bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
             var user = UserGuiHelper.GetUser(userID);
@@ -356,7 +355,6 @@ namespace SD.HnD.BL
 				user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
 			}
 			user.Signature = signature;
-			user.SignatureAsHTML = string.IsNullOrWhiteSpace(signature) ? string.Empty : TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
 			user.Website = website;
 
             //Preferences
@@ -388,14 +386,13 @@ namespace SD.HnD.BL
 		/// <param name="website">The website.</param>
 		/// <param name="emailTemplatePath">The email template path.</param>
 		/// <param name="emailData">The email data.</param>
-		/// <param name="parserData">The parser data.</param>
 		/// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
 		/// <param name="defaultMessagesPerPage">Messages per page to display</param>
 		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
 		public static int RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, string ipNumber, string location, 
-										  string occupation, string signature, string website, string emailTemplatePath, Dictionary<string, string> emailData, ParserData parserData,
+										  string occupation, string signature, string website, string emailTemplatePath, Dictionary<string, string> emailData,
 											bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
 			var newUser = new UserEntity
@@ -422,7 +419,6 @@ namespace SD.HnD.BL
             //Preferences
             newUser.AutoSubscribeToThread = autoSubscribeThreads;
             newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
-			newUser.SignatureAsHTML = string.IsNullOrWhiteSpace(signature) ? string.Empty : TextParser.TransformSignatureUBBStringToHTML(signature, parserData);
 
             //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly created RoleUserEntity.
             var systemData = SystemGuiHelper.GetSystemSettings();

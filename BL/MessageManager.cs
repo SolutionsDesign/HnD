@@ -139,17 +139,16 @@ namespace SD.HnD.BL
 
 		/// <summary>
 		/// Re-parses all messages from start date till now or when amountToIndex is reached. This routine will read messagetext for a message,
-		/// parse it, and update the MessageTextAsXML field with the parse result. It's mainly used to apply a change in html output for given input, e.g. when 
-		/// xml templates for messages have been changed, and is not used often, hence it's simply processing one entity at a time, keeping the connection open.
+		/// parse its markdown to HTML, and update the MessageTextAsHTML field with the parse result directly. It's mainly used to apply a change in html output for given input, e.g. when 
+		/// markdown to HTML for messages have been changed, and is not used often, hence it's simply processing one entity at a time, keeping the connection open. It's not 
+		/// fetching all entities and then persisting them again, as that would be potentially harmful for memory as a forum system can have a lot of messages. 
 		/// </summary>
 		/// <param name="amountToParse">Amount to parse.</param>
 		/// <param name="startDate">Start date.</param>
-		/// <param name="reGenerateHTML">If true, the HTML is also re-generated and saved.</param>
-		/// <param name="parserData">The parser data to use with the text parser to parse messages.</param>
 		/// <returns>
 		/// the amount of messages re-parsed
 		/// </returns>
-		public static int ReParseMessages(int amountToParse, DateTime startDate, bool reGenerateHTML, ParserData parserData)
+		public static int ReParseMessages(int amountToParse, DateTime startDate)
 		{
 			// index is blocks of 100 messages.
 			var qf = new QueryFactory();
@@ -182,22 +181,12 @@ namespace SD.HnD.BL
 							MessageEntity directUpdater = new MessageEntity();
 							directUpdater.IsNew = false;
 
-							string messageXML = string.Empty;
-							string messageHTML = string.Empty;
-							TextParser.ReParseMessage((string)row["MessageText"], reGenerateHTML, parserData, out messageXML, out messageHTML);
-
 							// use the in-memory message entity to create an update query without fetching the entity first.
 							directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row["MessageID"]);
-							directUpdater.MessageTextAsXml = messageXML;
-
-							if(reGenerateHTML)
-							{
-								directUpdater.MessageTextAsHTML = messageHTML;
-							}
+							directUpdater.MessageTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml((string)row["MessageText"]);
 							directUpdater.Fields.IsDirty = true;
 							adapter.SaveEntity(directUpdater);
 						}
-
 						amountProcessed += messagesToParse.Rows.Count;
 						pageNo++;
 

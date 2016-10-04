@@ -158,8 +158,7 @@ namespace SD.HnD.Gui
 			emailData.Add("emailPasswordSubject", GetEmailPasswordSubject());
 			emailData.Add("emailThreadNotificationSubject", GetEmailThreadNotificationSubject());
             emailData.Add("siteName", GetSiteName());
-#warning UPDATE TO HANDLE https:// TOO
-			emailData.Add("applicationURL", "http://" + HttpContext.Current.Request.Url.Host + GetVirtualRoot());
+			emailData.Add("applicationURL", "https://" + HttpContext.Current.Request.Url.Host + GetVirtualRoot());
 
             return emailData;
         }
@@ -183,16 +182,6 @@ namespace SD.HnD.Gui
 	    {
 		    return HttpContext.Current.Application["signatureStyle"] as XslCompiledTransform;
 	    }
-
-
-	    /// <summary>
-		/// Create a DTO of all needed e-mail default data.
-		/// </summary>
-		/// <returns>a dictionary of the following keys (grammar, actionTable, gotoTable, messageStyle, signatureStyle)</returns>
-		public static ParserData GetParserData()
-		{
-		    return new ParserData {MessageStyle = GetMessageStyle(), SignatureStyle = GetSignatureStyle()};
-		}
 
 		/// <summary>
 		/// Gets the noise words.
@@ -325,18 +314,7 @@ namespace SD.HnD.Gui
             int maxAmountMessagesPerPage = Convert.ToInt32(appSettingsCollection["MaxAmountMessagesPerPage"]);
 
             string datafilesPath = currentHttpContext.Server.MapPath(appSettingsCollection["DatafilesPath"]);
-            string ubbMessageTransformXSLPathFilename = appSettingsCollection["UBBMessageTransformXSLPathFilename"];
-            string ubbSignatureTransformXSLPathFilename = appSettingsCollection["UBBSignatureTransformXSLPathFilename"];
-
-            // Load XML -> HTML transformation XSL
-			XslCompiledTransform messageStyle = new XslCompiledTransform();
-			XslCompiledTransform signatureStyle = new XslCompiledTransform();
-
-			messageStyle.Load(Path.Combine(datafilesPath, ubbMessageTransformXSLPathFilename));
-			signatureStyle.Load(Path.Combine(datafilesPath, ubbSignatureTransformXSLPathFilename));
-
             var noiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(datafilesPath);
-
             string registrationReplyMailTemplate = File.ReadAllText(Path.Combine(datafilesPath, "RegistrationReplyMail.template"));
             string threadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(datafilesPath, "ThreadUpdatedNotification.template"));
 			// add other email templates here. 
@@ -359,9 +337,6 @@ namespace SD.HnD.Gui
                 applicationState.Add("datafilesMapPath", datafilesPath);
 				applicationState.Add("emailPasswordSubject", emailPasswordSubject);
 				applicationState.Add("emailThreadNotificationSubject", emailThreadNotificationSubject);
-
-				applicationState.Add("messageStyle", messageStyle);
-				applicationState.Add("signatureStyle", signatureStyle);
 
                 applicationState.Add("noiseWords", noiseWords);
                 applicationState.Add("maxAmountMessagesPerPage", maxAmountMessagesPerPage);
