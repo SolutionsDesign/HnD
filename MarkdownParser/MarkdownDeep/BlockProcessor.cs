@@ -1368,9 +1368,21 @@ namespace MarkdownDeep
 				return false;
 			}
 			SkipLinespace();
+			// nickname is optional and can contain non-whitespace characters like '.'. So we simply skip till we either run into eol or whitespace. 
+			int startNick = this.Position;
+			while(!Eol)
+			{
+				if(SkipLinespace())
+				{
+					break;
+				}
+				SkipForward(1);
+			}
 			var nickName = string.Empty;
-			// nickname is optional, so we skip over it if it's there and automatically receive the value specified. 
-			SkipIdentifier(ref nickName);
+			if(this.Position > startNick)
+			{
+				nickName = this.Substring(startNick, this.Position - startNick);
+			}
 			SkipToNextLine();
 			int startContent = this.Position;
 

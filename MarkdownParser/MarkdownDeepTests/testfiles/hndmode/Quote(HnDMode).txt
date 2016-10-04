@@ -17,6 +17,10 @@ This is Bar's text, nested into Foo's
 This is Foo's text
 @end
 
+@quote dot.nick
+blablabla
+@end
+
 some text
 @quote
 @quote
