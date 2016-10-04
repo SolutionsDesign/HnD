@@ -151,25 +151,26 @@ mark {
 /* #region Tables*/
 .table-bordered-all {
   border-color: #dfdfdf;
-  background: #fafafa;
+  background: #fdfdfd;
 }
 .table-bordered-all td {
-  border-bottom-color: #e1e4e5;
-  border-left-color: #e1e4e5;
+  border-bottom-color: #dfdfdf;
+  border-left-color: #dfdfdf;
 }
 .table-bordered {
-  border-color: #e1e4e5;
+  border-color: #dfdfdf;
 }
 .table-bordered-rows td {
-  border-bottom-color: #e1e4e5;
+  border-bottom-color: #dfdfdf;
 }
 .table-horizontal td,
 .table-horizontal th {
-  border-bottom-color: #e1e4e5;
+  border-bottom-color: #dfdfdf;
 }
 /* #endregion*/
 /* #region Alert boxes*/
 .alert {
+  color: initial;
   background: #e7f2fa;
 }
 .alert-title {
@@ -177,24 +178,28 @@ mark {
   background: #6ab0de;
 }
 .alert.alert-danger {
+  color: initial;
   background: #ffffff;
 }
 .alert.alert-danger .alert-title {
   background: #e22222;
 }
 .alert.alert-warning {
+  color: initial;
   background: #ffffff;
 }
 .alert.alert-warning .alert-title {
   background: #f0b37e;
 }
 .alert.alert-info {
+  color: initial;
   background: #e7f2fa;
 }
 .alert.alert-info .alert-title {
   background: #6ab0de;
 }
 .alert.alert-neutral {
+  color: initial;
   background: #ffffff;
 }
 .alert.alert-neutral .alert-title {
@@ -202,6 +207,7 @@ mark {
   background: #ddd;
 }
 .alert.alert-tip {
+  color: initial;
   background: #f1fdfb;
 }
 .alert.alert-tip .alert-title {
