@@ -12,6 +12,18 @@ namespace SD.HnD.Gui.Controllers
 {
 	public class MessageController : Controller
 	{
+		[HttpGet]
+		public ActionResult Goto(int id = 0)
+		{
+			var message = MessageGuiHelper.GetMessage(id);
+			if(message == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			return CalculateRedirectToMessage(message);
+		}
+
+
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
@@ -142,7 +154,7 @@ namespace SD.HnD.Gui.Controllers
 					SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), message.MessageID);
 				}
 			}
-			return RedirectToAction("Index", "Thread", new {id = thread.ThreadID, pageNo = 1});
+			return CalculateRedirectToMessage(message);
 		}
 
 
@@ -151,7 +163,7 @@ namespace SD.HnD.Gui.Controllers
 		/// </summary>
 		/// <param name="thread">The thread.</param>
 		/// <param name="message">The message.</param>
-		/// <returns></returns>
+		/// <returns>true if the user may edit the message, false otherwise</returns>
 		private static bool PerformEditMessageSecurityChecks(ThreadEntity thread, MessageEntity message)
 		{
 			var userMayEditMessages = false;
@@ -182,5 +194,20 @@ namespace SD.HnD.Gui.Controllers
 			}
 			return userMayEditMessages;
 		}
+
+
+		/// <summary>
+		/// Calculates the redirect to message specified. This is a response to the index action on the thread controller, with the proper page and '#' id redirect.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <returns></returns>
+		private ActionResult CalculateRedirectToMessage(MessageEntity message)
+		{
+			var maxAmountMessagesPerPage = LoggedInUserAdapter.GetUserDefaultNumberOfMessagesPerPage();
+			int startAtMessageNo = ThreadGuiHelper.GetStartAtMessageForGivenMessageAndThread(message.ThreadID, message.MessageID, maxAmountMessagesPerPage);
+			int currentPageNo = (startAtMessageNo / maxAmountMessagesPerPage) + 1;
+			return Redirect(this.Url.Action("Index", "Thread", new { id = message.ThreadID, pageNo = currentPageNo }) + "#" + message.MessageID);
+		}
+
 	}
 }

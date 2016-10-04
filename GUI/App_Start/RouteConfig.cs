@@ -35,6 +35,7 @@ namespace SD.HnD.Gui
 
 			routes.MapRoute("DeleteMessage", "Message/Delete/{id}", new {controller = "Message", action = "Delete", id = UrlParameter.Optional});
 			routes.MapRoute("EditMessage", "Message/Edit/{id}", new {controller = "Message", action = "Edit", id = UrlParameter.Optional});
+			routes.MapRoute("GotoMessage", "Message/Goto/{id}", new {controller = "Message", action = "Goto", id = UrlParameter.Optional});
 
 			routes.MapRoute("ListOfForums", "Section/Forums/{id}", new {controller = "Section", action = "Forums", id = UrlParameter.Optional});
 			

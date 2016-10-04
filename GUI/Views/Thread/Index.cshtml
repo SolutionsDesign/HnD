@@ -224,7 +224,7 @@
 					<div class="ps-message">
 						<div class="ps-message-title">
 							<div class="pull-left">
-								<a href="~/Message/@currentMessage.ThreadID/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
+								<a href="~/Message/Goto/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
 								@if(Model.ShowDeleteMessageLink && ((Model.PageNo > 1) || (i > 0)))
 								{
 									<a href="#" data-toggle="modal" data-target="#confirmMessageDeleteModal" data-messageid="@currentMessage.MessageID" title="Delete post"><i class="fa fa-trash-o"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
