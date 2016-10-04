@@ -140,6 +140,11 @@ pre.nocode {
 	font-size: 13px;
 }
 
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
 textarea.form-control{
 	font-size: 16px;
 	border-radius: 0;
@@ -168,6 +173,123 @@ textarea.form-control{
 	right: 0;
 }
 /* #endregion*/
+
+/* #region Tables*/
+.table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	empty-cells: show;
+	margin-bottom: 24px;
+}
+
+.table caption {
+	font-size: 85%;
+	font-style: italic;
+	padding: 1em 0;
+	text-align: center;
+}
+
+.table td, .table th {
+	font-size: 90%;
+	margin: 0;
+	overflow: visible;
+	padding: 8px 16px;
+}
+
+.table td:first-child, .table th:first-child {
+	border-left-width: 0;
+}
+
+.table thead {
+	text-align: left;
+	vertical-align: bottom;
+	white-space: nowrap;
+}
+
+.table thead th {
+	font-weight: bold;
+	border-bottom: solid 2px;
+}
+
+.table td {
+	background-color: transparent;
+}
+
+.table td p {
+	line-height: 18px;
+}
+
+.table td p:last-child {
+	margin-bottom: 0;
+}
+
+.table .table-cell-min {
+	width: 1%;
+	padding-right: 0;
+}
+
+.table-secondary {
+	font-size: 90%;
+}
+
+.table-tertiary {
+	font-size: 80%;
+}
+
+.table-bordered-all {
+	border: 1px solid;
+	box-shadow: 0px 0px 8px rgba(10,10,10,0.1);
+}
+
+.table-bordered-all td {
+	border-bottom: 1px solid;
+	border-left: 1px solid;
+}
+
+.table-bordered-all tbody > tr:last-child td {
+	border-bottom-width: 0;
+}
+
+.table-bordered {
+	border: 1px solid;
+}
+
+.table-bordered-rows td {
+	border-bottom: 1px solid;
+}
+
+.table-bordered-rows tbody > tr:last-child td {
+	border-bottom-width: 0;
+}
+
+.table-horizontal tbody > tr:last-child td {
+	border-bottom-width: 0;
+}
+
+.table-horizontal td, .table-horizontal th {
+	border-width: 0 0 1px 0;
+	border-bottom: 1px solid;
+}
+
+.table-horizontal tbody > tr:last-child td {
+	border-bottom-width: 0;
+}
+
+.table-responsive {
+	margin-bottom: 24px;
+	max-width: 100%;
+	overflow: auto;
+}
+
+.table-responsive table {
+	margin-bottom: 0 !important;
+}
+
+.table-responsive table td, .table-responsive table th {
+	white-space: nowrap;
+}
+/* #endregion*/
+
 
 /* #region Alert boxes*/
 .alert {

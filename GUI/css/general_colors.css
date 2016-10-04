@@ -148,6 +148,26 @@ mark {
 .stickyThread {
   background-color: #eefafe;
 }
+/* #region Tables*/
+.table-bordered-all {
+  border-color: #dfdfdf;
+  background: #fafafa;
+}
+.table-bordered-all td {
+  border-bottom-color: #e1e4e5;
+  border-left-color: #e1e4e5;
+}
+.table-bordered {
+  border-color: #e1e4e5;
+}
+.table-bordered-rows td {
+  border-bottom-color: #e1e4e5;
+}
+.table-horizontal td,
+.table-horizontal th {
+  border-bottom-color: #e1e4e5;
+}
+/* #endregion*/
 /* #region Alert boxes*/
 .alert {
   background: #e7f2fa;

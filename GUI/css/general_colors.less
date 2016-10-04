@@ -6,6 +6,7 @@
 @color-grey: #9f9f9f;
 @color-row: #fff;
 @color-code: #600;
+@table-cell-background: #fafafa;
 
 /* alert boxes colors */
 @alert-background: #e7f2fa;
@@ -25,6 +26,7 @@
 @menucolor-op90: fadeout(@menucolor, 10%);
 @color-grey-plus10: lighten(@color-grey, 10%);
 @color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-plus25: lighten(@color-grey, 25%);
 @color-grey-plus30: lighten(@color-grey, 30%);
 @color-grey-plus35: lighten(@color-grey, 35%);
 @color-grey-min2: darken(@color-row, 2%);
@@ -226,6 +228,31 @@ mark {
 .stickyThread {
 	background-color : @color-plus68;
 }
+
+/* #region Tables*/
+
+.table-bordered-all {
+	border-color: @color-grey-plus25;
+	background: @table-cell-background;
+}
+
+.table-bordered-all td {
+	border-bottom-color: #@color-grey-plus25;
+	border-left-color: #@color-grey-plus25;
+}
+
+.table-bordered {
+	border-color: #@color-grey-plus25;
+}
+
+.table-bordered-rows td {
+	border-bottom-color: #@color-grey-plus25;
+}
+
+.table-horizontal td, .table-horizontal th {
+	border-bottom-color: #@color-grey-plus25;
+}
+/* #endregion*/
 
 /* #region Alert boxes*/
 .alert {
