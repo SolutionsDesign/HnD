@@ -144,10 +144,6 @@
 													<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#moveThreadModal" title="Move thread">Move thread</a></li>
 													<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#deleteThreadModal" title="Delete thread">Delete thread</a></li>
 												}
-												@if(!Model.Thread.IsClosed && Model.UserMayAddNewMessages)
-												{
-													<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Lock thread</a></li>
-												}
 												<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#editThreadPropertiesModal" title="Edit thread properties">Edit thread properties</a></li>
 											</ul>
 										</div>
@@ -179,7 +175,7 @@
 									}
 									@if(Model.UserMayAddNewMessages)
 									{
-										<a href="#" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
+										<a href="~/Message/Add/@Model.Thread.ThreadID" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
 									}
 									@{
 										// leave following nbsp; in the HTML to make sure Chrome knows this div is not empty, otherwise it will show 30px extra in the header. Why? Who knows!
@@ -245,7 +241,7 @@
 								}
 								@if(Model.ShowQuoteMessageLink)
 								{
-									<a href="#" title="Quote and reply to post"><i class="fa fa-reply"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;")
+									<a href="~/Message/Add/@currentMessage.ThreadID/@currentMessage.MessageID" title="Quote and reply to post"><i class="fa fa-reply"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;")
 								}
 							</div>
 						</div>
@@ -298,8 +294,8 @@
 							</div>
 						</div>
 						<div class="pull-center mb20">
-							<a class="btn btn-primary" data-dismiss="modal">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>&nbsp;&nbsp;
-							<button class="btn btn-default" type="submit" id="confirmMessageDeleteLink"> Delete </button>
+							<button class="btn btn-default" type="submit" id="confirmMessageDeleteLink"> Delete </button>&nbsp;&nbsp;
+                            <a class="btn btn-primary" data-dismiss="modal">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>
 						</div>
 					</div>
 				</div>
@@ -344,8 +340,8 @@
 							</div>
 						</div>
 						<div class="pull-center mb20 pt20">
-							<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
-							<button type="submit" class="btn btn-primary btn-default disabled" id="moveThreadModalLink">&nbsp;&nbsp;Move&nbsp;&nbsp;</button>
+							<button type="submit" class="btn btn-primary btn-default disabled" id="moveThreadModalLink">&nbsp;&nbsp;Move&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                            <a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>
 						</div>
 					</form>
 				</div>
@@ -372,8 +368,8 @@
 							</div>
 						</div>
 						<div class="pull-center mb20 pt20">
-							<a class="btn btn-default btn-primary" data-dismiss="modal">&nbsp;Keep&nbsp;</a>&nbsp;&nbsp;
-							<button type="submit" class="btn btn-default" id="deleteThreadModalLink">&nbsp;&nbsp;Delete&nbsp;&nbsp;</button>
+							<button type="submit" class="btn btn-default" id="deleteThreadModalLink">&nbsp;&nbsp;Delete&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                            <a class="btn btn-default btn-primary" data-dismiss="modal">&nbsp;Keep&nbsp;</a>
 						</div>
 					</form>
 				</div>
@@ -414,8 +410,8 @@
 								</label>
 							</div>
 							<div class="pull-center mb20 pt20">
-								<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>&nbsp;&nbsp;
-								<button type="submit" class="btn btn-default btn-primary" id="updateThreadPropertiesModalLink">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>
+								<button type="submit" class="btn btn-default btn-primary" id="updateThreadPropertiesModalLink">&nbsp;&nbsp;Update&nbsp;&nbsp;</button>&nbsp;&nbsp;
+                                <a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>
 							</div>
 						</form>
 					</div>

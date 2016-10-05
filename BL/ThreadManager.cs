@@ -159,42 +159,16 @@ namespace SD.HnD.BL
 		/// <param name="messageText">Message text</param>
 		/// <param name="messageAsHTML">Message text as HTML</param>
 		/// <param name="userIDIPAddress">IP address of user calling this method</param>
-		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
 		/// <param name="threadUpdatedNotificationTemplate">The thread updated notification template.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
 		/// <returns>MessageID if succeeded, 0 if not.</returns>
-        public static int CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, string messageAsXML, 
+        public static int CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, 
 												   bool subscribeToThread, string threadUpdatedNotificationTemplate, Dictionary<string,string> emailData, bool sendReplyNotifications)
 		{
-			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, messageAsXML, subscribeToThread, 
-																	 threadUpdatedNotificationTemplate, emailData, sendReplyNotifications, closeThreadAfterInsert: false);
-		}
-		
-
-		/// <summary>
-		/// Creates a new message in the given thread and closes the thread right after the addition of the message,
-		/// which makes the just added message the 'close' message of the thread. Close messages are handy when the
-		/// closure of a thread is not obvious.
-		/// Caller should validate input parameters.
-		/// </summary>
-		/// <param name="threadID">Thread wherein the new message will be placed</param>
-		/// <param name="userID">User who posted this message</param>
-		/// <param name="messageText">Message text</param>
-		/// <param name="messageAsHTML">Message text as HTML</param>
-		/// <param name="userIDIPAddress">IP address of user calling this method</param>
-		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
-		/// <param name="threadUpdatedNotificationTemplate">The thread updated notification template.</param>
-		/// <param name="emailData">The email data.</param>
-		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
-		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
-		/// <returns>MessageID if succeeded, 0 if not.</returns>
-		public static int CreateNewMessageInThreadAndCloseThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, string messageAsXML, 
-																  string threadUpdatedNotificationTemplate, Dictionary<string, string> emailData, bool sendReplyNotifications)
-		{
-			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, messageAsXML, false,
+			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, subscribeToThread, 
 																	 threadUpdatedNotificationTemplate, emailData, sendReplyNotifications, closeThreadAfterInsert: false);
 		}
 
@@ -403,7 +377,6 @@ namespace SD.HnD.BL
 		/// <param name="messageText">Message text</param>
 		/// <param name="messageAsHTML">Message text as HTML</param>
 		/// <param name="userIDIPAddress">IP address of user calling this method</param>
-		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
 		/// <param name="threadUpdatedNotificationTemplate">The thread updated notification template.</param>
 		/// <param name="emailData">The email data.</param>
@@ -413,7 +386,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// MessageID if succeeded, 0 if not.
 		/// </returns>
-		private static int CreateNewMessageInThreadAndPotentiallyCloseThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, string messageAsXML,
+		private static int CreateNewMessageInThreadAndPotentiallyCloseThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress,
 																		bool subscribeToThread, string threadUpdatedNotificationTemplate, Dictionary<string, string> emailData,
 																		bool sendReplyNotifications, bool closeThreadAfterInsert)
 		{

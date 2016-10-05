@@ -20,7 +20,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			return CalculateRedirectToMessage(message);
+			return CalculateRedirectToMessage(message.ThreadID, message.MessageID);
 		}
 
 
@@ -67,25 +67,13 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			var message = MessageGuiHelper.GetMessage(id);
-			if(message == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var thread = ThreadGuiHelper.GetThread(message.ThreadID);
-			if(thread == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var userMayEditMessages = MessageController.PerformEditMessageSecurityChecks(thread, message);
+			MessageEntity message;
+			var userMayEditMessages = MessageController.PerformEditMessageSecurityChecks(id, out message);
 			if(!userMayEditMessages)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+			var thread = message.Thread;
 			var forum = CacheManager.GetForum(thread.ForumID);
 			if(forum == null)
 			{
@@ -106,6 +94,94 @@ namespace SD.HnD.Gui.Controllers
 							  };
 			return View(messageData);
 		}
+
+
+		[Authorize]
+		[HttpGet]
+		public ActionResult Add(int threadId = 0, int messageIdToQuote=0)
+		{
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			ThreadEntity thread;
+			var userMayAddMessages = MessageController.PerformAddMessageSecurityChecks(threadId, out thread);
+			if(!userMayAddMessages)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			MessageEntity messageToQuote = null;
+			UserEntity userOfMessageToQuote = null;
+			if(messageIdToQuote > 0)
+			{
+				messageToQuote = MessageGuiHelper.GetMessage(messageIdToQuote);
+				if(messageToQuote == null || messageToQuote.ThreadID!=threadId)
+				{
+					// doesn't exist, or is in another thread, ignore.
+					return RedirectToAction("Index", "Home");
+				}
+				userOfMessageToQuote = UserGuiHelper.GetUser(messageToQuote.PostedByUserID);
+				if(userOfMessageToQuote == null)
+				{
+					return RedirectToAction("Index", "Home");
+				}
+			}
+			var forum = CacheManager.GetForum(thread.ForumID);
+			if(forum == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			string messageTextForEditor = messageToQuote == null ? string.Empty
+																 : string.Format("@quote {0}{1}{2}{1}@end{1}", userOfMessageToQuote.NickName, Environment.NewLine, messageToQuote.MessageText);
+			// user has access, let's edit!
+			var messageData = new MessageData()
+			{
+				MessageText = messageTextForEditor,
+				CurrentUserID = LoggedInUserAdapter.GetUserID(),
+				ForumID = forum.ForumID,
+				ThreadID = thread.ThreadID,
+				ForumName = forum.ForumName,
+				SectionName = CacheManager.GetSectionName(forum.SectionID),
+				ThreadSubject = thread.Subject,
+				PageNo = 1,
+			};
+			return View(messageData);
+		}
+
+
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		[ValidateInput(false)]
+		public ActionResult Add([Bind(Include = "MessageText")] MessageData messageData, string submitButton, int threadId = 0)
+		{
+			if(!ModelState.IsValid)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			ThreadEntity thread;
+			var userMayAddMessages = MessageController.PerformAddMessageSecurityChecks(threadId, out thread);
+			if(!userMayAddMessages)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			int newMessageId = 0;
+			if(submitButton == "Post")
+			{
+				// allowed, proceed
+				// parse message text to html
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText);
+#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING
+#warning IMPLEMENT ATTACHMENTS
+				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, LoggedInUserAdapter.GetUserID(), messageData.MessageText, messageAsHtml, Request.UserHostAddress, 
+																	false, string.Empty, null, false);
+				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
+				{
+					SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), newMessageId);
+				}
+			}
+			return CalculateRedirectToMessage(thread.ThreadID, newMessageId);
+		}
 		
 
 		[Authorize]
@@ -118,25 +194,8 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			if(LoggedInUserAdapter.IsAnonymousUser())
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var message = MessageGuiHelper.GetMessage(id);
-			if(message == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var thread = ThreadGuiHelper.GetThread(message.ThreadID);
-			if(thread == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var userMayEditMessages = MessageController.PerformEditMessageSecurityChecks(thread, message);
+			MessageEntity message;
+			var userMayEditMessages = MessageController.PerformEditMessageSecurityChecks(id, out message);
 			if(!userMayEditMessages)
 			{
 				return RedirectToAction("Index", "Home");
@@ -153,18 +212,39 @@ namespace SD.HnD.Gui.Controllers
 					SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), message.MessageID);
 				}
 			}
-			return CalculateRedirectToMessage(message);
+			return CalculateRedirectToMessage(message.ThreadID, message.MessageID);
 		}
 
 
 		/// <summary>
 		/// Performs the edit message security checks. Returns true if the user may edit the message, false otherwise
 		/// </summary>
-		/// <param name="thread">The thread.</param>
+		/// <param name="id">The identifier.</param>
 		/// <param name="message">The message.</param>
-		/// <returns>true if the user may edit the message, false otherwise</returns>
-		private static bool PerformEditMessageSecurityChecks(ThreadEntity thread, MessageEntity message)
+		/// <returns>
+		/// true if the user may edit the message, false otherwise
+		/// </returns>
+		private static bool PerformEditMessageSecurityChecks(int id, out MessageEntity message)
 		{
+			message = null;
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return false;
+			}
+			message = MessageGuiHelper.GetMessage(id, prefetchThread:true);
+			if(message == null)
+			{
+				return false;
+			}
+			var thread = message.Thread;
+			if(thread == null)
+			{
+				return false;
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
+			{
+				return false;
+			}
 			var userMayEditMessages = false;
 			if(!thread.IsClosed)
 			{
@@ -195,18 +275,52 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+		private static bool PerformAddMessageSecurityChecks(int threadId, out ThreadEntity thread)
+		{
+			thread = null;
+			if(LoggedInUserAdapter.IsAnonymousUser())
+			{
+				return false;
+			}
+			thread = ThreadGuiHelper.GetThread(threadId);
+			if(thread == null)
+			{
+				return false;
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
+			{
+				return false;
+			}
+			var userMayAddMessages = false;
+			if(!thread.IsClosed)
+			{
+				userMayAddMessages = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID,
+																					 thread.IsSticky ? ActionRights.AddAndEditMessageInSticky : ActionRights.AddAndEditMessage);
+			}
+
+			// check if the user can view the thread the message is in. If not, don't continue.
+			if((thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) &&
+			   !LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers))
+			{
+				// can't edit this message, it's in a thread which isn't visible to the user
+				userMayAddMessages = false;
+			}
+			return userMayAddMessages;
+		}
+		
+
 		/// <summary>
-		/// Calculates the redirect to message specified. This is a response to the index action on the thread controller, with the proper page and '#' id redirect.
+		/// Calculates the redirect to message with the id specified. This is a response to the index action on the thread controller, with the proper page and '#' id redirect.
 		/// </summary>
-		/// <param name="message">The message.</param>
+		/// <param name="threadId">The thread identifier.</param>
+		/// <param name="messageId">The message identifier.</param>
 		/// <returns></returns>
-		private ActionResult CalculateRedirectToMessage(MessageEntity message)
+		private ActionResult CalculateRedirectToMessage(int threadId, int messageId)
 		{
 			var maxAmountMessagesPerPage = LoggedInUserAdapter.GetUserDefaultNumberOfMessagesPerPage();
-			int startAtMessageNo = ThreadGuiHelper.GetStartAtMessageForGivenMessageAndThread(message.ThreadID, message.MessageID, maxAmountMessagesPerPage);
+			int startAtMessageNo = messageId > 0 ? ThreadGuiHelper.GetStartAtMessageForGivenMessageAndThread(threadId, messageId, maxAmountMessagesPerPage) : 0;
 			int currentPageNo = (startAtMessageNo / maxAmountMessagesPerPage) + 1;
-			return Redirect(this.Url.Action("Index", "Thread", new { id = message.ThreadID, pageNo = currentPageNo }) + "#" + message.MessageID);
+			return Redirect(this.Url.Action("Index", "Thread", new { id = threadId, pageNo = currentPageNo }) + "#" + messageId);
 		}
-
 	}
 }

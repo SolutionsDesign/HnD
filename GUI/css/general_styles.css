@@ -19,7 +19,7 @@ body {
 
 blockquote {
 	font-size: inherit;
-	padding: 10px 15px;
+	padding: 10px 3px 10px 15px;
 }
 
 code, pre.nocode {
@@ -651,12 +651,22 @@ textarea.form-control{
 
 	.clear { clear: both; }
 
+	.cm-comment {
+		background: inherit !important;
+		border-radius: 0 !important;
+		font-family: Consolas, "Andale Mono WT","Andale Mono","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
+		font-size: 14px;
+		line-height: 15px;
+	}
+
 	.CodeMirror
 	{
-		max-height: 440px;
+		max-height: 500px;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
 	}
 	.CodeMirror-scroll {
-		max-height: 400px;
+		max-height: 460px;
 	}
 
 	.collapsing {
@@ -692,6 +702,11 @@ textarea.form-control{
 
 	.column-clear {
 		clear: both;	
+	}
+
+	.editor-toolbar {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
 	}
 
 	.empty-space-unanswered {
@@ -1057,6 +1072,14 @@ img.ps-poster-avatar {
 	}
 	.ps-message-modal {
 		max-height: 300px;
+	}
+	
+	.CodeMirror
+	{
+		max-height: 400px;
+	}
+	.CodeMirror-scroll {
+		max-height: 360px;
 	}
 
 	#body-content{

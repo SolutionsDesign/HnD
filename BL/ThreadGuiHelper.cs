@@ -46,13 +46,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the thread.
 		/// </summary>
-		/// <param name="ID">Thread ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns>Thread object or null if not found</returns>
-		public static ThreadEntity	GetThread(int ID)
+		public static ThreadEntity	GetThread(int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var thread = new ThreadEntity(ID);
+				var thread = new ThreadEntity(threadId);
 				return adapter.FetchEntity(thread) ? thread : null;
 			}
 		}

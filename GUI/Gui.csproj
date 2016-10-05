@@ -283,6 +283,7 @@
     <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
     <Content Include="Views\Shared\MarkdownEditor_JS.cshtml" />
     <Content Include="Views\SupportQueue\EditMemo.cshtml" />
+    <Content Include="Views\Message\Add.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

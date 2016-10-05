@@ -26,6 +26,7 @@ using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using System.Collections.Generic;
 using System.Linq;
+using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
@@ -88,16 +89,20 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Gets the message entity with the ID passed in. 
+		/// Gets the message entity with the ID passed in.
 		/// </summary>
 		/// <param name="messageID">The message ID.</param>
-		/// <returns>Filled messageentity if found, otherwise null</returns>
-		public static MessageEntity GetMessage(int messageID)
+		/// <param name="prefetchThread">if set to <c>true</c> it will also prefetch the related thread entity.</param>
+		/// <returns>
+		/// Filled messageentity if found, otherwise null
+		/// </returns>
+		public static MessageEntity GetMessage(int messageID, bool prefetchThread = false)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var message = new MessageEntity(messageID);
-				return adapter.FetchEntity(message) ? message : null;
+				IPrefetchPath2 path = prefetchThread ? new PrefetchPath2(EntityType.MessageEntity) {MessageEntity.PrefetchPathThread} : null;
+				return adapter.FetchEntity(message, path) ? message : null;
 			}
 		}
 
