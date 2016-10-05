@@ -22,6 +22,7 @@ blockquote {
 	padding: 10px 3px 10px 15px;
 }
 
+
 code, pre.nocode {
 	white-space: pre;
 	max-width: 100%;
@@ -134,8 +135,9 @@ pre > code {
 }
 
 pre.nocode {
-	margin: 0 20px;
+	margin: 0;
 	font-size: 13px;
+	padding: 6.5px;
 }
 
 table {
