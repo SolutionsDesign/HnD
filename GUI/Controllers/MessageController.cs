@@ -102,6 +102,7 @@ namespace SD.HnD.Gui.Controllers
 								  ForumName = forum.ForumName,
 								  SectionName = CacheManager.GetSectionName(forum.SectionID),
 								  ThreadSubject = thread.Subject,
+								  PageNo = 1,
 							  };
 			return View(messageData);
 		}

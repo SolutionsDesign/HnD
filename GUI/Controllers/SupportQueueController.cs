@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -14,7 +16,8 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		public ActionResult ClaimThread(int id, int pageNo)
 	    {
-			var result = PerformSecurityCheck(id);
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
 			{
 				return result;
@@ -29,7 +32,8 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		public ActionResult ReleaseThread(int id, int pageNo)
 		{
-			var result = PerformSecurityCheck(id);
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
 			{
 				return result;
@@ -40,27 +44,70 @@ namespace SD.HnD.Gui.Controllers
 
 
 	    [Authorize]
-		[ValidateAntiForgeryToken]
-		[HttpPost]
+		[HttpGet]
 		public ActionResult EditMemo(int id = 0, int pageNo = 1)
 	    {
-		    var result = PerformSecurityCheck(id);
-		    if(result != null)
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
 		    {
 			    return result;
 		    }
-
-#warning IMPLEMENT WHEN MESSAGE EDITOR HAS BEEN ADDED.
-			return RedirectToAction("Index", "Thread");
+		    var forum = CacheManager.GetForum(thread.ForumID);
+		    if(forum == null)
+		    {
+				// orphaned thread
+				return RedirectToAction("Index", "Home");
+			}
+			var messageData = new MessageData()
+			{
+				MessageText = thread.Memo + string.Format("  {2}**-----------------------------------------------------------------  {2}{1} {0} wrote:** ", 
+											LoggedInUserAdapter.GetUserNickName(), DateTime.Now.ToString(@"dd-MMM-yyyy HH:mm:ss"), Environment.NewLine),
+				CurrentUserID = LoggedInUserAdapter.GetUserID(),
+				ForumID = forum.ForumID,
+				ThreadID = thread.ThreadID,
+				ForumName = forum.ForumName,
+				SectionName = CacheManager.GetSectionName(forum.SectionID),
+				ThreadSubject = thread.Subject,
+				PageNo = pageNo,
+			};
+			return View(messageData);
 	    }
 
 
 	    [Authorize]
+	    [ValidateAntiForgeryToken]
+	    [HttpPost]
+	    [ValidateInput(false)]
+	    public ActionResult EditMemo([Bind(Include = "MessageText")] MessageData messageData, string submitButton, int id = 0, int pageNo=1)
+	    {
+		    if(!ModelState.IsValid)
+		    {
+			    return RedirectToAction("Index", "Home");
+		    }
+			ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
+			if(result != null)
+			{
+				return result;
+			}
+
+			ThreadManager.UpdateMemo(thread.ThreadID, messageData.MessageText);
+			if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditEditMemo))
+			{
+				SecurityManager.AuditEditMemo(LoggedInUserAdapter.GetUserID(), thread.ThreadID);
+			}
+			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+		}
+
+
+		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult MoveToQueue(int id = 0, int pageNo = 1, int queueId = 0)
 	    {
-			var result = PerformSecurityCheck(id);
+		    ThreadEntity thread;
+			var result = PerformSecurityCheck(id, out thread);
 			if(result != null)
 			{
 				return result;
@@ -90,9 +137,9 @@ namespace SD.HnD.Gui.Controllers
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-	    private ActionResult PerformSecurityCheck(int id)
+	    private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
 	    {
-			var thread = ThreadGuiHelper.GetThread(id);
+			thread = ThreadGuiHelper.GetThread(id);
 			if(thread == null)
 			{
 				// not found, return to start page

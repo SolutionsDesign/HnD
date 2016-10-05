@@ -13,6 +13,7 @@ namespace SD.HnD.Gui.Models
 		public string SectionName { get; set; }
 		public int ForumID { get; set; }
 		public int ThreadID { get; set; }
+		public int PageNo { get; set; }
 		public string ForumName { get; set; }
 		public string ThreadSubject { get; set; }
 		[Required]
