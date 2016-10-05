@@ -2,5 +2,9 @@
   {
     "outputFile": "css/general_colors.css",
     "inputFile": "css/general_colors.less"
+  },
+  {
+    "outputFile": "js/bootstrap.3.3.7.min.es5.js",
+    "inputFile": "js/bootstrap.3.3.7.min.js"
   }
 ]

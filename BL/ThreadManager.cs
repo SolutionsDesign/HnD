@@ -432,7 +432,6 @@ namespace SD.HnD.BL
 									  PostingDate = postingDate,
 									  ThreadID = threadID,
 									  PostedFromIP = userIDIPAddress,
-									  MessageTextAsXml = messageAsXML
 								  };
 					messageID = adapter.SaveEntity(message) ? message.MessageID : 0;
 					if(messageID > 0)

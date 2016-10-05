@@ -131,7 +131,6 @@ namespace SD.HnD.BL
 				//update the fields with the new passed values
 				message.MessageText = messageText;
 				message.MessageTextAsHTML = messageAsHTML;
-				message.MessageTextAsXml = messageAsXML;
 				return adapter.SaveEntity(message);
 			}
 		}

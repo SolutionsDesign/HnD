@@ -47,8 +47,6 @@ namespace SD.HnD.DALAdapter.TypedListClasses
 		public Nullable<System.Int32> UserID { get; set; }
 		/// <summary>Gets or sets the NickName field. Mapped onto 'User.NickName'</summary>
 		public System.String NickName { get; set; }
-		/// <summary>Gets or sets the SignatureAsHTML field. Mapped onto 'User.SignatureAsHTML'</summary>
-		public System.String SignatureAsHTML { get; set; }
 		/// <summary>Gets or sets the IconURL field. Mapped onto 'User.IconURL'</summary>
 		public System.String IconURL { get; set; }
 		/// <summary>Gets or sets the Location field. Mapped onto 'User.Location'</summary>
@@ -59,6 +57,8 @@ namespace SD.HnD.DALAdapter.TypedListClasses
 		public Nullable<System.Int32> AmountOfPostings { get; set; }
 		/// <summary>Gets or sets the UserTitleDescription field. Mapped onto 'UserTitle.UserTitleDescription'</summary>
 		public System.String UserTitleDescription { get; set; }
+		/// <summary>Gets or sets the Signature field. Mapped onto 'User.Signature'</summary>
+		public System.String Signature { get; set; }
 		#endregion
 	}
 }

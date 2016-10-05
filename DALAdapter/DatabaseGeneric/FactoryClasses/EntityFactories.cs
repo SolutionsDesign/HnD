@@ -20,7 +20,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	
-	
 	/// <summary>general base class for the generated factories</summary>
 	[Serializable]
 	public partial class EntityFactoryBase2<TEntity> : EntityFactoryCore2
@@ -113,7 +112,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new ActionRightEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewActionRightUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -134,7 +132,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new AttachmentEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAttachmentUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -155,7 +152,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new AuditActionEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditActionUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -176,7 +172,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new AuditDataCoreEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataCoreUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -197,7 +192,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new AuditDataMessageRelatedEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataMessageRelatedUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -218,7 +212,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new AuditDataThreadRelatedEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewAuditDataThreadRelatedUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -239,7 +232,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new BookmarkEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewBookmarkUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -260,7 +252,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new ForumEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewForumUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -281,7 +272,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new ForumRoleForumActionRightEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewForumRoleForumActionRightUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -302,7 +292,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new IPBanEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewIPBanUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -323,7 +312,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new MessageEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewMessageUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -344,7 +332,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new RoleEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -365,7 +352,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new RoleAuditActionEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleAuditActionUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -386,7 +372,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new RoleSystemActionRightEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleSystemActionRightUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -407,7 +392,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new RoleUserEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewRoleUserUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -428,7 +412,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new SectionEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSectionUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -449,7 +432,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new SupportQueueEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSupportQueueUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -470,7 +452,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new SupportQueueThreadEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSupportQueueThreadUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -491,7 +472,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new SystemDataEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewSystemDataUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -512,7 +492,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new ThreadEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewThreadUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -533,7 +512,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new ThreadSubscriptionEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewThreadSubscriptionUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -554,7 +532,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new UserEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewUserUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code
@@ -575,7 +552,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 			IEntity2 toReturn = new UserTitleEntity(fields);
 			// __LLBLGENPRO_USER_CODE_REGION_START CreateNewUserTitleUsingFields
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			return toReturn;
 		}
 		#region Included Code

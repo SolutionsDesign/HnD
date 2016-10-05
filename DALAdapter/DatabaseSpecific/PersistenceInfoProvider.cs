@@ -183,7 +183,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 		/// <summary>Inits MessageEntity's mappings</summary>
 		private void InitMessageEntityMappings()
 		{
-			this.AddElementMapping("MessageEntity", @"HnD", @"dbo", "Message", 9, 0);
+			this.AddElementMapping("MessageEntity", @"HnD", @"dbo", "Message", 8, 0);
 			this.AddElementFieldMapping("MessageEntity", "MessageID", "MessageID", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
 			this.AddElementFieldMapping("MessageEntity", "PostingDate", "PostingDate", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 1);
 			this.AddElementFieldMapping("MessageEntity", "PostedByUserID", "PostedByUserID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 2);
@@ -192,7 +192,6 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			this.AddElementFieldMapping("MessageEntity", "ChangeTrackerStamp", "ChangeTrackerStamp", false, "Timestamp", 8, 0, 0, false, "", null, typeof(System.Byte[]), 5);
 			this.AddElementFieldMapping("MessageEntity", "MessageText", "MessageText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 6);
 			this.AddElementFieldMapping("MessageEntity", "MessageTextAsHTML", "MessageTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 7);
-			this.AddElementFieldMapping("MessageEntity", "MessageTextAsXml", "MessageTextAsXml", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 8);
 		}
 
 		/// <summary>Inits RoleEntity's mappings</summary>
@@ -301,7 +300,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 		/// <summary>Inits UserEntity's mappings</summary>
 		private void InitUserEntityMappings()
 		{
-			this.AddElementMapping("UserEntity", @"HnD", @"dbo", "User", 20, 0);
+			this.AddElementMapping("UserEntity", @"HnD", @"dbo", "User", 19, 0);
 			this.AddElementFieldMapping("UserEntity", "UserID", "UserID", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
 			this.AddElementFieldMapping("UserEntity", "NickName", "NickName", false, "NVarChar", 20, 0, 0, false, "", null, typeof(System.String), 1);
 			this.AddElementFieldMapping("UserEntity", "Password", "Password", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 2);
@@ -315,13 +314,12 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			this.AddElementFieldMapping("UserEntity", "Occupation", "Occupation", true, "NVarChar", 100, 0, 0, false, "", null, typeof(System.String), 10);
 			this.AddElementFieldMapping("UserEntity", "Location", "Location", true, "NVarChar", 100, 0, 0, false, "", null, typeof(System.String), 11);
 			this.AddElementFieldMapping("UserEntity", "Website", "Website", true, "NVarChar", 200, 0, 0, false, "", null, typeof(System.String), 12);
-			this.AddElementFieldMapping("UserEntity", "SignatureAsHTML", "SignatureAsHTML", true, "NVarChar", 1024, 0, 0, false, "", null, typeof(System.String), 13);
-			this.AddElementFieldMapping("UserEntity", "JoinDate", "JoinDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 14);
-			this.AddElementFieldMapping("UserEntity", "AmountOfPostings", "AmountOfPostings", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 15);
-			this.AddElementFieldMapping("UserEntity", "EmailAddressIsPublic", "EmailAddressIsPublic", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 16);
-			this.AddElementFieldMapping("UserEntity", "LastVisitedDate", "LastVisitedDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 17);
-			this.AddElementFieldMapping("UserEntity", "AutoSubscribeToThread", "AutoSubscribeToThread", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 18);
-			this.AddElementFieldMapping("UserEntity", "DefaultNumberOfMessagesPerPage", "DefaultNumberOfMessagesPerPage", true, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 19);
+			this.AddElementFieldMapping("UserEntity", "JoinDate", "JoinDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 13);
+			this.AddElementFieldMapping("UserEntity", "AmountOfPostings", "AmountOfPostings", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 14);
+			this.AddElementFieldMapping("UserEntity", "EmailAddressIsPublic", "EmailAddressIsPublic", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 15);
+			this.AddElementFieldMapping("UserEntity", "LastVisitedDate", "LastVisitedDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 16);
+			this.AddElementFieldMapping("UserEntity", "AutoSubscribeToThread", "AutoSubscribeToThread", true, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 17);
+			this.AddElementFieldMapping("UserEntity", "DefaultNumberOfMessagesPerPage", "DefaultNumberOfMessagesPerPage", true, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 18);
 		}
 
 		/// <summary>Inits UserTitleEntity's mappings</summary>

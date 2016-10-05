@@ -46,12 +46,12 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 							PostedFromIP = MessageFields.PostedFromIP.ToValue<System.String>(),
 							UserID = UserFields.UserID.ToValue<Nullable<System.Int32>>(),
 							NickName = UserFields.NickName.ToValue<System.String>(),
-							SignatureAsHTML = UserFields.SignatureAsHTML.ToValue<System.String>(),
 							IconURL = UserFields.IconURL.ToValue<System.String>(),
 							Location = UserFields.Location.ToValue<System.String>(),
 							JoinDate = UserFields.JoinDate.ToValue<Nullable<System.DateTime>>(),
 							AmountOfPostings = UserFields.AmountOfPostings.ToValue<Nullable<System.Int32>>(),
 							UserTitleDescription = UserTitleFields.UserTitleDescription.ToValue<System.String>(),
+							Signature = UserFields.Signature.ToValue<string>(),
 							NumberOfAttachments = this.Create().Select(AttachmentFields.AttachmentID.Count())
 													   		   .Where(AttachmentFields.MessageID == MessageFields.MessageID).ToScalar()
 															   .ToValue<int>()

@@ -25,13 +25,11 @@ namespace SD.HnD.DALAdapter.EntityClasses
 {
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
-	
 	/// <summary>Entity class which represents the entity 'User'.<br/><br/></summary>
 	[Serializable]
 	public partial class UserEntity : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
-		// __LLBLGENPRO_USER_CODE_REGION_END
-			
+		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
 		#region Class Member Declarations
 		private EntityCollection<AuditDataCoreEntity> _loggedAudits;
@@ -52,7 +50,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
-		
 		#endregion
 
 		#region Statics
@@ -172,7 +169,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			}
 			// __LLBLGENPRO_USER_CODE_REGION_START DeserializationConstructor
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 		}
 
 		
@@ -496,7 +492,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			}
 			// __LLBLGENPRO_USER_CODE_REGION_START GetObjectInfo
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			base.GetObjectData(info, context);
 		}
 
@@ -783,7 +778,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 			OnInitClassMembersComplete();
 		}
 
@@ -821,8 +815,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			_fieldsCustomProperties.Add("Location", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("Website", fieldHashtable);
-			fieldHashtable = new Dictionary<string, string>();
-			_fieldsCustomProperties.Add("SignatureAsHTML", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
 			_fieldsCustomProperties.Add("JoinDate", fieldHashtable);
 			fieldHashtable = new Dictionary<string, string>();
@@ -883,7 +875,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
 			// __LLBLGENPRO_USER_CODE_REGION_END
-			
 
 			OnInitialized();
 
@@ -1192,16 +1183,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set	{ SetValue((int)UserFieldIndex.Website, value); }
 		}
 
-		/// <summary> The SignatureAsHTML property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."SignatureAsHTML"<br/>
-		/// Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 1024<br/>
-		/// Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual System.String SignatureAsHTML
-		{
-			get { return (System.String)GetValue((int)UserFieldIndex.SignatureAsHTML, true); }
-			set	{ SetValue((int)UserFieldIndex.SignatureAsHTML, value); }
-		}
-
 		/// <summary> The JoinDate property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."JoinDate"<br/>
 		/// Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0<br/>
@@ -1404,7 +1385,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END
-		
 		#endregion
 
 		#region Included code

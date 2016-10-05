@@ -40,7 +40,7 @@
     <Property Name="NavigatorMappedOntoManyToManyPattern" Value="{$EndEntityName}CollectionVia{$IntermediateEntityName}" />
     <Property Name="NavigatorMappedOntoOneManyToOnePattern" Value="{$EndEntityName}" />
     <Property Name="NavigatorMappedOntoOneToManyPattern" Value="{$EndEntityName}" />
-    <Property Name="NonExcludableOrphanedElementDetectedAction" Value="3" />
+    <Property Name="NonExcludableOrphanedElementDetectedAction" Value="4" />
     <Property Name="PreferDecimalOverCurrencyTypes" Value="true" />
     <Property Name="PreferNaturalCharacterTypes" Value="true" />
     <Property Name="PreferSystemSequencesOverSchemaSequencesIfApplicable" Value="true" />
@@ -102,6 +102,21 @@
           <Binding Name="SD.TemplateBindings.SharedTemplates" />
           <Binding Name="SD.TemplateBindings.SqlServerSpecific" />
           <Binding Name="SD.TemplateBindings.General" />
+        </TemplateBindings>
+      </LastUsedPreferences>
+    </OutputType>
+    <OutputType Value="2">
+      <LastUsedPreferences>
+        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\SQLScripts" />
+        <FrameworkName Value="DDL SQL" />
+        <LanguageName Value="SQL" />
+        <PlatformName Value="RDBMS" />
+        <PresetName Value="SD.Presets.DDLSQL.UpdateScript" />
+        <RootNamespace Value="" />
+        <TemplateGroup Value="Update DDL SQL" />
+        <TemplateBindings>
+          <Binding Name="SD.TemplateBindings.SqlServerSpecific.DDLSQL" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.DDLSQL" />
         </TemplateBindings>
       </LastUsedPreferences>
     </OutputType>
@@ -240,7 +255,6 @@
           <Field Name="MessageID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
           <Field Name="MessageText" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="6" />
           <Field Name="MessageTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="7" />
-          <Field Name="MessageTextAsXml" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="8" />
           <Field Name="PostedByUserID" Type="int" IsAutoCreated="true" FieldIndex="2" />
           <Field Name="PostedFromIP" Type="string" MaxLength="25" FieldIndex="4" />
           <Field Name="PostingDate" Type="datetime" FieldIndex="1" />
@@ -332,8 +346,8 @@
       </EntityDefinition>
       <EntityDefinition Name="User" ObjectID="bab33438-a5a6-4f41-8e30-df0f5926d2c8">
         <Fields>
-          <Field Name="AmountOfPostings" Type="int" IsOptional="true" FieldIndex="15" />
-          <Field Name="AutoSubscribeToThread" Type="bool" IsOptional="true" FieldIndex="18">
+          <Field Name="AmountOfPostings" Type="int" IsOptional="true" FieldIndex="14" />
+          <Field Name="AutoSubscribeToThread" Type="bool" IsOptional="true" FieldIndex="17">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
@@ -341,7 +355,7 @@
             </OutputSettingValues>
           </Field>
           <Field Name="DateOfBirth" Type="datetime" IsOptional="true" FieldIndex="9" />
-          <Field Name="DefaultNumberOfMessagesPerPage" Type="short" IsOptional="true" FieldIndex="19">
+          <Field Name="DefaultNumberOfMessagesPerPage" Type="short" IsOptional="true" FieldIndex="18">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
@@ -349,18 +363,17 @@
             </OutputSettingValues>
           </Field>
           <Field Name="EmailAddress" Type="string" IsOptional="true" MaxLength="200" FieldIndex="7" />
-          <Field Name="EmailAddressIsPublic" Type="bool" IsOptional="true" FieldIndex="16" />
+          <Field Name="EmailAddressIsPublic" Type="bool" IsOptional="true" FieldIndex="15" />
           <Field Name="IconURL" Type="string" IsOptional="true" MaxLength="250" FieldIndex="6" />
           <Field Name="IPNumber" Type="string" MaxLength="25" FieldIndex="4" />
           <Field Name="IsBanned" Type="bool" FieldIndex="3" />
-          <Field Name="JoinDate" Type="datetime" IsOptional="true" FieldIndex="14" />
-          <Field Name="LastVisitedDate" Type="datetime" IsOptional="true" FieldIndex="17" />
+          <Field Name="JoinDate" Type="datetime" IsOptional="true" FieldIndex="13" />
+          <Field Name="LastVisitedDate" Type="datetime" IsOptional="true" FieldIndex="16" />
           <Field Name="Location" Type="string" IsOptional="true" MaxLength="100" FieldIndex="11" />
           <Field Name="NickName" Type="string" MaxLength="20" FieldIndex="1" />
           <Field Name="Occupation" Type="string" IsOptional="true" MaxLength="100" FieldIndex="10" />
           <Field Name="Password" Type="string" MaxLength="30" FieldIndex="2" />
           <Field Name="Signature" Type="string" IsOptional="true" MaxLength="250" FieldIndex="5" />
-          <Field Name="SignatureAsHTML" Type="string" IsOptional="true" MaxLength="1024" FieldIndex="13" />
           <Field Name="UserID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
           <Field Name="UserTitleID" Type="int" IsAutoCreated="true" FieldIndex="8" />
           <Field Name="Website" Type="string" IsOptional="true" MaxLength="200" FieldIndex="12" />
@@ -618,12 +631,12 @@
         <Field FieldAlias="PostedFromIP" TargetField="Message.PostedFromIP" />
         <Field FieldAlias="UserID" TargetField="User.UserID" />
         <Field FieldAlias="NickName" TargetField="User.NickName" />
-        <Field FieldAlias="SignatureAsHTML" TargetField="User.SignatureAsHTML" />
         <Field FieldAlias="IconURL" TargetField="User.IconURL" />
         <Field FieldAlias="Location" TargetField="User.Location" />
         <Field FieldAlias="JoinDate" TargetField="User.JoinDate" />
         <Field FieldAlias="AmountOfPostings" TargetField="User.AmountOfPostings" />
         <Field FieldAlias="UserTitleDescription" TargetField="UserTitle.UserTitleDescription" />
+        <Field FieldAlias="Signature" TargetField="User.Signature" />
       </Fields>
       <Relationships>
         <Relationship Name="Message.PostedByUser-User.PostedMessages" StartAlias="User" EndAlias="Message" JoinHint="2" />
@@ -662,7 +675,7 @@
     </TypedListDefinition>
   </TypedListDefinitions>
   <TargetDatabases>
-    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="2">
+    <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="1">
       <ConnectionElements>
         <ConnectionElement Name="ServerName" Value="nerd" />
         <ConnectionElement Name="CatalogName" Value="master" />
@@ -675,9 +688,9 @@
         <Sequence Name="@@IDENTITY" />
       </SystemSequences>
       <Catalogs>
-        <Catalog Name="HnD" SyncSource="2">
+        <Catalog Name="HnD" SyncSource="1">
           <Schemas>
-            <Schema Name="dbo" SyncSource="2">
+            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2016-10-05T08:54:41.3244094Z">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />
@@ -788,7 +801,6 @@
                     <Field Name="ChangeTrackerStamp" Ordinal="6" IsTimestamp="true" DbType="21" Length="8" />
                     <Field Name="MessageText" Ordinal="7" IsOptional="true" DbType="11" Length="1073741823" />
                     <Field Name="MessageTextAsHTML" Ordinal="8" IsOptional="true" DbType="11" Length="1073741823" />
-                    <Field Name="MessageTextAsXml" Ordinal="9" IsOptional="true" DbType="11" Length="1073741823" />
                   </Fields>
                 </Table>
                 <Table Name="Role">
@@ -905,7 +917,6 @@
                     <Field Name="Occupation" Ordinal="11" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Location" Ordinal="12" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Website" Ordinal="13" IsOptional="true" DbType="12" Length="200" />
-                    <Field Name="SignatureAsHTML" Ordinal="14" IsOptional="true" DbType="12" Length="1024" />
                     <Field Name="JoinDate" Ordinal="15" IsOptional="true" HasDefaultValue="true" DefaultValue="(getdate())" DbType="4" />
                     <Field Name="AmountOfPostings" Ordinal="16" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
                     <Field Name="EmailAddressIsPublic" Ordinal="17" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
@@ -1202,7 +1213,6 @@
             <FieldMapping FieldName="MessageID" TargetFieldName="MessageID" SequenceToUse="SCOPE_IDENTITY()" />
             <FieldMapping FieldName="MessageText" TargetFieldName="MessageText" />
             <FieldMapping FieldName="MessageTextAsHTML" TargetFieldName="MessageTextAsHTML" />
-            <FieldMapping FieldName="MessageTextAsXml" TargetFieldName="MessageTextAsXml" />
             <FieldMapping FieldName="PostedByUserID" TargetFieldName="PostedByUserID" />
             <FieldMapping FieldName="PostedFromIP" TargetFieldName="PostedFromIP" />
             <FieldMapping FieldName="PostingDate" TargetFieldName="PostingDate" />
@@ -1310,7 +1320,6 @@
             <FieldMapping FieldName="Occupation" TargetFieldName="Occupation" />
             <FieldMapping FieldName="Password" TargetFieldName="Password" />
             <FieldMapping FieldName="Signature" TargetFieldName="Signature" />
-            <FieldMapping FieldName="SignatureAsHTML" TargetFieldName="SignatureAsHTML" />
             <FieldMapping FieldName="UserID" TargetFieldName="UserID" SequenceToUse="SCOPE_IDENTITY()" />
             <FieldMapping FieldName="UserTitleID" TargetFieldName="UserTitleID" />
             <FieldMapping FieldName="Website" TargetFieldName="Website" />

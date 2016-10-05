@@ -253,7 +253,7 @@
 							@Html.Raw(@currentMessage.MessageTextAsHTML)
 						</div>
 						<div class="ps-message-signature">
-							@Html.Raw(@currentMessage.SignatureAsHTML)
+							@Html.Encode(@currentMessage.Signature)
 							<div class="pull-right">
 								<a href="#top" title="Go to top of page"><i class="fa fa-arrow-up"></i></a>
 							</div>

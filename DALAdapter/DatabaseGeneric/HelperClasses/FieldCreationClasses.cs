@@ -387,11 +387,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 		{
 			get { return (EntityField2)EntityFieldFactory.Create(MessageFieldIndex.MessageTextAsHTML);}
 		}
-		/// <summary>Creates a new MessageEntity.MessageTextAsXml field instance</summary>
-		public static EntityField2 MessageTextAsXml
-		{
-			get { return (EntityField2)EntityFieldFactory.Create(MessageFieldIndex.MessageTextAsXml);}
-		}
 	}
 
 	/// <summary>Field Creation Class for entity RoleEntity</summary>
@@ -726,11 +721,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 		public static EntityField2 Website
 		{
 			get { return (EntityField2)EntityFieldFactory.Create(UserFieldIndex.Website);}
-		}
-		/// <summary>Creates a new UserEntity.SignatureAsHTML field instance</summary>
-		public static EntityField2 SignatureAsHTML
-		{
-			get { return (EntityField2)EntityFieldFactory.Create(UserFieldIndex.SignatureAsHTML);}
 		}
 		/// <summary>Creates a new UserEntity.JoinDate field instance</summary>
 		public static EntityField2 JoinDate

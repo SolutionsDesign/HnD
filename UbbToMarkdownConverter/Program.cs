@@ -130,7 +130,7 @@ namespace UbbToMarkdownConverter
 			var numberOfBatches = (totalNumberOfMessages/BATCHSIZE)+1;
 			var qf = new QueryFactory();
 			var q = qf.Message.OrderBy(MessageFields.MessageID.Ascending())
-							  .Exclude(MessageFields.MessageTextAsHTML, MessageFields.MessageTextAsXml);
+							  .Exclude(MessageFields.MessageTextAsHTML);
 			using(var adapter = new DataAccessAdapter())
 			{
 				adapter.StartTransaction(IsolationLevel.ReadCommitted, "Converting UBB to Markdown");

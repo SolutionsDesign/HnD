@@ -202,8 +202,6 @@ namespace SD.HnD.DALAdapter
 		MessageText,
 		///<summary>MessageTextAsHTML. </summary>
 		MessageTextAsHTML,
-		///<summary>MessageTextAsXml. </summary>
-		MessageTextAsXml,
 		/// <summary></summary>
 		AmountOfFields
 	}
@@ -382,8 +380,6 @@ namespace SD.HnD.DALAdapter
 		Location,
 		///<summary>Website. </summary>
 		Website,
-		///<summary>SignatureAsHTML. </summary>
-		SignatureAsHTML,
 		///<summary>JoinDate. </summary>
 		JoinDate,
 		///<summary>AmountOfPostings. </summary>
@@ -470,8 +466,6 @@ namespace SD.HnD.DALAdapter
 		UserID,
 		///<summary>NickName</summary>
 		NickName,
-		///<summary>SignatureAsHTML</summary>
-		SignatureAsHTML,
 		///<summary>IconURL</summary>
 		IconURL,
 		///<summary>Location</summary>
@@ -482,6 +476,8 @@ namespace SD.HnD.DALAdapter
 		AmountOfPostings,
 		///<summary>UserTitleDescription</summary>
 		UserTitleDescription,
+		///<summary>Signature</summary>
+		Signature,
 		/// <summary></summary>
 		AmountOfFields
 	}
@@ -558,7 +554,6 @@ namespace SD.HnD.DALAdapter
 	
 	// __LLBLGENPRO_USER_CODE_REGION_START CustomUserConstants
 	// __LLBLGENPRO_USER_CODE_REGION_END
-	
 	#endregion
 
 	#region Included code

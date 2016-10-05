@@ -28,7 +28,7 @@ code, pre.nocode {
 	border: solid 1px;
 	font-size: 90%;
 	padding: 0 2px;
-	margin: 0 3px;
+	margin: 0;
 	font-family: Consolas, "Andale Mono WT","Andale Mono","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
 	overflow-x: auto;
 }
@@ -118,7 +118,7 @@ p code {
 pre {
 	display: block;
 	margin: 0 0 10px;
-	padding: 6px;
+	padding: 6px 0;
 	line-height: initial;
 	background-color: initial;
 	border: initial;
@@ -131,12 +131,10 @@ pre code {
 
 pre > code {
 	font-size: 13px;
-	box-shadow: 0px 0px 5px rgba(10,10,10,0.07);
 }
 
 pre.nocode {
-	margin: 0 9px 20px;
-	box-shadow: 0px 0px 5px rgba(10,10,10,0.07);
+	margin: 0 20px;
 	font-size: 13px;
 }
 
@@ -238,7 +236,6 @@ textarea.form-control{
 
 .table-bordered-all {
 	border: 1px solid;
-	box-shadow: 0px 0px 8px rgba(10,10,10,0.1);
 }
 
 .table-bordered-all td {

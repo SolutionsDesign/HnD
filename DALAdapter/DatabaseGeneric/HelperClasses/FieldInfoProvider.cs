@@ -16,7 +16,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
 	
-	
 	/// <summary>Singleton implementation of the FieldInfoProvider. This class is the singleton wrapper through which the actual instance is retrieved.</summary>
 	/// <remarks>It uses a single instance of an internal class. The access isn't marked with locks as the FieldInfoProviderBase class is threadsafe.</remarks>
 	internal static class FieldInfoProviderSingleton
@@ -188,7 +187,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddElementFieldInfo("MessageEntity", "ChangeTrackerStamp", typeof(System.Byte[]), false, false, true, false,  (int)MessageFieldIndex.ChangeTrackerStamp, 8, 0, 0);
 			this.AddElementFieldInfo("MessageEntity", "MessageText", typeof(System.String), false, false, false, true,  (int)MessageFieldIndex.MessageText, 1073741823, 0, 0);
 			this.AddElementFieldInfo("MessageEntity", "MessageTextAsHTML", typeof(System.String), false, false, false, true,  (int)MessageFieldIndex.MessageTextAsHTML, 1073741823, 0, 0);
-			this.AddElementFieldInfo("MessageEntity", "MessageTextAsXml", typeof(System.String), false, false, false, true,  (int)MessageFieldIndex.MessageTextAsXml, 1073741823, 0, 0);
 		}
 		/// <summary>Inits RoleEntity's FieldInfo objects</summary>
 		private void InitRoleEntityInfos()
@@ -300,7 +298,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddElementFieldInfo("UserEntity", "Occupation", typeof(System.String), false, false, false, true,  (int)UserFieldIndex.Occupation, 100, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "Location", typeof(System.String), false, false, false, true,  (int)UserFieldIndex.Location, 100, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "Website", typeof(System.String), false, false, false, true,  (int)UserFieldIndex.Website, 200, 0, 0);
-			this.AddElementFieldInfo("UserEntity", "SignatureAsHTML", typeof(System.String), false, false, false, true,  (int)UserFieldIndex.SignatureAsHTML, 1024, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "JoinDate", typeof(Nullable<System.DateTime>), false, false, false, true,  (int)UserFieldIndex.JoinDate, 0, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "AmountOfPostings", typeof(Nullable<System.Int32>), false, false, false, true,  (int)UserFieldIndex.AmountOfPostings, 0, 0, 10);
 			this.AddElementFieldInfo("UserEntity", "EmailAddressIsPublic", typeof(Nullable<System.Boolean>), false, false, false, true,  (int)UserFieldIndex.EmailAddressIsPublic, 0, 0, 0);
