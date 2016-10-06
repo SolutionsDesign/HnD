@@ -23,6 +23,8 @@ namespace SD.HnD.Gui
 			routes.MapRoute("MoveThread", "Thread/Move/{id}", new { controller = "Thread", action = "Move", id = UrlParameter.Optional });
 			routes.MapRoute("DeleteThread", "Thread/Delete/{id}", new { controller = "Thread", action = "Delete", id = UrlParameter.Optional });
 			routes.MapRoute("EditThreadProperties", "Thread/EditProperties/{id}", new {controller = "Thread", action = "EditProperties", id = UrlParameter.Optional});
+			routes.MapRoute("AddThread", "Thread/Add/{forumId}", new {controller = "Thread", action = "Add", forumId = UrlParameter.Optional});
+			// set this one beneath all other Thread/ routes as otherwise {id} will match with the action... WebDev, never a dull moment!
 			routes.MapRoute("ViewThread", "Thread/{id}/{pageNo}", new { controller = "Thread", action = "Index", id = UrlParameter.Optional, pageNo = 1 });
 
 			routes.MapRoute("ViewForum", "Forum/{id}/{pageNo}", new { controller="Forum", action="Index", id = UrlParameter.Optional, pageNo=1 });

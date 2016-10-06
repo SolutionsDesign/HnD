@@ -15,7 +15,7 @@ namespace SD.HnD.Gui.Models
 		public int ThreadID { get; set; }
 		public int PageNo { get; set; }
 		public string ForumName { get; set; }
-		public string ThreadSubject { get; set; }
+		public virtual string ThreadSubject { get; set; }
 		[Required]
 		public string MessageText { get; set; }
 	}

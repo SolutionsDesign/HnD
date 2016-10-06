@@ -132,6 +132,7 @@
     <Compile Include="Models\ForumSelectorData.cs" />
     <Compile Include="Models\HomeData.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\NewThreadData.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\RssForumData.cs" />
     <Compile Include="Models\ThreadData.cs" />
@@ -147,7 +148,6 @@
     <Content Include="css\general_colors.css" />
     <Content Include="css\general_colors.min.css" />
     <Content Include="css\general_styles.css" />
-    <Content Include="css\simplemde1.11.2.min.css" />
     <Content Include="css\styles\agate.css" />
     <Content Include="css\styles\androidstudio.css" />
     <Content Include="css\styles\arduino-light.css" />
@@ -198,7 +198,6 @@
     <Content Include="js\general.js" />
     <Content Include="js\highlight.9.7.pack.js" />
     <Content Include="js\jquery.validate.unobtrusive.min.js" />
-    <Content Include="js\simplemde.1.11.2.min.js" />
     <Content Include="pics\logo%402x.png" />
     <Content Include="pics\logo.png" />
     <Content Include="Rssforum.aspx" />
@@ -280,10 +279,11 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <Content Include="Views\Shared\MarkdownEditor.cshtml" />
-    <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
     <Content Include="Views\Shared\MarkdownEditor_JS.cshtml" />
     <Content Include="Views\SupportQueue\EditMemo.cshtml" />
     <Content Include="Views\Message\Add.cshtml" />
+    <Content Include="Views\Thread\Add.cshtml" />
+    <None Include="Properties\PublishProfiles\Disk.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

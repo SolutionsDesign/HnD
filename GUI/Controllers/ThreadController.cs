@@ -225,6 +225,40 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
 		}
 
+		[Authorize]
+		[HttpGet]
+		public ActionResult Add(int forumId = 0)
+		{
+			var forum = CacheManager.GetForum(forumId);
+			if(forum == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AccessForum))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			var userCanAddStickyThread = LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread);
+			if(!(userCanAddStickyThread || LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread)))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			var newThreadData = new NewThreadData()
+			{
+				CurrentUserID = LoggedInUserAdapter.GetUserID(),
+				ForumID = forumId,
+				ForumName = forum.ForumName,
+				SectionName = CacheManager.GetSectionName(forum.SectionID),
+				ThreadSubject = string.Empty,
+				MessageText = string.Empty,
+				IsSticky = false,
+				UserCanAddStickyThread = userCanAddStickyThread,
+				SubscribeToThread =  false,
+				NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
+			};
+			return View(newThreadData);
+		}
+
 
 		/// <summary>
 		/// Performs the basic security check for the logged in user if that user has any access rights to this thread at all. It doesn't check specific thread actions. 

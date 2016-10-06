@@ -5,10 +5,6 @@
     ViewBag.Title = string.Format("HnD | Edit message in thread {0}", Model.ThreadSubject);
 }
 
-@section Stylesheets {
-    @Html.Partial("MarkdownEditor_CSS")
-}
-
 <a id="top"></a>
 <div class="container">
     <div class="row">
@@ -37,14 +33,15 @@
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.Partial("MarkdownEditor", Model)
                     <div class="mt20">
-                        <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default"/>&nbsp;&nbsp;&nbsp;
+                        <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default" />&nbsp;&nbsp;&nbsp;
                         <input type="submit" name="submitButton" value="Cancel" class="btn btn-default" />
-                    </div>
-                }
+                    </div>}
             </div>
         </div>
     </div>
 </section>
+
+
 
 @section Scripts {
     @Html.Partial("MarkdownEditor_JS")

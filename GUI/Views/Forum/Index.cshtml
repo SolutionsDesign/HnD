@@ -61,7 +61,7 @@
 					</ul>
 					@if(Model.UserCanCreateThreads)
 					{
-						<a href="#" class="fs-tooltip" title="New thread"><i class="fa fa-plus"></i></a>
+						<a href="~/Thread/Add/@Model.ForumID" class="fs-tooltip" title="New thread"><i class="fa fa-plus"></i></a>
 					}
 					&nbsp;
 				</div>
@@ -123,7 +123,7 @@
 						<div class="col-sm-1 notonmobile">@threadRow.NumberOfMessages</div>
 						<div class="col-sm-1 notonmobile">@threadRow.NumberOfViews</div>
 						<div class="col-sm-2 col-xs-4 text-nowrap-responsive">
-							<a href="~/Message/@threadRow.ThreadID/@threadRow.MessageIDLastPost">@lastPostingDateAsString</a>
+							<a href="~/Message/Goto/@threadRow.MessageIDLastPost">@lastPostingDateAsString</a>
 							<span class="list-row-description notonmobile"><br />By: <a href="~/User/@threadRow.UserIDLastPost">@threadRow.NickNameLastPost</a></span>
 						</div>
 					</div>

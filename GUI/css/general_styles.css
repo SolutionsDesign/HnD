@@ -105,7 +105,7 @@ input[type=search]
 }
 
 input[type=checkbox] {
-	margin-top: 7px;	/* to align the label with the checkbox. Hurray for HTML! such an advanced system... */
+	margin-top: 6px;	/* to align the label with the checkbox. Hurray for HTML! such an advanced system... */
 }
 
 label {
@@ -148,9 +148,6 @@ table {
 textarea.form-control{
 	font-size: 16px;
 	border-radius: 0;
-	white-space: pre;
-	overflow-wrap: normal;
-	overflow-x: scroll;
 }
 /* #endregion */
 
@@ -651,25 +648,10 @@ textarea.form-control{
 		border-radius:0;
 	}
 
+	.checkbox-inline {
+		margin-top: 5px;
+	}
 	.clear { clear: both; }
-
-	.cm-comment {
-		background: inherit !important;
-		border-radius: 0 !important;
-		font-family: Consolas, "Andale Mono WT","Andale Mono","Lucida Sans Typewriter","DejaVu Sans Mono","Bitstream Vera Sans Mono","Liberation Mono","Nimbus Mono L",Monaco,"Courier New",Courier,monospace;
-		font-size: 14px;
-		line-height: 15px;
-	}
-
-	.CodeMirror
-	{
-		max-height: 500px;
-		border-bottom-left-radius: 0;
-		border-bottom-right-radius: 0;
-	}
-	.CodeMirror-scroll {
-		max-height: 460px;
-	}
 
 	.collapsing {
 		-webkit-transition: none;

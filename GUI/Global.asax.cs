@@ -121,5 +121,27 @@ namespace SD.HnD.Gui
 				SecurityManager.AuditLogin(LoggedInUserAdapter.GetUserID());
 			}
 		}
+
+#if DEBUG
+		/////////////////////////////////////////////
+		/// For debugging routes
+		/////////////////////////////////////////////
+		public override void Init()
+		{
+			base.Init();
+			this.AcquireRequestState += showRouteValues;
+		}
+
+		protected void showRouteValues(object sender, EventArgs e)
+		{
+			var context = HttpContext.Current;
+			if(context == null)
+				return;
+			// set breakpoint on line below to examine routeData to debug a routing issue.
+			var routeData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(context));
+		}
+		/////////////////////////////////////////////
+		/////////////////////////////////////////////
+#endif
 	}
 }

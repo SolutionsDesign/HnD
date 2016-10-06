@@ -1,11 +1,36 @@
 ﻿@model SD.HnD.Gui.Models.MessageData
+<div class="btn-toolbar" role="toolbar" aria-label="CX">
+    <div class="btn-group" role="group" aria-label="A">
+        <button type="button" class="btn btn-link"onclick="InsertTagAroundSelection('**','**');">&nbsp;<i class="fa fa-bold" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link"onclick="InsertTagAroundSelection('*','*');">&nbsp;<i class="fa fa-italic" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link"onclick="InsertTagAroundSelection('~~','~~');">&nbsp;<i class="fa fa-strikethrough" aria-hidden="true"></i>&nbsp;</button>
+        <div style="border-right: 1px solid #C0C0C0; margin-left: 20px; float: left; height: 34px"></div>
+    </div>
+    <div class="btn-group" role="group" aria-label="B">
+        <button type="button" class="btn btn-link" value="Code" onclick="InsertTagAroundSelection('`', '`');">&nbsp;<i class="fa fa-code" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link" value="C# block" onclick="InsertTagAroundSelection('```cs\n', '\n```');">C# block</button>
+        <div style="border-right: 1px solid #C0C0C0; margin-left: 20px; float: left; height: 34px"></div>
+    </div>
+    <div class="btn-group" role="group" aria-label="C">
+        <button type="button" class="btn btn-link" value="Quote" onclick="InsertTagAroundSelection('@("@")quote\n','\n@("@")end');">&nbsp;<i class="fa fa-quote-left" aria-hidden="true"></i>&nbsp;</button>
+        <div style="border-right: 1px solid #C0C0C0; margin-left: 20px; float: left; height: 34px"></div>
+    </div>
+    <a href="#" onclick="InsertTagAroundSelection('**','**');">&nbsp;<i class="fa fa-bold" aria-hidden="true"></i>&nbsp;</a>
+    <a href="#" onclick="InsertTagAroundSelection('*','*');">&nbsp;<i class="fa fa-italic" aria-hidden="true"></i>&nbsp;</a>
+    <div style="border-right: 1px solid #C0C0C0; margin-left: 20px; float: left; height: 34px"></div>
+    <a href="#" onclick="InsertTagAroundSelection('~~','~~');">&nbsp;<i class="fa fa-strikethrough" aria-hidden="true"></i>&nbsp;</a>
+
+</div>
 <div class="form-group">
-    @Html.TextAreaFor(m => m.MessageText, 20, 110, new
-                   {
-                       @placeholder = "",
-                       @autofocus = "",
-                       @class = "form-control"
-                   })
-    @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "text-danger" })
+    @Html.TextAreaFor(m => m.MessageText, 20, 80, new
+                                                  {
+                                                      @placeholder = "Please type your message here.",
+                                                      @autofocus = "",
+                                                      @class = "form-control",
+                                                      @id="MessageEditor"
+                                                  })
+    @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "bg-danger" })
+</div>
+<div class="mt20">
 </div>
 
