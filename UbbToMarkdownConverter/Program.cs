@@ -32,16 +32,51 @@ namespace UbbToMarkdownConverter
 			try
 			{
 				LoadXsltTemplates();
-				//PerformTestConversion();
-				ConvertThreadMemos();
-				ConvertUsers();
-				ConvertMessages();
+				ConvertForumWelcomeTexts();
+				//ConvertThreadMemos();
+				//ConvertUsers();
+				//ConvertMessages();
 			}
 			catch(Exception ex)
 			{
 				DisplayException(ex);
 			}
 		}
+
+		private static void ConvertForumWelcomeTexts()
+		{
+			Console.WriteLine("Converting forum welcome texts. Republishing header texts as well.");
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var forums = adapter.FetchQuery(qf.Forum);
+				foreach(ForumEntity f in forums)
+				{
+					string parserLog;
+					string messageAsXml;
+					bool errorsOccurred;
+					string convertedText = TextParser.TransformUBBMessageStringToHTML(f.NewThreadWelcomeText, _parserData, out parserLog, out errorsOccurred, out messageAsXml);
+					if(errorsOccurred)
+					{
+						Console.WriteLine("\nERRORS: {0}", parserLog);
+						Console.WriteLine("ForumID: {0}\nForum welcome text:\n{1}--------------\n", f.ForumID, f.NewThreadWelcomeText);
+						f.NewThreadWelcomeText = string.Empty;
+						f.NewThreadWelcomeTextAsHTML = string.Empty;
+					}
+					else
+					{
+						// html decode, so any &lt; etc. are converted back to the regular characters. 
+						f.NewThreadWelcomeText = HttpUtility.HtmlDecode(convertedText);
+						f.NewThreadWelcomeTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(f.NewThreadWelcomeText);
+					}
+				}
+				Console.Write("\tPersisting forums...");
+				adapter.SaveEntityCollection(forums);
+				Console.WriteLine("DONE!");
+			}
+			Console.WriteLine("DONE");
+		}
+
 
 		private static void ConvertThreadMemos()
 		{

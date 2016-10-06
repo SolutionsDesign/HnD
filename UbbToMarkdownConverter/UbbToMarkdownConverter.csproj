@@ -35,9 +35,29 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MarkdownDeep, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\MarkdownParser\MarkdownDeep\bin\Debug\MarkdownDeep.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.HnD.BL, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BL\bin\Debug\SD.HnD.BL.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.HnD.DALAdapter, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BL\bin\Debug\SD.HnD.DALAdapter.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.HnD.DALAdapterDBSpecific, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BL\bin\Debug\SD.HnD.DALAdapterDBSpecific.dll</HintPath>
+    </Reference>
     <Reference Include="SD.HnD.UBBParser, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ParserAssemblies\SD.HnD.UBBParser.dll</HintPath>
+    </Reference>
+    <Reference Include="SD.HnD.Utility, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BL\bin\Debug\SD.HnD.Utility.dll</HintPath>
     </Reference>
     <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.0.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
       <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.0.5\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
@@ -72,24 +92,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextParser.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BL\SD.HnD.BL.csproj">
-      <Project>{dcf9e35b-d377-4b8c-a0bb-d31cd6a7ec1a}</Project>
-      <Name>SD.HnD.BL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapter.csproj">
-      <Project>{2b4058f7-26d3-4bda-b5ff-be048fdce94c}</Project>
-      <Name>SD.HnD.DALAdapter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapterDBSpecific.csproj">
-      <Project>{ce055bc5-bfd4-4b66-8178-fbfb01492105}</Project>
-      <Name>SD.HnD.DALAdapterDBSpecific</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj">
-      <Project>{aaeb0829-9929-4706-b7fb-f4e8bfcc32c2}</Project>
-      <Name>SD.HnD.Utility</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
