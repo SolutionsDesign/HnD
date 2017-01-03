@@ -194,8 +194,10 @@ namespace SD.HnD.Utility
 		/// Transforms the markdown specified into HTML using the markdowndeep parser (which has been adjusted for HnD).
 		/// </summary>
 		/// <param name="messageText">The message text.</param>
+		/// <param name="emojiFilenamesPerName">the emojiname to filename mappings</param>
+		/// <param name="smileyMappings">The shortcut to emoji mappings for the old smileys</param>
 		/// <returns></returns>
-		public static string TransformMarkdownToHtml(string messageText)
+		public static string TransformMarkdownToHtml(string messageText, Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings)
 		{
 			if(String.IsNullOrWhiteSpace(messageText))
 			{
@@ -208,7 +210,9 @@ namespace SD.HnD.Utility
 						 ExtraMode = true,
 						 GitHubCodeBlocks = true,
 						 MarkdownInHtml = false,
-						 AutoHeadingIDs = false
+						 AutoHeadingIDs = false,
+						 EmojiFilePerName = emojiFilenamesPerName,
+						 EmojiPerSmileyShortcut = smileyMappings
 					 };
 			return md.Transform(messageText);
 		}

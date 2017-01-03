@@ -75,19 +75,6 @@ code, pre.nocode {
 	border: solid 1px @color-light-grey;
 }
 
-.threadtools > a.dimmed,
-.threadtools > i.dimmed {
-	color: @forecolor-dark-background-min-60;
-}
-
-.threadtools > a.dimmed:hover {
-	color : @color-plus60;
-}
-
-.threadtools > a.active {
-	color : @forecolor-dark-background;
-}
-
 body {
 	background-color: @color-light-grey;
 }
@@ -132,6 +119,10 @@ mark {
 
 .br-bottom-center.large:after {
 	border-top: 5px solid @color;
+}
+
+.editor-toolbar-divider {
+    border-right-color: @color-grey-plus10;
 }
 
 .footer-links > li > a:hover,
@@ -179,6 +170,20 @@ mark {
 
 .fs-headingrow {
 	background-color: @color-grey-plus20;
+}
+
+
+.threadtools > a.dimmed,
+.threadtools > i.dimmed {
+	color: @forecolor-dark-background-min-60;
+}
+
+.threadtools > a.dimmed:hover {
+	color : @color-plus60;
+}
+
+.threadtools > a.active {
+	color : @forecolor-dark-background;
 }
 
 /* color of the icon of an element which has new posts */

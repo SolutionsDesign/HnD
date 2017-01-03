@@ -1267,10 +1267,7 @@ namespace MarkdownDeep
 		private bool HandleSDExtension(Block b)
 		{
 			var initialStart = this.Position;
-			if(DoesMatchI("@fa-"))
-			{
-				return HandleFontAwesomeExtension(b);
-			}
+			// @fa- is done in the span formatter as it can also appear on another location than at the start of a line.
 			// first match @tabs, and then @tab, as both are handled by this processor.
 			if(DoesMatchI("@tabs"))
 			{
@@ -1578,27 +1575,6 @@ namespace MarkdownDeep
 			// scan the content, as it can contain markdown statements.
 			var contentProcessor = new BlockProcessor(m_markdown, m_markdown.MarkdownInHtml);
 			b.Children = contentProcessor.ScanLines(Input, startContent, endContent - startContent);
-			return true;
-		}
-
-
-		/// <summary>
-		/// Handles the font awesome extension, which is available in DocNet mode. FontAwesome extension uses @fa-iconname, where iconname is the name of the fontawesome icon.
-		/// Called when '@fa-' has been seen. Current position is on 'f' of 'fa-'.
-		/// </summary>
-		/// <param name="b">The b.</param>
-		/// <returns></returns>
-		private bool HandleFontAwesomeExtension(Block b)
-		{
-			string iconName = string.Empty;
-			int newPosition = this.Position;
-			if(!Utils.SkipFontAwesome(this.Input, this.Position, out newPosition, out iconName))
-			{
-				return false;
-			}
-			this.Position = newPosition;
-			b.BlockType = BlockType.font_awesome;
-			b.Data = iconName;
 			return true;
 		}
 

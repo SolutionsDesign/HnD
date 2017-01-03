@@ -22,6 +22,7 @@ using System.Data;
 using System.Configuration;
 using System.Web;
 using SD.HnD.BL;
+using System.Linq;
 using SD.HnD.Utility;
 using System.Collections.Specialized;
 using System.Xml.Xsl;
@@ -213,7 +214,19 @@ namespace SD.HnD.Gui
 	    }
 
 
-	    /// <summary>
+	    public static Dictionary<string, string> GetEmojiFilenamesPerName()
+	    {
+		    return HttpContext.Current.Application["emojiFilenamesPerName"] as Dictionary<string, string>;
+	    }
+
+
+		public static Dictionary<string, string> GetSmileyMappings()
+		{
+			return HttpContext.Current.Application["smileyMappings"] as Dictionary<string, string>;
+		}
+
+
+		/// <summary>
 		/// sets the flag for the cached RSS feed for the given forum to false, so the cache will be invalidated for that forum rss feed
 		/// </summary>
 		/// <param name="forumID">ID of forum which rss feed to invalidate</param>
@@ -301,6 +314,12 @@ namespace SD.HnD.Gui
         {
             HttpContext currentHttpContext = HttpContext.Current;
             NameValueCollection appSettingsCollection = (NameValueCollection)ConfigurationManager.GetSection("appSettings");
+	        var smileyMappingsNVCollection = (NameValueCollection)ConfigurationManager.GetSection("smileyMappings");
+	        var smileyMappings = new Dictionary<string, string>();
+	        foreach(var key in smileyMappingsNVCollection.AllKeys)
+	        {
+		        smileyMappings[key] = smileyMappingsNVCollection[key] ?? string.Empty;
+	        }
 
             // read data from web.config
             string defaultFromEmailAddress = appSettingsCollection["DefaultFromEmailAddress"];
@@ -317,8 +336,10 @@ namespace SD.HnD.Gui
             var noiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(datafilesPath);
             string registrationReplyMailTemplate = File.ReadAllText(Path.Combine(datafilesPath, "RegistrationReplyMail.template"));
             string threadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(datafilesPath, "ThreadUpdatedNotification.template"));
-			// add other email templates here. 
 
+	        var emojiUrlPath = appSettingsCollection["EmojiFilesPath"];
+	        var emojiFilesPath = currentHttpContext.Server.MapPath(emojiUrlPath);
+	        var emojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
 			DataView bannedNicknames = UserGuiHelper.GetAllBannedUserNicknamesAsDataView();
 			var usersToLogoutByForce = new HashSet<string>();
 			foreach(DataRowView row in bannedNicknames)
@@ -335,6 +356,8 @@ namespace SD.HnD.Gui
                 applicationState.Add("siteName", siteName);
                 applicationState.Add("virtualRoot", virtualRoot);
                 applicationState.Add("datafilesMapPath", datafilesPath);
+	            applicationState.Add("emojiFilenamesPerName", emojiFilenamesPerName);		// Dictionary with per name(key) the filename including url path of the image.
+	            applicationState.Add("smileyMappings", smileyMappings);						// Dictionary with smiley shortcut -> emoji mappings.
 				applicationState.Add("emailPasswordSubject", emailPasswordSubject);
 				applicationState.Add("emailThreadNotificationSubject", emailThreadNotificationSubject);
 
@@ -351,5 +374,25 @@ namespace SD.HnD.Gui
                 applicationState.UnLock();
             }
         }
-    }
+
+		
+		/// <summary>
+		/// Loads all the filenames of png/jpg/gif files in the path specified.
+		/// </summary>
+		/// <param name="emojiFilesPath"></param>
+		/// <returns>dictionary with key the filename without path/extension, and as value the filename with url path and extension</returns>
+		private static Dictionary<string, string> LoadEmojiFilenames(string emojiFilesPath, string emojiUrlPath)
+		{
+			if(string.IsNullOrWhiteSpace(emojiFilesPath))
+			{
+				return new Dictionary<string, string>();
+			}
+			var emojiUrlPathToUse = (emojiUrlPath ?? string.Empty).TrimEnd('\\', '/');
+			return Directory
+				.EnumerateFiles(emojiFilesPath, "*.png")
+				.Union(Directory.EnumerateFiles(emojiFilesPath, "*.jpg"))
+				.Union(Directory.EnumerateFiles(emojiFilesPath, "*.gif"))
+				.ToDictionary(f=>Path.GetFileNameWithoutExtension(f), f=>emojiUrlPathToUse + '/' + Path.GetFileName(f));
+		}
+	}
 }

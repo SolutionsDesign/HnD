@@ -1045,6 +1045,17 @@ namespace MarkdownDeep
 		{
 			get { return _sdTokenStartEndIndices; }
 		}
+
+
+		/// <summary>
+		/// Dictionary which stores per name the filename of the emoji image, including the EmojiUrlPath. 
+		/// </summary>
+		public Dictionary<string, string> EmojiFilePerName { get; set; }
+
+		/// <summary>
+		/// Dictionary which stores per key (shortcut) the emoji name (value, refers to name in EmojiFilePerName keys) it maps to. 
+		/// </summary>
+		public Dictionary<string, string> EmojiPerSmileyShortcut { get; set; }
 		#endregion
 	}
 

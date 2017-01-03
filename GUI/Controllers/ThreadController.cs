@@ -290,7 +290,7 @@ namespace SD.HnD.Gui.Controllers
 			if(container.UserMayEditMemo && (container.Thread.Memo.Length > 0))
 			{
 				// convert memo contents to HTML so it's displayed above the thread. 
-				container.MemoAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(container.Thread.Memo);
+				container.MemoAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(container.Thread.Memo, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
 			}
 		}
 

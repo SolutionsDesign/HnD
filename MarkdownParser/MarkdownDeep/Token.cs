@@ -58,6 +58,7 @@ namespace MarkdownDeep
 
 		// HnD Extensions
 		strikethrough_span, 
+		emoji,
 	}
 
 	// Token

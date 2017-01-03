@@ -275,6 +275,28 @@ namespace MarkdownDeep
 						m_Markdown.HtmlEncode(sb, str, t.startOffset, t.length);
 						sb.Append("</s>");
 						break;
+					case TokenType.emoji:
+						var emojiFilename = string.Empty;
+						var emojiName = t.data as string ?? string.Empty;
+						if(m_Markdown.EmojiFilePerName != null)
+						{
+							m_Markdown.EmojiFilePerName.TryGetValue(emojiName, out emojiFilename);
+						}
+						if(string.IsNullOrWhiteSpace(emojiFilename))
+						{
+							sb.Append(":");
+							m_Markdown.HtmlEncode(sb, emojiName, 0, emojiName.Length);
+							sb.Append(":");
+						}
+						else
+						{
+							sb.Append("<img src=\"");
+							sb.Append(emojiFilename);
+							sb.Append("\" class=\"emoji\" alt=\"");
+							sb.Append(emojiName);
+							sb.Append("\"/>");
+						}
+						break;
 				}
 
 				FreeToken(t);
@@ -505,6 +527,27 @@ namespace MarkdownDeep
 							}
 						}
 						break;
+					case ':':
+						if(m_Markdown.HnDMode && m_Markdown.EmojiFilePerName != null)
+						{
+							// scan till next ':' and stop if EOL or whitespace is seen. 
+							string emojiName = string.Empty;
+							int newPosition = 0;
+							if(Utils.ParseEmoji(this.Input, this.Position, out newPosition, out emojiName))
+							{
+								token = CreateToken(TokenType.emoji, emojiName);
+								this.Position = newPosition;
+							}
+							else
+							{
+								// try smiley mapping
+								token = ParseSmileyMapping(positionSave);
+							}
+						}
+						break;
+					default:
+						token = ParseSmileyMapping(positionSave);
+						break;
 				}
 
 				// Look for abbreviations.
@@ -557,6 +600,36 @@ namespace MarkdownDeep
 			{
 				ResolveEmphasisMarks(m_Tokens, emphasis_marks);
 			}
+		}
+
+
+		private Token ParseSmileyMapping(int positionSave)
+		{
+			Token toReturn = null;
+			if(m_Markdown.HnDMode && m_Markdown.EmojiPerSmileyShortcut != null)
+			{
+				// scan for smiley shortcut. 
+				foreach(var kvp in m_Markdown.EmojiPerSmileyShortcut.Where(e=>!string.IsNullOrEmpty(e.Key) && e.Key[0] == this.Current))
+				{
+					// scan to see if key matches at the current location. If so, emit an emoji token with the value of the kvp.
+					if(this.DoesMatch(kvp.Key))
+					{
+						// check if it is followed by whitespace, EOL/EOF or '.,!?'. 
+						this.SkipForward(kvp.Key.Length);
+						if(this.Eof || char.IsWhiteSpace(this.Current) || this.DoesMatchAny(new char[] {'.', ',', '!', '?'}))
+						{
+							// valid. Data is the emoji name, which is in the kvp.value property
+							toReturn = CreateToken(TokenType.emoji, kvp.Value);
+						}
+						else
+						{
+							// not a valid shortcut, roll back
+							this.Position = positionSave;
+						}
+					}
+				}
+			}
+			return toReturn;
 		}
 
 

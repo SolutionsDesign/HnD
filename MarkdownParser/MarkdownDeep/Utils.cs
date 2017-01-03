@@ -88,6 +88,41 @@ namespace MarkdownDeep
 			return true;
 		}
 		
+
+		// Scan a string for a valid emoji name. Emoji names can start with and contain anything, but can't contain whitespace and start and end with a ':'
+		// Updates `pos` to character after the identifier if matched. String passed in starts with ':'.
+		public static bool ParseEmoji(string str, int pos, out int newPos, out string emojiName)
+		{
+			newPos = 0;
+			emojiName = string.Empty;
+			if(pos >= str.Length)
+				return false;
+
+			if(str[pos] != ':')
+			{
+				return false;
+			}
+
+			// Find the end
+			pos++;
+			int startpos = pos;
+			while(pos < str.Length && !char.IsWhiteSpace(str[pos]) && (str[pos] != ':'))
+			{
+				pos++;
+			}
+			// check if current pos is indeed ':'. If not, no emoji for you
+			if(str[pos] == ':')
+			{
+				// emoji found
+				emojiName = str.Substring(startpos, pos - startpos);
+				newPos = pos + 1; // the ':' has to be skipped. 
+				return true;
+			}
+			// not found
+			return false;
+		}
+
+
 		// Skip over anything that looks like a valid html entity (eg: &amp, &#123, &#nnn) etc...
 		// Updates `pos` to character after the entity if matched
 		public static bool SkipHtmlEntity(string str, ref int pos, ref string entity)

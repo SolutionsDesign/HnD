@@ -170,7 +170,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				// allowed, proceed
 				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText);
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
 #warning IMPLEMENT SUBSCRIBING AND EMAILSENDING
 #warning IMPLEMENT ATTACHMENTS
 				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, LoggedInUserAdapter.GetUserID(), messageData.MessageText, messageAsHtml, Request.UserHostAddress, 
@@ -205,7 +205,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				// allowed, proceed
 				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText);
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
 				var result = MessageManager.UpdateEditedMessage(LoggedInUserAdapter.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml, Request.UserHostAddress, string.Empty);
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
 				{

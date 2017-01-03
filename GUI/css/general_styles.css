@@ -93,6 +93,13 @@ h6 {
 	line-height: 18px;
 }
 
+img.emoji {
+	margin-left: .1em;
+    margin-right: .1em;
+    width: 20px;
+    height: 20px;
+}
+
 input[type=search],
 input[type=text],
 input[type=password],
@@ -691,6 +698,12 @@ textarea.form-control{
 	.editor-toolbar {
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
+	}
+
+	.editor-toolbar-divider {
+		border-right: 1px solid; 
+		float: left; 
+		height: 34px
 	}
 
 	.empty-space-unanswered {

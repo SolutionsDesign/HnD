@@ -140,6 +140,26 @@ namespace MarkdownDeepTests
 				md.GitHubCodeBlocks = true;
 				md.MarkdownInHtml = false;
 				md.AutoHeadingIDs = false;
+				md.EmojiFilePerName = new Dictionary<string, string>()
+									  {
+										  {"simple_smile", "simple_smile.png"}, {"rage", "rage.png"}, {"confused", "confused.png"},
+										  {"sunglasses", "sunglasses.png"}, {"disappointed", "disappointed.png"}, {"flushed", "flushed.png"}, {"smile", "smile.png"}, {"cry", "cry.png"},
+										  {"stuck_out_tongue_winking_eye", "stuck_out_tongue_winking_eye.png"}, {"wink", "wink.png"}
+									  };
+				md.EmojiPerSmileyShortcut = new Dictionary<string, string>()
+											{
+												{":)", "simple_smile"},
+												{":(", "rage"},
+												{":?", "confused"},
+												{"8)", "sunglasses"},
+												{":/", "disappointed"},
+												{":!", "flushed"},
+												{":D", "smile"},
+												{";(", "cry"},
+												{":o", "frowning"},
+												{":P", "stuck_out_tongue_winking_eye"},
+												{";)", "wink"}
+											};
 			}
 			if(md.DocNetMode)
 			{

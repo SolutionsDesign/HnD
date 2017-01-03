@@ -22,16 +22,6 @@ pre.nocode {
   background: #fff;
   border: solid 1px #f1f1f1;
 }
-.threadtools > a.dimmed,
-.threadtools > i.dimmed {
-  color: rgba(255, 255, 255, 0.4);
-}
-.threadtools > a.dimmed:hover {
-  color: #c6effd;
-}
-.threadtools > a.active {
-  color: #fff;
-}
 body {
   background-color: #f1f1f1;
 }
@@ -65,6 +55,9 @@ mark {
 }
 .br-bottom-center.large:after {
   border-top: 5px solid #066A8B;
+}
+.editor-toolbar-divider {
+  border-right-color: #b9b9b9;
 }
 .footer-links > li > a:hover,
 .footer-links > li > a:focus,
@@ -102,6 +95,16 @@ mark {
 }
 .fs-headingrow {
   background-color: #d2d2d2;
+}
+.threadtools > a.dimmed,
+.threadtools > i.dimmed {
+  color: rgba(255, 255, 255, 0.4);
+}
+.threadtools > a.dimmed:hover {
+  color: #c6effd;
+}
+.threadtools > a.active {
+  color: #fff;
 }
 /* color of the icon of an element which has new posts */
 .icon-newpost {

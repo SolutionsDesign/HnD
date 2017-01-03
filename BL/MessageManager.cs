@@ -18,6 +18,7 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using SD.HnD.Utility;
 
@@ -144,10 +145,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="amountToParse">Amount to parse.</param>
 		/// <param name="startDate">Start date.</param>
+		/// <param name="emojiFilenamesPerName">the emojiname to filename mappings</param>
+		/// <param name="smileyMappings">The shortcut to emoji mappings for the old smileys</param>
 		/// <returns>
 		/// the amount of messages re-parsed
 		/// </returns>
-		public static int ReParseMessages(int amountToParse, DateTime startDate)
+		public static int ReParseMessages(int amountToParse, DateTime startDate, Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings)
 		{
 			// index is blocks of 100 messages.
 			var qf = new QueryFactory();
@@ -182,7 +185,7 @@ namespace SD.HnD.BL
 
 							// use the in-memory message entity to create an update query without fetching the entity first.
 							directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row["MessageID"]);
-							directUpdater.MessageTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml((string)row["MessageText"]);
+							directUpdater.MessageTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml((string)row["MessageText"], emojiFilenamesPerName, smileyMappings);
 							directUpdater.Fields.IsDirty = true;
 							adapter.SaveEntity(directUpdater);
 						}
