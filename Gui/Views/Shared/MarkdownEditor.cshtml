@@ -1,29 +1,28 @@
 ﻿@model SD.HnD.Gui.Models.MessageData
 <div class="btn-toolbar" role="toolbar" aria-label="CX">
     <div class="btn-group" role="group" aria-label="A">
-        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('**','**');">&nbsp;<i class="fa fa-bold" aria-hidden="true"></i>&nbsp;</button>
-        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('*','*');">&nbsp;<i class="fa fa-italic" aria-hidden="true"></i>&nbsp;</button>
-        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('~~','~~');">&nbsp;<i class="fa fa-strikethrough" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('**','**');" tabindex="-1">&nbsp;<i class="fa fa-bold" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('*','*');" tabindex="-1">&nbsp;<i class="fa fa-italic" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link" onclick="InsertTagAroundSelection('~~','~~');" tabindex="-1">&nbsp;<i class="fa fa-strikethrough" aria-hidden="true"></i>&nbsp;</button>
         <div class="editor-toolbar-divider">&nbsp;</div>
     </div>
     <div class="btn-group" role="group" aria-label="B">
-        <button type="button" class="btn btn-link" value="Code" onclick="InsertTagAroundSelection('`', '`');">&nbsp;<i class="fa fa-code" aria-hidden="true"></i>&nbsp;</button>
-        <button type="button" class="btn btn-link" value="C# block" onclick="InsertTagAroundSelection('```cs\n', '\n```');">C# block</button>
+        <button type="button" class="btn btn-link" value="Code" onclick="InsertTagAroundSelection('`', '`');" tabindex="-1">&nbsp;<i class="fa fa-code" aria-hidden="true"></i>&nbsp;</button>
+        <button type="button" class="btn btn-link" value="C# block" onclick="InsertTagAroundSelection('```cs\n', '\n```');" tabindex="-1">C# block</button>
         <div class="editor-toolbar-divider">&nbsp;</div>
     </div>
     <div class="btn-group" role="group" aria-label="C">
-        <button type="button" class="btn btn-link" value="Quote" onclick="InsertTagAroundSelection('@("@")quote\n','\n@("@")end');"><i class="fa fa-quote-left" aria-hidden="true"></i></button>
+        <button type="button" class="btn btn-link" value="Quote" onclick="InsertTagAroundSelection('@("@")quote\n','\n@("@")end');" tabindex="-1"><i class="fa fa-quote-left" aria-hidden="true"></i></button>
         <div class="editor-toolbar-divider"></div>
-        <a  class="btn btn-link" href="#">Markdown help</a>
+        <a  class="btn btn-link" href="#" tabindex="-1">Markdown help</a>
     </div>
 </div>
 <div class="form-group">
     @Html.TextAreaFor(m => m.MessageText, 20, 80, new
                                                   {
-                                                      @placeholder = "Please type your message here.",
-                                                      @autofocus = "",
+                                                      placeholder = "Please type your message here.",
                                                       @class = "form-control",
-                                                      @id="MessageEditor"
+                                                      id="MessageEditor"
                                                   })
     @Html.ValidationMessageFor(m => m.MessageText, "", new { @class = "bg-danger" })
 </div>

@@ -229,17 +229,10 @@ namespace SD.HnD.Gui.Controllers
 		[HttpGet]
 		public ActionResult Add(int forumId = 0)
 		{
-			var forum = CacheManager.GetForum(forumId);
-			if(forum == null)
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			if(!LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AccessForum))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-			var userCanAddStickyThread = LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread);
-			if(!(userCanAddStickyThread || LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread)))
+			bool userMayAddStickThread = false;
+			ForumEntity forum;
+			var userMayAddThread = ThreadController.PerformAddThreadSecurityChecks(forumId, out forum, out userMayAddStickThread);
+			if(!userMayAddThread)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -252,11 +245,71 @@ namespace SD.HnD.Gui.Controllers
 				ThreadSubject = string.Empty,
 				MessageText = string.Empty,
 				IsSticky = false,
-				UserCanAddStickyThread = userCanAddStickyThread,
+				UserCanAddStickyThread = userMayAddStickThread,
 				SubscribeToThread =  false,
 				NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
 			};
 			return View(newThreadData);
+		}
+		
+
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		[ValidateInput(false)]
+		public ActionResult Add([Bind(Include = "MessageText, ThreadSubject, IsSticky")] NewThreadData newThreadData, string submitButton, int forumId = 0)
+		{
+			if(!ModelState.IsValid)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			bool userMayAddStickThread = false;
+			ForumEntity forum;
+			var userMayAddThread = ThreadController.PerformAddThreadSecurityChecks(forumId, out forum, out userMayAddStickThread);
+			if(!userMayAddThread)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			int newThreadId = 0;
+			if(submitButton == "Post")
+			{
+				// allowed, proceed
+				// parse message text to html
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
+#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING
+				newThreadId = ForumManager.CreateNewThreadInForum(forumId, LoggedInUserAdapter.GetUserID(), newThreadData.ThreadSubject, newThreadData.MessageText, messageAsHtml, 
+																  (userMayAddStickThread && newThreadData.IsSticky), Request.UserHostAddress, forum.DefaultSupportQueueID, 
+																  false, out newThreadId);
+				ApplicationAdapter.InvalidateCachedForumRSS(forumId);
+				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
+				{
+					SecurityManager.AuditNewThread(LoggedInUserAdapter.GetUserID(), newThreadId);
+				}
+				CacheManager.InvalidateCachedItem(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
+#warning IMPLEMENT ATTACHMENTS
+			}
+			return Redirect(this.Url.Action("Index", "Thread", new { id = newThreadId, pageNo = 1 }));
+		}
+
+
+		private static bool PerformAddThreadSecurityChecks(int forumId, out ForumEntity forum, out bool userMayAddStickThread)
+		{
+			userMayAddStickThread = false;
+			forum = CacheManager.GetForum(forumId);
+			if(forum == null)
+			{
+				return false;
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AccessForum))
+			{
+				return false;
+			}
+			userMayAddStickThread = LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread);
+			if(!(userMayAddStickThread || LoggedInUserAdapter.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread)))
+			{
+				return false;
+			}
+			return true;
 		}
 
 

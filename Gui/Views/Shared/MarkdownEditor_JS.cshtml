@@ -1,11 +1,23 @@
 ﻿<script language="javascript">
+    var tbxSubject = null;
     var tbxMessage = null;
-
+    if (!tbxSubject) {
+        tbxSubject = document.getElementById("SubjectEditor");
+    }
     if (!tbxMessage) {
         tbxMessage = document.getElementById("MessageEditor");
     }
-    if (tbxMessage) {
-        tbxMessage.focus();
+    if (tbxSubject) {
+        tbxSubject.focus();
+    }
+    else {
+        if (tbxMessage) {
+            tbxMessage.focus();
+        }
+    }
+    // cludgy re-test, as we always have to set IE specific caret cruft, whatever object is focused.
+    if(tbxMessage)
+    {
         if (typeof tbxMessage.createTextRange != 'undefined') {
             // IE
             tbxMessage.onkeyup = StoreCaretPosition;

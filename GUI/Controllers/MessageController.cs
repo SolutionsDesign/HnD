@@ -171,13 +171,13 @@ namespace SD.HnD.Gui.Controllers
 				// allowed, proceed
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
-#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING
+#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING. Pay close attention to security: perform security check for subscribing combined with data coming in. Don't trust user input.
 #warning IMPLEMENT ATTACHMENTS
 				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, LoggedInUserAdapter.GetUserID(), messageData.MessageText, messageAsHtml, Request.UserHostAddress, 
-																	false, string.Empty, null, false);
+																	  false, string.Empty, null, false);
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
 				{
-					SecurityManager.AuditAlteredMessage(LoggedInUserAdapter.GetUserID(), newMessageId);
+					SecurityManager.AuditNewMessage(LoggedInUserAdapter.GetUserID(), newMessageId);
 				}
 			}
 			return CalculateRedirectToMessage(thread.ThreadID, newMessageId);

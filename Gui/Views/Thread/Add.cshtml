@@ -33,7 +33,7 @@
             <div class="row">
                 <div class="col-sm-10">
                     <div class="form-group">
-                        @Html.TextBoxFor(m => m.ThreadSubject, new { @class = "form-control", @placeholder = " Subject", @autofocus = "" })
+                        @Html.TextBoxFor(m => m.ThreadSubject, new { id="SubjectEditor", @class = "form-control", placeholder = " Subject", autofocus = "autofocus" })
                         @Html.ValidationMessageFor(m => m.ThreadSubject, "", new { @class = "text-danger" })
                     </div>
                 </div>

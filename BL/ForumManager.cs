@@ -210,7 +210,7 @@ namespace SD.HnD.BL
 					messageID = newMessage.MessageID;
 					int threadID = newMessage.ThreadID;
 
-					// update thread statistics, this is the task for the message manager, and we pass the transaction object so the actions will run in
+					// update thread statistics, this is the task for the message manager, and we pass the adapter so the actions will run in
 					// the same transaction.
 					MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, DateTime.Now, false, subscribeToThread);
 
