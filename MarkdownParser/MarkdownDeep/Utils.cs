@@ -28,19 +28,21 @@ namespace MarkdownDeep
 		// Extension method. Get the last item in a list (or null if empty)
 		public static T Last<T>(this List<T> list) where T:class
 		{
-			if (list.Count > 0)
+			if(list.Count > 0)
+			{
 				return list[list.Count - 1];
-			else
-				return null;
+			}
+			return null;
 		}
 
 		// Extension method. Get the first item in a list (or null if empty)
 		public static T First<T>(this List<T> list) where T : class
 		{
-			if (list.Count > 0)
+			if(list.Count > 0)
+			{
 				return list[0];
-			else
-				return null;
+			}
+			return null;
 		}
 
 		// Extension method.  Use a list like a stack
@@ -52,14 +54,13 @@ namespace MarkdownDeep
 		// Extension method.  Remove last item from a list
 		public static T Pop<T>(this List<T> list) where T : class
 		{
-			if (list.Count == 0)
-				return null;
-			else
+			if(list.Count == 0)
 			{
-				T val = list[list.Count - 1];
-				list.RemoveAt(list.Count - 1);
-				return val;
+				return null;
 			}
+			T val = list[list.Count - 1];
+			list.RemoveAt(list.Count - 1);
+			return val;
 		}
 
 
@@ -68,8 +69,10 @@ namespace MarkdownDeep
 		// Updates `pos` to character after the identifier if matched
 		public static bool ParseIdentifier(string str, ref int pos, ref string identifer)
 		{
-			if (pos >= str.Length)
+			if(pos >= str.Length)
+			{
 				return false;
+			}
 
 			// Must start with a letter or underscore
 			if (!char.IsLetter(str[pos]) && str[pos] != '_')
@@ -80,9 +83,14 @@ namespace MarkdownDeep
 			// Find the end
 			int startpos = pos;
 			pos++;
-			while (pos < str.Length && (char.IsDigit(str[pos]) || char.IsLetter(str[pos]) || str[pos] == '_'))
+			while(pos < str.Length && (char.IsDigit(str[pos]) || char.IsLetter(str[pos]) || str[pos] == '_'))
+			{
 				pos++;
-
+			}
+			if(pos >= str.Length)
+			{
+				return false;
+			}
 			// Return it
 			identifer = str.Substring(startpos, pos - startpos);
 			return true;
@@ -96,8 +104,9 @@ namespace MarkdownDeep
 			newPos = 0;
 			emojiName = string.Empty;
 			if(pos >= str.Length)
+			{
 				return false;
-
+			}
 			if(str[pos] != ':')
 			{
 				return false;
@@ -109,6 +118,10 @@ namespace MarkdownDeep
 			while(pos < str.Length && !char.IsWhiteSpace(str[pos]) && (str[pos] != ':'))
 			{
 				pos++;
+			}
+			if(pos >= str.Length)
+			{
+				return false;
 			}
 			// check if current pos is indeed ':'. If not, no emoji for you
 			if(str[pos] == ':')
@@ -127,9 +140,10 @@ namespace MarkdownDeep
 		// Updates `pos` to character after the entity if matched
 		public static bool SkipHtmlEntity(string str, ref int pos, ref string entity)
 		{
-			if (str[pos] != '&')
+			if(str[pos] != '&')
+			{
 				return false;
-
+			}
 			int savepos = pos;
 			int len = str.Length;
 			int i = pos+1;
@@ -164,26 +178,35 @@ namespace MarkdownDeep
 
 				else if (bNumber)
 				{
-					if (!char.IsDigit(ch))
+					if(!char.IsDigit(ch))
+					{
 						break;
+					}
 				}
-				else if (!char.IsLetterOrDigit(ch))
+				else if(!char.IsLetterOrDigit(ch))
+				{
 					break;
-
+				}
 				i++;
 			}
 
 			// Quit if ran out of string
-			if (i == len)
+			if(i == len)
+			{
 				return false;
+			}
 
 			// Quit if nothing in the content
-			if (i == contentpos)
+			if(i == contentpos)
+			{
 				return false;
+			}
 
 			// Quit if didn't find a semicolon
-			if (str[i] != ';')
+			if(str[i] != ';')
+			{
 				return false;
+			}
 
 			// Looks good...
 			pos = i + 1;
@@ -230,9 +253,10 @@ namespace MarkdownDeep
 		// Like HtmlEncode, but don't escape &'s that look like html entities
 		public static void SmartHtmlEncodeAmpsAndAngles(StringBuilder dest, string str)
 		{
-			if (str == null)
+			if(str == null)
+			{
 				return;
-
+			}
 			for (int i=0; i<str.Length; i++)
 			{
 				switch (str[i])
@@ -305,8 +329,10 @@ namespace MarkdownDeep
 		{
 			foreach (var t in list)
 			{
-				if (string.Compare(t, str) == 0)
+				if(string.Compare(t, str) == 0)
+				{
 					return true;
+				}
 			}
 			return false;
 		}
@@ -315,10 +341,7 @@ namespace MarkdownDeep
 		// Definitely don't allow "javascript:" or any of it's encodings.
 		public static bool IsSafeUrl(string url)
 		{
-			if (!url.StartsWith("http://") && !url.StartsWith("https://") && !url.StartsWith("ftp://"))
-				return false;
-
-			return true;
+			return url.StartsWith("http://") || url.StartsWith("https://") || url.StartsWith("ftp://");
 		}
 
 		// Check if a character is escapable in markdown
@@ -371,9 +394,10 @@ namespace MarkdownDeep
 		// Remove the markdown escapes from a string
 		public static string UnescapeString(string str, bool ExtraMode)
 		{
-			if (str == null || str.IndexOf('\\')==-1)
+			if(str == null || str.IndexOf('\\') == -1)
+			{
 				return str;
-
+			}
 			var b = new StringBuilder();
 			for (int i = 0; i < str.Length; i++)
 			{
@@ -397,9 +421,10 @@ namespace MarkdownDeep
 		static char[] lineends = new char[] { '\r', '\n' };
 		public static string NormalizeLineEnds(string str)
 		{
-			if (str.IndexOfAny(lineends) < 0)
+			if(str.IndexOfAny(lineends) < 0)
+			{
 				return str;
-
+			}
 			StringBuilder sb = new StringBuilder();
 			StringScanner sp = new StringScanner(str);
 			while (!sp.Eof)
@@ -434,14 +459,12 @@ namespace MarkdownDeep
 		public static bool IsEmailAddress(string str)
 		{
 			int posAt = str.IndexOf('@');
-			if (posAt < 0)
+			if(posAt < 0)
+			{
 				return false;
-
+			}
 			int posLastDot = str.LastIndexOf('.');
-			if (posLastDot < posAt)
-				return false;
-
-			return true;
+			return posLastDot >= posAt;
 		}
 
 		// Check if a string looks like a url
@@ -456,20 +479,25 @@ namespace MarkdownDeep
 		// Check if a string is a valid HTML ID identifier
 		internal static bool IsValidHtmlID(string str)
 		{
-			if (String.IsNullOrEmpty(str))
+			if(String.IsNullOrEmpty(str))
+			{
 				return false;
+			}
 
 			// Must start with a letter
-			if (!Char.IsLetter(str[0]))
+			if(!Char.IsLetter(str[0]))
+			{
 				return false;
+			}
 
 			// Check the rest
 			for (int i = 0; i < str.Length; i++)
 			{
 				char ch = str[i];
-				if (Char.IsLetterOrDigit(ch) || ch == '_' || ch == '-' || ch == ':' || ch == '.')
+				if(Char.IsLetterOrDigit(ch) || ch == '_' || ch == '-' || ch == ':' || ch == '.')
+				{
 					continue;
-
+				}
 				return false;
 			}
 
@@ -492,29 +520,38 @@ namespace MarkdownDeep
 			}
 
 			// Skip closing '{'
-			if (pos < start || str[pos] != '}')
+			if(pos < start || str[pos] != '}')
+			{
 				return null;
-
+			}
 			int endId = pos;
 			pos--;
 
 			// Find the opening '{'
-			while (pos >= start && str[pos] != '{')
+			while(pos >= start && str[pos] != '{')
+			{
 				pos--;
+			}
 
 			// Check for the #
-			if (pos < start || str[pos + 1] != '#')
+			if(pos < start || str[pos + 1] != '#')
+			{
 				return null;
+			}
 
 			// Extract and check the ID
 			int startId = pos + 2;
 			string strID = str.Substring(startId, endId - startId);
-			if (!IsValidHtmlID(strID))
+			if(!IsValidHtmlID(strID))
+			{
 				return null;
+			}
 
 			// Skip any preceeding whitespace
-			while (pos > start && Char.IsWhiteSpace(str[pos - 1]))
+			while(pos > start && Char.IsWhiteSpace(str[pos - 1]))
+			{
 				pos--;
+			}
 
 			// Done!
 			end = pos;
