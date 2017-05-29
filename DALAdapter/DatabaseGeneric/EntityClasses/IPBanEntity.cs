@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 5.0
+// Code is generated using LLBLGen Pro version: 5.2
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
@@ -10,9 +10,7 @@
 using System;
 using System.ComponentModel;
 using System.Collections.Generic;
-#if !CF
 using System.Runtime.Serialization;
-#endif
 using System.Xml.Serialization;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -172,7 +170,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			}
 			return toReturn;
 		}
-#if !CF
+
 		/// <summary>Checks if the relation mapped by the property with the name specified is a one way / single sided relation. If the passed in name is null, it/ will return true if the entity has any single-sided relation</summary>
 		/// <param name="propertyName">Name of the property which is mapped onto the relation to check, or null to check if the entity has any relation/ which is single sided</param>
 		/// <returns>true if the relation is single sided / one way (so the opposite relation isn't present), false otherwise</returns>
@@ -187,7 +185,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 					return base.CheckOneWayRelations(propertyName);
 			}
 		}
-#endif
+
 		/// <summary> Sets the internal parameter related to the fieldname passed to the instance relatedEntity. </summary>
 		/// <param name="relatedEntity">Instance to set as the related entity of type entityType</param>
 		/// <param name="fieldName">Name of field mapped onto the relation which resolves in the instance relatedEntity</param>
@@ -287,7 +285,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		{
 			return EntityFactoryCache2.GetEntityFactory(typeof(IPBanEntityFactory));
 		}
-#if !CF
+
 		/// <summary>Adds the member collections to the collections queue (base first)</summary>
 		/// <param name="collectionsQueue">The collections queue.</param>
 		protected override void AddToMemberEntityCollectionsQueue(Queue<IEntityCollection2> collectionsQueue) 
@@ -318,7 +316,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		{
 			base.CreateMemberEntityCollectionsQueue(collectionsQueue, requiredQueue);
 		}
-#endif
+
 		/// <summary>Gets all related data objects, stored by name. The name is the field name mapped onto the relation for that particular data element.</summary>
 		/// <returns>Dictionary with per name the related referenced data element, which can be an entity collection or an entity or null</returns>
 		protected override Dictionary<string, object> GetRelatedData()

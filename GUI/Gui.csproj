@@ -42,8 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.0.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.0.5\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
+    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.2.0\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.Algorithmia, Version=1.2.0.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
@@ -135,6 +135,7 @@
     <Compile Include="Models\NewThreadData.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\RssForumData.cs" />
+    <Compile Include="Models\SupportQueuesData.cs" />
     <Compile Include="Models\ThreadData.cs" />
     <Compile Include="Models\ThreadPropertiesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -1167,6 +1168,7 @@
     <Content Include="Views\Thread\Add.cshtml" />
     <None Include="Properties\PublishProfiles\Disk.pubxml" />
     <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
+    <Content Include="Views\SupportQueue\ListQueues.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

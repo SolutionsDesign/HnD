@@ -90,10 +90,10 @@
 						iconType = "fa-thumb-tack";
 						stickyClass = " stickyThread";
 					}
-					if(threadRow.DateLastPost.HasValue)
+					if(threadRow.ThreadLastPostingDate.HasValue)
 					{
-						lastPostingDateAsString = threadRow.DateLastPost.Value.ToString("dd-MMM-yyyy HH:mm");
-						if(threadRow.DateLastPost.Value > Model.UserLastVisitDate)
+						lastPostingDateAsString = threadRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+						if(threadRow.ThreadLastPostingDate.Value > Model.UserLastVisitDate)
 						{
 							iconClass = "icon-newpost";
 						}
@@ -114,7 +114,7 @@
 								</div>
 								<div class="column-fluent">
 									<a href="~/Thread/@threadRow.ThreadID/1">@threadRow.Subject</a>
-									<span class="list-row-description notonmobile"><br />Started by: <a href="~/User/@threadRow.UserIDThreadStarter">@threadRow.NickNameThreadStarter</a></span>
+									<span class="list-row-description notonmobile pt3">Started by: <a href="~/User/@threadRow.ThreadStartedByUserID">@threadRow.ThreadStartedByNickName</a></span>
 									@Html.Partial("ThreadPager", threadRow)
 								</div>
 								<div class="column-clear"></div>
@@ -124,7 +124,7 @@
 						<div class="col-sm-1 notonmobile">@threadRow.NumberOfViews</div>
 						<div class="col-sm-2 col-xs-4 text-nowrap-responsive">
 							<a href="~/Message/Goto/@threadRow.MessageIDLastPost">@lastPostingDateAsString</a>
-							<span class="list-row-description notonmobile"><br />By: <a href="~/User/@threadRow.UserIDLastPost">@threadRow.NickNameLastPost</a></span>
+							<span class="list-row-description notonmobile pt3">By: <a href="~/User/@threadRow.LastPostbyUserID">@threadRow.LastPostByNickName</a></span>
 						</div>
 					</div>
 				}

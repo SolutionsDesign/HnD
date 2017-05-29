@@ -97,8 +97,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.0.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.0.5\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
+    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.2.0\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.BCLExtensions, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
@@ -188,6 +188,7 @@
     </Compile>
     <Compile Include="TypedDataClasses\AggregatedForumRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedActiveThreadRow.cs" />
+    <Compile Include="TypedDataClasses\AggregatedSupportQueueContentsRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedThreadRow.cs" />
     <Compile Include="UserGuiHelper.cs">
       <SubType>Code</SubType>

@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 5.0
+// Code is generated using LLBLGen Pro version: 5.2
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
@@ -133,7 +133,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 				((DynamicQueryEngine)dqe).CompatibilityLevel = _compatibilityLevel.Value;
 			}
 		}
- 
+
 		private Nullable<SqlServerCompatibilityLevel> _compatibilityLevel = null;
 		
 		/// <summary>The per-instance compatibility level used by this DQE instance. Default is the one set globally, which is by default SqlServer2005 (for 2005+). 

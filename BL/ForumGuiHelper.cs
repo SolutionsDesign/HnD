@@ -76,7 +76,7 @@ namespace SD.HnD.BL
 						  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
 						  .Where(ThreadFields.ForumID == forumID)
 						  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
-						  .Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
+						  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
 						  .Distinct()
 						  .Offset(pageSize * (pageNumber-1))		// skip the pages we don't need.
 						  .Limit(pageSize+1);						// fetch 1 row extra, which we can use to determine whether there are more pages left.

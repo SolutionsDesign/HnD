@@ -1,7 +1,7 @@
 ﻿///////////////////////////////////////////////////////////////
 // This is generated code. 
 //////////////////////////////////////////////////////////////
-// Code is generated using LLBLGen Pro version: 5.0
+// Code is generated using LLBLGen Pro version: 5.2
 // Code is generated on: 
 // Code is generated using templates: SD.TemplateBindings.SharedTemplates
 // Templates vendor: Solutions Design.
@@ -31,9 +31,9 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 		/// <param name="objectName">the name of the object the field belongs to, like CustomerEntity or OrdersTypedView</param>
 		/// <param name="fieldName">the name of the field to create</param>
 		public static IEntityField2 Create(string objectName, string fieldName)
-        {
+		{
 			return new EntityField2(FieldInfoProviderSingleton.GetInstance().GetFieldInfo(objectName, fieldName));
-        }
+		}
 
 		#region Included Code
 
