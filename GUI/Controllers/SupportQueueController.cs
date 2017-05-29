@@ -4,8 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
+using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Models;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -132,12 +134,89 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+	    [Authorize]
+	    [HttpGet]
+	    public ActionResult ListQueues()
+	    {
+		    if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.QueueContentManagement))
+		    {
+			    return RedirectToAction("Index", "Home");
+			}
+
+			// these queues are pre-sorted, so no need to sort them again.
+		    var supportQueues = CacheManager.GetAllSupportQueues().ToList();
+		    var supportQueueContents = SupportQueueGuiHelper.GetAllThreadsInSpecifiedSupportQueues(LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum),
+																								   supportQueues.Select(e => e.QueueID).ToArray());
+		    if(supportQueueContents == null)
+		    {
+				return RedirectToAction("Index", "Home");
+			}
+		    var data = new SupportQueuesData()
+					   {
+						   AvailableSupportQueues = supportQueues,
+						   AllVisibleSupportQueueContents = supportQueueContents,
+						   UserLastVisitDate = LoggedInUserAdapter.GetLastVisitDate()
+						};
+			return View(data);
+	    }
+
+
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult UpdateQueues(string threadClaimButton)
+	    {
+		    if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.QueueContentManagement))
+		    {
+			    return RedirectToAction("Index", "Home");
+			}
+
+		    var buttonIdClicked = Request.Params["threadClaimButton"] ?? string.Empty;
+		    if(string.IsNullOrWhiteSpace(buttonIdClicked))
+		    {
+			    return RedirectToAction("Index", "Home");
+		    }
+
+		    var idFragments = buttonIdClicked.Split('_');
+		    if(idFragments.Length != 2)
+		    {
+			    return RedirectToAction("Index", "Home");
+		    }
+
+		    var threadId = 0;
+		    if(!Int32.TryParse(idFragments[1], out threadId))
+		    {
+			    return RedirectToAction("Index", "Home");
+		    }
+
+			ThreadEntity thread;
+		    var result = PerformSecurityCheck(threadId, out thread);
+		    if(result != null)
+		    {
+			    return result;
+		    }
+		    switch(idFragments[0])
+		    {
+			    case "releaseButton":
+				    SupportQueueManager.ReleaseClaimOnThread(threadId);
+					break;
+			    case "claimButton":
+				    SupportQueueManager.ClaimThread(LoggedInUserAdapter.GetUserID(), threadId);
+					break;
+				default:
+					return RedirectToAction("Index", "Home");
+			}
+			// it's either claim or release, go back to the original view for all queues
+		    return RedirectToAction("ListQueues", "SupportQueue");
+	    }
+
+
 		/// <summary>
 		/// Returns an action result if security check failed, otherwise it will return null.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-	    private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
+		private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
 	    {
 			thread = ThreadGuiHelper.GetThread(id);
 			if(thread == null)
