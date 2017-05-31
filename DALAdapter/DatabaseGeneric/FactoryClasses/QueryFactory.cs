@@ -287,32 +287,6 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 								.InnerJoin(this.Section).On(ForumFields.SectionID.Equal(SectionFields.SectionID)));
 		}
 
-		/// <summary>Gets the query to fetch the typed list MessagesInThread</summary>
-		/// <returns>Dynamic Query which fetches <see cref="SD.HnD.DALAdapter.TypedListClasses.MessagesInThreadRow"/> instances </returns>
-		public DynamicQuery<SD.HnD.DALAdapter.TypedListClasses.MessagesInThreadRow> GetMessagesInThreadTypedList()
-		{
-			return this.Create()
-						.Select(() => new SD.HnD.DALAdapter.TypedListClasses.MessagesInThreadRow()
-								{
-									MessageID = MessageFields.MessageID.ToValue<System.Int32>(),
-									PostingDate = MessageFields.PostingDate.ToValue<System.DateTime>(),
-									MessageTextAsHTML = MessageFields.MessageTextAsHTML.ToValue<System.String>(),
-									ThreadID = MessageFields.ThreadID.ToValue<System.Int32>(),
-									PostedFromIP = MessageFields.PostedFromIP.ToValue<System.String>(),
-									UserID = UserFields.UserID.ToValue<Nullable<System.Int32>>(),
-									NickName = UserFields.NickName.ToValue<System.String>(),
-									IconURL = UserFields.IconURL.ToValue<System.String>(),
-									Location = UserFields.Location.ToValue<System.String>(),
-									JoinDate = UserFields.JoinDate.ToValue<Nullable<System.DateTime>>(),
-									AmountOfPostings = UserFields.AmountOfPostings.ToValue<Nullable<System.Int32>>(),
-									UserTitleDescription = UserTitleFields.UserTitleDescription.ToValue<System.String>(),
-									Signature = UserFields.Signature.ToValue<System.String>()
-								})
-						.From(this.Message
-						   		.LeftJoin(this.User).On(MessageFields.PostedByUserID.Equal(UserFields.UserID))
-								.InnerJoin(this.UserTitle).On(UserFields.UserTitleID.Equal(UserTitleFields.UserTitleID)));
-		}
-
 		/// <summary>Gets the query to fetch the typed list SearchResult</summary>
 		/// <returns>Dynamic Query which fetches <see cref="SD.HnD.DALAdapter.TypedListClasses.SearchResultRow"/> instances </returns>
 		public DynamicQuery<SD.HnD.DALAdapter.TypedListClasses.SearchResultRow> GetSearchResultTypedList()

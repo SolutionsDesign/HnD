@@ -45,8 +45,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DatabaseGeneric\ClassExtensions\MessagesInThreadRowExtension.cs" />
-    <Compile Include="DatabaseGeneric\ClassExtensions\QueryFactoryExtensions.cs" />
     <AppDesigner Include="Properties\" />
     <Compile Include="DatabaseGeneric\AssemblyInfo.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
@@ -237,14 +235,12 @@
     <Compile Include="DatabaseGeneric\TypedListClasses\ForumsWithSectionNameRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
-    <Compile Include="DatabaseGeneric\TypedListClasses\MessagesInThreadRow.cs">
-      <GeneratedBy>LLBLGen Pro</GeneratedBy>
-    </Compile>
     <Compile Include="DatabaseGeneric\TypedListClasses\SearchResultRow.cs">
       <GeneratedBy>LLBLGen Pro</GeneratedBy>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DatabaseGeneric\ClassExtensions\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

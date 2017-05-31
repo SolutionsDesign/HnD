@@ -92,7 +92,7 @@
         <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DALAdapter" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
-        <PlatformName Value=".NET 4.5.2" />
+        <PlatformName Value=".NET 4.6.1" />
         <PresetName Value="SD.Presets.Adapter.General" />
         <RootNamespace Value="SD.HnD.DALAdapter" />
         <TemplateGroup Value="Adapter" />
@@ -610,37 +610,6 @@
       </Fields>
       <Relationships>
         <Relationship Name="Forum.Section-Section.Forums" StartAlias="Section" EndAlias="Forum" JoinHint="1" />
-      </Relationships>
-      <OutputSettingValues>
-        <SettingValues>
-          <SettingValue Name="8:OutputType" Value="PocoWithQuerySpecQuery" Type="18" />
-        </SettingValues>
-      </OutputSettingValues>
-    </TypedListDefinition>
-    <TypedListDefinition Name="MessagesInThread">
-      <EntityAliases>
-        <EntityAlias Entity=":Message" />
-        <EntityAlias Entity=":User" />
-        <EntityAlias Entity=":UserTitle" />
-      </EntityAliases>
-      <Fields>
-        <Field FieldAlias="MessageID" TargetField="Message.MessageID" />
-        <Field FieldAlias="PostingDate" TargetField="Message.PostingDate" />
-        <Field FieldAlias="MessageTextAsHTML" TargetField="Message.MessageTextAsHTML" />
-        <Field FieldAlias="ThreadID" TargetField="Message.ThreadID" />
-        <Field FieldAlias="PostedFromIP" TargetField="Message.PostedFromIP" />
-        <Field FieldAlias="UserID" TargetField="User.UserID" />
-        <Field FieldAlias="NickName" TargetField="User.NickName" />
-        <Field FieldAlias="IconURL" TargetField="User.IconURL" />
-        <Field FieldAlias="Location" TargetField="User.Location" />
-        <Field FieldAlias="JoinDate" TargetField="User.JoinDate" />
-        <Field FieldAlias="AmountOfPostings" TargetField="User.AmountOfPostings" />
-        <Field FieldAlias="UserTitleDescription" TargetField="UserTitle.UserTitleDescription" />
-        <Field FieldAlias="Signature" TargetField="User.Signature" />
-      </Fields>
-      <Relationships>
-        <Relationship Name="Message.PostedByUser-User.PostedMessages" StartAlias="User" EndAlias="Message" JoinHint="2" />
-        <Relationship Name="User.UserTitle-UserTitle.Users" StartAlias="UserTitle" EndAlias="User" JoinHint="1" />
       </Relationships>
       <OutputSettingValues>
         <SettingValues>
@@ -1339,4 +1308,141 @@
     </MappingStore>
   </MappingStores>
   <ModelViews />
+  <DerivedModels>
+    <DerivedModel Name="ReadOnlyElements" ObjectID="4996e435-4538-49b1-bf1e-9dfaeed4e342" TargetFrameworkName="DTO Class Model" UseLegacyDefaults="false">
+      <CodeGenerationMetaDataDefaults>
+        <TargetElement Type="32768">
+          <Defaults>
+            <Attributes>
+              <Attribute Value="Serializable" />
+              <Attribute Value="DataContract" />
+            </Attributes>
+          </Defaults>
+        </TargetElement>
+        <TargetElement Type="65536">
+          <Defaults>
+            <Attributes>
+              <Attribute Value="Serializable" />
+              <Attribute Value="DataContract" />
+            </Attributes>
+          </Defaults>
+        </TargetElement>
+        <TargetElement Type="131072">
+          <Defaults>
+            <Attributes>
+              <Attribute Value="DataMember" />
+            </Attributes>
+          </Defaults>
+        </TargetElement>
+        <TargetElement Type="262144">
+          <Defaults>
+            <Attributes>
+              <Attribute Value="DataMember" />
+            </Attributes>
+          </Defaults>
+        </TargetElement>
+        <TargetElement Type="524288">
+          <Defaults>
+            <Attributes>
+              <Attribute Value="DataMember" />
+            </Attributes>
+          </Defaults>
+        </TargetElement>
+      </CodeGenerationMetaDataDefaults>
+      <Settings>
+        <Property Name="DerivedElementClassNameSuffix" Value="Dto" />
+        <Property Name="PrefixDenormalizedFieldsWithNavigatorName" Value="true" />
+      </Settings>
+      <CodeGenerationCyclePreferences OutputType="3">
+        <LastUsedPreferences>
+          <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DTOs" />
+          <FrameworkName Value="DTO Class Model" />
+          <LanguageName Value="C#" />
+          <PlatformName Value=".NET 4.6.1" />
+          <PresetName Value="SD.DTOClasses.ReadOnlyDTOs" />
+          <RootNamespace Value="SD.HnD.ReadOnlyElements" />
+          <TemplateGroup Value="General" />
+          <TemplateBindings>
+            <Binding Name="SD.DTOClassModel" />
+            <Binding Name="SD.TemplateBindings.General" />
+          </TemplateBindings>
+        </LastUsedPreferences>
+      </CodeGenerationCyclePreferences>
+      <Documents>
+        <Document Name="MessageInThread">
+          <RootEntity Entity=":Message" />
+          <Fields>
+            <Field Name="Attachments">
+              <Document Name="Attachment">
+                <RootEntity Entity=":Attachment" NavigatorPath="Attachments" />
+                <Fields>
+                  <Field Name="AddedOn">
+                    <EntityField Name="AddedOn" />
+                  </Field>
+                  <Field Name="Approved">
+                    <EntityField Name="Approved" />
+                  </Field>
+                  <Field Name="AttachmentID">
+                    <EntityField Name="AttachmentID" />
+                  </Field>
+                  <Field Name="Filename">
+                    <EntityField Name="Filename" />
+                  </Field>
+                  <Field Name="Filesize">
+                    <EntityField Name="Filesize" />
+                  </Field>
+                </Fields>
+              </Document>
+            </Field>
+            <Field Name="MessageID">
+              <EntityField Name="MessageID" />
+            </Field>
+            <Field Name="MessageTextAsHTML">
+              <EntityField Name="MessageTextAsHTML" />
+            </Field>
+            <Field Name="PostedByUser">
+              <Document Name="PostedByUser">
+                <RootEntity Entity=":User" NavigatorPath="PostedByUser" />
+                <Fields>
+                  <Field Name="AmountOfPostings">
+                    <EntityField Name="AmountOfPostings" />
+                  </Field>
+                  <Field Name="IconURL">
+                    <EntityField Name="IconURL" />
+                  </Field>
+                  <Field Name="JoinDate">
+                    <EntityField Name="JoinDate" />
+                  </Field>
+                  <Field Name="Location">
+                    <EntityField Name="Location" />
+                  </Field>
+                  <Field Name="NickName">
+                    <EntityField Name="NickName" />
+                  </Field>
+                  <Field Name="Signature">
+                    <EntityField Name="Signature" />
+                  </Field>
+                  <Field Name="UserID">
+                    <EntityField Name="UserID" />
+                  </Field>
+                  <Field Name="UserTitleDescription">
+                    <EntityField Name="UserTitleDescription" Entity=":UserTitle" NavigatorPath="PostedByUser,UserTitle" />
+                  </Field>
+                </Fields>
+              </Document>
+            </Field>
+            <Field Name="PostedFromIP">
+              <EntityField Name="PostedFromIP" />
+            </Field>
+            <Field Name="PostingDate">
+              <EntityField Name="PostingDate" />
+            </Field>
+            <Field Name="ThreadID">
+              <EntityField Name="ThreadID" />
+            </Field>
+          </Fields>
+        </Document>
+      </Documents>
+    </DerivedModel>
+  </DerivedModels>
 </Project>

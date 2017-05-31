@@ -449,38 +449,6 @@ namespace SD.HnD.DALAdapter
 		/// <summary></summary>
 		AmountOfFields
 	}
-	/// <summary>Index enum to fast-access TypedList Fields in the Columns collection of the Typed List: MessagesInThread</summary>
-	public enum MessagesInThreadTypedListFieldIndex
-	{
-		///<summary>MessageID</summary>
-		MessageID,
-		///<summary>PostingDate</summary>
-		PostingDate,
-		///<summary>MessageTextAsHTML</summary>
-		MessageTextAsHTML,
-		///<summary>ThreadID</summary>
-		ThreadID,
-		///<summary>PostedFromIP</summary>
-		PostedFromIP,
-		///<summary>UserID</summary>
-		UserID,
-		///<summary>NickName</summary>
-		NickName,
-		///<summary>IconURL</summary>
-		IconURL,
-		///<summary>Location</summary>
-		Location,
-		///<summary>JoinDate</summary>
-		JoinDate,
-		///<summary>AmountOfPostings</summary>
-		AmountOfPostings,
-		///<summary>UserTitleDescription</summary>
-		UserTitleDescription,
-		///<summary>Signature</summary>
-		Signature,
-		/// <summary></summary>
-		AmountOfFields
-	}
 	/// <summary>Index enum to fast-access TypedList Fields in the Columns collection of the Typed List: SearchResult</summary>
 	public enum SearchResultTypedListFieldIndex
 	{

@@ -127,6 +127,14 @@
       <Project>{ce055bc5-bfd4-4b66-8178-fbfb01492105}</Project>
       <Name>SD.HnD.DALAdapterDBSpecific</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj">
+      <Project>{e3419fbd-14fb-4fff-b59f-91b621c77246}</Project>
+      <Name>SD.HnD.ReadOnlyElements.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj">
+      <Project>{8b1438a4-9ac7-40e8-9628-5cc1d07052ac}</Project>
+      <Name>SD.HnD.ReadOnlyElements</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj">
       <Name>SD.HnD.Utility</Name>
       <Project>{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}</Project>

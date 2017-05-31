@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.TypedListClasses;
+using SD.HnD.ReadOnlyElements.DtoClasses;
 
 namespace SD.HnD.Gui.Models
 {
@@ -45,7 +46,7 @@ namespace SD.HnD.Gui.Models
 		public SupportQueueThreadEntity SupportQueueThreadInfo { get; set; }
 		public bool ThreadIsBookmarked { get; set; }
 		public bool ThreadIsSubscribed { get; set; }
-		public List<MessagesInThreadRow> ThreadMessages { get; set; }
+		public List<MessageInThreadDto> ThreadMessages { get; set; }
 
 		public bool IsClosed
 		{

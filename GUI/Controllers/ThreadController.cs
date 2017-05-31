@@ -55,7 +55,7 @@ namespace SD.HnD.Gui.Controllers
 				UserMayDoBasicThreadOperations = !LoggedInUserAdapter.IsAnonymousUser(),
 				ThreadIsBookmarked = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id),
 				ThreadIsSubscribed = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id),
-				ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsTypedList(id, pageNoToFetch, numberOfMessagesPerPage),
+				ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsDTOs(id, pageNoToFetch, numberOfMessagesPerPage),
 			};
 			if(!thread.IsClosed)
 			{

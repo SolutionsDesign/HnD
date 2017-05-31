@@ -19,22 +19,21 @@
 */
 using System;
 using System.Data;
-using System.Text;
-using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Web;
-using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.Linq;
 using SD.HnD.DALAdapter.TypedListClasses;
+using SD.HnD.ReadOnlyElements.DtoClasses;
+using SD.HnD.ReadOnlyElements.Persistence;
+using SD.LLBLGen.Pro.LinqSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
 
 namespace SD.HnD.BL
 {
@@ -209,8 +208,8 @@ namespace SD.HnD.BL
 				return adapter.FetchFirst(q);
 			}
 		}
-		
 
+		
 		/// <summary>
 		/// Constructs a poco typed list with all the messages in the thread given. Poster info is included, so the
 		/// returned list is bindable at once to the message list repeater.
@@ -219,21 +218,20 @@ namespace SD.HnD.BL
 		/// <param name="pageNo">The page no.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <returns>List with all messages in the thread for the page specified</returns>
-		public static List<MessagesInThreadRow> GetAllMessagesInThreadAsTypedList(int threadID, int pageNo, int pageSize)
+		public static List<MessageInThreadDto> GetAllMessagesInThreadAsDTOs(int threadID, int pageNo, int pageSize)
 		{
-			// we'll use an extended typedlist. We've extended the typed list with a scalar query to pull the # of attachments in the same query. 
-			var qf = new QueryFactory();
-			var q = qf.GetMessagesInThreadExtendedTypedList()
-						  .Where(MessageFields.ThreadID == threadID)			// create the filter with the threadID passed to the method.
-						  .OrderBy(MessageFields.PostingDate.Ascending())		// Sort Messages on posting date, ascending, so the first post is located on top. 
-						  .Page(pageNo, pageSize)								// Pass in the paging information as well, to perform server-side paging. 
-						  .Distinct();                                          // Use distinct to avoid duplicates as we're paging.
 			using(var adapter = new DataAccessAdapter())
 			{
-				var messages = adapter.FetchQuery(q);
+				var metaData = new LinqMetaData(adapter);
+				var q = metaData.Message
+								.Where(m => m.ThreadID == threadID)
+								.OrderBy(m => m.PostingDate)
+								.TakePage(pageNo, pageSize);
+				var messages = q.ProjectToMessageInThreadDto().ToList();
 
 				// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
 				var updater = new ThreadEntity();
+
 				// set the NumberOfViews field to an expression which increases it by 1
 				updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
 				adapter.UpdateEntitiesDirectly(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID));
