@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.ORMSupportClasses.Contrib;
 
 namespace SD.HnD.Gui
 {
@@ -19,6 +21,9 @@ namespace SD.HnD.Gui
 			AreaRegistration.RegisterAllAreas();
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+			// For now we'll  use the default MemoryCache which is configured through the config file.
+			CacheController.RegisterCache(string.Empty, new MemoryCachedResultsetCache());
 
 			// Use static method in BL to fill the Application object with the data which is systemwide
 			// and thus cacheable in the application object.

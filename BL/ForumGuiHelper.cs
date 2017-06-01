@@ -197,7 +197,9 @@ namespace SD.HnD.BL
 										SectionID = ForumFields.SectionID.ToValue<int>()
 									})
 						.Where(ForumFields.ForumID == accessableForums)
-						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
+						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending())
+#warning MAKE DURATION CONFIGURABLE
+						.CacheResultset(30);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var results = adapter.FetchQuery(q);
