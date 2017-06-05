@@ -26,7 +26,7 @@
 </div>
 <section class="mt20">
     <div class="container">
-        @using(Html.BeginForm("Add", "Thread", FormMethod.Post, new { role = "form", forumId = @Model.ForumID }))
+        @using(Html.BeginForm("Add", "Thread", FormMethod.Post, new { role = "form", forumId = Model.ForumID }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -49,7 +49,7 @@
                     @Html.Partial("MarkdownEditor", Model)
                     <div class="mt20">
                         <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default" />&nbsp;&nbsp;&nbsp;
-                        <input type="submit" name="submitButton" value="Cancel" class="btn btn-default" />
+                        <input type="submit" name="submitButton" formnovalidate value="Cancel" class="btn btn-default" />
                     </div>
                 </div>
             </div>

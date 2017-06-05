@@ -259,6 +259,15 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateInput(false)]
 		public ActionResult Add([Bind(Include = "MessageText, ThreadSubject, IsSticky")] NewThreadData newThreadData, string submitButton, int forumId = 0)
 		{
+			if(submitButton != "Post")
+			{
+				// apparently canceled
+				if(forumId <= 0)
+				{
+					return RedirectToAction("Index", "Home");
+				}
+				return RedirectToAction("Index", "Forum", new {id = forumId});
+			}
 			if(!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", "Home");

@@ -155,6 +155,16 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateInput(false)]
 		public ActionResult Add([Bind(Include = "MessageText")] MessageData messageData, string submitButton, int threadId = 0)
 		{
+			if(submitButton != "Post")
+			{
+				// apparently canceled
+				if(threadId <= 0)
+				{
+					return RedirectToAction("Index", "Home");
+				}
+				return RedirectToAction("Index", "Thread", new { id = threadId });
+			}
+
 			if(!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", "Home");

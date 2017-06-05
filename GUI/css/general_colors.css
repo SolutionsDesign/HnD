@@ -170,6 +170,9 @@ mark {
 .table-horizontal th {
   border-bottom-color: #dfdfdf;
 }
+.attachments-caption span {
+  background-color: #fff;
+}
 /* #endregion*/
 /* #region Alert boxes*/
 .alert {

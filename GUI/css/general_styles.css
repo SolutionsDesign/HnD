@@ -186,11 +186,28 @@ textarea.form-control{
 	margin-bottom: 24px;
 }
 
-.table caption {
+.attachments-caption {
 	font-size: 85%;
 	font-style: italic;
-	padding: 1em 0;
-	text-align: center;
+	text-align: left;
+	position: relative;
+}
+
+.attachments-caption span {
+	padding-right: 10px;
+	position: relative;
+	z-index: 1;
+}
+
+.attachments-caption:after {
+	background: #ccc;
+	content: "";
+	display: block;
+	height: 1px;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+	z-index: 0;
 }
 
 .table td, .table th {

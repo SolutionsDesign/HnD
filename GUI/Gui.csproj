@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="Caching\CacheKeyStore.cs" />
     <Compile Include="Caching\MemoryCachedResultsetCache.cs" />
+    <Compile Include="Controllers\AttachmentController.cs" />
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\RssForumController.cs" />
@@ -1107,6 +1108,7 @@
   <ItemGroup>
     <Folder Include="Admin\" />
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Attachment\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
