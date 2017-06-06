@@ -21,7 +21,7 @@
     "ValidationLocation": "Messages"
   },
   "General": {
-    "AllMessagesToOutputWindow": false,
+    "AllMessagesToOutputWindow": true,
     "KeepImportantComments": true,
     "ShowLogoWatermark": true,
     "SvgPreviewPane": true
@@ -30,7 +30,7 @@
     "AttributeQuotesRemovalMode": "KeepQuotes",
     "CustomAngularDirectiveList": null,
     "EnableBootstrapValidation": true,
-    "EnableEnterFormat": true,
+    "EnableEnterFormat": false,
     "EnableFoundationValidation": true,
     "EnableMicrodataValidation": true,
     "MinifyAngularBindingExpressions": false,

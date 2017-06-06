@@ -35,11 +35,13 @@ namespace SD.HnD.Gui.Models
 		public bool UserMayAddNewMessages { get; set; }
 		public bool UserMayAddAttachments { get; set; }
 		public bool UserCanCreateThreads { get; set; }
+		public bool UserCanApproveAttachments { get; set; }
 		public bool UserMayDoForumSpecificThreadManagement { get; set; }
 		public bool UserMayDoSystemWideThreadManagement { get; set; }
 		public bool UserMayEditMemo { get; set; }
 		public bool UserMayMarkThreadAsDone { get; set; }
 		public bool UserMayManageSupportQueueContents { get; set; }
+		public bool UserMayManageOtherUsersAttachments { get; set; }
 		public bool UserMayDoBasicThreadOperations { get; set; }
 		public List<SupportQueueEntity> AllSupportQueues { get; set; }
 		public SupportQueueEntity ContainingSupportQueue { get; set; }
