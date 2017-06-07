@@ -43,8 +43,8 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.2.0\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="SD.Tools.Algorithmia, Version=1.2.0.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
       <HintPath>..\packages\SD.Tools.Algorithmia.1.2.1\lib\net35\SD.Tools.Algorithmia.dll</HintPath>

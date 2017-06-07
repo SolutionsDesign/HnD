@@ -42,7 +42,8 @@ namespace SD.HnD.Gui
 			routes.MapRoute("GotoMessage", "Message/Goto/{id}", new {controller = "Message", action = "Goto", id = UrlParameter.Optional});
 			routes.MapRoute("AddMessage", "Message/Add/{threadId}/{messageIdToQuote}", new {controller = "Message", action = "Add", threadId = UrlParameter.Optional, messageIdToQuote = 0});
 
-			routes.MapRoute("ViewAttachments", "Attachments/{id}", new {controller = "Attachment", action = "Index", id = UrlParameter.Optional});
+			routes.MapRoute("DeleteAttachment", "Attachment/Delete/{messageId}/{attachmentId}", new {controller = "Attachment", action = "Delete", messageId = UrlParameter.Optional, attachmentId = UrlParameter.Optional});
+			routes.MapRoute("ToggleApproval", "Attachment/ToggleApproval/{messageId}/{attachmentId}", new { controller = "Attachment", action = "ToggleApproval", messageId = UrlParameter.Optional, attachmentId = UrlParameter.Optional });
 
 			routes.MapRoute("ListOfForums", "Section/Forums/{id}", new {controller = "Section", action = "Forums", id = UrlParameter.Optional});
 			

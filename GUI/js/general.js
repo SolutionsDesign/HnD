@@ -17,9 +17,9 @@ $(window).scroll(function () {
 
 // for remembering the collapse state of panels that can be collapsed. Stored in local storage. 
 $(document).ready(function () {
-    $('pre code').each(function (i, block) {
-        hljs.highlightBlock(block);
-    });
+	$('pre code').each(function (i, block) {
+		hljs.highlightBlock(block);
+	});
 
 	$('.collapse')
 		.on('hidden.bs.collapse', function () {
@@ -45,28 +45,20 @@ function injectToken(data) {
 	return data;
 }
 
-
 // Used for making a POST ajax call to the url specified in urlToPostTo. 
-// The buttonId is the id of the element which should have its state toggled visually by appending/removing the 'dimmed' css class.
 // expects the json method to return on success a JSON result object with a flag 'success' and a flag 'newstate' with the new state of the flag toggled.
-function performAjaxToggleCall(urlToPostTo, buttonId) {
+function performAjaxToggleCall(urlToPostTo, successCallback) {
 	$.ajax({
 		url: urlToPostTo,
 		data: injectToken({}),
 		contenttype: "application/json; charset=utf-8",
-		success: function (result) {
-			if (result.success) {
-				if (result.newstate) {
-					$(buttonId).removeClass("dimmed");
-				} else {
-					$(buttonId).addClass("dimmed");
-				}
-			}
-		},
-		error: function () {
-			alert('Something happened.');
+		success: successCallback,
+		error: function (xhr) {
+			//'An AJAX error happened!. Server reported status: ' + xhr.status + 
+			alert(xhr.responseText);
 		},
 		dataType: 'json',
 		type: 'POST'
 	});
 }
+

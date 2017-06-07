@@ -1,7 +1,7 @@
 /*
 	This file is part of HnD.
 	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
+	http://www.llblgen.com
 	http://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
@@ -141,7 +141,7 @@ namespace SD.HnD.BL
 				// use a scalar query to obtain the message id so we don't have to pull it completely in memory. An attachment can be big in size so we don't want to 
 				// read the entity to just read the messageid. We could use excluding fields to avoid the actual attachment data, but this query is really simple.
 				// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
-				int messageID = adapter.FetchScalar<int>(new QueryFactory().Create().Select(AttachmentFieldIndex.MessageID).Where(AttachmentFields.AttachmentID == attachmentID));
+				int messageID = adapter.FetchScalar<int>(new QueryFactory().Create().Select(AttachmentFields.MessageID).Where(AttachmentFields.AttachmentID == attachmentID));
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditApproveAttachment,
@@ -512,23 +512,23 @@ namespace SD.HnD.BL
 		}
 
 
-        /// <summary>
-        /// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
-        /// forms authentication is still available in the database.
-        /// </summary>
-        /// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
-        /// <param name="user">The user object is returned</param>
-        /// <returns>true if user exists, false otherwise.</returns>
-        public static bool DoesUserExist(string nickName, out UserEntity user)
-        {
-	        var qf = new QueryFactory();
-	        var q = qf.User.Where(UserFields.NickName.Equal(nickName));
-	        using(var adapter = new DataAccessAdapter())
-	        {
-		        user = adapter.FetchFirst(q) ?? new UserEntity();
-		        return user.Fields.State==EntityState.Fetched;
-	        }
-        }
+		/// <summary>
+		/// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
+		/// forms authentication is still available in the database.
+		/// </summary>
+		/// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
+		/// <param name="user">The user object is returned</param>
+		/// <returns>true if user exists, false otherwise.</returns>
+		public static bool DoesUserExist(string nickName, out UserEntity user)
+		{
+			var qf = new QueryFactory();
+			var q = qf.User.Where(UserFields.NickName.Equal(nickName));
+			using(var adapter = new DataAccessAdapter())
+			{
+				user = adapter.FetchFirst(q) ?? new UserEntity();
+				return user.Fields.State==EntityState.Fetched;
+			}
+		}
 
 		
 		/// <summary>
@@ -544,7 +544,7 @@ namespace SD.HnD.BL
 			var qf = new QueryFactory();
 			// fetch the Roles related to the user when fetching the user, using a prefetchPath object.
 			var q = qf.User.Where(UserFields.NickName.Equal(nickName))
-					       .WithPath(UserEntity.PrefetchPathRoles);
+						   .WithPath(UserEntity.PrefetchPathRoles);
 			using(var adapter = new DataAccessAdapter())
 			{
 				user = adapter.FetchFirst(q) ?? new UserEntity();

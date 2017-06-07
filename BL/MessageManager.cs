@@ -206,29 +206,48 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the attachment with the id specified.
 		/// </summary>
+		/// <param name="messageID">the messageid of the message the attachment belongs to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
-		public static void DeleteAttachment(int attachmentID)
+		public static void DeleteAttachment(int messageID, int attachmentID)
 		{
 			// delete the attachment directly from the db, without loading it first into memory
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity), new RelationPredicateBucket(AttachmentFields.AttachmentID == attachmentID));
+				adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity), new RelationPredicateBucket((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID==messageID)));
 			}
 		}
 
 
 		/// <summary>
-		/// Approves / revokes the approval of the attachment with ID passed in.
+		/// Toggles the approval of the attachment with ID passed in. Optionally audits the change if userIdForAuditing is set to a value of 1 or higher
 		/// </summary>
+		/// <param name="messageId">the id of the message the attachment is assigned to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
-		/// <param name="approved">the new flag value for Approved</param>
-		public static void ModifyAttachmentApproval(int attachmentID, bool approved)
+		/// <param name="userIdForAuditing">THe user id for the auditing action if the change was successful. If 0 or lower, it's ignored and no auditing will take place</param>
+		/// <param name="newState">the new state of the approved flag for the attachment, if operation was successful</param>
+		/// <returns>true if operation was successful, false otherwise. If false, newState is undefined.</returns>
+		public static bool ToggleAttachmentApproval(int messageId, int attachmentID, int userIdForAuditing, out bool newState)
 		{
-			// we'll update the approved flag directly in the db, so we don't have to load the entity into memory first. 
+			newState = false;
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.UpdateEntitiesDirectly(new AttachmentEntity {Approved = approved}, new RelationPredicateBucket(AttachmentFields.AttachmentID == attachmentID));
+				// fetch the attachment, but exclude the file contents, as we don't need that and it can be quite big
+				var attachment = adapter.FetchNewEntity<AttachmentEntity>(new RelationPredicateBucket((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID == messageId)), 
+																		null, null, new ExcludeFieldsList(AttachmentFields.Filecontents));
+				if(attachment.IsNew)
+				{
+					// not found
+					return false;
+				}
+				if(userIdForAuditing > 0)
+				{
+					SecurityManager.AuditApproveAttachment(userIdForAuditing, attachmentID);
+				}
+				attachment.Approved = !attachment.Approved;
+				newState = attachment.Approved;
+				adapter.SaveEntity(attachment);
 			}
+			return true;
 		}
 
 
