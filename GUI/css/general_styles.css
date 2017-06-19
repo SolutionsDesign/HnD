@@ -95,9 +95,9 @@ h6 {
 
 img.emoji {
 	margin-left: .1em;
-    margin-right: .1em;
-    width: 20px;
-    height: 20px;
+	margin-right: .1em;
+	width: 20px;
+	height: 20px;
 }
 
 input[type=search],
@@ -160,20 +160,20 @@ textarea.form-control{
 
 /* #region id defines */
 #main-wrapper{
-    min-height: 100%;
-    position:relative;
+	min-height: 100%;
+	position:relative;
 }
 
 #body-content{
-    padding-bottom: 300px;    /* height of footer */
+	padding-bottom: 300px;    /* height of footer */
 }
 
 #footer {
-    height: 240px; 
-    width:100%;
-    position: absolute;
-    left: 0;
-    bottom: 0;
+	height: 240px; 
+	width:100%;
+	position: absolute;
+	left: 0;
+	bottom: 0;
 	right: 0;
 }
 /* #endregion*/
@@ -747,7 +747,7 @@ textarea.form-control{
 	}
 
 	.headerscrolled {
-        box-shadow:0 0 10px rgba(0, 0, 0, 0.3);
+		box-shadow:0 0 10px rgba(0, 0, 0, 0.3);
 		-webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
 	}
 
@@ -803,6 +803,13 @@ textarea.form-control{
 /* #endregion */
 
 /* #region post definitions */
+
+	.ps-anchor {
+		display: block;
+		height: 55px; /*same height as header*/
+		margin-top: -55px; /*same height as header*/
+		visibility: hidden;
+	}
 
 img.ps-poster-avatar {
 		width: 100px;
@@ -947,9 +954,9 @@ img.ps-poster-avatar {
 
 	.footer-wrapper {
 		background-color: #303236;
-	    color: #d8dade;
-	    position:relative;
-	    padding:60px 0 40px;
+		color: #d8dade;
+		position:relative;
+		padding:60px 0 40px;
 		height: 100%;
 	}
 
@@ -965,10 +972,10 @@ img.ps-poster-avatar {
 	/* Footer title */
 	.footer-title {
 		font-family:"Montserrat",sans-serif;
-	    font-size: 16px;
-	    margin-bottom:5px;
-	    color: #d8dade;
-	    letter-spacing: 1px;
+		font-size: 16px;
+		margin-bottom:5px;
+		color: #d8dade;
+		letter-spacing: 1px;
 	}
 	.footer-title:after {
 		content:"";

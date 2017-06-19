@@ -1,7 +1,7 @@
 /*
 	This file is part of HnD.
 	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
+	http://www.llblgen.com
 	http://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ namespace SD.HnD.BL
 				var q = qf.Create()
 						  .Select(Functions.CountRow())
 						  .From(qf.Attachment.InnerJoin(qf.Message).On(AttachmentFields.MessageID.Equal(MessageFields.MessageID))
-								             .InnerJoin(qf.Thread).On(MessageFields.ThreadID.Equal(ThreadFields.ThreadID)))
+											 .InnerJoin(qf.Thread).On(MessageFields.ThreadID.Equal(ThreadFields.ThreadID)))
 						  .Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID));
 				return adapter.FetchScalar<int>(q);
 			}
@@ -133,14 +133,26 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the attachment with the attachmentid passed in
 		/// </summary>
+		/// <param name="messageID">The messageid of the message the attachment is related to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
 		/// <returns>the attachment entity or null if not found</returns>
-		public static AttachmentEntity GetAttachment(int attachmentID)
+		public static AttachmentEntity GetAttachment(int messageID, int attachmentID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var attachment = new AttachmentEntity(attachmentID);
-				return adapter.FetchEntity(attachment) ? attachment : null;
+				if(adapter.FetchEntity(attachment))
+				{
+					if(attachment.MessageID != messageID)
+					{
+						attachment = null;
+					}
+				}
+				else
+				{
+					attachment = null;
+				}
+				return attachment;
 			}
 		}
 

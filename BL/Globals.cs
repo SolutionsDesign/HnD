@@ -1,7 +1,7 @@
 /*
 	This file is part of HnD.
 	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
+	http://www.llblgen.com
 	http://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "19-Aug-2016";
+		public static readonly string Build = "08-Jun-2017";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
@@ -163,13 +163,13 @@ namespace SD.HnD.BL
 		// Add more here. Check the comma!
 	}
 
-    /// <summary>
-    /// MailTemplate constants. The generated emails supported by the application. A dedicated helper 
-    /// will get the corresponding template file path
-    /// </summary>
-    public enum EmailTemplate
-    {
-        RegistrationReply = 1,
-        ThreadUpdatedNotification = 2
-    }
+	/// <summary>
+	/// MailTemplate constants. The generated emails supported by the application. A dedicated helper 
+	/// will get the corresponding template file path
+	/// </summary>
+	public enum EmailTemplate
+	{
+		RegistrationReply = 1,
+		ThreadUpdatedNotification = 2
+	}
 }

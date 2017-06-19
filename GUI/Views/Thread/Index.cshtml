@@ -155,12 +155,15 @@
 											<form method="POST" role="form" class="block-leftside" action="~/Thread/ToggleMarkAsDone/@Model.Thread.ThreadID/@Model.PageNo" id="threadFlagsForm">
 												<div class="threadtools">
 													@Html.AntiForgeryToken()
-													<a href="#" id="markDoneButton" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>@Html.Raw("&nbsp; &nbsp;")
+													<a href="#" id="markDoneButton" class="fs-tooltip @dimmedClass" title="Mark thread as done"><i class="fa fa-check"></i></a>
+													&nbsp; &nbsp;
 												</div>
-											</form>}
+											</form>
+										}
 										else
 										{
-											<i class="fa fa-check @dimmedClass"></i><span>&nbsp;&nbsp;</span>}
+											<i class="fa fa-check @dimmedClass"></i><span>&nbsp;&nbsp;</span>
+										}
 									}
 									@if(Model.UserMayDoBasicThreadOperations)
 									{
@@ -186,7 +189,7 @@
 		@for(int i = 0; i < Model.ThreadMessages.Count; i++)
 		{
 			var currentMessage = Model.ThreadMessages[i];
-			<a id="@currentMessage.MessageID"></a>
+			<a id="@currentMessage.MessageID" class="ps-anchor"></a>
 			<div class="row ps">
 				<div class="col-sm-12 plr0">
 					<div class="ps-poster" id="@Html.Raw("MessagePoster" + currentMessage.MessageID)">
@@ -222,14 +225,17 @@
 								}
 							</div>
 							<div class="ps-message-tools">
-								@if(currentMessage.Attachments.Count > 0)
-								{
-									<a href="#" title="View Attachments"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
-								}
-								@if(Model.ForumAllowsAttachments && Model.UserMayAddAttachments && (LoggedInUserAdapter.GetUserID() == currentMessage.PostedByUser.UserID))
-								{
-									<a href="#" title="Manage Attachments"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
-								}
+								@if(Model.ForumMaxNumberOfAttachmentsPerMessage > 0 && Model.UserMayAddAttachments && (LoggedInUserAdapter.GetUserID() == currentMessage.PostedByUser.UserID))
+                                {
+                                    if(currentMessage.Attachments.Count >= Model.ForumMaxNumberOfAttachmentsPerMessage)
+                                    {
+                                        <a href="#" title="Add Attachment" onclick="alert('This message has the maximum number of attachments (@Model.ForumMaxNumberOfAttachmentsPerMessage). Please remove one first');return false;"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+                                    }
+                                    else
+                                    {
+                                        <a href="#" data-toggle="modal" data-target="#addAttachmentModal" data-messageid="@currentMessage.MessageID" title="Add Attachment"><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+                                    }
+                                }
 								@if(Model.ShowEditMessageLink || (!LoggedInUserAdapter.IsAnonymousUser() && (currentMessage.PostedByUser.UserID == LoggedInUserAdapter.GetUserID())))
 								{
 									<a href="~/Message/Edit/@currentMessage.MessageID" title="Edit post"><i class="fa fa-pencil"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
@@ -250,7 +256,10 @@
 									<caption class="attachments-caption"><span>Attachments</span></caption>
 									<thead>
 										<tr>
-											<th>&nbsp;</th>
+											@if(userMayManageAttachments)
+											{
+												<th>&nbsp;</th>
+											}
 											<th>Filename</th>
 											<th>File size</th>
 											<th>Added on</th>
@@ -261,20 +270,16 @@
 										@foreach(var attachment in currentMessage.Attachments)
 										{
 											<tr>
+												@if(userMayManageAttachments)
+												{
 												<td>
-													@if(userMayManageAttachments)
-													{
-														<a href="#" data-toggle="modal" data-target="#confirmAttachmentDeleteModal" data-messageid="@currentMessage.MessageID" data-attachmentid="@attachment.AttachmentID" data-filename="@attachment.Filename" title="Download file '@attachment.Filename'"><i class="fa fa-trash-o"></i></a>
-													}
-													else
-													{
-														@Html.Raw("&nbsp;")
-													}
+													<a href="#" data-toggle="modal" data-target="#confirmAttachmentDeleteModal" data-messageid="@currentMessage.MessageID" data-attachmentid="@attachment.AttachmentID" data-filename="@attachment.Filename" title="Download file '@attachment.Filename'"><i class="fa fa-trash-o"></i></a>
 												</td>
+												}
 												<td>
 													@if(attachment.Approved || Model.UserCanApproveAttachments)
 													{
-														<a href="~/Attachment/Get/@attachment.AttachmentID" target="_blank" title="Download file '@attachment.Filename'">@attachment.Filename</a>
+														<a href="~/Attachment/Get/@currentMessage.MessageID/@attachment.AttachmentID" target="_blank" title="Download file '@attachment.Filename'">@attachment.Filename</a>
 													}
 													else
 													{
@@ -357,6 +362,47 @@
 		</div>
 	</div>
 }
+
+@if(Model.ForumMaxNumberOfAttachmentsPerMessage>0 && Model.UserMayAddAttachments)
+{
+    <div class="modal" id="addAttachmentModal" tabindex="-1" role="dialog" aria-labelledby="addAttachmentModalLabel">
+        <div class="row">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="addAttachmentModalLabel">Add attachment</h4>
+                    </div>
+	                <div class="modal-body">
+						<form action="~/Attachment/Add/" method="post" role="form" class="form-inline" id="addAttachmentForm">
+							@Html.AntiForgeryToken()
+							<div class="col-sm-12">
+								<div class="row" id="addAttachmentError" style="display: none;">
+									<div class="col-sm-12">
+										<span class="alert-danger" id="addAttachmentModelErrorLabel">Some error!</span>
+										<br/><br />
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										Please select the file to attach to the post. <br /><br />
+										<input type="file" name="filenameToUpload" id="filenameToUpload"  />
+									</div>
+								</div>
+							</div>
+							<div class="pull-center mb20 pt20">
+								<button type="button" class="btn btn-default btn-primary" id="addAttachmentModalSubmit">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>&nbsp;&nbsp;
+								<a class="btn btn-default" data-dismiss="modal">&nbsp;Cancel&nbsp;</a>
+							</div>
+						</form>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
 @if(Model.UserMayDoSystemWideThreadManagement)
 {
 	<div class="modal" id="moveThreadModal" tabindex="-1" role="dialog" aria-labelledby="moveThreadModalLabel">
@@ -400,30 +446,6 @@
 					</form>
 				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="modal" id="confirmAttachmentDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmAttachmentDeleteModalLabel">
-		<div class="row">
-			<form action="~/Attachment/Delete/" method="post" role="form" id="confirmAttachmentDeleteForm">
-				<input type="hidden" name="confirmAttachmentDeleteFormActionSave" id="confirmAttachmentDeleteFormActionSave" value="" />
-				@Html.AntiForgeryToken()
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="confirmAttachmentDeleteModalLabel">Confirm attachment delete</h4>
-						</div>
-						<div class="col-sm-12 mt10 mb20">
-							Are you sure you want to delete the attachment: '<span id="confirmAttachmentDeleteModalFilename"></span>' ?
-						</div>
-						<div class="pull-center mb20">
-							<button class="btn btn-default" type="submit" id="confirmAttachmentDeleteLink"> Delete </button>&nbsp;&nbsp;
-							<a class="btn btn-primary" data-dismiss="modal" onclick="">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>
-						</div>
-					</div>
-				</div>
-			</form>
 		</div>
 	</div>
 
@@ -498,6 +520,33 @@
 	</div>
 }
 
+@if(!LoggedInUserAdapter.IsAnonymousUser())
+{
+	<div class="modal" id="confirmAttachmentDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmAttachmentDeleteModalLabel">
+		<div class="row">
+			<form action="~/Attachment/Delete/" method="post" role="form" id="confirmAttachmentDeleteForm">
+				<input type="hidden" name="confirmAttachmentDeleteFormActionSave" id="confirmAttachmentDeleteFormActionSave" value="" />
+				@Html.AntiForgeryToken()
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="confirmAttachmentDeleteModalLabel">Confirm attachment delete</h4>
+						</div>
+						<div class="col-sm-12 mt10 mb20">
+							Are you sure you want to delete the attachment: '<span id="confirmAttachmentDeleteModalFilename"></span>' ?
+						</div>
+						<div class="pull-center mb20">
+							<button class="btn btn-default" type="submit" id="confirmAttachmentDeleteLink"> Delete </button>&nbsp;&nbsp;
+							<a class="btn btn-primary" data-dismiss="modal" onclick="">&nbsp;&nbsp;Keep&nbsp;&nbsp;</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+}
+
 @section scripts
 {
 	<script type="text/javascript">
@@ -517,6 +566,19 @@
 			function (event) {
 				$('#confirmAttachmentDeleteForm').attr('action', $('#confirmAttachmentDeleteFormActionSave').attr('value'));
 			});
+
+		
+		// The buttonId is the id of the element which should have its state toggled visually by appending/removing the 'dimmed' css class.
+		function handleThreadToggleAjaxCallResult(buttonId, result)
+		{
+			if (result.success) {
+				if (result.newstate) {
+					$(buttonId).removeClass("dimmed");
+				} else {
+					$(buttonId).addClass("dimmed");
+				}
+			}
+		}
 	</script>
 
 	@if(Model.ShowDeleteMessageLink)
@@ -574,26 +636,20 @@
 				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID',
 					function(result) {
 						handleThreadToggleAjaxCallResult('#subscribeButton', result);
+					},
+					function (xhr) {
+						alert(xhr.responseText);
 					});
 			});
 			$('#bookmarkButton').bind("click", function () {
 				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID',
 					function (result) {
 						handleThreadToggleAjaxCallResult('#bookmarkButton', result);
+					},
+					function (xhr) {
+						alert(xhr.responseText);
 					});
 			});
-
-			// The buttonId is the id of the element which should have its state toggled visually by appending/removing the 'dimmed' css class.
-			function handleThreadToggleAjaxCallResult(buttonId, result)
-			{
-				if (result.success) {
-					if (result.newstate) {
-						$(buttonId).removeClass("dimmed");
-					} else {
-						$(buttonId).addClass("dimmed");
-					}
-				}
-			}
 		</script>
 	}
 	@if(Model.UserCanApproveAttachments)
@@ -602,10 +658,57 @@
 			function toggleAttachmentApproval(messageId, attachmentId) {
 				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Attachment/ToggleApproval/' + messageId + '/' + attachmentId,
 					function (result) {
-								if (result.success) {
-									$('#icon_attachment_' + attachmentId).attr('class', result.newstate ? 'fa fa-check-square-o' : 'fa fa-square-o');
-								}
+						if (result.success) {
+							$('#icon_attachment_' + attachmentId).attr('class', result.newstate ? 'fa fa-check-square-o' : 'fa fa-square-o');
+						}
+					},
+					function (xhr) {
+						alert(xhr.responseText);
+					});
+			}
+		</script>
+	}
+
+	@if(Model.ForumMaxNumberOfAttachmentsPerMessage > 0 && Model.UserMayAddAttachments)
+	{
+		<script type="text/javascript">
+			$('#addAttachmentModal').on('show.bs.modal',
+				function (event) {
+					var button = $(event.relatedTarget); // Button that triggered the modal
+					var messageId = button.data('messageid');
+					$('#addAttachmentModelErrorLabel').html('');
+					$('#addAttachmentError').hide();
+					$('#addAttachmentModalSubmit').attr('onclick', 'uploadFileThroughForm(' + messageId + ')');
 				});
+		</script>
+
+
+		<script type="text/javascript">
+			function uploadFileThroughForm(messageId) {
+				var files = $('#filenameToUpload').prop('files');
+				if (files.length > 0) {
+					if (window.FormData !== undefined) {
+						var fileData = new FormData();
+						fileData.append("file", files[0]);
+						$.ajax({
+							type: "POST",
+							url: '@ApplicationAdapter.GetVirtualRoot()Attachment/Add/' + messageId,
+							contentType: false,
+							processData: false,
+							data: injectToken({
+								fileData:  fileData
+							}),
+							success: function(result) {
+								alert(result.responseMessage);
+							},
+							error: function (xhr) {
+								alert(xhr.responseText);
+							}
+						});
+					} else {
+						alert("This browser doesn't support HTML5 file uploads!");
+					}
+				}
 			}
 		</script>
 	}

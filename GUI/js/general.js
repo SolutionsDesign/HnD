@@ -45,18 +45,16 @@ function injectToken(data) {
 	return data;
 }
 
+
 // Used for making a POST ajax call to the url specified in urlToPostTo. 
 // expects the json method to return on success a JSON result object with a flag 'success' and a flag 'newstate' with the new state of the flag toggled.
-function performAjaxToggleCall(urlToPostTo, successCallback) {
+function performAjaxToggleCall(urlToPostTo, successCallback, errorCallback) {
 	$.ajax({
 		url: urlToPostTo,
 		data: injectToken({}),
 		contenttype: "application/json; charset=utf-8",
 		success: successCallback,
-		error: function (xhr) {
-			//'An AJAX error happened!. Server reported status: ' + xhr.status + 
-			alert(xhr.responseText);
-		},
+		error: errorCallback, 
 		dataType: 'json',
 		type: 'POST'
 	});

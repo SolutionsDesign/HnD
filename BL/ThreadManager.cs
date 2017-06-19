@@ -1,7 +1,7 @@
 /*
 	This file is part of HnD.
 	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
+	http://www.llblgen.com
 	http://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
@@ -48,8 +48,8 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static bool UpdateMemo(int threadID, string memo)
 		{
-            // load the entity from the database
-            var thread = ThreadGuiHelper.GetThread(threadID);
+			// load the entity from the database
+			var thread = ThreadGuiHelper.GetThread(threadID);
 			if(thread==null)
 			{
 				// not found
@@ -68,7 +68,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">Thread ID.</param>
 		/// <returns></returns>
-        public static bool MarkThreadAsDone(int threadID)
+		public static bool MarkThreadAsDone(int threadID)
 		{
 			var thread = ThreadGuiHelper.GetThread(threadID);
 			if(thread == null)
@@ -77,7 +77,7 @@ namespace SD.HnD.BL
 				return false;
 			}
 			var containingSupportQueue = SupportQueueGuiHelper.GetQueueOfThread(threadID);
-            thread.MarkedAsDone = true;
+			thread.MarkedAsDone = true;
 			using(var adapter = new DataAccessAdapter())
 			{ 
 				// if the thread is in a support queue, the thread has to be removed from that queue. This is a multi-entity action and therefore we've to start a 
@@ -110,20 +110,20 @@ namespace SD.HnD.BL
 			}
 		}
 
-        /// <summary>
-        /// Marks the thread as un-done, and add it to the default queue of the forum.
-        /// </summary>
-        /// <param name="threadID">Thread ID</param>
-        /// <returns></returns>
-        public static bool UnMarkThreadAsDone(int threadID, int userID)
-        {
-            var thread = ThreadGuiHelper.GetThread(threadID);
-            if (thread == null)
-            {
-                // not found
-                return false;
-            }
-            thread.MarkedAsDone = false;
+		/// <summary>
+		/// Marks the thread as un-done, and add it to the default queue of the forum.
+		/// </summary>
+		/// <param name="threadID">Thread ID</param>
+		/// <returns></returns>
+		public static bool UnMarkThreadAsDone(int threadID, int userID)
+		{
+			var thread = ThreadGuiHelper.GetThread(threadID);
+			if (thread == null)
+			{
+				// not found
+				return false;
+			}
+			thread.MarkedAsDone = false;
 			using(var adapter = new DataAccessAdapter())
 			{ 
 				// Save the thread and add it to the default queue of the forum.
@@ -148,7 +148,7 @@ namespace SD.HnD.BL
 					throw;
 				}
 			}
-        }
+		}
 
 		
 		/// <summary>
@@ -165,7 +165,7 @@ namespace SD.HnD.BL
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
 		/// <returns>MessageID if succeeded, 0 if not.</returns>
-        public static int CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, 
+		public static int CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, 
 												   bool subscribeToThread, string threadUpdatedNotificationTemplate, Dictionary<string,string> emailData, bool sendReplyNotifications)
 		{
 			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, subscribeToThread, 
@@ -177,9 +177,9 @@ namespace SD.HnD.BL
 		/// Modifies the given properties of the given thread.
 		/// </summary>
 		/// <param name="threadID">The threadID of the thread which properties should be changed</param>
-        /// <param name="subject">The new subject for this thread</param>
-        /// <param name="isSticky">The new value for IsSticky</param>
-        /// <param name="isClosed">The new value for IsClosed</param>
+		/// <param name="subject">The new subject for this thread</param>
+		/// <param name="isSticky">The new value for IsSticky</param>
+		/// <param name="isClosed">The new value for IsClosed</param>
 		/// <returns></returns>
 		public static bool ModifyThreadProperties(int threadID, string subject, bool isSticky, bool isClosed)
 		{
@@ -190,10 +190,10 @@ namespace SD.HnD.BL
 				return false;
 			}
 			
-            // update the fields with new values
-            thread.Subject = subject;
-            thread.IsSticky = isSticky;
-            thread.IsClosed = isClosed;
+			// update the fields with new values
+			thread.Subject = subject;
+			thread.IsSticky = isSticky;
+			thread.IsClosed = isClosed;
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.SaveEntity(thread);
@@ -204,8 +204,8 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Moves the given thread to the given forum.
 		/// </summary>
-        /// <param name="threadID">ID of thread to move</param>
-        /// <param name="newForumID">ID of forum to move the thread to</param>
+		/// <param name="threadID">ID of thread to move</param>
+		/// <param name="newForumID">ID of forum to move the thread to</param>
 		/// <returns></returns>
 		public static bool MoveThread(int threadID, int newForumID)
 		{
@@ -215,7 +215,7 @@ namespace SD.HnD.BL
 				// not found
 				return false;
 			}
-            thread.ForumID = newForumID;
+			thread.ForumID = newForumID;
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.SaveEntity(thread);
@@ -247,7 +247,7 @@ namespace SD.HnD.BL
 					throw;
 				}
 			}
-        }
+		}
 
 
 		/// <summary>
@@ -300,57 +300,57 @@ namespace SD.HnD.BL
 		/// <param name="emailTemplate">The email template.</param>
 		/// <param name="emailData">The email data.</param>
 		private static void SendThreadReplyNotifications(int threadID, int initiatedByUserID, string emailTemplate, Dictionary<string, string> emailData)
-        {
-            // get list of subscribers to thread, minus the initiator. Do this by fetching the subscriptions plus the related user entity entity instances. 
+		{
+			// get list of subscribers to thread, minus the initiator. Do this by fetching the subscriptions plus the related user entity entity instances. 
 			// The related user entities are loaded using a prefetch path. 
 			var qf = new QueryFactory();
 			var q = qf.ThreadSubscription
 							.Where((ThreadSubscriptionFields.ThreadID == threadID).And(ThreadSubscriptionFields.UserID != initiatedByUserID))
 							.WithPath(ThreadSubscriptionEntity.PrefetchPathUser);
-	        var subscriptions = new EntityCollection<ThreadSubscriptionEntity>();
+			var subscriptions = new EntityCollection<ThreadSubscriptionEntity>();
 			using(var adapter = new DataAccessAdapter())
 			{
 				adapter.FetchQuery(q, subscriptions);
-		        if(subscriptions.Count <= 0)
-		        {
-			        // no subscriptions, nothing to do
-			        return;
-		        }
-	        }
+				if(subscriptions.Count <= 0)
+				{
+					// no subscriptions, nothing to do
+					return;
+				}
+			}
 
-	        // now collect all email addresses into an array so we can pass that to the email routine. 
-            var toAddresses = new string[subscriptions.Count];
-            for(int i=0;i<subscriptions.Count;i++)
-            {
+			// now collect all email addresses into an array so we can pass that to the email routine. 
+			var toAddresses = new string[subscriptions.Count];
+			for(int i=0;i<subscriptions.Count;i++)
+			{
 				toAddresses[i] = subscriptions[i].User.EmailAddress;
-            }
+			}
 
 #warning POTENTIAL CLONE OF SD.HnDUtility.HnDGeneralUtils.EmailPassword's HANDLING OF TEMPLATE.
 			// use template to construct message to send. 
 			var mailBody = new StringBuilder(emailTemplate);
-            var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
+			var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
 			if (!string.IsNullOrEmpty(emailTemplate))
-            {
-                // Use the existing template to format the body
-	            string siteName = emailData.GetValue("siteName") ?? string.Empty;
+			{
+				// Use the existing template to format the body
+				string siteName = emailData.GetValue("siteName") ?? string.Empty;
 				var thread = ThreadGuiHelper.GetThread(threadID);
-	            if(thread == null)
-	            {
-		            // thread doesn't exist, exit
-		            return;
-	            }
-	            var threadSubject = thread.Subject;
+				if(thread == null)
+				{
+					// thread doesn't exist, exit
+					return;
+				}
+				var threadSubject = thread.Subject;
 #warning UPDATE TO MVC URL
-		        var threadUrl =  string.Format("{0}Messages.aspx?ThreadID={1}", applicationURL, thread.ThreadID);
-	            mailBody.Replace("[SiteURL]", applicationURL);
-                mailBody.Replace("[SiteName]", siteName);
-                mailBody.Replace("[ThreadSubject]", threadSubject);
-                mailBody.Replace("[ThreadURL]", threadUrl);
-            }
+				var threadUrl =  string.Format("{0}Messages.aspx?ThreadID={1}", applicationURL, thread.ThreadID);
+				mailBody.Replace("[SiteURL]", applicationURL);
+				mailBody.Replace("[SiteName]", siteName);
+				mailBody.Replace("[ThreadSubject]", threadSubject);
+				mailBody.Replace("[ThreadURL]", threadUrl);
+			}
 
-            // format the subject
-            string subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty) + applicationURL;
-            string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
+			// format the subject
+			string subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty) + applicationURL;
+			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 			try
 			{
@@ -366,7 +366,7 @@ namespace SD.HnD.BL
 				// swallow, as there's nothing we can do
 			}
 			// rest: problematic, so bubble upwards.
-        }
+		}
 
 
 		/// <summary>

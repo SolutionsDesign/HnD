@@ -30,7 +30,6 @@ namespace SD.HnD.Gui.Models
 			get { return this.UserMayAddNewMessages; }
 		}
 		public bool ShowIPAddresses { get; set; }
-		public bool ForumAllowsAttachments { get; set; }
 		public bool ThreadStartedByCurrentUser { get; set; }
 		public bool UserMayAddNewMessages { get; set; }
 		public bool UserMayAddAttachments { get; set; }
@@ -48,6 +47,7 @@ namespace SD.HnD.Gui.Models
 		public SupportQueueThreadEntity SupportQueueThreadInfo { get; set; }
 		public bool ThreadIsBookmarked { get; set; }
 		public bool ThreadIsSubscribed { get; set; }
+		public int ForumMaxNumberOfAttachmentsPerMessage { get; set; }
 		public List<MessageInThreadDto> ThreadMessages { get; set; }
 
 		public bool IsClosed

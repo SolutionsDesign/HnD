@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
@@ -10,6 +11,73 @@ namespace SD.HnD.Gui.Controllers
 {
 	public class AttachmentController : Controller
 	{
+		[HttpGet]
+		public ActionResult Get(int messageId = 0, int attachmentId = 0)
+		{
+			// loads Message and related thread based on the attachmentId
+			var relatedMessage = MessageGuiHelper.GetMessageWithAttachmentLogic(attachmentId);
+			if(relatedMessage == null || relatedMessage.MessageID!=messageId)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(!LoggedInUserAdapter.CanPerformForumActionRight(relatedMessage.Thread.ForumID, ActionRights.AccessForum))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			// Check if the thread is sticky, or that the user can see normal threads started
+			// by others. If not, the user isn't allowed to view the thread the message is in, and therefore is denied access.
+			if((relatedMessage.Thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) &&
+			   !LoggedInUserAdapter.CanPerformForumActionRight(relatedMessage.Thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
+			   !relatedMessage.Thread.IsSticky)
+			{
+				// user can't view the thread the message is in, because:
+				// - the thread isn't sticky
+				// AND
+				// - the thread isn't posted by the calling user and the user doesn't have the right to view normal threads started by others
+				return RedirectToAction("Index", "Home");
+			}
+			var attachmentToStream = MessageGuiHelper.GetAttachment(messageId, attachmentId);
+			if(attachmentToStream == null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(!attachmentToStream.Approved && !LoggedInUserAdapter.CanPerformForumActionRight(relatedMessage.Thread.ForumID, ActionRights.ApproveAttachment))
+			{
+				// the attachment hasn't been approved yet, and the caller isn't entitled to approve attachments, so deny. 
+				// approval of attachments requires to be able to load the attachment without the attachment being approved
+				return RedirectToAction("Index", "Home");
+			}
+			// all good, return the file contents.
+			return File(attachmentToStream.Filecontents, "application/unknown", attachmentToStream.Filename);
+		}
+
+
+		[Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Add(int messageId = 0)
+		{
+			try
+			{
+				if(Request.Files.Count <= 0)
+				{
+					return Json(new { success = false, responseMessage="No file attached!" });
+				}
+				var fileContent = Request.Files[0];
+				if(fileContent != null && fileContent.ContentLength > 0)
+				{
+					return Json(new {success = true, responseMessage = "File received: " + fileContent.FileName});
+				}
+			}
+			catch(Exception)
+			{
+				Response.StatusCode = (int)HttpStatusCode.BadRequest;
+				return Json(new { success = false, responseMessage = "Upload failed." });
+			}
+			return Json(new { success = false, responseMessage = "Upload failed." });
+		}
+
+
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]

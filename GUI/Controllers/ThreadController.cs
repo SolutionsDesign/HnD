@@ -42,7 +42,7 @@ namespace SD.HnD.Gui.Controllers
 				ShowIPAddresses = (LoggedInUserAdapter.HasSystemActionRight(ActionRights.SystemManagement) ||
 								   LoggedInUserAdapter.HasSystemActionRight(ActionRights.SecurityManagement) ||
 								   LoggedInUserAdapter.HasSystemActionRight(ActionRights.UserManagement)),
-				ForumAllowsAttachments = (forum.MaxNoOfAttachmentsPerMessage > 0),
+				ForumMaxNumberOfAttachmentsPerMessage = forum.MaxNoOfAttachmentsPerMessage,
 				ThreadStartedByCurrentUser = thread.StartedByUserID == userID,
 				UserMayAddAttachments = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddAttachment),
 				UserCanCreateThreads = LoggedInUserAdapter.CanPerformForumActionRight(thread.ForumID, ActionRights.AddNormalThread) ||
