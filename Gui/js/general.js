@@ -15,14 +15,21 @@ $(window).scroll(function () {
 	}
 });
 
-// a fix for the # jump issue in Firefox (see: https://stackoverflow.com/a/31919635 combined with https://stackoverflow.com/a/8611751)
-// In chrome this works without the script below, but in FF, the browser first scrolls and reflows of the HTML layout due to 
-// CSS being applied it will make the browser end up showing the wrong post. This script fixes it.
-$(window).load(function () {
+$(document).ready(function () {
+    $('pre code').each(function (i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    // a fix for the # jump issue in Firefox (see: https://stackoverflow.com/a/31919635 combined with https://stackoverflow.com/a/8611751)
+    // In chrome this works without the script below, but in FF, the browser first scrolls and reflows of the HTML layout due to 
+    // CSS being applied it will make the browser end up showing the wrong post. This script fixes it.
 	//dom not only ready, but everything is loaded
 	if (window.location.hash.length > 0) {
 		window.scrollTo(0, $(window.location.hash).offset().top);
 	}
+});
+
+$(window).load(function () {
 });
 
 // for remembering the collapse state of panels that can be collapsed. Stored in local storage. 
