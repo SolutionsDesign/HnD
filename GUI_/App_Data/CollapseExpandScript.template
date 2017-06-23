@@ -1,0 +1,140 @@
+/******************************************************************************
+ Expandable and Collapseable Menus v1.4
+
+ Grabs an elements id by using the toggle function and sets that element so it 
+ is hidden. Once set hidden it creates a cookie that allows it to stay hidden 
+ everytime that page is loaded. Hidden elements can be expanded by toggling 
+ the menu back open.
+	
+	v1.1 - Open and closing of divs without cookies
+	v1.2 - Sets a cookie everytime the element is closed, but doesnt remember
+	v1.3 - Added a function to delete the cookie entirely
+	v1.4 - Function for saved elements which keeps them closed on page load
+	
+ Copyright 2006 Miles Johnson. www.mileswjohnson.com
+ 
+ Adjusted for the forum system by Frans Bouma.
+******************************************************************************/
+
+// Lets begin shall we? Lets name our name state.
+var stateObject = 
+{ 
+	// Creates the actual cookie on the users browser
+	setCookie: function(name, value, expires) 
+	{
+		document.cookie = name + '=' + escape(value) + '; path=/' + (typeof expires != 'undefined' ? '; expires=' + expires.toGMTString() : '');
+	},
+	
+	// Deletes the corresponding cookie
+	deleteCookie: function(name) {
+		document.cookie = name + '=' + '; expires=Thu, 01-Jan-70 00:00:01 GMT' +  '; path=/';
+	},
+	
+	// Saves the id being closed in a cookie
+	saveCookie: function(id, state) {
+		var set = stateObject.getCookie('[RootCookieName]collapse_menu');
+		var div = new Array();
+	
+		if (set != null) {
+			set = set.split('\n');
+	
+			for (var v in set) {
+				if (set[v] != id && set[v] != '') {
+					div[div.length] = set[v];
+				}
+			}
+		}
+	
+		if (state) {
+			div[div.length] = id;
+		}
+	
+		expires = new Date();
+		expires.setTime(expires.getTime() + (1000 * 86400 * 365));
+		stateObject.setCookie('[RootCookieName]collapse_menu', div.join('\n'), expires);
+	},
+	
+	// Gets a cookie to be used
+	getCookie: function(name) {
+		if (document.cookie.length > 0) {
+			start = document.cookie.indexOf(name + "=")
+		
+			if (start != -1) { 
+				start = start + name.length + 1 
+				end = document.cookie.indexOf(";",start)
+				
+				if (end == -1) 
+					end = document.cookie.length
+					return unescape(document.cookie.substring(start,end))
+			} 
+		}
+		return null
+	},
+	
+	// Opens or closes the divs
+	toggle: function(id) {
+		var div = document.getElementById(id);
+		var collapseImageDiv = document.getElementById("Collapse" + id);
+		var expandImageDiv = document.getElementById("Expand" + id);
+		
+		collapseImageDiv.style.display = 'none';
+		expandImageDiv.style.display = 'none';
+		
+		if(div.style.display == 'none') {
+			stateObject.saveCookie(id, false);
+			div.style.display = 'block';	
+			collapseImageDiv.style.display = 'block';
+			expandImageDiv.style.display = 'none';
+		} else{
+			stateObject.saveCookie(id, true);
+			div.style.display = 'none';
+			collapseImageDiv.style.display = 'none';
+			expandImageDiv.style.display = 'block';
+		}
+	},
+	
+	// Loads the divs to their state
+	loadDivs: function() { 
+		var set = stateObject.getCookie('[RootCookieName]collapse_menu');
+	
+		if (set != null) 
+		{
+			set = set.split('\n');
+	
+			for (var v in set) 
+			{
+				var div = document.getElementById(set[v]);
+				var collapseImageDiv = document.getElementById("Collapse" + set[v]);
+				var expandImageDiv = document.getElementById("Expand" + set[v]);
+
+				// set initial values.
+				collapseImageDiv.style.display = 'block';
+				expandImageDiv.style.display = 'none';
+				
+				if (div == null) 
+				{
+					stateObject.deleteCookie('[RootCookieName]collapse_menu');
+				} 
+				else 
+				{
+					div.style.display = 'none'; 
+					collapseImageDiv.style.display = 'none';
+					expandImageDiv.style.display = 'block';
+				}
+			}
+		} 
+		else 
+		{
+			stateObject.deleteCookie('[RootCookieName]collapse_menu');
+		}
+	}
+
+}
+
+//==========================================
+//	Initialize
+//==========================================
+
+window.onload = function() {
+   stateObject.loadDivs();
+}  	
