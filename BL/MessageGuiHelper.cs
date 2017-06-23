@@ -39,6 +39,19 @@ namespace SD.HnD.BL
 	public static class MessageGuiHelper
 	{
 		/// <summary>
+		/// Gets the number of attachments related to the message with the id specified. 
+		/// </summary>
+		/// <param name="messageId"></param>
+		/// <returns></returns>
+		public static int GetTotalNumberOfAttachmentsOfMessage(int messageId) 
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int>(new QueryFactory().Attachment.Where(AttachmentFields.MessageID == messageId).Select(Functions.CountRow()));
+			}
+		}
+
+		/// <summary>
 		/// Gets the number of postings in all threads of all forums on this system. 
 		/// </summary>
 		/// <returns>the total of all posts on the entire forum system</returns>

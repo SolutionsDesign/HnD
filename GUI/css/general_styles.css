@@ -655,6 +655,12 @@ textarea.form-control{
 		display: inline-block;
 	}
 
+	.bottom_aligner {
+		display: inline-block;
+		height: 100%;
+		vertical-align: bottom;
+		width: 0px;
+	}
 
 	/* gives a small line at the left, under the text it is applied to*/
 	.br-bottom:after {
@@ -672,6 +678,18 @@ textarea.form-control{
 
 	.btn {
 		border-radius:0;
+	}
+
+	.bs-alert-danger {
+		color: #a94442;
+		background-color: #f2dede;
+		border-color: #ebccd1;
+	}
+	.bs-alert {
+		padding: 15px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
 	}
 
 	.checkbox-inline {

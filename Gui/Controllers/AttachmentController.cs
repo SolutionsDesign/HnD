@@ -57,6 +57,35 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Add(int messageId = 0)
 		{
+			MessageEntity message = null;
+			if(!GetMessageAndThread(messageId, out message))
+			{
+				return Json(new { success = false, responseMessage = "Upload failed." });
+			}
+			var forum = CacheManager.GetForum(message.Thread.ForumID);
+			if(forum == null)
+			{
+				return Json(new { success = false, responseMessage = "Upload failed." });
+			}
+			// Check if the thread is sticky, or that the user can see normal threads started
+			// by others. If not, the user isn't allowed to view the thread the message is in, and therefore is denied access.
+			if((message.Thread.StartedByUserID != LoggedInUserAdapter.GetUserID()) &&
+			   !LoggedInUserAdapter.CanPerformForumActionRight(message.Thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
+			   !message.Thread.IsSticky)
+			{
+				// user can't view the thread the message is in, because:
+				// - the thread isn't sticky
+				// AND
+				// - the thread isn't posted by the calling user and the user doesn't have the right to view normal threads started by others
+				return Json(new { success = false, responseMessage = "Upload failed." });
+			}
+			bool userMayAddAttachment = forum.MaxNoOfAttachmentsPerMessage > 0 && LoggedInUserAdapter.CanPerformForumActionRight(forum.ForumID, ActionRights.AddAttachment) && 
+										LoggedInUserAdapter.GetUserID() == message.PostedByUserID &&
+										MessageGuiHelper.GetTotalNumberOfAttachmentsOfMessage(messageId) < forum.MaxNoOfAttachmentsPerMessage;
+			if(!userMayAddAttachment)
+			{
+				return Json(new { success = false, responseMessage = "Upload failed." });
+			}
 			try
 			{
 				if(Request.Files.Count <= 0)
@@ -64,17 +93,31 @@ namespace SD.HnD.Gui.Controllers
 					return Json(new { success = false, responseMessage="No file attached!" });
 				}
 				var fileContent = Request.Files[0];
-				if(fileContent != null && fileContent.ContentLength > 0)
+				if(fileContent == null || fileContent.ContentLength <= 0)
 				{
-					return Json(new {success = true, responseMessage = "File received: " + fileContent.FileName});
+					return Json(new { success = false, responseMessage = "The file uploaded is empty (0KB)."});
 				}
+				var fileLengthInKB = fileContent.ContentLength / 1024;
+				if(fileLengthInKB > forum.MaxAttachmentSize)
+				{
+					return Json(new {success = false, responseMessage = $"The file uploaded is too large ({fileLengthInKB}KB). The max. file size is {forum.MaxAttachmentSize}KB"});
+				}
+
+				// all is well, save the attachment!
+				byte[] fileData = null;
+				using(var reader = new System.IO.BinaryReader(fileContent.InputStream))
+				{
+					fileData = reader.ReadBytes(fileContent.ContentLength);
+				}
+				MessageManager.AddAttachment(messageId, fileContent.FileName, fileData,
+											 LoggedInUserAdapter.CanPerformForumActionRight(forum.ForumID, ActionRights.GetsAttachmentsApprovedAutomatically));
+				return Json(new {success = true, responseMessage = string.Empty});
 			}
 			catch(Exception)
 			{
 				Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				return Json(new { success = false, responseMessage = "Upload failed." });
 			}
-			return Json(new { success = false, responseMessage = "Upload failed." });
 		}
 
 

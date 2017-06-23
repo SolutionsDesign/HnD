@@ -114,7 +114,7 @@
 			</div>
 		</div>
 	</section>
-										}
+}
 
 <section class="fs mt20">
 	<div class="container">
@@ -189,7 +189,7 @@
 		@for(int i = 0; i < Model.ThreadMessages.Count; i++)
 		{
 			var currentMessage = Model.ThreadMessages[i];
-			<a id="@currentMessage.MessageID" class="ps-anchor"></a>
+			<a class="ps-anchor" id="@currentMessage.MessageID"></a>
 			<div class="row ps">
 				<div class="col-sm-12 plr0">
 					<div class="ps-poster" id="@Html.Raw("MessagePoster" + currentMessage.MessageID)">
@@ -251,8 +251,8 @@
 							@if(currentMessage.Attachments.Count > 0)
 							{
 								bool userMayManageAttachments = Model.UserMayManageOtherUsersAttachments || (currentMessage.PostedByUser.UserID == LoggedInUserAdapter.GetUserID());
-
-								<table class="table mb0 mt20 table-condensed">
+								<div class="bottom_aligner"></div>
+								<table class="table mb0 mt0 table-condensed">
 									<caption class="attachments-caption"><span>Attachments</span></caption>
 									<thead>
 										<tr>
@@ -379,8 +379,9 @@
 							<div class="col-sm-12">
 								<div class="row" id="addAttachmentError" style="display: none;">
 									<div class="col-sm-12">
-										<span class="alert-danger" id="addAttachmentModelErrorLabel">Some error!</span>
-										<br/><br />
+										<div class="bs-alert bs-alert-danger" role="alert">
+											<span id="addAttachmentModelErrorLabel">Some error!</span>
+										</div>
 									</div>
 								</div>
 								<div class="row">
@@ -552,25 +553,25 @@
 	<script type="text/javascript">
 		// handling logic for attachment delete modal dialog
 		$('#confirmAttachmentDeleteModal').on('show.bs.modal',
-			function (event) {
+			function(event) {
 				var button = $(event.relatedTarget); // Button that triggered the modal
 				var messageid = button.data('messageid');
 				var attachmentid = button.data('attachmentid');
 				var filename = button.data('filename');
 				$('#confirmAttachmentDeleteModalFilename').html(filename);
 				$('#confirmAttachmentDeleteFormActionSave').attr('value', $('#confirmAttachmentDeleteForm').attr('action'));
-				$('#confirmAttachmentDeleteForm').attr('action', $('#confirmAttachmentDeleteForm').attr('action') + messageid + "/" + attachmentid);
+				$('#confirmAttachmentDeleteForm').attr('action',
+					$('#confirmAttachmentDeleteForm').attr('action') + messageid + "/" + attachmentid);
 			});
 
 		$('#confirmAttachmentDeleteModal').on('hide.bs.modal',
-			function (event) {
+			function(event) {
 				$('#confirmAttachmentDeleteForm').attr('action', $('#confirmAttachmentDeleteFormActionSave').attr('value'));
 			});
 
-		
+
 		// The buttonId is the id of the element which should have its state toggled visually by appending/removing the 'dimmed' css class.
-		function handleThreadToggleAjaxCallResult(buttonId, result)
-		{
+		function handleThreadToggleAjaxCallResult(buttonId, result) {
 			if (result.success) {
 				if (result.newstate) {
 					$(buttonId).removeClass("dimmed");
@@ -585,7 +586,7 @@
 	{
 		<script type="text/javascript">
 			$('#confirmMessageDeleteModal').on('show.bs.modal',
-				function (event) {
+				function(event) {
 					var button = $(event.relatedTarget); // Button that triggered the modal
 					var messageid = button.data('messageid');
 					$('#confirmMessageDeleteModalMessageContents').html($('#MessageContents' + messageid).html());
@@ -597,7 +598,7 @@
 				});
 
 			$('#confirmMessageDeleteModal').on('hide.bs.modal',
-				function (event) {
+				function(event) {
 					$('#confirmMessageDeleteForm').attr('action', $('#confirmMessageDeleteFormActionSave').attr('value'));
 				});
 		</script>
@@ -605,14 +606,15 @@
 	@if(Model.UserMayDoSystemWideThreadManagement)
 	{
 		<script type="text/javascript">
-			$('#moveThreadSectionComboBox').change(function () {
+			$('#moveThreadSectionComboBox').change(function() {
 				var selectedSectionID = $(this).val();
 				if (selectedSectionID > 0) {
-					$.get('@ApplicationAdapter.GetVirtualRoot()Section/Forums/' + selectedSectionID, function (data) {
-						$('#moveThreadForumSelectorPlaceHolder').html(data);
-						$('#moveThreadForumSelectorPlaceHolder').fadeIn('fast');
-						$('#moveThreadModalLink').removeClass("disabled");
-					});
+					$.get('@ApplicationAdapter.GetVirtualRoot()Section/Forums/' + selectedSectionID,
+						function(data) {
+							$('#moveThreadForumSelectorPlaceHolder').html(data);
+							$('#moveThreadForumSelectorPlaceHolder').fadeIn('fast');
+							$('#moveThreadModalLink').removeClass("disabled");
+						});
 				} else {
 					$('#moveThreadForumSelectorPlaceHolder').html("");
 					$('#moveThreadForumSelectorPlaceHolder').fadeOut('fast');
@@ -624,45 +626,51 @@
 	@if(Model.UserMayMarkThreadAsDone)
 	{
 		<script type="text/javascript">
-			$('#markDoneButton').bind("click", function () {
-				$('#threadFlagsForm').submit();
-			})
+			$('#markDoneButton').bind("click",
+				function() {
+					$('#threadFlagsForm').submit();
+				})
 		</script>
 	}
 	@if(Model.UserMayDoBasicThreadOperations)
 	{
 		<script type="text/javascript">
-			$('#subscribeButton').bind("click", function () {
-				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID',
-					function(result) {
-						handleThreadToggleAjaxCallResult('#subscribeButton', result);
-					},
-					function (xhr) {
-						alert(xhr.responseText);
-					});
-			});
-			$('#bookmarkButton').bind("click", function () {
-				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID',
-					function (result) {
-						handleThreadToggleAjaxCallResult('#bookmarkButton', result);
-					},
-					function (xhr) {
-						alert(xhr.responseText);
-					});
-			});
+			$('#subscribeButton').bind("click",
+				function() {
+					performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID',
+						function(result) {
+							handleThreadToggleAjaxCallResult('#subscribeButton', result);
+						},
+						function(xhr) {
+							alert(xhr.responseText);
+						});
+				});
+			$('#bookmarkButton').bind("click",
+				function() {
+					performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID',
+						function(result) {
+							handleThreadToggleAjaxCallResult('#bookmarkButton', result);
+						},
+						function(xhr) {
+							alert(xhr.responseText);
+						});
+				});
 		</script>
 	}
 	@if(Model.UserCanApproveAttachments)
 	{
 		<script type="text/javascript">
 			function toggleAttachmentApproval(messageId, attachmentId) {
-				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Attachment/ToggleApproval/' + messageId + '/' + attachmentId,
-					function (result) {
+				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Attachment/ToggleApproval/' +
+					messageId +
+					'/' +
+					attachmentId,
+					function(result) {
 						if (result.success) {
 							$('#icon_attachment_' + attachmentId).attr('class', result.newstate ? 'fa fa-check-square-o' : 'fa fa-square-o');
 						}
 					},
-					function (xhr) {
+					function(xhr) {
 						alert(xhr.responseText);
 					});
 			}
@@ -674,9 +682,10 @@
 		<script type="text/javascript">
 			$('#addAttachmentModal').on('show.bs.modal',
 				function (event) {
+					document.getElementById('addAttachmentForm').reset();
 					var button = $(event.relatedTarget); // Button that triggered the modal
 					var messageId = button.data('messageid');
-					$('#addAttachmentModelErrorLabel').html('');
+					$('#addAttachmentModelErrorLabel').text('');
 					$('#addAttachmentError').hide();
 					$('#addAttachmentModalSubmit').attr('onclick', 'uploadFileThroughForm(' + messageId + ')');
 				});
@@ -685,28 +694,35 @@
 
 		<script type="text/javascript">
 			function uploadFileThroughForm(messageId) {
-				var files = $('#filenameToUpload').prop('files');
-				if (files.length > 0) {
-					if (window.FormData !== undefined) {
-						var fileData = new FormData();
-						fileData.append("file", files[0]);
-						$.ajax({
-							type: "POST",
-							url: '@ApplicationAdapter.GetVirtualRoot()Attachment/Add/' + messageId,
-							contentType: false,
-							processData: false,
-							data: injectToken({
-								fileData:  fileData
-							}),
-							success: function(result) {
-								alert(result.responseMessage);
-							},
-							error: function (xhr) {
-								alert(xhr.responseText);
-							}
-						});
-					} else {
-						alert("This browser doesn't support HTML5 file uploads!");
+				var form = $('#addAttachmentForm');
+				if (form.valid()) {
+					var files = $('#filenameToUpload').prop('files');
+					if (files.length > 0) {
+						if (window.FormData !== undefined) {
+							var formData = new FormData();
+							formData.append("__RequestVerificationToken", $('#addAttachmentForm input[name=__RequestVerificationToken]').val());
+							formData.append("file", files[0]);
+							$.ajax({
+								type: "POST",
+								url: "@ApplicationAdapter.GetVirtualRoot()Attachment/Add/" + messageId,
+								contentType: false,
+								processData: false,
+								data: formData,
+								success: function (resultObject) {
+									if (resultObject.success) {
+										window.location = "@ApplicationAdapter.GetVirtualRoot()Message/Goto/" + messageId;
+									} else {
+										$('#addAttachmentError').show();
+										$('#addAttachmentModelErrorLabel').text(resultObject.responseMessage);
+									}
+								},
+								error: function(xhr) {
+									alert(xhr.responseText);
+								}
+							});
+						} else {
+							alert("This browser doesn't support HTML5 file uploads!");
+						}
 					}
 				}
 			}
