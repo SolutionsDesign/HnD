@@ -738,6 +738,11 @@ textarea.form-control{
 		padding-left: 10px;
 	}
 
+	.column-fluent-no-padding {
+		float: right;
+		width: 100%;
+	}
+
 	.column-clear {
 		clear: both;	
 	}

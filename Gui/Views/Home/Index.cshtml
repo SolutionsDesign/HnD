@@ -12,22 +12,24 @@
 		</div>
 	</div>
 	<div class="row">
-		<form>
-			<div class="col-sm-8">
-				<div class="form-group">
-					<label class="sr-only" for="idSearchBox">Search for</label>
-					<div class="input-group">
-						<input type="search" id="idSearchBox" class="form-control" role="search" placeholder="Please type your question here"/>
-						<div class="input-group-btn">
-							<button class="btn btn-default"><i class="fa fa-search"></i> Search</button>
-						</div>
+	@using(Html.BeginForm("SearchAll", "Search", FormMethod.Post, new {role = "form"}))
+	{
+		@Html.AntiForgeryToken()
+		<div class="col-sm-8">
+			<div class="form-group">
+				<label class="sr-only" for="searchParameters">Search for</label>
+				<div class="input-group">
+					<input type="text" id="searchParameters" name="searchParameters" class="form-control" role="search" placeholder="Please type your question here"/>
+					<div class="input-group-btn">
+						<button class="btn btn-default" type="submit"><i class="fa fa-search"></i> Search</button>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-4 mt5">
-				<a href="#">Advanced search</a>
-			</div>
-		</form>
+		</div>
+		<div class="col-sm-4 mt5">
+			<a href="#">Advanced search</a>
+		</div>
+	}
 	</div>
 	<div class="row mt20">
 		<div class="col-sm-12">

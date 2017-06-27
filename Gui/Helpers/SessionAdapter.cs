@@ -18,12 +18,14 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Web;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
 using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
@@ -101,7 +103,7 @@ namespace SD.HnD.Gui
         /// </summary>
         /// <param name="searchTerms">A string of search terms.</param>
         /// <param name="searchResults">A dataTable of search results.</param>
-        public static void AddSearchTermsAndResults(string searchTerms, DataTable searchResults)
+        public static void AddSearchTermsAndResults(string searchTerms, List<SearchResultRow> searchResults)
         {
             HttpContext.Current.Session.Add("searchTerms", searchTerms);
             HttpContext.Current.Session.Add("searchResults", searchResults);
@@ -120,9 +122,9 @@ namespace SD.HnD.Gui
         /// Gets the search results.
         /// </summary>
         /// <returns>A dataTable of search results, and null if no such value is present in the session</returns>
-        public static DataTable GetSearchResults()
+        public static List<SearchResultRow> GetSearchResults()
         {
-	        return HttpContext.Current.Session["searchResults"] as DataTable;
+	        return HttpContext.Current.Session["searchResults"] as List<SearchResultRow>;
         }
 
 

@@ -114,6 +114,20 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
+		/// Gets all forum IDs of all forums in the system, unordered.
+		/// </summary>
+		/// <returns></returns>
+	    public static List<int> GetAllForumIds()
+	    {
+		    var q = new QueryFactory().Forum.Select(() => ForumFields.ForumID.ToValue<int>());
+		    using(var adapter = new DataAccessAdapter())
+		    {
+			    return adapter.FetchQuery(q);
+		    }
+	    }
+
+
+		/// <summary>
 		/// Gets all forum entities which belong to a given section. 
 		/// </summary>
 		/// <param name="sectionID">The section ID from which forums should be retrieved</param>

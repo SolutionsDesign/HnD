@@ -117,6 +117,7 @@
     <Compile Include="Controllers\ForumController.cs" />
     <Compile Include="Controllers\MessageController.cs" />
     <Compile Include="Controllers\RssForumController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\SupportQueueController.cs" />
     <Compile Include="Controllers\ThreadController.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Models\NewThreadData.cs" />
     <Compile Include="Models\MessageData.cs" />
     <Compile Include="Models\RssForumData.cs" />
+    <Compile Include="Models\SearchResultsData.cs" />
     <Compile Include="Models\SupportQueuesData.cs" />
     <Compile Include="Models\ThreadData.cs" />
     <Compile Include="Models\ThreadPropertiesModel.cs" />
@@ -1181,6 +1183,7 @@
     <None Include="Properties\PublishProfiles\Disk.pubxml" />
     <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
     <Content Include="Views\SupportQueue\ListQueues.cshtml" />
+    <Content Include="Views\Search\Results.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
