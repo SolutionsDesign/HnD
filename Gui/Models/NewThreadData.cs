@@ -12,7 +12,6 @@ namespace SD.HnD.Gui.Models
 		[Required]
 		public override string ThreadSubject { get; set; }
 		public bool UserCanAddStickyThread { get; set; }
-		public bool SubscribeToThread { get; set; }
 		public string NewThreadWelcomeTextAsHTML { get; set; }
 		public bool IsSticky { get; set; }
 	}

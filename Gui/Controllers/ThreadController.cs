@@ -246,9 +246,7 @@ namespace SD.HnD.Gui.Controllers
 				SectionName = CacheManager.GetSectionName(forum.SectionID),
 				ThreadSubject = string.Empty,
 				MessageText = string.Empty,
-				IsSticky = false,
 				UserCanAddStickyThread = userMayAddStickThread,
-				SubscribeToThread =  false,
 				NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
 			};
 			return View(newThreadData);
@@ -287,10 +285,9 @@ namespace SD.HnD.Gui.Controllers
 				// allowed, proceed
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
-#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING
 				newThreadId = ForumManager.CreateNewThreadInForum(forumId, LoggedInUserAdapter.GetUserID(), newThreadData.ThreadSubject, newThreadData.MessageText, messageAsHtml, 
 																  (userMayAddStickThread && newThreadData.IsSticky), Request.UserHostAddress, forum.DefaultSupportQueueID, 
-																  false, out newThreadId);
+																  newThreadData.Subscribe, out newThreadId);
 				ApplicationAdapter.InvalidateCachedForumRSS(forumId);
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
 				{
