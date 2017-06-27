@@ -18,5 +18,6 @@ namespace SD.HnD.Gui.Models
 		public virtual string ThreadSubject { get; set; }
 		[Required]
 		public string MessageText { get; set; }
+		public bool Subscribe { get; set; }
 	}
 }

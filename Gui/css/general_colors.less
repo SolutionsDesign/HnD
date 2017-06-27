@@ -34,11 +34,13 @@
 
 @color-light-grey: lighten(@color-grey, 32%);
 
+@color-plus5: lighten(@color, 5%);
 @color-plus10: lighten(@color, 10%);
 @color-plus20: lighten(@color, 20%);
 @color-plus50: lighten(@color, 50%);
 @color-plus60: lighten(@color, 60%);
 @color-plus68: lighten(@color, 68%);
+@color-min5: darken(@color, 5%);
 @color-min15: darken(@color, 15%);
 
 @color-op50: fade(@color,50%);
@@ -118,6 +120,15 @@ mark {
 
 .br-bottom-center.large:after {
 	border-top: 5px solid @color;
+}
+
+.btn-primary {
+	background-color: @color;
+	border-color: @color-plus5;
+}
+
+.btn-primary:hover {
+	background-color:@color-min5;
 }
 
 .editor-toolbar-divider {

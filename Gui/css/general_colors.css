@@ -1,4 +1,4 @@
-/* define colors here*/
+﻿/* define colors here*/
 /* HnD main colors: @color: #970303; */
 /* alert boxes colors */
 /* no need to define anything below this point */
@@ -55,6 +55,13 @@ mark {
 }
 .br-bottom-center.large:after {
   border-top: 5px solid #066A8B;
+}
+.btn-primary {
+  background-color: #066A8B;
+  border-color: #077da3;
+}
+.btn-primary:hover {
+  background-color: #055773;
 }
 .editor-toolbar-divider {
   border-right-color: #b9b9b9;

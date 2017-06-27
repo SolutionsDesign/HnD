@@ -144,6 +144,7 @@ namespace SD.HnD.Utility
 			if(sendAsynchronically)
 			{
 				// send email asynchronously.
+#warning THIS SHOULD BE REFACTORED INTO ITS OWN METHOD, WHICH IS THEN ALSO ASYNC.
 				client.SendAsync(messageToSend, null);
 			}
 			else

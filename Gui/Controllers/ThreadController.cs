@@ -259,7 +259,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		[ValidateInput(false)]
-		public ActionResult Add([Bind(Include = "MessageText, ThreadSubject, IsSticky")] NewThreadData newThreadData, string submitButton, int forumId = 0)
+		public ActionResult Add([Bind(Include = "MessageText, ThreadSubject, IsSticky, Subscribe")] NewThreadData newThreadData, string submitButton, int forumId = 0)
 		{
 			if(submitButton != "Post")
 			{
@@ -297,7 +297,6 @@ namespace SD.HnD.Gui.Controllers
 					SecurityManager.AuditNewThread(LoggedInUserAdapter.GetUserID(), newThreadId);
 				}
 				CacheManager.InvalidateCachedItem(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
-#warning IMPLEMENT ATTACHMENTS
 			}
 			return Redirect(this.Url.Action("Index", "Thread", new { id = newThreadId, pageNo = 1 }));
 		}

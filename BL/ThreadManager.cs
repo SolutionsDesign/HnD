@@ -355,7 +355,7 @@ namespace SD.HnD.BL
 			try
 			{
 				//send message
-				HnDGeneralUtils.SendEmail(subject, mailBody.ToString(), fromAddress, toAddresses, emailData, true);
+				HnDGeneralUtils.SendEmail(subject, mailBody.ToString(), fromAddress, toAddresses, emailData, false);
 			}
 			catch(SmtpFailedRecipientsException)
 			{

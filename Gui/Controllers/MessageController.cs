@@ -153,7 +153,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		[ValidateInput(false)]
-		public ActionResult Add([Bind(Include = "MessageText")] MessageData messageData, string submitButton, int threadId = 0)
+		public ActionResult Add([Bind(Include = "MessageText,Subscribe")] MessageData messageData, string submitButton, int threadId = 0)
 		{
 			if(submitButton != "Post")
 			{
@@ -181,9 +181,9 @@ namespace SD.HnD.Gui.Controllers
 				// allowed, proceed
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
-#warning IMPLEMENT SUBSCRIBING AND EMAILSENDING. Pay close attention to security: perform security check for subscribing combined with data coming in. Don't trust user input.
 				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, LoggedInUserAdapter.GetUserID(), messageData.MessageText, messageAsHtml, Request.UserHostAddress, 
-																	  false, string.Empty, null, false);
+																	  messageData.Subscribe, ApplicationAdapter.GetEmailTemplate(EmailTemplate.ThreadUpdatedNotification),
+																	  ApplicationAdapter.GetEmailData(), CacheManager.GetSystemData().SendReplyNotifications);
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
 				{
 					SecurityManager.AuditNewMessage(LoggedInUserAdapter.GetUserID(), newMessageId);
