@@ -71,7 +71,7 @@ namespace SD.HnD.Gui.Controllers
 			var rowsToShow = new List<SearchResultRow>();
 			for(int i = 0; (i < pageSize) && ((((pageNo - 1) * pageSize) + i) < results.Count); i++)
 			{
-				rowsToShow.Add(results[i]);
+				rowsToShow.Add(results[((pageNo-1)*pageSize) + i]);
 			}
 			var viewData = new SearchResultsData()
 						   {

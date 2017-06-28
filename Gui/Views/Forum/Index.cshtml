@@ -47,17 +47,20 @@
 						<i class="fa fa-search"></i>
 					</a>&nbsp;
 					<ul class="dropdown-menu plr10 inpageDropDown" role="menu" id="searchDropDown">
-						<form class="form-inline">
-							<div class="form-group">
-								<label class="sr-only" for="idSearchBox">Search for</label>
-								<div class="input-group">
-									<input type="search" id="idSearchBox" size="40" class="form-control" role="search" placeholder="Please type your question here"/>
-									<div class="input-group-btn">
-										<button class="btn btn-default"><i class="fa fa-search"></i></button>
-									</div>
+					@using(Html.BeginForm("SearchForum", "Search", FormMethod.Post, new {role = "form", @class = "form-inline"}))
+					{
+						@Html.AntiForgeryToken()
+						<input type="hidden" name="forumId" id="forumId" value="@Model.ForumID"/>
+						<div class="form-group">
+							<label class="sr-only" for="searchParameters">Search for</label>
+							<div class="input-group">
+								<input type="search" id="searchParameters" name="searchParameters" size="40" class="form-control" role="search" autofocus="" placeholder="Please type your question here"/>
+								<div class="input-group-btn">
+									<button class="btn btn-default"><i class="fa fa-search"></i></button>
 								</div>
 							</div>
-						</form>
+						</div>
+					}
 					</ul>
 					@if(Model.UserCanCreateThreads)
 					{

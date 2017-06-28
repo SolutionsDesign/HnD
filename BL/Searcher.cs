@@ -90,7 +90,8 @@ namespace SD.HnD.BL
 								  .And(ForumFields.ForumID.In(forumIDs))
 								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
 					  .Limit(500)
-					  .OrderBy(CreateSearchSortClause(orderFirstElement));
+					  .OrderBy(CreateSearchSortClause(orderFirstElement))
+					  .Distinct();
 			if(orderSecondElement != orderFirstElement)
 			{
 				// simply call OrderBy again, it will append the sortclause to the existing one.

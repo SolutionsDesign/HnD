@@ -49,7 +49,7 @@ namespace SD.HnD.Gui
 
 			routes.MapRoute("SearchAll", "Search/SearchAll/{searchParameters}", new {controller = "Search", action = "SearchAll", searchParameters = UrlParameter.Optional});
 			routes.MapRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller = "Search", action = "SearchForum", forumId = UrlParameter.Optional, searchParameters = UrlParameter.Optional});
-			routes.MapRoute("SearchResults", "Search/Results/{pageId}", new {controller = "Search", action = "Results", pageId = UrlParameter.Optional});
+			routes.MapRoute("SearchResults", "Search/Results/{pageNo}", new {controller = "Search", action = "Results", pageNo = UrlParameter.Optional});
 
 			routes.MapRoute("ListOfForums", "Section/Forums/{id}", new {controller = "Section", action = "Forums", id = UrlParameter.Optional});
 			

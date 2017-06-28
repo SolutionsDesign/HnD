@@ -38,15 +38,24 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12 fs-header">
-				<span class="plr7">Threads</span>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12 p0">
+							<div class="fs-thread-header">
+								<span class="plr7">Threads</span>&nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="fs-thread-pager">@Html.Partial("SearchResultsPager", Model)</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="row fs-headingrow">
-					<div class="col-sm-8 col-xs-8">Thread subject</div>
-					<div class="col-sm-2 notonmobile plr10">Forum</div>
-					<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+					<div class="col-sm-7 col-xs-8 pl20">Thread subject</div>
+					<div class="col-sm-3 notonmobile">Forum</div>
+					<div class="col-sm-2 col-xs-4 plr10">Last post</div>
 				</div>
 				@foreach(var row in Model.PageRows)
 				{
@@ -56,12 +65,12 @@
 						lastPostingDateAsString = row.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
 					}
 					<div class="row fs-row">
-						<div class="col-sm-8 col-xs-8">
+						<div class="col-sm-7 col-xs-8">
 							<div class="column-fluent-no-padding">
-								<a href="~/Thread/@row.ThreadID/1">@row.Subject</a>
+								<a href="~/Thread/@row.ThreadID/1" target="_blank">@row.Subject</a>
 							</div>
 						</div>
-						<div class="col-sm-2 notonmobile">@row.ForumName</div>
+						<div class="col-sm-3 notonmobile">@row.ForumName</div>
 						<div class="col-sm-2 col-xs-4 text-nowrap-responsive">
 							@Html.Raw(lastPostingDateAsString)
 						</div>

@@ -1184,6 +1184,7 @@
     <Content Include="Views\Shared\MarkdownEditor_CSS.cshtml" />
     <Content Include="Views\SupportQueue\ListQueues.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />
+    <Content Include="Views\Shared\SearchResultsPager.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
