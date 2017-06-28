@@ -77,7 +77,9 @@ namespace SD.HnD.Gui.Controllers
 						   {
 							   NumberOfPages = numberOfPages,
 							   PageNo = pageNo,
-							   PageRows = rowsToShow
+							   PageRows = rowsToShow,
+							   NumberOfResultRows = results.Count,
+							   SearchParameters = SessionAdapter.GetSearchTerms()
 						   };
 			return View(viewData);
 		}

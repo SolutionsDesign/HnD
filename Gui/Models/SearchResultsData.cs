@@ -20,5 +20,10 @@ namespace SD.HnD.Gui.Models
 		/// The list of rows for the page to render. These are the rows on the page with no PageNo
 		/// </summary>
 		public List<SearchResultRow> PageRows { get; set; }
+		/// <summary>
+		/// The total number of rows in the search result
+		/// </summary>
+		public int NumberOfResultRows { get; set; }
+		public string SearchParameters { get; set; }
 	}
 }
