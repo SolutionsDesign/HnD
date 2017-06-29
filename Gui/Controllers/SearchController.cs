@@ -6,11 +6,72 @@ using System.Web.Mvc;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.TypedListClasses;
 using SD.HnD.Gui.Models;
+using SD.Tools.BCLExtensions.CollectionsRelated;
 
 namespace SD.HnD.Gui.Controllers
 {
 	public class SearchController : Controller
 	{
+		/// <summary>
+		/// Get method for the advanced search UI
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		public ActionResult AdvancedSearch()
+		{
+			var allAccessibleForumIDs = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
+			var viewData = new AdvancedSearchUIData()
+						   {
+							   NumberOfMessages = MessageGuiHelper.GetTotalNumberOfMessages(),
+							   AllAccessibleForumsWithSectionName = ForumGuiHelper.GetAllForumsWithSectionNames().Where(r => allAccessibleForumIDs.Contains(r.ForumID)).ToList()
+						   };
+			return View(viewData);
+		}
+
+
+		/// <summary>
+		/// post method for the advanced search. It's called 'SearchAdvanced' as the other search methods are called Search<i>method</i>.
+		/// </summary>
+		/// <param name="searchData"></param>
+		/// <returns></returns>
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult SearchAdvanced([Bind(Include = "SearchParameters, SearchTarget, TargetForums, FirstSortClause, SecondSortClause")] AdvancedSearchModel searchData)
+		{
+			if(string.IsNullOrWhiteSpace(searchData.SearchParameters))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			var forumsToSearch = new List<int>();
+			if(searchData.TargetForums == null || searchData.TargetForums.Count <= 0)
+			{
+				forumsToSearch = ForumGuiHelper.GetAllForumIds();
+			}
+			else
+			{
+				forumsToSearch.AddRange(searchData.TargetForums);
+			}
+
+			var firstSortClause = SearchResultsOrderSetting.ForumAscending;
+			if(!Enum.TryParse(searchData.FirstSortClause, out firstSortClause))
+			{
+				firstSortClause = SearchResultsOrderSetting.ForumAscending;
+			}
+			var secondSortClause = SearchResultsOrderSetting.LastPostDateAscending;
+			if(!Enum.TryParse(searchData.SecondSortClause, out secondSortClause))
+			{
+				secondSortClause = SearchResultsOrderSetting.LastPostDateAscending;
+			}
+			var searchTarget = SearchTarget.MessageText;
+			if(!Enum.TryParse(searchData.SearchTarget, out searchTarget))
+			{
+				searchTarget = SearchTarget.MessageText;
+			}
+			PerformSearch(searchData.SearchParameters, forumsToSearch, firstSortClause, secondSortClause, searchTarget);
+			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+		}
+
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult SearchAll([Bind] string searchParameters="")

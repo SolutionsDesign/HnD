@@ -1,0 +1,161 @@
+﻿@model SD.HnD.Gui.Models.AdvancedSearchUIData
+
+@{
+	ViewBag.Title = "HnD | Advanced Search";
+}
+<a id="top"></a>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li><a href="~/">Home</a></li>
+				<li>Advanced Search</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-10">
+			<h1 class="br-bottom subject mb5 pb5">Advanced Search</h1>
+			<p>Here you can search all messages on this forum using advanced controls. For a more in-depth help about the search, see
+			<a href="#searchHelp">below</a>.</p>
+		</div>
+	</div>
+	<form action="~/Search/SearchAdvanced" method="post" role="form" class="form-horizontal mt20">
+		@Html.AntiForgeryToken()
+		<div class="row">
+			<div class="form-group mb10">
+				<div class="col-sm-2">
+					<label for="searchParameters" class="col-sm-2 pt5 text-nowrap-responsive">Search string</label>
+				</div>
+				<div class="col-sm-8">
+					<input class="form-control" data-val="true" data-val-maxlength="The search string has a max length of &#39;250&#39; characters."
+						   data-val-maxlength-max="200" data-val-required="The search string field is required." id="searchParameters" name="searchParameters" type="text" 
+						   placeholder="Please type your search query here" autofocus=""/>
+					<span class="field-validation-valid text-danger" data-valmsg-for="searchParameters" data-valmsg-replace="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group mb5">
+				<div class="col-sm-2">
+					<label for="searchTarget" class="col-sm-2 text-nowrap-responsive pt5">Element to search</label>
+				</div>
+				<div class="col-sm-8">
+					<select name="searchTarget" id="searchTarget" class="form-control">
+						<option selected="selected" value="MessageText">Message text</option>
+						<option value="ThreadSubject">Thread subject</option>
+						<option value="MessageTextAndThreadSubject">Message text and thread subject</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group mb10">
+				<div class="col-sm-2">
+					<label for="targetForums" class="col-sm-2 text-nowrap-responsive pt5">Forums to search</label>
+					
+				</div>
+				<div class="col-sm-8">
+					@{
+						var selectBoxHeight = Math.Min(10, Model.AllAccessibleForumsWithSectionName.Count);
+						selectBoxHeight = selectBoxHeight < 6 ? 6 : selectBoxHeight;
+					}
+					<select name="targetForums" id="targetForums" multiple size="@selectBoxHeight" class="form-control">
+						@foreach(var forumWithSectionName in Model.AllAccessibleForumsWithSectionName)
+						{
+							<option selected="selected" value="@forumWithSectionName.ForumID">@String.Format("{0} - {1}", forumWithSectionName.SectionName, forumWithSectionName.ForumName)</option>
+						}
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group mb5">
+				<div class="col-sm-2">
+					<label for="firstSortClause" class="col-sm-2 text-nowrap-responsive pt5">Sort by</label>
+				</div>
+				<div class="col-sm-8">
+					<select name="firstSortClause" id="firstSortClause" class="form-control mb5">
+						<option value="LastPostDateDescending">Last post date, descending</option>
+						<option value="LastPostDateAscending">Last post date, ascending</option>
+						<option selected="selected" value="ForumAscending">Forum, ascending</option>
+						<option value="ForumDescending">Forum, descending</option>
+						<option value="ThreadSubjectAscending">Thread subject, ascending</option>
+						<option value="ThreadSubjectDescending">Thread subject, descending</option>
+					</select>
+					And
+					<select name="secondSortClause" id="secondSortClause" class="form-control mt5">
+						<option selected="selected" value="LastPostDateDescending">Last post date, descending</option>
+						<option value="LastPostDateAscending">Last post date, ascending</option>
+						<option value="ForumAscending">Forum, ascending</option>
+						<option value="ForumDescending">Forum, descending</option>
+						<option value="ThreadSubjectAscending">Thread subject, ascending</option>
+						<option value="ThreadSubjectDescending">Thread subject, descending</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-2 col-sm-offset-2 plr7 pt10">
+				<button class="btn btn-primary" type="submit"> Search </button>
+			</div>
+		</div>
+	</form>
+</div>
+<section class="fs mt20">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-10 mt30">
+				<a class="ps-anchor" id="searchHelp"></a>
+				<h2 class="mb5 pb5 br-bottom">Search Help</h2>
+				<p>
+					Above you can specify your search query, which element to search and in which forums you want to search. If you do not select a 
+					forum, all forums are searched.	You can specify 'AND', 'OR', 'AND NOT' and 'OR NOT' to specify your query arguments. 
+					If no operator is specified, AND is assumed, so you don't have to 
+					specify it explicitly. Specifying 'OR' will search for either of the two terms it's placed in between.
+				</p>
+				<p>
+					This searchengine uses SQL Server full text search together with <a href="https://www.llblgen.com">LLBLGen Pro</a> code to search through the
+					<span>@Model.NumberOfMessages</span> posts on this forum, using CONTAINS queries. The forum search engine therefore accepts
+					queries which are valid CONTAINS queries. Below is a brief help on the basic syntaxis of CONTAINS queries. You can also consult the 
+					<a href="https://docs.microsoft.com/en-us/sql/t-sql/queries/contains-transact-sql" target="_blank">CONTAINS reference documentation in SQL Server Books Online</a> for
+					the exact syntax for CONTAINS queries.
+				</p>
+				<p>
+					The search engine will at most return 500 hits. If you receive 500 hits, please refine your query. A search in both message text and thread subject
+					will likely result in more results and this search is also slower.
+				</p>
+				<p>
+					<h3 class="mb5 pb5 mt10 pt10">Query syntaxis</h3>
+					You can use exact index searching by specifying the terms you're looking for, like <i>Entity</i> or <i>Prefetch</i>, which will exactly match with
+					<i>Entity</i> and <i>Prefetch</i>. If you want to use wild-cards, you can. For example <i>Entity*</i> will match with <i>Entity</i> but also with
+					EntityClass, EntityMethod but not with MyEntity. To find <i>MyEntity</i> as well, specify <i>*Entity*</i>.
+				</p>
+				<p>
+					You can also use <i>phrases</i>, to search for "Entity Collection" for example. Simply enclose any text that you want to search for which contains
+					spaces with double quotes. To search for a word near another word, you can use the keyword 'NEAR': Entity NEAR collection, which search for 'Entity'
+					and 'Collection', and will favor messages which contain these words closer together over messages which have these words far apart from eachother.
+				</p>
+				<p>
+					The search results consists of links to threads with messages matching the search query. All threads open in a new window. At most 500 threads
+					are made available to you in the search result page. In the case of a lot of search results, you're adviced to specify more search terms to narrow
+					down the resultset. The search is case-insensitive.
+				</p>
+				<p>
+					<h3 class="mb5 pb5 mt10 pt10">Examples:</h3>
+					<i>Prefetch AND Path</i> (which results in all messages with 'Prefetch' and 'Path') Equals to: <i>Prefetch Path</i><br>
+					<i>Prefetch OR Path</i> (which results in all messages with 'Prefetch' or 'Path' or both)<br>
+					<i>Prefetch Path*</i> (which results in all messages with 'Prefetch' and all known words starting with 'Path')<br>
+					<i>Entity Prefetch OR Path</i> (which results in all messages with 'Entity', and either 'Prefetch' or 'Path' or both)<br>
+					<i>"Entity Collection"</i> (which results in all messages with 'Entity Collection', including the space)
+				</p>
+				<p>
+					<b>Note:</b> The search engine uses a list of words which are ignored. Please click
+					<a href="IgnoredSearchWords.aspx" target="_blank">here</a> to check this list. If you perform a search with a reserved word and the AND operator,
+					no rows are returned, as it will not return in any hits.
+				</p>
+
+			</div>
+		</div>
+	</div>
+</section>

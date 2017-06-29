@@ -133,6 +133,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AdvancedSearchModel.cs" />
+    <Compile Include="Models\AdvancedSearchUIData.cs" />
     <Compile Include="Models\ForumData.cs" />
     <Compile Include="Models\ForumSelectorData.cs" />
     <Compile Include="Models\HomeData.cs" />
@@ -1185,6 +1187,7 @@
     <Content Include="Views\SupportQueue\ListQueues.cshtml" />
     <Content Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\SearchResultsPager.cshtml" />
+    <Content Include="Views\Search\AdvancedSearch.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
