@@ -42,16 +42,16 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+			var allAccessibleForums = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
 			var forumsToSearch = new List<int>();
 			if(searchData.TargetForums == null || searchData.TargetForums.Count <= 0)
 			{
-				forumsToSearch = ForumGuiHelper.GetAllForumIds();
+				forumsToSearch.AddRange(allAccessibleForums);
 			}
 			else
 			{
-				forumsToSearch.AddRange(searchData.TargetForums);
+				forumsToSearch.AddRange(searchData.TargetForums.Where(f=>allAccessibleForums.Contains(f)));
 			}
-
 			var firstSortClause = SearchResultsOrderSetting.ForumAscending;
 			if(!Enum.TryParse(searchData.FirstSortClause, out firstSortClause))
 			{
@@ -80,7 +80,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			PerformSearch(searchParameters, ForumGuiHelper.GetAllForumIds(), SearchResultsOrderSetting.LastPostDateDescending, SearchResultsOrderSetting.ForumAscending, 
+			PerformSearch(searchParameters, LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum), SearchResultsOrderSetting.LastPostDateDescending, SearchResultsOrderSetting.ForumAscending, 
 						  SearchTarget.MessageTextAndThreadSubject);
 
 			return RedirectToAction("Results", "Search", new { pageNo = 1 });
@@ -95,12 +95,53 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+			var allAccessibleForums = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
+			if(!allAccessibleForums.Contains(forumId))
+			{
+				return RedirectToAction("Index", "Home");
+			}
 			var forum = CacheManager.GetForum(forumId);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
 			PerformSearch(searchParameters, new List<int>() { forumId}, SearchResultsOrderSetting.LastPostDateDescending, SearchResultsOrderSetting.ThreadSubjectAscending, 
+						  SearchTarget.MessageTextAndThreadSubject);
+			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+		}
+
+
+		[HttpGet]
+		public ActionResult SearchUnattended()
+		{
+			string[] forumIDs = Request.QueryString.GetValues("ForumID");
+			var forumIDsToSearchIn = new List<int>();
+			var allAccessibleForumIDs = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
+			if(forumIDs == null)
+			{
+				forumIDsToSearchIn.AddRange(allAccessibleForumIDs);
+			}
+			else
+			{
+				foreach(string forumIDAsString in forumIDs)
+				{
+					int forumID;
+					if(!int.TryParse(forumIDAsString, out forumID))
+					{
+						return RedirectToAction("Index", "Home");
+					}
+					if(allAccessibleForumIDs.Contains(forumID))
+					{
+						forumIDsToSearchIn.Add(forumID);
+					}
+				}
+			}
+			string searchParameters = Request.QueryString.Get("SearchTerms");		// 'SearchTerms' is the URL argument used in older HnD versions, so we keep that.
+			if(string.IsNullOrWhiteSpace(searchParameters))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			PerformSearch(searchParameters, forumIDsToSearchIn, SearchResultsOrderSetting.LastPostDateDescending, SearchResultsOrderSetting.ThreadSubjectAscending,
 						  SearchTarget.MessageTextAndThreadSubject);
 			return RedirectToAction("Results", "Search", new { pageNo = 1 });
 		}

@@ -65,6 +65,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -149,6 +150,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rssforum.aspx.cs">
       <DependentUpon>Rssforum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SearchUnattended.aspx.cs">
+      <DependentUpon>SearchUnattended.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>
@@ -1092,6 +1097,7 @@
     <Content Include="pics\logo%402x.png" />
     <Content Include="pics\logo.png" />
     <Content Include="Rssforum.aspx" />
+    <Content Include="SearchUnattended.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
