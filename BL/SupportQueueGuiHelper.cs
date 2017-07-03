@@ -179,6 +179,22 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
+		/// Gets the total number of threads in support queues no matter what the calling user can see.
+		/// </summary>
+		/// <returns>total number of threads in support queues</returns>
+		public static int GetTotalNumberOfThreadsInSupportQueues()
+		{
+			var qf = new QueryFactory();
+			var q = qf.SupportQueueThread
+					  .Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"));
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchScalar<int>(q);
+			}
+		}
+
+
+		/// <summary>
 		/// Gets the total number of threads in support queues. Only the count of threads which are in the forums in the list of
 		/// accessable forums are returned.
 		/// </summary>

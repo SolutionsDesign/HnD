@@ -132,6 +132,7 @@ namespace SD.HnD.Gui.Controllers
 				}
 				MessageManager.AddAttachment(messageId, fileContent.FileName, fileData,
 											 LoggedInUserAdapter.CanPerformForumActionRight(forum.ForumID, ActionRights.GetsAttachmentsApprovedAutomatically));
+				ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 				return Json(new {success = true, responseMessage = string.Empty});
 			}
 			catch(Exception)
@@ -165,6 +166,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 			MessageManager.DeleteAttachment(messageId, attachmentId);
+			ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 			// redirect to the message, using the message controller
 			return RedirectToAction("Goto", "Message", new {id = messageId});
 		}
@@ -194,6 +196,10 @@ namespace SD.HnD.Gui.Controllers
 			int userIdForAuditing = AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditApproveAttachment) ? LoggedInUserAdapter.GetUserID() : -1;
 			bool newState = false;
 			bool result = MessageManager.ToggleAttachmentApproval(messageId, attachmentId, userIdForAuditing, out newState);
+			if(result)
+			{
+				ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
+			}
 			return Json(new { success = result, newstate = newState });
 		}
 		

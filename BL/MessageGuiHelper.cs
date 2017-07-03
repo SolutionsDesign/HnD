@@ -66,7 +66,24 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Gets the total number of attachments to approve.
+		/// Gets the total number of attachments to approve, without any filter.
+		/// </summary>
+		/// <returns></returns>
+		public static int GetTotalNumberOfAttachmentsToApprove()
+		{
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var q = qf.Attachment
+						  .Select(Functions.CountRow())
+						  .Where(AttachmentFields.Approved.Equal(false));
+				return adapter.FetchScalar<int>(q);
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the total number of attachments to approve based on what the passed in user can see.
 		/// </summary>
 		/// <param name="accessableForums">The accessable forums by the user calling.</param>
 		/// <param name="forumsWithApprovalRight">The forums the calling user has attachment approval rights.</param>

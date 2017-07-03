@@ -224,6 +224,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				ThreadManager.MarkThreadAsDone(thread.ThreadID);
 			}
+			ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
 		}
 
@@ -289,6 +290,7 @@ namespace SD.HnD.Gui.Controllers
 																  (userMayAddStickThread && newThreadData.IsSticky), Request.UserHostAddress, forum.DefaultSupportQueueID, 
 																  newThreadData.Subscribe, out newThreadId);
 				ApplicationAdapter.InvalidateCachedForumRSS(forumId);
+				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
 				{
 					SecurityManager.AuditNewThread(LoggedInUserAdapter.GetUserID(), newThreadId);

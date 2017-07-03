@@ -184,6 +184,7 @@ namespace SD.HnD.Gui.Controllers
 				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, LoggedInUserAdapter.GetUserID(), messageData.MessageText, messageAsHtml, Request.UserHostAddress, 
 																	  messageData.Subscribe, ApplicationAdapter.GetEmailTemplate(EmailTemplate.ThreadUpdatedNotification),
 																	  ApplicationAdapter.GetEmailData(), CacheManager.GetSystemData().SendReplyNotifications);
+				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(AuditingAdapter.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
 				{
 					SecurityManager.AuditNewMessage(LoggedInUserAdapter.GetUserID(), newMessageId);

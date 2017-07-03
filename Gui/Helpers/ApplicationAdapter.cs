@@ -226,6 +226,78 @@ namespace SD.HnD.Gui
 		}
 
 
+	    public static int GetCachedNumberOfUnapprovedAttachments()
+	    {
+		    try
+		    {
+			    HttpContext.Current.Application.Lock();
+			    var toReturn = HttpContext.Current.Application["cachedNumberOfUnapprovedAttachments"] as int?;
+			    if(toReturn.HasValue)
+			    {
+				    return toReturn.Value;
+			    }
+				// reset the cached value in the application object. 
+			    return InvalidateCachedNumberOfUnapprovedAttachments();
+		    }
+			finally
+		    {
+				HttpContext.Current.Application.UnLock();
+		    }
+	    }
+
+
+	    public static int InvalidateCachedNumberOfUnapprovedAttachments()
+	    {
+		    try
+		    {
+			    HttpContext.Current.Application.Lock();
+				var numberOfUnapprovedAttachments = MessageGuiHelper.GetTotalNumberOfAttachmentsToApprove();
+			    HttpContext.Current.Application["cachedNumberOfUnapprovedAttachments"] = numberOfUnapprovedAttachments;
+			    return numberOfUnapprovedAttachments;
+		    }
+		    finally
+		    {
+			    HttpContext.Current.Application.UnLock();
+		    }
+	    }
+
+
+	    public static int GetCachedNumberOfThreadsInSupportQueues()
+	    {
+		    try
+		    {
+			    HttpContext.Current.Application.Lock();
+			    var toReturn = HttpContext.Current.Application["cachedNumberOfThreadsInSupportQueues"] as int?;
+			    if(toReturn.HasValue)
+			    {
+				    return toReturn.Value;
+			    }
+			    // reset the cached value in the application object. 
+			    return InvalidateCachedNumberOfThreadsInSupportQueues();
+		    }
+		    finally
+		    {
+			    HttpContext.Current.Application.UnLock();
+		    }
+	    }
+
+
+	    public static int InvalidateCachedNumberOfThreadsInSupportQueues()
+	    {
+		    try
+		    {
+			    HttpContext.Current.Application.Lock();
+			    var numberOfThreadsInSupportQueues = SupportQueueGuiHelper.GetTotalNumberOfThreadsInSupportQueues();
+			    HttpContext.Current.Application["cachedNumberOfThreadsInSupportQueues"] = numberOfThreadsInSupportQueues;
+			    return numberOfThreadsInSupportQueues;
+		    }
+		    finally
+		    {
+			    HttpContext.Current.Application.UnLock();
+		    }
+	    }
+
+
 		/// <summary>
 		/// sets the flag for the cached RSS feed for the given forum to false, so the cache will be invalidated for that forum rss feed
 		/// </summary>
