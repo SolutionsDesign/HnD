@@ -26,6 +26,7 @@ using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using System.Collections.Generic;
 using System.Linq;
+using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -191,15 +192,15 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Gets all attachments which have to be approved as data view, filtered on the two passed in list of forum id's.
-		/// It doesn't return the file contents for each attachment, it just returns the other data of each attachment, as well as some other related data.
+		/// Gets all message ids and related info for displaying of the messages which have at least 1 unapproved attachment.
 		/// </summary>
 		/// <param name="accessableForums">The accessable forums by the user calling.</param>
 		/// <param name="forumsWithApprovalRight">The forums the calling user has attachment approval rights.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums the calling user can view normal threads from others.</param>
 		/// <param name="userID">The user ID of the calling user.</param>
-		/// <returns>DataView with the data requested.</returns>
-		public static DataView GetAllAttachmentsToApproveAsDataView(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers, int userID)
+		/// <returns>List with objects with the data requested.</returns>
+		public static List<AggregatedUnapprovedAttachmentRow> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums, List<int> forumsWithApprovalRight, 
+																										List<int> forumsWithThreadsFromOthers, int userID)
 		{
 			if((accessableForums == null) || (accessableForums.Count <= 0))
 			{
@@ -211,31 +212,27 @@ namespace SD.HnD.BL
 				// doesn't have a forum with attachment approval right
 				return null;
 			}
+			var qf = new QueryFactory();
 
-			// The data we'll add is the ForumID of the thread containing the messagee the attachment is attached to, as well as
-			// the userid of the poster of the message the attachment is attached to, and the threadid of the thread the message is in.
 			// We've to filter the list of attachments based on the forums accessable by the calling user, the list of forums the calling user has approval 
 			// rights on and by the forums on which the user can see other user's threads. We'll create a predicate expression for this, and will add 
 			// for each of these filters a separate predicate to this predicate expression and specify AND, so they all have to be true 
-			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(AttachmentFields.AttachmentID,
-								AttachmentFields.MessageID,
-								AttachmentFields.Filename,
-								AttachmentFields.Approved,
-								AttachmentFields.Filesize,
-								AttachmentFields.AddedOn,
-								MessageFields.PostedByUserID,
-								ThreadFields.ForumID,
-								ThreadFields.ThreadID)
-						.From(qf.Attachment
-								.InnerJoin(qf.Message).On(AttachmentFields.MessageID == MessageFields.MessageID)
-								.InnerJoin(qf.Thread).On(MessageFields.ThreadID == ThreadFields.ThreadID))
-						.Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID))
-						.OrderBy(AttachmentFields.AddedOn.Ascending());
+					  .Select<AggregatedUnapprovedAttachmentRow>(ThreadFields.Subject,
+																 ForumFields.ForumName,
+																 MessageFields.MessageID,
+																 AttachmentFields.AddedOn)
+					  .From(qf.Attachment
+							  .InnerJoin(qf.Message).On(AttachmentFields.MessageID == MessageFields.MessageID)
+							  .InnerJoin(qf.Thread).On(MessageFields.ThreadID == ThreadFields.ThreadID)
+							  .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
+					  .Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID))
+					  .OrderBy(ForumFields.ForumName.Ascending(), AttachmentFields.AddedOn.Ascending())
+					  .Distinct();
+
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchAsDataTable(q).DefaultView;
+				return adapter.FetchQuery(q);
 			}
 		}
 

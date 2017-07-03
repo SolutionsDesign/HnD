@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -49,6 +50,26 @@ namespace SD.HnD.Gui.Controllers
 			}
 			// all good, return the file contents.
 			return File(attachmentToStream.Filecontents, "application/unknown", attachmentToStream.Filename);
+		}
+
+
+		[Authorize]
+		[HttpGet]
+		public ActionResult Unapproved()
+		{
+			var forumsWithApprovalRight = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.ApproveAttachment);
+			var accessableForums = LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum);
+			if(((forumsWithApprovalRight == null) || (forumsWithApprovalRight.Count <= 0)) ||
+			   ((accessableForums == null) || (accessableForums.Count <= 0)))
+			{
+				// no, this user doesn't have the right to approve attachments or doesn't have access to any forums.
+				return RedirectToAction("Index", "Home");
+			}
+
+			var messageIDsWithUnaprovedAttachments = MessageGuiHelper.GetAllMessagesIDsWithUnapprovedAttachments(accessableForums, forumsWithApprovalRight,
+																												 LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
+																												 LoggedInUserAdapter.GetUserID());
+			return View(new UnapprovedAttachmentsData() {MessageIdsWithUnapprovedAttachments = messageIDsWithUnaprovedAttachments});
 		}
 
 

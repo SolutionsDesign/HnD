@@ -198,6 +198,7 @@
     <Compile Include="TypedDataClasses\AggregatedActiveThreadRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedSupportQueueContentsRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedThreadRow.cs" />
+    <Compile Include="TypedDataClasses\AggregatedUnapprovedAttachmentRow.cs" />
     <Compile Include="UserGuiHelper.cs">
       <SubType>Code</SubType>
     </Compile>

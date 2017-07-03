@@ -46,6 +46,7 @@ namespace SD.HnD.Gui
 			routes.MapRoute("ToggleApproval", "Attachment/ToggleApproval/{messageId}/{attachmentId}", new { controller = "Attachment", action = "ToggleApproval", messageId = UrlParameter.Optional, attachmentId = UrlParameter.Optional });
 			routes.MapRoute("GetAttachment", "Attachment/Get/{messageId}/{attachmentId}", new {controller = "Attachment", action = "Get", messageId = UrlParameter.Optional, attachmentId = UrlParameter.Optional});
 			routes.MapRoute("AddAttachment", "Attachment/Add/{messageId}", new { controller = "Attachment", action = "Add", messageId = UrlParameter.Optional });
+			routes.MapRoute("GetUnapproved", "Attachment/Unapproved", new { controller="Attachment", action="Unapproved"});
 
 			routes.MapRoute("SearchAll", "Search/SearchAll/{searchParameters}", new {controller = "Search", action = "SearchAll", searchParameters = UrlParameter.Optional});
 			routes.MapRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller = "Search", action = "SearchForum", forumId = UrlParameter.Optional, searchParameters = UrlParameter.Optional});
