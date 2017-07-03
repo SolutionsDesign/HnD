@@ -27,7 +27,7 @@ namespace SD.HnD.Gui
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Response.RedirectPermanent("~/RssForum/" + HnDGeneralUtils.TryConvertToInt(Request.QueryString["ForumID"]));
+			Response.RedirectPermanent("~/RssForum/" + Request.QueryString["ForumID"]);
 		}
 	}
 }

@@ -53,6 +53,7 @@ namespace SD.HnD.Gui
 			routes.MapRoute("SearchAdvanced", "Search/SearchAdvanced/", new {controller = "Search", action = "SearchAdvanced"});
 			routes.MapRoute("SearchAdvancedUI", "Search", new {controller = "Search", action = "AdvancedSearch"});
 			routes.MapRoute("SearchUnattended", "SearchUnattended", new {controller = "Search", action = "SearchUnattended"});
+			routes.MapRoute("ViewIgnoredSearchWords", "Search/IgnoredSearchWords", new {controller = "Search", action = "IgnoredSearchWords" });
 
 			routes.MapRoute("ListOfForums", "Section/Forums/{id}", new {controller = "Section", action = "Forums", id = UrlParameter.Optional});
 			

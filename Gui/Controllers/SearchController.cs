@@ -187,6 +187,14 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+		[HttpGet]
+		public ActionResult IgnoredSearchWords()
+		{
+			var viewData = new IgnoredSearchWordsData(ApplicationAdapter.GetNoiseWords());
+			return View(viewData);
+		}
+
+
 		private void PerformSearch(string searchParameters, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, SearchResultsOrderSetting orderSecondElement, 
 								   SearchTarget targetToSearch)
 		{

@@ -139,6 +139,7 @@
     <Compile Include="Models\ForumData.cs" />
     <Compile Include="Models\ForumSelectorData.cs" />
     <Compile Include="Models\HomeData.cs" />
+    <Compile Include="Models\IgnoredSearchWordsData.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\NewThreadData.cs" />
     <Compile Include="Models\MessageData.cs" />
@@ -1194,6 +1195,7 @@
     <Content Include="Views\Search\Results.cshtml" />
     <Content Include="Views\Shared\SearchResultsPager.cshtml" />
     <Content Include="Views\Search\AdvancedSearch.cshtml" />
+    <Content Include="Views\Search\IgnoredSearchWords.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
