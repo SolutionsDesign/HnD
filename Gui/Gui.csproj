@@ -134,6 +134,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ActiveThreadsData.cs" />
     <Compile Include="Models\AdvancedSearchModel.cs" />
     <Compile Include="Models\AdvancedSearchUIData.cs" />
     <Compile Include="Models\ForumData.cs" />
@@ -1198,6 +1199,7 @@
     <Content Include="Views\Search\AdvancedSearch.cshtml" />
     <Content Include="Views\Search\IgnoredSearchWords.cshtml" />
     <Content Include="Views\Attachment\Unapproved.cshtml" />
+    <Content Include="Views\Thread\Active.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

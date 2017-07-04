@@ -57,12 +57,14 @@
 							<ul class="nav navbar-nav">
 								@if(Request.IsAuthenticated)
 								{
-									<li><a href="~/Account/Logout">Log out</a></li>}
+									<li><a href="~/Account/Logout">Log out</a></li>
+								}
 								else
 								{
 									<li><a href="#">Register</a></li>
-									<li><a href="~/Account/Login">Log in</a></li>}
-								<li><a href="activethreads.html">Active Threads</a></li>
+									<li><a href="~/Account/Login">Log in</a></li>
+								}
+								<li><a href="~/Thread/Active">Active Threads</a></li>
 								@if(LoggedInUserAdapter.ShouldSeeAdministrateMenu())
 								{
 									<li class="dropdown">
@@ -86,7 +88,8 @@
 												<li>Admin placeholder</li>
 											}
 										</ul>
-									</li>}
+									</li>
+								}
 								@if(Request.IsAuthenticated)
 								{
 									<li class="dropdown">
@@ -124,12 +127,14 @@
 									<li><a href="~/">Home</a></li>
 									@if(Request.IsAuthenticated)
 									{
-										<li><a href="~/Account/Logout">Log out</a></li>}
+										<li><a href="~/Account/Logout">Log out</a></li>
+									}
 									else
 									{
 										<li><a href="#">Register</a></li>
-										<li><a href="~/Account/Login">Log in</a></li>}
-									<li><a href="#">Active Threads</a></li>
+										<li><a href="~/Account/Login">Log in</a></li>
+									}
+									<li><a href="~/Thread/Active">Active Threads</a></li>
 									<li><a href="~/Search">Search</a></li>
 								</ul>
 							</div>

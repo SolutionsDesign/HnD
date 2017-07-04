@@ -1,0 +1,114 @@
+﻿@model SD.HnD.Gui.Models.ActiveThreadsData
+
+@{
+    ViewBag.Title = "HnD | Active Threads";
+}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0">Active Threads</h2>
+            <p>
+	            The list of all active threads of the past @CacheManager.GetSystemData().HoursThresholdForActiveThreads hours.
+            </p>
+        </div>
+    </div>
+</div>
+<section class="fs mt20">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 fs-header">
+                Active threads
+            </div>
+        </div>
+		@if(Model.ActiveThreads.Count <= 0)
+        {
+            <div class="row fs-row pb30">
+                <div class="col-sm-12">
+                    There are no active threads at this point.
+                </div>
+            </div>
+		}
+        else
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row fs-headingrow">
+	                    <div class="col-sm-8 col-xs-8"><span class="pl50">Thread subject</span></div>
+	                    <div class="col-sm-1 notonmobile plr10">Posts</div>
+	                    <div class="col-sm-1 notonmobile plr10">Views</div>
+	                    <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+                    </div>
+                    @foreach(var activeThreadRow in Model.ActiveThreads)
+                    {
+                        var iconClass = "icon-nonewpost";
+                        var iconType = "fa-comments";
+                        var lastPostingDateAsString = "Never";
+                        var stickyClass = string.Empty;
+                        if(activeThreadRow.IsClosed)
+                        {
+                            iconType = "fa-lock";
+                        }
+                        if(activeThreadRow.IsSticky)
+                        {
+                            iconType = "fa-thumb-tack";
+                            stickyClass = " stickyThread";
+                        }
+                        if(activeThreadRow.ThreadLastPostingDate.HasValue)
+                        {
+                            lastPostingDateAsString = activeThreadRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+                            if(activeThreadRow.ThreadLastPostingDate.Value > LoggedInUserAdapter.GetLastVisitDate())
+                            {
+                                iconClass = "icon-newpost";
+                            }
+                        }
+                        <div class="row fs-row @stickyClass">
+                            <div class="col-sm-8 col-xs-8">
+                                <div class="column-wrapper-sm">
+                                    <div class="column-fixed-sm">
+                                        <i class="fa @iconType @iconClass"></i>
+                                    </div>
+                                    <div class="column-fluent">
+                                        <a href="~/Thread/@activeThreadRow.ThreadID/1">@activeThreadRow.Subject</a>
+                                        <span class="list-row-description notonmobile pt3">
+                                            Posted in forum: <a href="~/Forum/@activeThreadRow.ForumID/1">@activeThreadRow.ForumName</a><br/>
+                                            Started by: <a href="~/User/@activeThreadRow.ThreadStartedByUserID">@activeThreadRow.ThreadStartedByNickName</a><br/>
+                                        </span>
+                                    </div>
+                                    <div class="column-clear"></div>
+                                </div>
+                            </div>
+							<div class="col-sm-1 notonmobile">@activeThreadRow.NumberOfMessages</div>
+							<div class="col-sm-1 notonmobile">@activeThreadRow.NumberOfViews</div>
+                            <div class="col-sm-2 col-xs-4">
+                                <a href="~/Message/Goto/@activeThreadRow.MessageIDLastPost">@lastPostingDateAsString</a>
+                                <span class="list-row-description notonmobile pt3">
+                                    By: <a href="~/User/@activeThreadRow.LastPostbyUserID">@activeThreadRow.LastPostByNickName</a>
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+		}
+        <div class="row pb10">
+            <div class="col-sm-12">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 pull-center pt20">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

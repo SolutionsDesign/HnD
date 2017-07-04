@@ -71,6 +71,18 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+		[HttpGet]
+		public ActionResult Active()
+		{
+			var aggregatedActiveThreadsData = ThreadGuiHelper.GetActiveThreadsAggregatedData(LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.AccessForum),
+																							 CacheManager.GetSystemData().HoursThresholdForActiveThreads,
+																							 LoggedInUserAdapter.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
+																							 LoggedInUserAdapter.GetUserID());
+			var viewData = new ActiveThreadsData() {ActiveThreads = aggregatedActiveThreadsData};
+			return View(viewData);
+		}
+
+
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]

@@ -21,6 +21,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -149,17 +150,17 @@ namespace SD.HnD.BL
 			}
 		}
 
-#warning CONVERT TO List<AggregatedActiveThreadRow>() RETURNING METHOD
+
 		/// <summary>
-		/// Gets the active threads.
+		/// Gets the active threads visible to the user.
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
 		/// <param name="hoursThreshold">The hours threshold for the query to fetch the active threads. All threads within this threshold's period of time (in hours)
 		/// are fetched.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
-		/// <returns>a dataView of Active threads</returns>
-		public static DataView GetActiveThreadsAsDataView(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
+		/// <returns>a list with objects representing the Active threads</returns>
+		public static List<AggregatedActiveThreadRow> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
 		{
             if (accessableForums == null || accessableForums.Count <= 0)
             {
@@ -168,7 +169,7 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(ThreadGuiHelper.BuildQueryProjectionElementsForAllActiveThreadsWithStats(qf))
+						.Select<AggregatedActiveThreadRow>(ThreadGuiHelper.BuildQueryProjectionElementsForAllActiveThreadsWithStats(qf).ToArray())
 						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
 								.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
 						.Where((ThreadFields.ForumID == accessableForums)
@@ -179,7 +180,7 @@ namespace SD.HnD.BL
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchAsDataTable(q).DefaultView;
+				return adapter.FetchQuery(q);
 			}
 		}
 
