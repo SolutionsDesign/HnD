@@ -151,7 +151,7 @@ namespace SD.HnD.BL
 				return new List<AggregatedSupportQueueContentsRow>();
 			}
 			var qf = new QueryFactory();
-			var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionElementsForAllActiveThreadsWithStats(qf));
+			var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf));
 			projectionFields.AddRange(new[]
 									  {
 										  SupportQueueThreadFields.QueueID, 

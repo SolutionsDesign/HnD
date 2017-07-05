@@ -137,6 +137,7 @@
     <Compile Include="Models\ActiveThreadsData.cs" />
     <Compile Include="Models\AdvancedSearchModel.cs" />
     <Compile Include="Models\AdvancedSearchUIData.cs" />
+    <Compile Include="Models\BookmarksData.cs" />
     <Compile Include="Models\ForumData.cs" />
     <Compile Include="Models\ForumSelectorData.cs" />
     <Compile Include="Models\HomeData.cs" />
@@ -1200,6 +1201,7 @@
     <Content Include="Views\Search\IgnoredSearchWords.cshtml" />
     <Content Include="Views\Attachment\Unapproved.cshtml" />
     <Content Include="Views\Thread\Active.cshtml" />
+    <Content Include="Views\Account\Bookmarks.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -242,7 +242,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadIDsToRemove">Thread I ds to remove.</param>
 		/// <param name="userID">user for whom these bookmarks have to be deleted</param>
-		public static void RemoveBookmarks(List<int> threadIDsToRemove, int userID)
+		public static void RemoveBookmarks(IEnumerable<int> threadIDsToRemove, int userID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{

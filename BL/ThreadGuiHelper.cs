@@ -160,7 +160,7 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>a list with objects representing the Active threads</returns>
-		public static List<AggregatedActiveThreadRow> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
+		public static List<AggregatedThreadRow> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
 		{
             if (accessableForums == null || accessableForums.Count <= 0)
             {
@@ -169,7 +169,7 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select<AggregatedActiveThreadRow>(ThreadGuiHelper.BuildQueryProjectionElementsForAllActiveThreadsWithStats(qf).ToArray())
+						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
 						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
 								.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
 						.Where((ThreadFields.ForumID == accessableForums)
@@ -361,12 +361,11 @@ namespace SD.HnD.BL
 		
 
 		/// <summary>
-		/// Builds the projection elements for a dynamic query which contains active thread and statistics information.
+		/// Builds the projection elements for a dynamic query which contains thread information and additionally the forum name.
 		/// </summary>
 		/// <param name="qf">The query factory to use.</param>
 		/// <returns>The fields for the projection</returns>
-		/// <remarks>Doesn't add the forum fields</remarks>
-		internal static List<object> BuildQueryProjectionElementsForAllActiveThreadsWithStats(QueryFactory qf)
+		internal static List<object> BuildQueryProjectionForAllThreadsWithStatsWithForumName(QueryFactory qf)
 		{
 			var toReturn = BuildQueryProjectionForAllThreadsWithStats(qf);
 			toReturn.Add(ForumFields.ForumName);

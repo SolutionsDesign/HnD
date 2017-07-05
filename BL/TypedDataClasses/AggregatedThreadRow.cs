@@ -13,6 +13,7 @@ namespace SD.HnD.BL.TypedDataClasses
 	{
 		public int ThreadID { get; set; }
 		public int ForumID { get; set; }
+		public string ForumName { get; set; }
 		public string Subject { get; set; }
 		public int ThreadStartedByUserID { get; set; }
 		public string ThreadStartedByNickName { get; set; }

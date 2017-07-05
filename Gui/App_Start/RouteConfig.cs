@@ -59,7 +59,10 @@ namespace SD.HnD.Gui
 			routes.MapRoute("ViewIgnoredSearchWords", "Search/IgnoredSearchWords", new {controller = "Search", action = "IgnoredSearchWords" });
 
 			routes.MapRoute("ListOfForums", "Section/Forums/{id}", new {controller = "Section", action = "Forums", id = UrlParameter.Optional});
-			
+
+			routes.MapRoute("EditBookmarks", "Account/Bookmarks", new {controller = "Account", action = "Bookmarks"});
+			routes.MapRoute("UpdateBookmarks", "Account/UpdateBookmarks", new {controller = "Account", action = "UpdateBookmarks"});
+
 			routes.MapRoute(
 				name: "Default",
 				url: "{controller}/{action}/{id}",

@@ -164,7 +164,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateQueues(string threadClaimButton)
+		public ActionResult UpdateQueues()
 	    {
 		    if(!LoggedInUserAdapter.HasSystemActionRight(ActionRights.QueueContentManagement))
 		    {

@@ -12,6 +12,30 @@ namespace SD.HnD.Gui.Controllers
 {
     public class AccountController : Controller
     {
+	    [Authorize]
+	    [HttpGet]
+	    public ActionResult Bookmarks()
+	    {
+		    var bookmarkData = UserGuiHelper.GetBookmarksAggregatedData(LoggedInUserAdapter.GetUserID());
+		    var viewData = new BookmarksData() {Bookmarks = bookmarkData};
+		    return View(viewData);
+	    }
+
+
+	    [Authorize]
+	    [HttpPost]
+	    [ValidateAntiForgeryToken]
+	    public ActionResult UpdateBookmarks(int[] threadIdsToUnbookmark)
+	    {
+			// the user manager will take care of threads which are passed to this method and which don't exist. We'll only do a limit
+		    if(threadIdsToUnbookmark != null && threadIdsToUnbookmark.Length < 100 && threadIdsToUnbookmark.Length > 0)
+		    {
+			    UserManager.RemoveBookmarks(threadIdsToUnbookmark, LoggedInUserAdapter.GetUserID());
+		    }
+		    return RedirectToAction("Bookmarks");
+	    }
+
+
 		[AllowAnonymous]
 		[HttpGet]
 		public ActionResult Login(string returnUrl)

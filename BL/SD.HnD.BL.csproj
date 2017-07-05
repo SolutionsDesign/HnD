@@ -195,7 +195,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TypedDataClasses\AggregatedForumRow.cs" />
-    <Compile Include="TypedDataClasses\AggregatedActiveThreadRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedSupportQueueContentsRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedThreadRow.cs" />
     <Compile Include="TypedDataClasses\AggregatedUnapprovedAttachmentRow.cs" />

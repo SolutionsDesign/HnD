@@ -29,6 +29,7 @@ using SD.HnD.DALAdapter.FactoryClasses;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
+using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
@@ -244,25 +245,19 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">User ID.</param>
 		/// <returns></returns>
-		public static DataView GetBookmarksAsDataView(int userID)
+		public static List<AggregatedThreadRow> GetBookmarksAggregatedData(int userID)
 		{
-#warning IMPLEMENT
-			return null;
-
-			//var qf = new QueryFactory();
-			//var q = qf.Create()
-			//			.Select(new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
-			//						{
-			//							ForumFields.ForumName,
-			//							ForumFields.SectionID
-			//						}.ToArray())
-			//			.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-			//					.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
-			//			.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
-			//			.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
-			//var dao = new TypedListDAO();
-			//var bookmarkedThreads = dao.FetchAsDataTable(q);
-			//return bookmarkedThreads.DefaultView;
+			var qf = new QueryFactory();
+			var q = qf.Create()
+						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
+						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+								.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
+						.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
+						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q);
+			}
 		}
 
 

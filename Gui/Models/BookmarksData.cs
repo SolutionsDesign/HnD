@@ -6,8 +6,8 @@ using SD.HnD.BL.TypedDataClasses;
 
 namespace SD.HnD.Gui.Models
 {
-	public class ActiveThreadsData
+	public class BookmarksData
 	{
-		public List<AggregatedThreadRow> ActiveThreads { get; set; }
+		public List<AggregatedThreadRow> Bookmarks { get; set; }
 	}
 }
