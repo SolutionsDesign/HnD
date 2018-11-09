@@ -10,6 +10,8 @@ TestResults
 
 .vs
 
+.idea
+
 # User-specific files
 *.suo
 *.user
