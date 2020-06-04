@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses.Contrib;
+using SD.Tools.OrmProfiler.Interceptor;
 
 namespace SD.HnD.Gui
 {
@@ -15,9 +18,16 @@ namespace SD.HnD.Gui
 	{
 		protected void Application_Start()
 		{
+			var connectionString =  System.Configuration.ConfigurationManager.AppSettings["Main.ConnectionString.SQL Server (SqlClient)"];
+			var factoryType = typeof(System.Data.SqlClient.SqlClientFactory);
 #if DEBUG
-			SD.Tools.OrmProfiler.Interceptor.InterceptorCore.Initialize("HnD 3.0 Dev");
+			InterceptorCore.Initialize("HnD 3.0 Dev");
+			factoryType = DbProviderFactories.GetFactory("System.Data.SqlClient").GetType();
 #endif
+			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c=>c.AddDbProviderFactory(factoryType)
+																			 .SetDefaultCompatibilityLevel(SqlServerCompatibilityLevel.SqlServer2012));
+			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", connectionString);
+			
 			AreaRegistration.RegisterAllAreas();
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 			RouteConfig.RegisterRoutes(RouteTable.Routes);

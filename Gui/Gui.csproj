@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SD.HnD.Gui</RootNamespace>
     <AssemblyName>SD.HnD.Gui</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,26 +43,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SD.LLBLGen.Pro.ORMSupportClasses, Version=5.2.0.0, Culture=neutral, PublicKeyToken=ca73b74ba4e3ff27, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SD.LLBLGen.Pro.ORMSupportClasses.5.2.0\lib\net45\SD.LLBLGen.Pro.ORMSupportClasses.dll</HintPath>
-    </Reference>
-    <Reference Include="SD.Tools.Algorithmia, Version=1.3.6.0, Culture=neutral, PublicKeyToken=8ede9265bbb8e107, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.Algorithmia.1.3.6\lib\net452\SD.Tools.Algorithmia.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SD.Tools.BCLExtensions, Version=1.2.2.0, Culture=neutral, PublicKeyToken=a3f87088dcb994e1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.BCLExtensions.1.2.2\lib\net452\SD.Tools.BCLExtensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SD.Tools.OrmProfiler.Interceptor.NET45, Version=1.5.0.0, Culture=neutral, PublicKeyToken=f175dc08f093a9ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150715\lib\net45\SD.Tools.OrmProfiler.Interceptor.NET45.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SD.Tools.OrmProfiler.Shared, Version=1.5.0.0, Culture=neutral, PublicKeyToken=f175dc08f093a9ae, processorArchitecture=MSIL">
-      <HintPath>..\packages\SD.Tools.OrmProfiler.Interceptor.NET45.1.5.20150715\lib\net45\SD.Tools.OrmProfiler.Shared.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -74,37 +56,9 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.Helpers.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.6\lib\net45\System.Web.Mvc.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.6\lib\net45\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.6\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
@@ -1124,9 +1078,6 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="css\general_colors.css.map" />
     <Content Include="css\general_colors.less" />
   </ItemGroup>
@@ -1144,7 +1095,7 @@
       <Project>{dcf9e35b-d377-4b8c-a0bb-d31cd6a7ec1a}</Project>
       <Name>SD.HnD.BL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DALAdapter\SD.HnD.DALAdapter.csproj">
+    <ProjectReference Include="..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj">
       <Project>{2b4058f7-26d3-4bda-b5ff-be048fdce94c}</Project>
       <Name>SD.HnD.DALAdapter</Name>
     </ProjectReference>
@@ -1202,6 +1153,17 @@
     <Content Include="Views\Attachment\Unapproved.cshtml" />
     <Content Include="Views\Thread\Active.cshtml" />
     <Content Include="Views\Account\Bookmarks.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.7" />
+    <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.7" />
+    <PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0" />
+    <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />
+    <PackageReference Include="SD.Tools.Algorithmia" Version="1.4.0" />
+    <PackageReference Include="SD.Tools.BCLExtensions" Version="1.2.2" />
+    <PackageReference Include="SD.Tools.OrmProfiler.Interceptor.NetFull" Version="2.0.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

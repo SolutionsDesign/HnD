@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using NUnit.Framework;
-using System.Windows.Forms;
 
 namespace MarkdownDeepTests
 {

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!--LLBLGen Pro v5.2 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
-<Project Version="5.2" TargetFrameworkName="LLBLGen Pro Runtime Framework">
+<!--LLBLGen Pro v5.7 project file. Do not manually edit this file. Incorrect references could lead to an unloadable project file.-->
+<Project Version="5.7" TargetFrameworkName="LLBLGen Pro Runtime Framework">
   <Properties>
     <Abbreviations />
     <Property Name="AdditionalTaskPerformerFolder" Value="" />
@@ -16,10 +16,15 @@
     <Property Name="AutoAddManyToManyRelationships" Value="false" />
     <Property Name="AutoAssignSequencesToIntegerPks" Value="true" />
     <Property Name="AutoAssignTypeConverterToFieldMapping" Value="true" />
-    <Property Name="CleanUpVsNetProjects" Value="true" />
+    <Property Name="AutomaticallyGenerateSourceCodeOnProjectSave" Value="false" />
     <Property Name="ConnectionStringKeyNamePattern" Value="Main.ConnectionString.{$ProviderName}" />
+    <Property Name="DefaultDDLSQLScriptDestinationFolder" Value=".\DDLSQLScripts" />
     <Property Name="DefaultDeleteRuleAction" Value="1" />
+    <Property Name="DefaultSourceCodeDestinationFolder" Value=".\Code" />
     <Property Name="DefaultUpdateRuleAction" Value="0" />
+    <Property Name="DeleteObsoleteFiles" Value="true" />
+    <Property Name="ElementNamePrefixPattern" Value="{$SchemaName}" />
+    <Property Name="ElementNamePrefixPatternIsAppliedWhen" Value="1" />
     <Property Name="EncodingToUse" Value="0" />
     <Property Name="EntityActionCombinationDefaultForTable" Value="0" />
     <Property Name="EntityActionCombinationDefaultForView" Value="4" />
@@ -67,6 +72,8 @@
     <Property Name="SingularizeElementNames" Value="true" />
     <Property Name="StoredProcNameStripPattern" Value="{pr_}{}" />
     <Property Name="StoreTimeLastGeneratedIntoProject" Value="false" />
+    <Property Name="StoreTimeLastSyncIntoProject" Value="true" />
+    <Property Name="SyncCustomFieldOrderingWithTableFieldIndex" Value="false" />
     <Property Name="SyncMappedElementNamesAfterRefresh_v5" Value="false" />
     <Property Name="SyncMappedElementNamesAfterRelationalModelDataSync_v5" Value="false" />
     <Property Name="SyncRelationalModelDataElementNameWithModelElementName_v5" Value="false" />
@@ -83,7 +90,9 @@
     <Property Name="UpdateCustomPropertiesAfterRelationalModelDataSync_v5" Value="false" />
     <Property Name="UseCustomFieldOrderingOnNewElements" Value="true" />
   </Properties>
-  <TypeShortcuts />
+  <TypeShortcuts>
+    <TypeShortcut Shortcut="CategoryType" Type="EnumTypes.CategoryType, EnumTypes" />
+  </TypeShortcuts>
   <IgnoredWarnings />
   <SavedSearchQueries />
   <CodeGenerationCyclePreferences>
@@ -92,17 +101,17 @@
         <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DALAdapter" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
-        <PlatformName Value=".NET 4.6.1" />
-        <PresetName Value="SD.Presets.Adapter.General" />
+        <PlatformName Value=".NET Standard 2.0" />
+        <PresetName Value="SD.Presets.Adapter.General.Netstandard" />
         <RootNamespace Value="SD.HnD.DALAdapter" />
         <TemplateGroup Value="Adapter" />
         <TemplateBindings>
-          <Binding Name="SD.TemplateBindings.SharedTemplates.Deprecated" />
-          <Binding Name="SD.TemplateBindings.SharedTemplates.NET45x" />
+          <Binding Name="SD.TemplateBindings.SharedTemplates.Netstandard20" />
           <Binding Name="SD.TemplateBindings.SharedTemplates" />
           <Binding Name="SD.TemplateBindings.SqlServerSpecific" />
           <Binding Name="SD.TemplateBindings.General" />
         </TemplateBindings>
+        <AdhocTemplateSets />
       </LastUsedPreferences>
     </OutputType>
     <OutputType Value="2">
@@ -118,6 +127,7 @@
           <Binding Name="SD.TemplateBindings.SqlServerSpecific.DDLSQL" />
           <Binding Name="SD.TemplateBindings.SharedTemplates.DDLSQL" />
         </TemplateBindings>
+        <AdhocTemplateSets />
       </LastUsedPreferences>
     </OutputType>
   </CodeGenerationCyclePreferences>
@@ -129,8 +139,15 @@
       <SettingValue Name="1:AdapterDbSpecificProjectFileSuffix" Value="DBSpecific" Type="18" />
       <SettingValue Name="1:AdapterDbSpecificSubFolderName" Value="DatabaseSpecific" Type="18" />
       <SettingValue Name="1:ConvertNulledReferenceTypesToDefaultValue" Value="true" Type="3" />
+      <SettingValue Name="1:EntityBaseClassNameDefault" Value="CommonEntityBase" Type="18" />
+      <SettingValue Name="1:FieldPropertyIsPublicDefault" Value="true" Type="3" />
       <SettingValue Name="1:GenerateAsNullableTypeDefault" Value="true" Type="3" />
+      <SettingValue Name="1:GenerateEntityFieldFactory" Value="false" Type="3" />
+      <SettingValue Name="1:GenerateEntityFieldsFactory" Value="false" Type="3" />
+      <SettingValue Name="1:InlineValueTypedFields" Value="true" Type="3" />
       <SettingValue Name="1:LazyLoadingWithoutResultReturnsNew" Value="true" Type="3" />
+      <SettingValue Name="1:NavigatorPropertyIsPublicDefault" Value="true" Type="3" />
+      <SettingValue Name="1:SupportedActionCombinations" Value="0,1,2,3,4,5,6,7" Type="18" />
       <SettingValue Name="1:TdlEmitTimeDateInOutputFiles" Value="false" Type="3" />
       <SettingValue Name="1:TypedListOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
       <SettingValue Name="1:TypedViewOutputTypeDefault" Value="PocoWithQuerySpecQuery" Type="18" />
@@ -427,7 +444,7 @@
           <FieldFieldRelationship FkField="UserID" PkField="UserID" />
         </FieldRelationships>
       </NormalRelationship>
-      <NormalRelationship Name="Forum.DefaultSupportQueue-SupportQueue.DefaultForForums" Start=":Forum" End=":SupportQueue" StartNavigator="DefaultSupportQueue" EndNavigator="DefaultForForums" Type="4">
+      <NormalRelationship Name="Forum.DefaultSupportQueue-SupportQueue.DefaultForForums" Start=":Forum" End=":SupportQueue" StartNavigator="DefaultSupportQueue" EndNavigator="DefaultForForums" Type="4" EndIsOptional="true">
         <FieldRelationships>
           <FieldFieldRelationship FkField="DefaultSupportQueueID" PkField="QueueID" />
         </FieldRelationships>
@@ -497,7 +514,7 @@
           <FieldFieldRelationship FkField="UserID" PkField="UserID" />
         </FieldRelationships>
       </NormalRelationship>
-      <NormalRelationship Name="SupportQueueThread.ClaimedByUser-User.SupportQueueThreadsClaimed" Start=":SupportQueueThread" End=":User" StartNavigator="ClaimedByUser" EndNavigator="SupportQueueThreadsClaimed" Type="4">
+      <NormalRelationship Name="SupportQueueThread.ClaimedByUser-User.SupportQueueThreadsClaimed" Start=":SupportQueueThread" End=":User" StartNavigator="ClaimedByUser" EndNavigator="SupportQueueThreadsClaimed" Type="4" EndIsOptional="true">
         <FieldRelationships>
           <FieldFieldRelationship FkField="ClaimedByUserID" PkField="UserID" />
         </FieldRelationships>
@@ -886,12 +903,12 @@
                     <Field Name="Occupation" Ordinal="11" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Location" Ordinal="12" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Website" Ordinal="13" IsOptional="true" DbType="12" Length="200" />
-                    <Field Name="JoinDate" Ordinal="15" IsOptional="true" HasDefaultValue="true" DefaultValue="(getdate())" DbType="4" />
-                    <Field Name="AmountOfPostings" Ordinal="16" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
-                    <Field Name="EmailAddressIsPublic" Ordinal="17" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
-                    <Field Name="LastVisitedDate" Ordinal="18" IsOptional="true" DbType="4" />
-                    <Field Name="AutoSubscribeToThread" Ordinal="19" IsOptional="true" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
-                    <Field Name="DefaultNumberOfMessagesPerPage" Ordinal="20" IsOptional="true" HasDefaultValue="true" DefaultValue="(25)" DbType="16" Precision="5" />
+                    <Field Name="JoinDate" Ordinal="14" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(getdate())" DbType="4" />
+                    <Field Name="AmountOfPostings" Ordinal="15" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
+                    <Field Name="EmailAddressIsPublic" Ordinal="16" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
+                    <Field Name="LastVisitedDate" Ordinal="17" IsOptional="true" TrackedChanges="2" DbType="4" />
+                    <Field Name="AutoSubscribeToThread" Ordinal="18" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
+                    <Field Name="DefaultNumberOfMessagesPerPage" Ordinal="19" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(25)" DbType="16" Precision="5" />
                   </Fields>
                   <UniqueConstraints>
                     <UniqueConstraint Name="TF_User_NickName_U2">
@@ -1358,14 +1375,16 @@
           <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DTOs" />
           <FrameworkName Value="DTO Class Model" />
           <LanguageName Value="C#" />
-          <PlatformName Value=".NET 4.6.1" />
+          <PlatformName Value=".NET Standard 2.0" />
           <PresetName Value="SD.DTOClasses.ReadOnlyDTOs" />
           <RootNamespace Value="SD.HnD.ReadOnlyElements" />
           <TemplateGroup Value="General" />
           <TemplateBindings>
+            <Binding Name="SD.DTOClassModel.NETStandard20" />
             <Binding Name="SD.DTOClassModel" />
             <Binding Name="SD.TemplateBindings.General" />
           </TemplateBindings>
+          <AdhocTemplateSets />
         </LastUsedPreferences>
       </CodeGenerationCyclePreferences>
       <Documents>

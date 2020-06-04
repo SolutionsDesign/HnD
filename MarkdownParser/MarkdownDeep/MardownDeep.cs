@@ -314,11 +314,7 @@ namespace MarkdownDeep
 			{
 				url=url.Substring(1);
 			}
-
 			str=str + "\\" + url.Replace("/", "\\");
-
-
-			// 
 
 			//Create an image object from the uploaded file
 			try

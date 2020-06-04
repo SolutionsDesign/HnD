@@ -13,7 +13,6 @@ namespace SD.HnD.BL.TypedDataClasses
 	public class AggregatedSupportQueueContentsRow : AggregatedThreadRow
 	{
 		public int QueueID { get; set; }
-		public string ForumName { get; set; }
 		public string PlacedInQueueByNickName { get; set; }
 		public int PlacedInQueueByUserID { get; set; }
 		public DateTime PlacedInQueueOn { get; set; }

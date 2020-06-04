@@ -1,4 +1,4 @@
-/*
+﻿/*
 	This file is part of HnD.
 	HnD is (c) 2002-2007 Solutions Design.
     http://www.llblgen.com
@@ -19,33 +19,7 @@
 */
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
-//
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-//
-[assembly: AssemblyTitle("SD.HnD.BL")]
-[assembly: AssemblyDescription("HnD's Business Logic Layer")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Solutions Design")]
-[assembly: AssemblyProduct("HnD, a .NET Forum system using LLBLGen Pro")]
-[assembly: AssemblyCopyright("(c)2002-2016 Solutions Design")]
 [assembly: AssemblyTrademark("HnD, LLBLGen and LLBLGen Pro are trademarks of Solutions Design.")]
-[assembly: AssemblyCulture("")]		
-
-//
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Revision and Build Numbers 
-// by using the '*' as shown below:
-
-[assembly: AssemblyVersion("3.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
