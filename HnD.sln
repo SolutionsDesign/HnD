@@ -1,27 +1,29 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.BL", "BL\SD.HnD.BL.csproj", "{DCF9E35B-D377-4B8C-A0BB-D31CD6A7EC1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.BL", "BL\SD.HnD.BL.csproj", "{DCF9E35B-D377-4B8C-A0BB-D31CD6A7EC1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.Utility", "Utility\SD.HnD.Utility.csproj", "{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.Utility", "Utility\SD.HnD.Utility.csproj", "{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{CCF2120D-5F39-4EBD-AA33-E6F85DCC3CEE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.DALAdapter", "DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj", "{2B4058F7-26D3-4BDA-B5FF-BE048FDCE94C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DALAdapter", "DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj", "{2B4058F7-26D3-4BDA-B5FF-BE048FDCE94C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.DALAdapterDBSpecific", "DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj", "{CE055BC5-BFD4-4B66-8178-FBFB01492105}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DALAdapterDBSpecific", "DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj", "{CE055BC5-BFD4-4B66-8178-FBFB01492105}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{483CB141-09F5-4A4C-A597-85EC18503C04}"
 	ProjectSection(SolutionItems) = preProject
 		WebEssentials2015-Settings.json = WebEssentials2015-Settings.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.ReadOnlyElements", "DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj", "{8B1438A4-9AC7-40E8-9628-5CC1D07052AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.ReadOnlyElements", "DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj", "{8B1438A4-9AC7-40E8-9628-5CC1D07052AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SD.HnD.ReadOnlyElements.Persistence", "DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj", "{E3419FBD-14FB-4FFF-B59F-91B621C77246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.ReadOnlyElements.Persistence", "DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj", "{E3419FBD-14FB-4FFF-B59F-91B621C77246}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkdownDeep", "MarkdownParser\MarkdownDeep\MarkdownDeep.csproj", "{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownDeep", "MarkdownParser\MarkdownDeep\MarkdownDeep.csproj", "{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuiCore", "GuiCore\GuiCore.csproj", "{C857EADF-4C56-43B5-8D8D-37367B58B010}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,8 +125,23 @@ Global
 		{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|.NET.ActiveCfg = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|.NET.Build.0 = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|.NET.ActiveCfg = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|.NET.Build.0 = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C857EADF-4C56-43B5-8D8D-37367B58B010}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59E610F2-8EF0-4958-A5B4-66194DDC77D5}
 	EndGlobalSection
 EndGlobal
