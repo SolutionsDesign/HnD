@@ -1,0 +1,103 @@
+﻿@using Microsoft.AspNetCore.Http
+@using SD.HnD.Gui
+@using SD.Tools.BCLExtensions.CollectionsRelated
+@model SD.HnD.Gui.Models.HomeData
+
+@{
+	ViewBag.Title = string.Format("HnD | {0}", ApplicationAdapter.GetSiteName());
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header">
+			<h1 class="br-bottom">Welcome to the @ApplicationAdapter.GetSiteName()</h1>
+		</div>
+	</div>
+	<div class="row">
+	@using(Html.BeginForm("SearchAll", "Search", FormMethod.Post, new {role = "form"}))
+	{
+		@Html.AntiForgeryToken()
+		<div class="col-sm-8">
+			<div class="form-group">
+				<label class="sr-only" for="searchParameters">Search for</label>
+				<div class="input-group">
+					<input type="text" id="searchParameters" name="searchParameters" class="form-control" role="search" placeholder="Please type your question here"/>
+					<div class="input-group-btn">
+						<button class="btn btn-default" type="submit"><i class="fa fa-search"></i> Search</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4 mt5">
+			<a href="#">Advanced search</a>
+		</div>
+	}
+	</div>
+	<div class="row mt20">
+		<div class="col-sm-12">
+			<p>
+				Welcome <strong>@Model.NickName</strong>!<br/>
+				Below you'll find several sections with forums where you can ask your question. Please use the search to see whether your question has already
+				been asked before.<br/>
+				@if(!Model.IsAnonymousUser)
+				{
+					<span>Your last session here started on: <strong>@Model.UserLastVisitDate.ToString("dd-MMM-yyyy HH:mm")</strong></span>
+				}
+			</p>
+		</div>
+	</div>
+</div>
+@foreach(var sectionObject in Model.SectionsFiltered)
+{
+	string id = string.Format("id{0}SectionContent", sectionObject.SectionID);
+	var forumView = Model.ForumDataPerDisplayedSection.GetValue(sectionObject.SectionID);
+	<section class="fs mt20">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 fs-header">
+					<a href="#@id" data-toggle="collapse" aria-expanded="true" aria-controls="@id" class="areatoggle">
+						<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+					</a>
+					@sectionObject.SectionName
+					<div class="pull-right">
+						<a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@sectionObject.SectionDescription">
+							<i class="fa fa-info-circle"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="row collapse in" id="@id">
+				<div class="col-sm-12">
+					<div class="row fs-headingrow">
+						<div class="col-sm-8 col-xs-8">Forum</div>
+						<div class="col-sm-1 notonmobile plr10">Threads</div>
+						<div class="col-sm-1 notonmobile plr10">Posts</div>
+						<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+					</div>
+					@foreach(var forumRow in forumView)
+					{
+						var iconClass = "icon-nonewpost";
+						var lastPostingDateAsString = "Never";
+						if(forumRow.ForumLastPostingDate.HasValue)
+						{
+							lastPostingDateAsString = forumRow.ForumLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+							if(forumRow.ForumLastPostingDate.Value > Model.UserLastVisitDate)
+							{
+								iconClass = "icon-newpost";
+							}
+						}
+						<div class="row fs-row">
+							<div class="col-sm-8 col-xs-8">
+								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@forumRow.ForumName</a>
+							</div>
+							<div class="col-sm-1 notonmobile">@forumRow.AmountThreads</div>
+							<div class="col-sm-1 notonmobile">@forumRow.AmountMessages</div>
+							<div class="col-sm-2 col-xs-4 text-nowrap-responsive">@lastPostingDateAsString</div>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</section>
+}

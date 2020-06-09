@@ -1,0 +1,19 @@
+﻿@model SD.HnD.Gui.Models.ThreadData
+@if(Model.NumberOfPages>1)
+{
+	for(int i = 1; i <= Model.NumberOfPages; i++)
+	{
+		if(Model.PageNo == i)
+		{
+	<span>@i</span>
+		}
+		else
+		{
+	<a href="~/Thread/@Model.Thread.ThreadID/@i">@i</a>
+		}
+		if(i < Model.NumberOfPages)
+		{
+	@Html.Raw("&nbsp;/&nbsp;")		
+		}
+	}
+}

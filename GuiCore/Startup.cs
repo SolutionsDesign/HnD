@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +27,15 @@ namespace SD.HnD.Gui
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddDistributedMemoryCache();
+			services.AddSession();
 			services.AddControllersWithViews();
+			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+			services.AddMemoryCache();
+			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+					.AddCookie();
+#warning UPDATE AddCookie call (see:  https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-3.1 )
+			
 			// First we need to configure LLBLGen Pro
 			ConfigureLLBLGenPro(services);
 			// Then we can configure HnD as it needs the database.
@@ -47,9 +57,13 @@ namespace SD.HnD.Gui
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseRouting();
+			app.UseAuthentication();
 			app.UseAuthorization();
-			app.UseEndpoints(endpoints => RegisterRoutes(endpoints));
+			app.UseSession();
 			
+#warning ADD OWN MIDDLEWARE HERE THAT CHECKS SESSION VALUE, IF NOT THERE, DO Session_Start CODE.  
+			app.UseEndpoints(endpoints => RegisterRoutes(endpoints));
+
 			// HnD one-time configuration now we now the environment...
 			HnDConfiguration.Current.LoadStaticData(env.WebRootPath, env.ContentRootPath);
 		}
@@ -111,7 +125,7 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute(name:"MoveToQueue", pattern:"{controller=SupportQueue}/{action=MoveToQueue}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ClaimThread", pattern:"{controller=SupportQueue}/{action=ClaimThread}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ReleaseThread", pattern:"{controller=SupportQueue}/{action=ReleaseThread}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"EditMemo", pattern:"{controller=SupportQueue}/{action=EditMemo/{id?}/{pageNo=1}");
+			routes.MapControllerRoute(name:"EditMemo", pattern:"{controller=SupportQueue}/{action=EditMemo}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ListOfSupportQueues", pattern:"{controller=SupportQueues}/{action=Index}");
 			routes.MapControllerRoute(name:"UpdateSupportQueues", pattern:"{controller=SupportQueues}/{action=UpdateQueues}");
 

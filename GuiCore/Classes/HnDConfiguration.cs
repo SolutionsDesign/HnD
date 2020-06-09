@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using SD.HnD.BL;
 
 namespace SD.HnD.Gui.Classes
@@ -14,9 +15,10 @@ namespace SD.HnD.Gui.Classes
 	public class HnDConfiguration
 	{
 		#region Members
-		private object _lock = new object();
+		private ReaderWriterLockSlim _volatileDataLock;
 		private HashSet<string> _usersToLogoutByForce;
 		private Dictionary<int, bool> _cacheFlags;
+		private int? _cachedNumberOfUnapprovedAttachments, _cachedNumberOfThreadsInSupportQueues;
 
 		/// <summary>
 		/// Static instance holder, to avoid DI in all controllers which need it. 
@@ -54,6 +56,9 @@ namespace SD.HnD.Gui.Classes
 			Current = this;
 			_usersToLogoutByForce = new HashSet<string>();
 			_cacheFlags = new Dictionary<int, bool>();
+			_volatileDataLock = new ReaderWriterLockSlim();
+			_cachedNumberOfUnapprovedAttachments = null;
+			_cachedNumberOfThreadsInSupportQueues = null;
 		}
 
 		/// <summary>
@@ -66,18 +71,24 @@ namespace SD.HnD.Gui.Classes
 				this.MaxAmountMessagesPerPage = 25;
 			}
 
-			var keysToReset = new List<string>();
-			foreach(var kvp in this.SmileyMappings)
+			foreach(var mapping in this.SmileyMappings)
 			{
-				if(kvp.Value == null)
-				{
-					keysToReset.Add(kvp.Key);
-				}
+				this.SmileyMappingsLookup[mapping.From] = mapping.To ?? string.Empty;
 			}
-			foreach(var key in keysToReset)
+			if(string.IsNullOrWhiteSpace(this.VirtualRoot))
 			{
-				this.SmileyMappings[key] = string.Empty;
+				this.VirtualRoot = "/";
 			}
+			if(!this.VirtualRoot.EndsWith("/"))
+			{
+				this.VirtualRoot += "/";
+			}
+			if(this.DataFilesPath == null)
+			{
+				this.DataFilesPath = string.Empty;
+			}
+			// replace / with \ if we're on windows, or \ with / if we're on linux. 
+			this.DataFilesPath = this.DataFilesPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 		}
 		
 
@@ -87,16 +98,113 @@ namespace SD.HnD.Gui.Classes
 		/// <param name="forumID">ID of forum which rss feed to invalidate</param>
 		public void InvalidateCachedForumRSS(int forumID)
 		{
-			lock(_lock)
+			_volatileDataLock.EnterUpgradeableReadLock();
+			try
 			{
-				if(_cacheFlags.Count<=0)
+				if(_cacheFlags.Count <= 0)
 				{
 					return;
 				}
-				_cacheFlags[forumID] = false;
+				_volatileDataLock.EnterWriteLock();
+				try
+				{
+					_cacheFlags[forumID] = false;
+				}
+				finally
+				{
+					_volatileDataLock.ExitWriteLock();
+				}
+			}
+			finally
+			{
+				_volatileDataLock.ExitUpgradeableReadLock();
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Gets the number of unapproved attachments, which is a cached number. If it's not initialized, the method will initialize
+		/// the value from the database. 
+		/// </summary>
+		/// <returns></returns>
+		public int GetCachedNumberOfUnapprovedAttachments()
+	    {
+			_volatileDataLock.EnterUpgradeableReadLock();
+		    try
+		    {
+			    if(_cachedNumberOfUnapprovedAttachments.HasValue)
+			    {
+				    return _cachedNumberOfUnapprovedAttachments.Value;
+			    }
+			    return InvalidateCachedNumberOfUnapprovedAttachments();
+		    }
+			finally
+		    {
+				_volatileDataLock.ExitUpgradeableReadLock();
+		    }
+	    }
+
+
+		/// <summary>
+		/// Invalidates the number of unapproved attachments by fetching the total number of unapproved attachments from the database.   
+		/// </summary>
+		/// <returns></returns>
+	    public int InvalidateCachedNumberOfUnapprovedAttachments()
+	    {
+			_volatileDataLock.EnterWriteLock();
+		    try
+		    {
+				_cachedNumberOfUnapprovedAttachments = MessageGuiHelper.GetTotalNumberOfAttachmentsToApprove();
+			    return _cachedNumberOfUnapprovedAttachments.Value;
+		    }
+		    finally
+		    {
+				_volatileDataLock.ExitWriteLock();
+		    }
+	    }
+
+
+		/// <summary>
+		/// Gets the number of threads in support queues, which is a cached number in this object. If not initialized, this method will
+		/// fetch the number from the database. 
+		/// </summary>
+		/// <returns></returns>
+	    public int GetCachedNumberOfThreadsInSupportQueues()
+	    {
+			_volatileDataLock.EnterUpgradeableReadLock();
+			try
+			{
+				if(_cachedNumberOfThreadsInSupportQueues.HasValue)
+				{
+					return _cachedNumberOfThreadsInSupportQueues.Value;
+				}
+				return InvalidateCachedNumberOfThreadsInSupportQueues();
+			}
+			finally
+			{
+				_volatileDataLock.ExitUpgradeableReadLock();
+			}
+	    }
+
+
+		/// <summary>
+		/// Invalidates the number of threads in support queues by fetching the total number from the database. 
+		/// </summary>
+		/// <returns></returns>
+	    public int InvalidateCachedNumberOfThreadsInSupportQueues()
+	    {
+			_volatileDataLock.EnterWriteLock();
+			try
+			{
+				_cachedNumberOfThreadsInSupportQueues = SupportQueueGuiHelper.GetTotalNumberOfThreadsInSupportQueues();
+				return _cachedNumberOfThreadsInSupportQueues.Value;
+			}
+			finally
+			{
+				_volatileDataLock.ExitWriteLock();
+			}
+	    }
+
 
 		/// <summary>
 		/// Removes the user from the list to be logged out by force.
@@ -104,13 +212,26 @@ namespace SD.HnD.Gui.Classes
 		/// <param name="nickName">Name of the nick.</param>
 		public void RemoveUserFromListToBeLoggedOutByForce(string nickName)
 		{
-			lock(_lock)
+			_volatileDataLock.EnterUpgradeableReadLock();
+			try
 			{
 				if(!_usersToLogoutByForce.Contains(nickName))
 				{
 					return;
 				}
-				_usersToLogoutByForce.Remove(nickName);
+				_volatileDataLock.EnterWriteLock();
+				try
+				{
+					_usersToLogoutByForce.Remove(nickName);
+				}
+				finally
+				{
+					_volatileDataLock.ExitWriteLock();
+				}
+			}
+			finally
+			{
+				_volatileDataLock.ExitUpgradeableReadLock();
 			}
 		}
 		
@@ -122,9 +243,14 @@ namespace SD.HnD.Gui.Classes
 		/// <returns>true if the user has to be logged out by force, false otherwise.</returns>
 		public bool UserHasToBeLoggedOutByForce(string nickName)
 		{
-			lock(_lock)
+			_volatileDataLock.EnterReadLock();
+			try
 			{
 				return _usersToLogoutByForce.Contains(nickName);
+			}
+			finally
+			{
+				_volatileDataLock.ExitReadLock();
 			}
 		}
 
@@ -135,16 +261,47 @@ namespace SD.HnD.Gui.Classes
 		/// <param name="nickName">Name of the nick.</param>
 		public void AddUserToListToBeLoggedOutByForce(string nickName)
 		{
-			lock(_lock)
+			_volatileDataLock.EnterUpgradeableReadLock();
+			try
 			{
 				if(_usersToLogoutByForce.Contains(nickName))
 				{
 					return;
 				}
-				_usersToLogoutByForce.Add(nickName);
+				_volatileDataLock.EnterWriteLock();
+				try
+				{
+					_usersToLogoutByForce.Add(nickName);
+				}
+				finally
+				{
+					_volatileDataLock.ExitWriteLock();
+				}
+			}
+			finally
+			{
+				_volatileDataLock.ExitUpgradeableReadLock();
 			}
 		}
 		
+
+		/// <summary>
+		/// Gets the cache flags as known by this object or null if no cache flags are valid. Returned dictionary is a copy.
+		/// </summary>
+		/// <returns></returns>
+		public Dictionary<int, bool> GetCacheFlags()
+		{
+			_volatileDataLock.EnterReadLock();
+			try
+			{
+				return _cacheFlags.Count <= 0 ? null : new Dictionary<int, bool>(_cacheFlags);
+			}
+			finally
+			{
+				_volatileDataLock.ExitReadLock();
+			}
+		}
+
 
 		/// <summary>
 		/// Meant to be run at startup
@@ -154,22 +311,29 @@ namespace SD.HnD.Gui.Classes
 		public void LoadStaticData(string webRootPath, string contentRootPath)
 		{
 			this.FullDataFilesPath = Path.Combine(contentRootPath, this.DataFilesPath);
-			this.NoiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(this.DataFilesPath);
+			this.NoiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(this.FullDataFilesPath);
 #warning  IMPLEMENT
 			// string registrationReplyMailTemplate = File.ReadAllText(Path.Combine(datafilesPath, "RegistrationReplyMail.template"));
 			// string threadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(datafilesPath, "ThreadUpdatedNotification.template"));
 
-			var emojiUrlPath = this.EmojiFilesPath;
-			var emojiFilesPath = Path.Combine(webRootPath, emojiUrlPath);
+			var emojiUrlPath = (this.EmojiFilesPath ?? string.Empty);
+			// replace / with \ if we're on windows and / with \ if we're on linux
+			var emojiUrlPathForFilename = emojiUrlPath.TrimStart('\\', '/').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar); 
+			var emojiFilesPath = Path.Combine(webRootPath ?? string.Empty, emojiUrlPathForFilename);
 	        this.EmojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
 			// load nicks of banned users
 			var bannedNicknames = UserGuiHelper.GetAllBannedUserNicknamesAsDataView();
-			lock(_lock)
+			_volatileDataLock.EnterWriteLock();
+			try
 			{
 				foreach(DataRowView row in bannedNicknames)
 				{
 					_usersToLogoutByForce.Add(row["Nickname"].ToString());
 				}
+			}
+			finally
+			{
+				_volatileDataLock.ExitWriteLock();
 			}
 		}
 
@@ -196,7 +360,8 @@ namespace SD.HnD.Gui.Classes
 		
 		
 		public CacheConfiguration ResultsetCacheConfiguration { get; set; }
-		public Dictionary<string, string> SmileyMappings { get; set; } = new Dictionary<string, string>();
+		public List<FromToMapping> SmileyMappings { get; set; } = new List<FromToMapping>();
+		public Dictionary<string, string> SmileyMappingsLookup { get; } = new Dictionary<string, string>();
 		public string VirtualRoot { get; set; } = "/";
 		public string DefaultFromEmailAddress { get; set; } = string.Empty;
 		public string DefaultToEmailAddress { get; set; } = string.Empty;
@@ -210,5 +375,7 @@ namespace SD.HnD.Gui.Classes
 		public int MaxAmountMessagesPerPage { get; set; } = 25;
 		public HashSet<string> NoiseWords { get; set; } = new HashSet<string>();
 		public Dictionary<string, string> EmojiFilenamesPerName { get; set; } = new Dictionary<string, string>();
+		public string RegistrationReplyMailTemplate { get; set; }
+		public string ThreadUpdatedNotificationTemplate { get; set; }
 	}
 }

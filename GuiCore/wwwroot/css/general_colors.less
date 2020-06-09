@@ -1,0 +1,378 @@
+﻿/* define colors here*/
+@color: #066A8B;
+/* HnD main colors: @color: #970303; */
+@forecolor-dark-background: #fff;
+@menucolor: #f8f8f8;
+@color-grey: #9f9f9f;
+@color-row: #fff;
+@color-code: #600;
+@table-cell-background: #fdfdfd;
+
+/* alert boxes colors */
+@alert-background: #e7f2fa;
+@alert-title-background: #6ab0de;
+@alert-tip: #1abc9c;
+@alert-tip-background: lighten(@alert-tip, 55%);
+@alert-neutral: #ddd;
+@alert-neutral-background: lighten(@alert-neutral, 55%);
+@alert-danger: #e22222;
+@alert-danger-background: lighten(@alert-danger, 55%);
+@alert-warning: #f0b37e;
+@alert-warning-background: lighten(@alert-warning, 50%);
+
+
+/* no need to define anything below this point */
+@menucolor-op90: fadeout(@menucolor, 10%);
+@color-grey-plus10: lighten(@color-grey, 10%);
+@color-grey-plus20: lighten(@color-grey, 20%);
+@color-grey-plus25: lighten(@color-grey, 25%);
+@color-grey-plus30: lighten(@color-grey, 30%);
+@color-grey-plus35: lighten(@color-grey, 35%);
+@color-grey-min2: darken(@color-row, 2%);
+@color-grey-min10: darken(@color-grey, 10%);
+@color-grey-min40: darken(@color-grey, 40%);
+
+@color-light-grey: lighten(@color-grey, 32%);
+
+@color-plus5: lighten(@color, 5%);
+@color-plus10: lighten(@color, 10%);
+@color-plus20: lighten(@color, 20%);
+@color-plus50: lighten(@color, 50%);
+@color-plus60: lighten(@color, 60%);
+@color-plus68: lighten(@color, 68%);
+@color-min5: darken(@color, 5%);
+@color-min15: darken(@color, 15%);
+
+@color-op50: fade(@color,50%);
+@color-op70: fade(@color,70%);
+@color-op80: fade(@color,80%);
+@color-op90: fade(@color,90%);
+@color-black-op1: fade(#000, 0.1);
+@forecolor-dark-background-min-60 : fade(@forecolor-dark-background, 40%);
+
+
+a {
+	color: @color;
+}
+
+a.areatoggle {
+	color: @color-plus60;
+}
+
+a.fs-tooltip {
+	color: @forecolor-dark-background;
+}
+
+blockquote {
+	background: @color-grey-plus35;
+}
+
+body {
+	background-color: @color-light-grey;
+}
+
+code {
+	color : @color-code;
+}
+
+code, pre.nocode {
+	background: @color-row;
+	border: solid 1px @color-light-grey;
+}
+
+img.ps-poster-avatar {
+	border: 1px @color-grey-plus20 solid;
+}
+
+mark {
+	background: @color;
+}
+
+::-moz-selection {
+	background: @color;
+}
+
+::selection {
+	background: @color;
+}
+
+.as-row {
+	background-color: @forecolor-dark-background;
+}
+
+.as-header {
+	background-color: @color-grey-min10;
+	color: @forecolor-dark-background;
+}
+
+.breadcrumb {
+	background-color: @color-light-grey;
+}
+
+.br-bottom:after {
+	border-top: 2px solid @color;
+}
+
+.br-bottom-center::after {
+	border-top: 2px solid @color;
+}
+
+.br-bottom-center.large:after {
+	border-top: 5px solid @color;
+}
+
+.btn-primary {
+	background-color: @color;
+	border-color: @color-plus5;
+}
+
+.btn-primary:hover {
+	background-color:@color-min5;
+}
+
+.editor-toolbar-divider {
+    border-right-color: @color-grey-plus10;
+}
+
+.footer-links > li > a:hover,
+.footer-links > li > a:focus,
+.footer-links > li > a:active {
+	color: @color-plus10;
+}
+
+.footer-title:after {
+	border-top: 2px solid @color;
+}
+
+.footer-widget a,
+.footer-widget a:hover,
+.footer-widget a:active {
+	color: @color-plus10;
+}
+
+.footer-wrapper {
+	background-color: @color-min15;
+}
+
+.form-control:focus {
+	border-color: @color-plus10;
+	-webkit-box-shadow: inset 0 1px 1px @color-black-op1, 0 0 8px @color-op70;
+	box-shadow: inset 0 1px 1px @color-black-op1, 0 0 8px @color-op70;
+}
+
+.fs-header {
+	background-color: @color;
+	color: @forecolor-dark-background;
+}
+
+.fs-thread-pager > a,
+.fs-thread-pager > a:hover,
+.fs-thread-pager > a:active {
+	color: @color-plus60;
+}
+
+.fs-row, 
+.ps-message 
+{
+	background-color: @color-row;
+}
+
+.fs-headingrow {
+	background-color: @color-grey-plus20;
+}
+
+
+.threadtools > a.dimmed,
+.threadtools > i.dimmed {
+	color: @forecolor-dark-background-min-60;
+}
+
+.threadtools > a.dimmed:hover {
+	color : @color-plus60;
+}
+
+.threadtools > a.active {
+	color : @forecolor-dark-background;
+}
+
+/* color of the icon of an element which has new posts */
+.icon-newpost { color: @color-plus10; }
+.icon-nonewpost { 	color: @color-grey; }
+.icon-thread-open { color: @color-grey;}
+.icon-thread-answered { color: @color-plus10;}
+
+.list-row-description { color: @color-grey-min10;}
+
+.menu > li > a:hover,
+.menu > li > a:focus,
+.menu > li:hover > a {
+	color: @color;
+}
+
+.navbar-default {
+	background-color: @menucolor-op90;
+}
+
+.offtopic {
+    color: @color-grey;
+}
+
+.ps {
+	background-color : @color-grey-min2;
+}
+
+.ps-message-title {
+	color:@color-grey-min10;
+	border-bottom : 1px @color-grey-min2 solid;
+}
+
+.ps-message-signature {
+	color:@color-grey-min10;
+	border-top : 1px @color-grey-min2 solid;
+}
+
+.submenu,
+.inpageDropDown {
+	border-top: 1px solid @color;
+}
+
+.stickyThread {
+	background-color : @color-plus68;
+}
+
+/* #region Tables*/
+
+.table-bordered-all {
+	border-color: @color-grey-plus25;
+	background: @table-cell-background;
+}
+
+.table-bordered-all td {
+	border-bottom-color: @color-grey-plus25;
+	border-left-color: @color-grey-plus25;
+}
+
+.table-bordered {
+	border-color: @color-grey-plus25;
+}
+
+.table-bordered-rows td {
+	border-bottom-color: @color-grey-plus25;
+}
+
+.table-horizontal td, .table-horizontal th {
+	border-bottom-color: @color-grey-plus25;
+}
+
+.attachments-caption span {
+    background-color: @color-row;
+}
+
+/* #endregion*/
+
+/* #region Alert boxes*/
+.alert {
+    color: initial;
+	background: @alert-background;
+}
+
+.alert-title {
+	color: @forecolor-dark-background;
+	background: @alert-title-background;
+}
+
+.alert.alert-danger {
+    color: initial;
+	background: @alert-danger-background;
+}
+ 
+.alert.alert-danger .alert-title {
+	background: @alert-danger;
+}
+
+.alert.alert-warning {
+    color: initial;
+	background: @alert-warning-background;
+}
+
+.alert.alert-warning .alert-title {
+	background: @alert-warning;
+}
+
+.alert.alert-info {
+    color: initial;
+	background: @alert-background;
+}
+
+.alert.alert-info .alert-title {
+	background: @alert-title-background;
+}
+
+.alert.alert-neutral {
+    color: initial;
+	background: @alert-neutral-background;
+}
+
+.alert.alert-neutral .alert-title {
+	color: @color-grey-min40;
+	background: @alert-neutral;
+}
+
+.alert.alert-tip {
+    color: initial;
+	background: @alert-tip-background;
+}
+
+.alert.alert-tip .alert-title {
+	background: @alert-tip;
+}
+
+/* #endregion*/
+
+
+/* #region Tabs*/
+/* 
+	Tab CSS by Joseph Fusco. http://codepen.io/fusco/pen/Wvzjrm, slightly adjusted to remove the round corners. 
+	Shadow colors are defined in theme.css, as they can only be defined with the shadow definition directly.
+*/
+
+.tab-wrap {
+	background-color: @color-row;
+}
+
+.tab:checked + label {
+	background-color: @color-row;
+}
+
+.tab + label {
+	color: @color-grey-min40;
+	background-color: @color-light-grey;
+}
+
+.tab + label:hover {
+	background-color: @color-grey-plus20;
+}
+/* #endregion*/
+
+
+@media (max-width: 767px) {
+	.menu > li > a:hover,
+	.menu > li > a:focus {
+		color: @color;
+	}
+
+	.navbar-default {
+		background-color: @menucolor;
+	}
+}
+
+@media (max-width: 992px) {
+}
+
+@media (min-width:992px) {
+	.header-transparent .menu > li > a:hover,
+	.header-transparent .menu > li > a:focus,
+	.header-transparent .menu > li:hover > a {
+		color: @color;
+	}
+}
