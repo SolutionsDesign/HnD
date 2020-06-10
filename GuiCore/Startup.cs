@@ -17,9 +17,11 @@ namespace SD.HnD.Gui
 {
 	public class Startup
 	{
+		private readonly IConfiguration _configuration;
+
 		public Startup(IConfiguration configuration)
 		{
-			this.Configuration = configuration;
+			_configuration = configuration;
 		}
 
 
@@ -27,14 +29,20 @@ namespace SD.HnD.Gui
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddMvc();
 			services.AddDistributedMemoryCache();
 			services.AddSession();
 			services.AddControllersWithViews();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddMemoryCache();
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-					.AddCookie();
-#warning UPDATE AddCookie call (see:  https://docs.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-3.1 )
+					.AddCookie(options =>
+							   {
+								   options.LoginPath = "/Account/Login";
+								   options.LogoutPath = "/Account/Logout";
+								   options.Cookie.Name = "HnDAuthenticationCookie";
+							   });
+			services.AddResponseCaching();
 			
 			// First we need to configure LLBLGen Pro
 			ConfigureLLBLGenPro(services);
@@ -43,7 +51,12 @@ namespace SD.HnD.Gui
 		}
 
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		/// <summary>
+		/// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+		/// all configured methods are ran at every request
+		/// </summary>
+		/// <param name="app"></param>
+		/// <param name="env"></param>
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if(env.IsDevelopment())
@@ -54,25 +67,52 @@ namespace SD.HnD.Gui
 			{
 				app.UseExceptionHandler("/Home/Error");
 			}
+
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseRouting();
+			app.UseResponseCaching();
 			app.UseAuthentication();
 			app.UseAuthorization();
 			app.UseSession();
-			
-#warning ADD OWN MIDDLEWARE HERE THAT CHECKS SESSION VALUE, IF NOT THERE, DO Session_Start CODE.  
+			// own middleware function to initialize session if required. 
+			app.Use(async (context, next) =>
+					{
+						InitializeSessionIfRequired(context);
+
+						// call next in pipeline
+						await next();
+					});
+
+			// last element added to the chain.
 			app.UseEndpoints(endpoints => RegisterRoutes(endpoints));
 
-			// HnD one-time configuration now we now the environment...
+			// HnD one-time configuration now we now the environment.  
 			HnDConfiguration.Current.LoadStaticData(env.WebRootPath, env.ContentRootPath);
+		}
+
+
+		private void InitializeSessionIfRequired(HttpContext context)
+		{
+			if(context == null || context.Session==null)
+			{
+				return;
+			}
+
+			if(context.Session.GetInt32(SessionKeys.SessionInitialized)==1)
+			{
+				// initialized
+				return;
+			}
+
+			context.Session.Initialize(context);
 		}
 
 
 		private void ConfigureHnD(IServiceCollection services)
 		{
 			var hndConfig = new HnDConfiguration();
-			this.Configuration.Bind("HnD", hndConfig);
+			_configuration.Bind("HnD", hndConfig);
 			hndConfig.Sanitize();
 			// controllers which want to have it injected can do so
 			services.AddSingleton(hndConfig);
@@ -88,9 +128,9 @@ namespace SD.HnD.Gui
 		private void ConfigureLLBLGenPro(IServiceCollection services)
 		{
 			var llblgenProConfig = new LLBLGenProConfiguration();
-			this.Configuration.Bind("LLBLGenPro", llblgenProConfig);
+			_configuration.Bind("LLBLGenPro", llblgenProConfig);
 			llblgenProConfig.Sanitize();
-			var connectionString = this.Configuration.GetConnectionString("Main.ConnectionString.SQL Server (SqlClient)");
+			var connectionString = _configuration.GetConnectionString("Main.ConnectionString.SQL Server (SqlClient)");
 			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", 
 													 connectionString);
 			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c=>
@@ -107,6 +147,10 @@ namespace SD.HnD.Gui
 		
 		private static void RegisterRoutes(IEndpointRouteBuilder routes)
 		{
+			routes.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+			// Thread
+			routes.MapControllerRoute(name:"ViewThread", pattern:"{controller=Thread}/{action=Index}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ToggleMarkAsDone", pattern:"{controller=Thread}/{action=ToggleMarkAsDone}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ToggleBookmark", pattern:"{controller=Thread}/{action=ToggleBookmark}/{id?}");
 			routes.MapControllerRoute(name:"ToggleSubscribe", pattern:"{controller=Thread}/{action=ToggleSubscribe}/{id?}");
@@ -116,18 +160,17 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute(name:"AddThread", pattern:"{controller=Thread}/{action=Add}/{forumId?}");
 			routes.MapControllerRoute(name:"ViewActiveThreads", pattern:"{controller=Thread}/{action=Active}");
 
-			// set this one beneath all other Thread/ routes as otherwise {id?} will match with the action... WebDev, never a dull moment!
-			routes.MapControllerRoute(name:"ViewThread", pattern:"{controller=Thread}/{action=Index}/{id?}/{pageNo=1}");
-
+			// Forum
 			routes.MapControllerRoute(name:"ViewForum", pattern:"{controller=Forum}/{action=Index}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"RssForum", pattern:"{controller=RssForum}/{action=Index}/{id?}");
 
+			// SupportQueues
 			routes.MapControllerRoute(name:"MoveToQueue", pattern:"{controller=SupportQueue}/{action=MoveToQueue}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ClaimThread", pattern:"{controller=SupportQueue}/{action=ClaimThread}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"ReleaseThread", pattern:"{controller=SupportQueue}/{action=ReleaseThread}/{id?}/{pageNo=1}");
 			routes.MapControllerRoute(name:"EditMemo", pattern:"{controller=SupportQueue}/{action=EditMemo}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ListOfSupportQueues", pattern:"{controller=SupportQueues}/{action=Index}");
-			routes.MapControllerRoute(name:"UpdateSupportQueues", pattern:"{controller=SupportQueues}/{action=UpdateQueues}");
+			routes.MapControllerRoute(name:"ListOfSupportQueues", pattern:"{controller=SupportQueue}/{action=ListQueues}");
+			routes.MapControllerRoute(name:"UpdateSupportQueues", pattern:"{controller=SupportQueue}/{action=UpdateQueues}");
 
 			routes.MapControllerRoute(name:"DeleteMessage", pattern:"{controller=Message}/{action=Delete}/{id?}");
 			routes.MapControllerRoute(name:"EditMessage", pattern:"{controller=Message}/{action=Edit}/{id?}");
@@ -152,12 +195,6 @@ namespace SD.HnD.Gui
 
 			routes.MapControllerRoute(name:"EditBookmarks", pattern:"{controller=Account}/{action=Bookmarks}");
 			routes.MapControllerRoute(name:"UpdateBookmarks", pattern:"{controller=Account}/{action=UpdateBookmarks}");
-
-			routes.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 		}
-
-		#region Properties
-		public IConfiguration Configuration { get; }
-		#endregion
 	}
 }

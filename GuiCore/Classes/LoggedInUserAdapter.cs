@@ -7,6 +7,7 @@ using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.Gui.Classes;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
 {
@@ -237,7 +238,7 @@ namespace SD.HnD.Gui
 			{
 				return null;
 			}
-			var forumIDs = forumActionRights[(int)actionRightID];
+			var forumIDs = forumActionRights.GetValue((int)actionRightID);
 			return forumIDs == null ? null : forumIDs.ToList();
 		}
 

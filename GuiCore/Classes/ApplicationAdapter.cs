@@ -134,7 +134,7 @@ namespace SD.HnD.Gui
         /// <summary>
         /// Create a DTO of all needed e-mail default data.
         /// </summary>
-        /// <param name="hostName">The name of the host, e.g. www.llblgen.com. Obtained from controller by letting the DI system inject a IHttpContextAccessor
+        /// <param name="hostName">The name of the host, e.g. www.llblgen.com. Obtained from HttpContext.Request.Host.Host
         /// object in the controller ctor.</param>
 		/// <returns>a dictionary of the following keys (defaultFromEmailAddress, defaultToEmailAddress, defaultSMTPServer, emailPassowrdSubject,
 		/// siteName, applicationURL)</returns>

@@ -1,0 +1,99 @@
+﻿@model SD.HnD.Gui.Models.SearchResultsData
+
+@{
+	ViewBag.Title = string.Format("HnD | Search Results, Page {0}", Model.PageNo);
+
+	var nextPageButtonDisabledClass = string.Empty;
+	var previousPageButtonDisabledClass = string.Empty;
+	var previousPageNo = Model.PageNo - 1;
+	var nextPageNo = Model.PageNo + 1;
+	if(Model.PageNo >= Model.NumberOfPages)
+	{
+		nextPageButtonDisabledClass = "disabled";
+	}
+	if(Model.PageNo <= 1)
+	{
+		previousPageButtonDisabledClass = "disabled";
+	}
+}
+<a id="top"></a>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li><a href="~/">Home</a></li>
+				<li><a href="~/Search">Search</a></li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 pt0 mt0">
+			<h2 class="br-bottom pt0 mt0 mb0 pb0 subject">Search Results</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-10">
+			<div class="row">
+				<div class="col-sm-3">Number of results:</div>
+				<div class="col-sm-2"><b>@Model.NumberOfResultRows</b></div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3">Search terms:</div>
+				<div class="col-sm-8"><b>@Model.SearchParameters</b></div>
+			</div>
+		</div>
+		<div class="col-sm-2"><a href="~/Search" class="btn btn-default pull-right" title="New search">New search</a></div>
+	</div>
+</div>
+<section class="fs mt20">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 fs-header">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12 p0">
+							<div class="fs-thread-header">
+								<span class="plr7">Threads</span>&nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="fs-thread-pager">@Html.Partial("SearchResultsPager", Model)</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="row fs-headingrow">
+					<div class="col-sm-7 col-xs-8 pl20">Thread subject</div>
+					<div class="col-sm-3 notonmobile">Forum</div>
+					<div class="col-sm-2 col-xs-4 plr10">Last post</div>
+				</div>
+				@foreach(var row in Model.PageRows)
+				{
+					var lastPostingDateAsString = "Never";
+					if(row.ThreadLastPostingDate.HasValue)
+					{
+						lastPostingDateAsString = row.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+					}
+					<div class="row fs-row">
+						<div class="col-sm-7 col-xs-8">
+							<div class="column-fluent-no-padding">
+								<a href="~/Thread/@row.ThreadID/1" target="_blank">@row.Subject</a>
+							</div>
+						</div>
+						<div class="col-sm-3 notonmobile">@row.ForumName</div>
+						<div class="col-sm-2 col-xs-4 text-nowrap-responsive">
+							@Html.Raw(lastPostingDateAsString)
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 pull-center pt20">
+				<a class="btn btn-sm btn-default @previousPageButtonDisabledClass" href="~/Search/Results/@previousPageNo"><i class="fa fa-arrow-left"></i>&nbsp;&nbsp;Previous </a>
+				<a class="btn btn-sm btn-default @nextPageButtonDisabledClass" href="~/Search/Results/@nextPageNo"> Next&nbsp;&nbsp;<i class="fa fa-arrow-right"></i></a>
+			</div>
+		</div>
+	</div>
+</section>

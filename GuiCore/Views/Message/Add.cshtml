@@ -1,0 +1,47 @@
+﻿@using System.Globalization
+@using SD.HnD.DALAdapter.EntityClasses
+@model SD.HnD.Gui.Models.MessageData
+@{
+    ViewBag.Title = string.Format("HnD | Add new message to thread {0}", Model.ThreadSubject);
+}
+
+<a id="top"></a>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+                <li>@Model.SectionName</li>
+                <li><a href="~/Forum/@Model.ForumID/1">@Model.ForumName</a></li>
+                <li><a href="~/Thread/@Model.ThreadID/1">@Model.ThreadSubject</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0 mb0 pb0">Add New Message</h2>
+        </div>
+    </div>
+</div>
+<section class="mt20">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @using(Html.BeginForm("Add", "Message", FormMethod.Post, new { role = "form", threadId=@Model.ThreadID }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.Partial("MarkdownEditor", Model)
+                    <div class="mt20">
+                        <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default"/>&nbsp;&nbsp;&nbsp;
+                        <input type="submit" name="submitButton" formnovalidate value="Cancel" class="btn btn-default" />
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @Html.Partial("MarkdownEditor_JS")
+}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
@@ -22,6 +23,7 @@ namespace SD.HnD.Gui.Controllers
 			ArgumentVerifier.CantBeNull(cache, nameof(cache));
 			_cache = cache;
 		}
+		
 		
 		public ActionResult Index()
 		{

@@ -1,0 +1,69 @@
+﻿@model SD.HnD.Gui.Models.UnapprovedAttachmentsData
+
+@{
+	ViewBag.Title = "HnD | View messages with unapproved attachmentsSearch Results";
+}
+<a id="top"></a>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li><a href="~/">Home</a></li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 pt0 mt0">
+			<h2 class="br-bottom pt0 mt0 mb0 pb0 subject">Messages with unapproved attachments</h2>
+			<p>
+				Below you'll find the messages with at least one unapproved attachment, listed with the thread they're in. 
+				Clicking a thread subject will bring you to the post with the unapproved attachment which will allow you to approve it or delete it. If a thread
+				has multiple messages with unapproved attachments, the thread subject is listed multiple times.
+			<p>
+			</p>
+				Be sure you've checked the attachment's contents to see if it can be approved or not when you click the Approve button for a given attachment. 
+				Only approve attachments which you find OK for visitors to download. 
+			</p>
+		</div>
+	</div>
+</div>
+<section class="fs mt20">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 fs-header">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12 p0">
+							<div class="fs-thread-header">
+								Threads with messages with at least one unapproved attachment
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="row fs-headingrow">
+					<div class="col-sm-7 col-xs-8 pl20">Thread subject</div>
+					<div class="col-sm-3 notonmobile">Forum</div>
+					<div class="col-sm-2 col-xs-4 plr10">Attachment added</div>
+				</div>
+				@foreach(var row in Model.MessageIdsWithUnapprovedAttachments)
+				{
+					<div class="row fs-row">
+						<div class="col-sm-7 col-xs-8">
+							<div class="column-fluent-no-padding">
+								<a href="~/Message/Goto/@row.MessageID">@row.Subject</a>
+							</div>
+						</div>
+						<div class="col-sm-3 notonmobile">@row.ForumName</div>
+						<div class="col-sm-2 col-xs-4">
+							@row.AddedOn.ToString("dd-MMM-yyyy HH:mm")
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</section>

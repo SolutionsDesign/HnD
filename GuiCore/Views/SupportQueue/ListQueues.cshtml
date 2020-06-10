@@ -1,0 +1,151 @@
+﻿@model SD.HnD.Gui.Models.SupportQueuesData
+
+@{
+    ViewBag.Title = "HnD | Available Support Queues";
+}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0">Support queues</h2>
+            <p>
+                Below you'll find the support queues defined in the forum system, ordered by their defined order no, ascending, as well as their containing threads.
+                Use the queues below to access threads which need attention. Be sure to claim a thread when you want to work on the thread and release the claim of
+                the thread when you're done. You can do that in this overview, however you can also do that in the message view of the thread.
+                <br /><br />
+                The list of threads in a queue is filtered by the forums you can access: threads located in forums you don't have access to aren't displayed.
+            </p>
+        </div>
+    </div>
+</div>
+<section class="fs mt20">
+    <div class="container">
+        @foreach(var supportQueue in Model.AvailableSupportQueues)
+        {
+            var contentsForSupportQueue = Model.AllVisibleSupportQueueContents.Where(r => r.QueueID == supportQueue.QueueID).ToList();
+            <div class="row">
+                <div class="col-sm-12 fs-header">
+                    <span class="plr7">@supportQueue.QueueName</span>
+                    <div class="pull-right">
+                        <a href="#" class="fs-tooltip" data-toggle="tooltip" data-placement="left" title="@supportQueue.QueueDescription">
+                            <i class="fa fa-info-circle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+			if(contentsForSupportQueue.Count <= 0)
+			{
+                <div class="row fs-row pb30">
+                    <div class="col-sm-12">
+                        There are no threads in this queue.
+                    </div>
+                </div>
+}
+            else
+            {
+                <div class="row">
+                    <form action="~/SupportQueue/UpdateQueues" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="col-sm-12">
+                            <div class="row fs-headingrow">
+                                <div class="col-sm-8 col-xs-8">
+                                    <span class="pl35">Thread subject</span>
+                                </div>
+                                <div class="col-sm-2 notonmobile plr10">Last post</div>
+                                <div class="col-sm-2 col-xs-4 text-nowrap plr10">Claim</div>
+                            </div>
+                            @foreach(var supportQueueContentsRow in contentsForSupportQueue)
+                            {
+                                var iconClass = "icon-nonewpost";
+                                var iconType = "fa-comments";
+                                var lastPostingDateAsString = "Never";
+                                var stickyClass = string.Empty;
+                                if(supportQueueContentsRow.IsClosed)
+                                {
+                                    iconType = "fa-lock";
+                                }
+                                if(supportQueueContentsRow.IsSticky)
+                                {
+                                    iconType = "fa-thumb-tack";
+                                    stickyClass = " stickyThread";
+                                }
+                                if(supportQueueContentsRow.ThreadLastPostingDate.HasValue)
+                                {
+                                    lastPostingDateAsString = supportQueueContentsRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+                                    if(supportQueueContentsRow.ThreadLastPostingDate.Value > Model.UserLastVisitDate)
+                                    {
+                                        iconClass = "icon-newpost";
+                                    }
+                                }
+                                <div class="row fs-row @stickyClass">
+                                    <div class="col-sm-8 col-xs-8">
+                                        <div class="column-wrapper-sm">
+                                            <div class="column-fixed-sm">
+                                                <i class="fa @iconType @iconClass"></i>
+                                            </div>
+                                            <div class="column-fluent">
+                                                <a href="~/Thread/@supportQueueContentsRow.ThreadID/1">@supportQueueContentsRow.Subject</a>
+                                                <span class="list-row-description notonmobile pt3">
+                                                    Posted in forum: <a href="~/Forum/@supportQueueContentsRow.ForumID/1">@supportQueueContentsRow.ForumName</a><br/>
+                                                    Started by: <a href="~/User/@supportQueueContentsRow.ThreadStartedByUserID">@supportQueueContentsRow.ThreadStartedByNickName</a><br/>
+                                                    Placed in queue by: <a href="~/User/@supportQueueContentsRow.PlacedInQueueByUserID">@supportQueueContentsRow.PlacedInQueueByNickName</a><br/>
+                                                    Placed in queue on: @Html.Raw(supportQueueContentsRow.PlacedInQueueOn.ToString("dd-MMM-yyyy HH:mm"))
+                                                </span>
+                                                <span class="notonfullwidth list-row-description">
+                                                    <a href="~/Message/Goto/@supportQueueContentsRow.MessageIDLastPost" title="Go to last post">Last post in thread</a> by <a href="~/User/@supportQueueContentsRow.LastPostbyUserID">@supportQueueContentsRow.LastPostByNickName</a>
+                                                </span>
+                                            </div>
+                                            <div class="column-clear"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 notonmobile">
+                                        <a href="~/Message/Goto/@supportQueueContentsRow.MessageIDLastPost">@lastPostingDateAsString</a>
+                                        <span class="list-row-description notonmobile pt3">
+                                            By: <a href="~/User/@supportQueueContentsRow.LastPostbyUserID">@supportQueueContentsRow.LastPostByNickName</a>
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-4 text-nowrap-responsive">
+                                        @if(supportQueueContentsRow.ClaimedByUserID.HasValue)
+                                        {
+                                            <span class="list-row-description">
+                                                By: <a href="~/User/@supportQueueContentsRow.ClaimedByUserID.Value">@supportQueueContentsRow.ClaimedByNickName</a><br/>
+                                                @if(supportQueueContentsRow.ClaimedOn.HasValue)
+                                                {
+                                                    <span>On: @Html.Raw(supportQueueContentsRow.ClaimedOn.Value.ToString("dd-MMM-yyyy HH:mm"))</span>
+                                                }
+                                            </span>
+                                            <button class="btn btn-default mt5 plr20" value="releaseButton_@supportQueueContentsRow.ThreadID" name="threadClaimButton" type="submit"> Release </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-default mt5 plr20" value="claimButton_@supportQueueContentsRow.ThreadID" name="threadClaimButton" type="submit"> Claim </button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </form>
+                </div>
+}
+            <div class="row pb10">
+                <div class="col-sm-12">
+                    &nbsp;
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col-sm-12 pull-center pt20">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

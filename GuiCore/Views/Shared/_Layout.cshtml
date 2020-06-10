@@ -81,7 +81,7 @@
 											{
 												var numberOfThreadsInSupportQueues = ApplicationAdapter.GetCachedNumberOfThreadsInSupportQueues();
 												var numberOfThreadsInSupportQueuesAsString = numberOfThreadsInSupportQueues < 1 ? string.Empty : numberOfThreadsInSupportQueues.ToString();
-												<li><a href="~/SupportQueues">Support Queues <span class="badge">@numberOfThreadsInSupportQueuesAsString</span></a></li>
+												<li><a href="~/SupportQueue/ListQueues">Support Queues <span class="badge">@numberOfThreadsInSupportQueuesAsString</span></a></li>
 											}
 											@if(Context.Session.CanAdministrate())
 											{

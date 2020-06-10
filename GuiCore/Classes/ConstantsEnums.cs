@@ -12,5 +12,6 @@ namespace SD.HnD.Gui.Classes
 		public static readonly string SystemActionRights = "User:SystemActionRights";
 		public static readonly string ForumActionRights = "User:ForumActionRights";
 		public static readonly string AuditActions = "User:AuditActions";
+		public static readonly string SessionInitialized = "Session:Initialized";
 	}
 }
