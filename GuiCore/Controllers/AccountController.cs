@@ -57,10 +57,8 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToLocal("~/");
 	    }
 
-#warning CHECK VALIDATEINPUT
         [HttpPost]
 		[ValidateAntiForgeryToken]
-		//[ValidateInput(false)]
 		public async Task<IActionResult> LoginAsync([Bind("NickName, Password, RememberMe")] LoginModel data, string returnUrl)
         {
 	        if(!ModelState.IsValid)

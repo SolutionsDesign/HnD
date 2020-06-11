@@ -211,7 +211,7 @@ namespace SD.HnD.Gui
         /// <param name="searchResults">A dataTable of search results.</param>
         public static void AddSearchTermsAndResults(string searchTerms, List<SearchResultRow> searchResults)
         {
-#warning IMPLEMENT
+#warning IMPLEMENT. Wrap both in a new object, store that in the Cache, under a guid key and store the key in the session. Cache time 10 minutes.
             // HttpContext.Current.Session.Add("searchTerms", searchTerms);
             // HttpContext.Current.Session.Add("searchResults", searchResults);
         }

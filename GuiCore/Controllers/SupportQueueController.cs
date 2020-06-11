@@ -82,11 +82,9 @@ namespace SD.HnD.Gui.Controllers
 			return View(messageData);
 	    }
 
-#warning LOOK AT VALIDATEINPUT
 	    [Authorize]
 	    [ValidateAntiForgeryToken]
 	    [HttpPost]
-	    //[ValidateInput(false)]
 	    public ActionResult EditMemo([Bind("MessageText")] MessageData messageData, string submitButton, int id = 0, int pageNo=1)
 	    {
 		    if(!ModelState.IsValid)

@@ -128,7 +128,7 @@
 							<div class="fs-thread-header">
 								<span class="plr7">Posts</span>&nbsp;&nbsp;&nbsp;
 							</div>
-							<div class="fs-thread-pager">@Html.Partial("MessagePager", Model)</div>
+							<div class="fs-thread-pager">@await Html.PartialAsync("MessagePager", Model)</div>
 						</div>
 						<div class="col-sm-4">
 							<div class="threadtools pull-right">

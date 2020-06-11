@@ -118,7 +118,7 @@
 								<div class="column-fluent">
 									<a href="~/Thread/@threadRow.ThreadID/1">@threadRow.Subject</a>
 									<span class="list-row-description notonmobile pt3">Started by: <a href="~/User/@threadRow.ThreadStartedByUserID">@threadRow.ThreadStartedByNickName</a></span>
-									@Html.Partial("ThreadPager", threadRow)
+									@await Html.PartialAsync("ThreadPager", threadRow)
 								</div>
 								<div class="column-clear"></div>
 							</div>

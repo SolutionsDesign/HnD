@@ -44,7 +44,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    @Html.Partial("MarkdownEditor", Model)
+                    @await Html.PartialAsync("MarkdownEditor", Model)
                     <div class="mt20">
                         <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default" />&nbsp;&nbsp;&nbsp;
                         <input type="submit" name="submitButton" formnovalidate value="Cancel" class="btn btn-default" />
@@ -57,5 +57,5 @@
 
 
 @section Scripts {
-    @Html.Partial("MarkdownEditor_JS")
+    @await Html.PartialAsync("MarkdownEditor_JS")
 }

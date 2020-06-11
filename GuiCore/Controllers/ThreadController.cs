@@ -269,11 +269,9 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 
-#warning LOOK AT VALIDATEINPUT		
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		//[ValidateInput(false)]
 		public ActionResult Add([Bind("MessageText, ThreadSubject, IsSticky, Subscribe")] NewThreadData newThreadData, string submitButton, int forumId = 0)
 		{
 			if(submitButton != "Post")

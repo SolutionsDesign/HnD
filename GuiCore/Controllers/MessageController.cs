@@ -155,11 +155,9 @@ namespace SD.HnD.Gui.Controllers
 			return View(messageData);
 		}
 
-#warning CHECK VALIDATEINPUT
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		//[ValidateInput(false)]
 		public ActionResult Add([Bind("MessageText,Subscribe")] MessageData messageData, string submitButton, int threadId = 0)
 		{
 			if(submitButton != "Post")
@@ -202,11 +200,9 @@ namespace SD.HnD.Gui.Controllers
 			return CalculateRedirectToMessage(thread.ThreadID, newMessageId);
 		}
 		
-#warning CHECK VALIDATEINPUT
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		//[ValidateInput(false)]
 		public ActionResult Edit([Bind("MessageText")] MessageData messageData, string submitButton, int id = 0)
 		{
 			if(!ModelState.IsValid)

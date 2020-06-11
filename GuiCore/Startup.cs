@@ -70,6 +70,11 @@ namespace SD.HnD.Gui
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			
+			app.Use(async (c, n) =>
+					{
+						await n();
+					});
 			app.UseRouting();
 			app.UseResponseCaching();
 			app.UseAuthentication();
@@ -78,7 +83,7 @@ namespace SD.HnD.Gui
 			// own middleware function to initialize session if required. 
 			app.Use(async (context, next) =>
 					{
-						InitializeSessionIfRequired(context);
+						Startup.InitializeSessionIfRequired(context);
 
 						// call next in pipeline
 						await next();
@@ -92,9 +97,9 @@ namespace SD.HnD.Gui
 		}
 
 
-		private void InitializeSessionIfRequired(HttpContext context)
+		private static void InitializeSessionIfRequired(HttpContext context)
 		{
-			if(context == null || context.Session==null)
+			if(context?.Session == null)
 			{
 				return;
 			}
@@ -147,54 +152,42 @@ namespace SD.HnD.Gui
 		
 		private static void RegisterRoutes(IEndpointRouteBuilder routes)
 		{
-			routes.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
-
+			// Only map the routes that are different than the default (which is at the end of the list). All routes not defined explicitly
+			// will match with the default {controller}/{action}/{id?}. 
+			
 			// Thread
-			routes.MapControllerRoute(name:"ViewThread", pattern:"{controller=Thread}/{action=Index}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ToggleMarkAsDone", pattern:"{controller=Thread}/{action=ToggleMarkAsDone}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ToggleBookmark", pattern:"{controller=Thread}/{action=ToggleBookmark}/{id?}");
-			routes.MapControllerRoute(name:"ToggleSubscribe", pattern:"{controller=Thread}/{action=ToggleSubscribe}/{id?}");
-			routes.MapControllerRoute(name:"MoveThread", pattern:"{controller=Thread}/{action=Move}/{id?}");
-			routes.MapControllerRoute(name:"DeleteThread", pattern:"{controller=Thread}/{action=Delete}/{id?}");
-			routes.MapControllerRoute(name:"EditThreadProperties", pattern:"{controller=Thread}/{action=EditProperties}/{id?}");
-			routes.MapControllerRoute(name:"AddThread", pattern:"{controller=Thread}/{action=Add}/{forumId?}");
-			routes.MapControllerRoute(name:"ViewActiveThreads", pattern:"{controller=Thread}/{action=Active}");
+			routes.MapControllerRoute("ViewThread", "Thread/{id}/{pageNo}", new {controller="Thread", action="Index", pageNo=1});
+			routes.MapControllerRoute("ToggleMarkAsDone", "Thread/ToggleMarkAsDone/{id}/{pageNo}", new {controller="Thread", action="ToggleMarkAsDone", pageNo=1});
+			routes.MapControllerRoute("AddThread", "Thread/Add/{forumId}", new {controller="Thread", action="Add"});
 
 			// Forum
-			routes.MapControllerRoute(name:"ViewForum", pattern:"{controller=Forum}/{action=Index}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"RssForum", pattern:"{controller=RssForum}/{action=Index}/{id?}");
+			routes.MapControllerRoute("ViewForum", "Forum/{id}/{pageNo}", new {controller="Forum", action="Index", pageNo=1});
+			
+			// RssForum
+			routes.MapControllerRoute("RssForum", "RssForum/{id}", new {controller="RssForum", action="Index"});
 
-			// SupportQueues
-			routes.MapControllerRoute(name:"MoveToQueue", pattern:"{controller=SupportQueue}/{action=MoveToQueue}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ClaimThread", pattern:"{controller=SupportQueue}/{action=ClaimThread}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ReleaseThread", pattern:"{controller=SupportQueue}/{action=ReleaseThread}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"EditMemo", pattern:"{controller=SupportQueue}/{action=EditMemo}/{id?}/{pageNo=1}");
-			routes.MapControllerRoute(name:"ListOfSupportQueues", pattern:"{controller=SupportQueue}/{action=ListQueues}");
-			routes.MapControllerRoute(name:"UpdateSupportQueues", pattern:"{controller=SupportQueue}/{action=UpdateQueues}");
+			// SupportQueue
+			routes.MapControllerRoute("MoveToQueue", "SupportQueue/MoveToQueue/{id}/{pageNo}", new {controller="SupportQueue", action="MoveToQueue", pageNo=1});
+			routes.MapControllerRoute("ClaimThread", "SupportQueue/ClaimThread/{id}/{pageNo}", new {controller="SupportQueue", action="ClaimThread", pageNo=1});
+			routes.MapControllerRoute("ReleaseThread", "SupportQueue/ReleaseThread/{id}/{pageNo}", new {controller="SupportQueue", action="ReleaseThread", pageNo=1});
+			routes.MapControllerRoute("EditMemo", "SupportQueue/EditMemo/{id}/{pageNo}", new {controller="SupportQueue", action="EditMemo", pageNo=1});
 
-			routes.MapControllerRoute(name:"DeleteMessage", pattern:"{controller=Message}/{action=Delete}/{id?}");
-			routes.MapControllerRoute(name:"EditMessage", pattern:"{controller=Message}/{action=Edit}/{id?}");
-			routes.MapControllerRoute(name:"GotoMessage", pattern:"{controller=Message}/{action=Goto}/{id?}");
-			routes.MapControllerRoute(name:"AddMessage", pattern:"{controller=Message}/{action=Add}/{threadId?}/{messageIdToQuote=0}");
+			// Message
+			routes.MapControllerRoute("AddMessage", "Message/Add/{threadId}/{messageIdToQuote}", new {controller="Message", action="Add", messageIdToQuote=0});
 
-			routes.MapControllerRoute(name:"DeleteAttachment", pattern:"{controller=Attachment}/{action=Delete}/{messageId?}/{attachmentId?}");
-			routes.MapControllerRoute(name:"ToggleApproval", pattern:"{controller=Attachment}/{action=ToggleApproval}/{messageId?}/{attachmentId?}");
-			routes.MapControllerRoute(name:"GetAttachment", pattern:"{controller=Attachment}/{action=Get}/{messageId?}/{attachmentId?}");
-			routes.MapControllerRoute(name:"AddAttachment", pattern:"{controller=Attachment}/{action=Add}/{messageId?}");
-			routes.MapControllerRoute(name:"GetUnapproved", pattern:"{controller=Attachment}/{action=Unapproved}");
+			// Attachment
+			routes.MapControllerRoute("DeleteAttachment", "Attachment/Delete/{messageId}/{attachmentId}", new {controller="Attachment", action="Delete"});
+			routes.MapControllerRoute("ToggleApproval", "Attachment/ToggleApproval/{messageId}/{attachmentId}", new {controller="Attachment", action="ToggleApproval"});
+			routes.MapControllerRoute("GetAttachment", "Attachment/Get/{messageId}/{attachmentId}", new {controller="Attachment", action="Get"});
+			routes.MapControllerRoute("AddAttachment", "Attachment/Add/{messageId}", new {controller="Attachment", action="Add"});
 
-			routes.MapControllerRoute(name:"SearchAll", pattern:"{controller=Search}/{action=SearchAll}/{searchParameters?}");
-			routes.MapControllerRoute(name:"SearchForum", pattern:"{controller=Search}/{action=SearchForum}/{forumId?}/{searchParameters?}");
-			routes.MapControllerRoute(name:"SearchResults", pattern:"{controller=Search}/{action=Results}/{pageNo?}");
-			routes.MapControllerRoute(name:"SearchAdvanced", pattern:"{controller=Search}/{action=SearchAdvanced}");
-			routes.MapControllerRoute(name:"SearchAdvancedUI", pattern:"{controller=Search}/{action=AdvancedSearch}");
-			routes.MapControllerRoute(name:"SearchUnattended", pattern:"{controller=Search}/{action=SearchUnattended}");
-			routes.MapControllerRoute(name:"ViewIgnoredSearchWords", pattern:"{controller=Search}/{action=IgnoredSearchWords}");
-
-			routes.MapControllerRoute(name:"ListOfForums", pattern:"{controller=Section}/{action=Forums}/{id?}");
-
-			routes.MapControllerRoute(name:"EditBookmarks", pattern:"{controller=Account}/{action=Bookmarks}");
-			routes.MapControllerRoute(name:"UpdateBookmarks", pattern:"{controller=Account}/{action=UpdateBookmarks}");
+			// Search
+			routes.MapControllerRoute("SearchAll", "Search/SearchAll/{searchParameters}", new {controller="Search", action="SearchAll"});
+			routes.MapControllerRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller="Search", action="SearchForum"});
+			routes.MapControllerRoute("SearchResults", "Search/Results/{pageNo}", new {controller="Search", action="Results", pageNo=1});
+			
+			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
+			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");
 		}
 	}
 }

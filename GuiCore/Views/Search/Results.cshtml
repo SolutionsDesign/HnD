@@ -55,7 +55,7 @@
 							<div class="fs-thread-header">
 								<span class="plr7">Threads</span>&nbsp;&nbsp;&nbsp;
 							</div>
-							<div class="fs-thread-pager">@Html.Partial("SearchResultsPager", Model)</div>
+							<div class="fs-thread-pager">@await Html.PartialAsync("SearchResultsPager", Model)</div>
 						</div>
 					</div>
 				</div>
