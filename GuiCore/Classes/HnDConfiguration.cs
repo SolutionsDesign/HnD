@@ -89,6 +89,8 @@ namespace SD.HnD.Gui.Classes
 			}
 			// replace / with \ if we're on windows, or \ with / if we're on linux. 
 			this.DataFilesPath = this.DataFilesPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+			// clamp search result caching timeout between 1 and 60 minutes.
+			this.MaxNumberOfMinutesToCacheSearchResults = Math.Max(1, Math.Min(60, this.MaxNumberOfMinutesToCacheSearchResults));
 		}
 		
 
@@ -377,5 +379,6 @@ namespace SD.HnD.Gui.Classes
 		public Dictionary<string, string> EmojiFilenamesPerName { get; set; } = new Dictionary<string, string>();
 		public string RegistrationReplyMailTemplate { get; set; }
 		public string ThreadUpdatedNotificationTemplate { get; set; }
+		public int MaxNumberOfMinutesToCacheSearchResults { get; set; }
 	}
 }

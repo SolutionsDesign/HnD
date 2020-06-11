@@ -136,8 +136,11 @@ namespace SD.HnD.Gui
 			_configuration.Bind("LLBLGenPro", llblgenProConfig);
 			llblgenProConfig.Sanitize();
 			var connectionString = _configuration.GetConnectionString("Main.ConnectionString.SQL Server (SqlClient)");
-			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", 
-													 connectionString);
+			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", connectionString);
+			foreach(var kvp in llblgenProConfig.ConnectionStrings)
+			{
+				RuntimeConfiguration.AddConnectionString(kvp.Key, kvp.Value);
+			}
 			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c=>
 																		 {
 																			 c.AddDbProviderFactory(typeof(Microsoft.Data.SqlClient.SqlClientFactory))

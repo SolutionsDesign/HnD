@@ -340,8 +340,7 @@ namespace SD.HnD.BL
 					return;
 				}
 				var threadSubject = thread.Subject;
-#warning UPDATE TO MVC URL
-				var threadUrl =  string.Format("{0}Messages.aspx?ThreadID={1}", applicationURL, thread.ThreadID);
+				var threadUrl =  string.Format("{0}Thread/{1}", applicationURL, thread.ThreadID);
 				mailBody.Replace("[SiteURL]", applicationURL);
 				mailBody.Replace("[SiteName]", siteName);
 				mailBody.Replace("[ThreadSubject]", threadSubject);

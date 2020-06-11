@@ -23,6 +23,7 @@ using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.TypedListClasses;
@@ -203,43 +204,65 @@ namespace SD.HnD.Gui
 			session.SetString(SessionKeys.LastVisitedDateTickValue, lastVisitDate.Ticks.ToString());
         }
 
-		
-        /// <summary>
-        /// Adds the search terms and results to the session.
-        /// </summary>
-        /// <param name="searchTerms">A string of search terms.</param>
-        /// <param name="searchResults">A dataTable of search results.</param>
-        public static void AddSearchTermsAndResults(string searchTerms, List<SearchResultRow> searchResults)
+
+		/// <summary>
+		/// Adds the search terms and results to the session.
+		/// </summary>
+		/// <param name="session">The session the method works on</param>
+		/// <param name="cache">The cache to store the results in</param>
+		/// <param name="searchTerms">A string of search terms.</param>
+		/// <param name="searchResults">A dataTable of search results.</param>
+		public static void AddSearchTermsAndResults(this ISession session, IMemoryCache cache, string searchTerms, List<SearchResultRow> searchResults)
         {
-#warning IMPLEMENT. Wrap both in a new object, store that in the Cache, under a guid key and store the key in the session. Cache time 10 minutes.
-            // HttpContext.Current.Session.Add("searchTerms", searchTerms);
-            // HttpContext.Current.Session.Add("searchResults", searchResults);
-        }
+			var resultsToCache = new SearchResultsWrapper() {SearchResults = searchResults, SearchTerms = searchTerms};
+			var key = Guid.NewGuid().ToString();
+			// cache the results for 10 minutes.
+			cache.Set(key, resultsToCache, new TimeSpan(0, ApplicationAdapter.GetMaxNumberOfMinutesToCacheSearchResults(), 0));
+			// cache the key in the session so we can find back the actual results in the cache!
+			session.SetString(SessionKeys.SearchResultsKey, key);
+		}
 		
 
         /// <summary>
         /// Gets the search terms.
         /// </summary>
+		/// <param name="session">The session the method works on</param>
+		/// <param name="cache">The cache to store the results in</param>
         /// <returns>string of search terms, and an empty string if no such value is present in the session</returns>
-        public static string GetSearchTerms()
-        {
-#warning IMPLEMENT
-	        //return (HttpContext.Current.Session["searchTerms"] as string) ?? string.Empty;
-			return string.Empty;
+        public static string GetSearchTerms(this ISession session, IMemoryCache cache)
+		{
+			return SessionAdapter.GetSearchResultsFromCache(session, cache)?.SearchTerms ?? string.Empty;
 		}
 
 		
         /// <summary>
         /// Gets the search results.
         /// </summary>
-        /// <returns>A dataTable of search results, and null if no such value is present in the session</returns>
-        public static List<SearchResultRow> GetSearchResults()
-        {
-#warning IMPLEMENT
-	        //return HttpContext.Current.Session["searchResults"] as List<SearchResultRow>;
-			return new List<SearchResultRow>();
-        }
-		
+		/// <param name="session">The session the method works on</param>
+		/// <param name="cache">The cache to store the results in</param>
+        /// <returns>A list of search result rows if present, or null if no such value is present in the session</returns>
+        public static List<SearchResultRow> GetSearchResults(this ISession session, IMemoryCache cache)
+		{
+			return SessionAdapter.GetSearchResultsFromCache(session, cache)?.SearchResults;
+		}
+
+
+		private static SearchResultsWrapper GetSearchResultsFromCache(ISession session, IMemoryCache cache)
+		{
+			var key = session.GetString(SessionKeys.SearchResultsKey) ?? string.Empty;
+			if(string.IsNullOrEmpty(key))
+			{
+				return null;
+			}
+			var toReturn = cache.Get<SearchResultsWrapper>(key);
+			if(toReturn == null)
+			{
+				// cached data has expired. Remove key
+				session.Remove(SessionKeys.SearchResultsKey);
+			}
+			return toReturn;
+		}
+
 
 		/// <summary>
 		/// Adds the forums action rights collection to the session.

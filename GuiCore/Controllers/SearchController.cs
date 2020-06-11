@@ -163,7 +163,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var results = SessionAdapter.GetSearchResults();
+			var results = this.HttpContext.Session.GetSearchResults(_cache);
 			if(results == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -189,7 +189,7 @@ namespace SD.HnD.Gui.Controllers
 							   PageNo = pageNo,
 							   PageRows = rowsToShow,
 							   NumberOfResultRows = results.Count,
-							   SearchParameters = SessionAdapter.GetSearchTerms()
+							   SearchParameters = this.HttpContext.Session.GetSearchTerms(_cache)
 						   };
 			return View(viewData);
 		}
@@ -210,7 +210,7 @@ namespace SD.HnD.Gui.Controllers
 			var results = Searcher.DoSearch(searchTerms, forumIDs, orderFirstElement, orderSecondElement,
 											this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
 											this.HttpContext.Session.GetUserID(), targetToSearch);
-			SessionAdapter.AddSearchTermsAndResults(searchTerms, results);
+			this.HttpContext.Session.AddSearchTermsAndResults(_cache, searchTerms, results);
 		}
 	}
 }

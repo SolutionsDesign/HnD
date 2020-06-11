@@ -116,6 +116,12 @@ namespace SD.HnD.Gui
         }
 
 
+		public static int GetMaxNumberOfMinutesToCacheSearchResults()
+		{
+			return HnDConfiguration.Current.MaxNumberOfMinutesToCacheSearchResults;
+		}
+
+
 	    /// <summary>
         /// Gets an email template file path given the template type from the corresponding enum.
         /// </summary>

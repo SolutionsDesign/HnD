@@ -30,7 +30,10 @@ namespace SD.HnD.Gui.Classes
 			}
 			this.SqlServerCompatibilityAsEnum = (SqlServerCompatibilityLevel)this.SqlServerDQECompatibilityLevel;
 		}
-		
+
+		/// <summary>
+		/// Catalog name overwrites to use at runtime
+		/// </summary>
 		public Dictionary<string, string> CatalogNameOverwrites { get; set; } = new Dictionary<string, string>();
 		/// <summary>
 		/// The dqe compatibility level as read from the appsettings.json file
@@ -40,5 +43,9 @@ namespace SD.HnD.Gui.Classes
 		/// The enum instance of SqlServerDQECompatibilityLevel
 		/// </summary>
 		public SqlServerCompatibilityLevel SqlServerCompatibilityAsEnum { get; private set; } = SqlServerCompatibilityLevel.SqlServer2012;
+		/// <summary>
+		/// Connection strings defined in the appsettings.json, if any.
+		/// </summary>
+		public Dictionary<string, string> ConnectionStrings { get; set; } = new Dictionary<string, string>();
 	}
 }
