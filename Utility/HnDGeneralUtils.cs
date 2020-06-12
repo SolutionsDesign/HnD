@@ -27,6 +27,7 @@ using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
+using System.Xml;
 using MarkdownDeep;
 using SD.Tools.BCLExtensions.CollectionsRelated;
 
@@ -126,8 +127,8 @@ namespace SD.HnD.Utility
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendAsynchronically">if set to true, the email will be send asynchronically otherwise synchronically</param>
 		/// <returns>true if email sent, otherwise false</returns>
-		public static bool SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, 
-				Dictionary<string, string> emailData, bool sendAsynchronically)
+		public static bool SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, Dictionary<string, string> emailData, 
+									 bool sendAsynchronically)
 		{
 			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? String.Empty;
 			MailMessage messageToSend = new MailMessage(fromAddress, defaultToMailAddress);
@@ -140,7 +141,9 @@ namespace SD.HnD.Utility
 			messageToSend.IsBodyHtml = false;
 
 			// host and smtp credentials are set in .config file
-			SmtpClient client = new SmtpClient();
+			SmtpClient client = new SmtpClient(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")));
+			client.Credentials = new NetworkCredential(emailData.GetValue("smtpUserName"), emailData.GetValue("smtpPassword"));
+			client.EnableSsl = XmlConvert.ToBoolean(emailData.GetValue("smtpEnableSsl"));
 			if(sendAsynchronically)
 			{
 				// send email asynchronously.

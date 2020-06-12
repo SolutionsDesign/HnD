@@ -314,9 +314,8 @@ namespace SD.HnD.Gui.Classes
 		{
 			this.FullDataFilesPath = Path.Combine(contentRootPath, this.DataFilesPath);
 			this.NoiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(this.FullDataFilesPath);
-#warning  IMPLEMENT
-			// string registrationReplyMailTemplate = File.ReadAllText(Path.Combine(datafilesPath, "RegistrationReplyMail.template"));
-			// string threadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(datafilesPath, "ThreadUpdatedNotification.template"));
+			this.RegistrationReplyMailTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "RegistrationReplyMail.template"));
+			this.ThreadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "ThreadUpdatedNotification.template"));
 
 			var emojiUrlPath = (this.EmojiFilesPath ?? string.Empty);
 			// replace / with \ if we're on windows and / with \ if we're on linux
@@ -364,6 +363,7 @@ namespace SD.HnD.Gui.Classes
 		public CacheConfiguration ResultsetCacheConfiguration { get; set; }
 		public List<FromToMapping> SmileyMappings { get; set; } = new List<FromToMapping>();
 		public Dictionary<string, string> SmileyMappingsLookup { get; } = new Dictionary<string, string>();
+		public Dictionary<string, string> SmtpConfiguration { get; set; } = new Dictionary<string, string>();
 		public string VirtualRoot { get; set; } = "/";
 		public string DefaultFromEmailAddress { get; set; } = string.Empty;
 		public string DefaultToEmailAddress { get; set; } = string.Empty;

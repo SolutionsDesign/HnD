@@ -22,6 +22,7 @@ using SD.HnD.BL;
 using System.Linq;
 using System.Collections.Generic;
 using SD.HnD.Gui.Classes;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
 {
@@ -45,47 +46,7 @@ namespace SD.HnD.Gui
 			return HnDConfiguration.Current.MaxAmountMessagesPerPage;
         }
 
-
-	    /// <summary>
-        /// Gets the default from mail address.
-        /// </summary>
-        /// <returns>defaultFromEmailAddress if available, otherwise an empty string</returns>
-        private static string GetDefaultFromEmailAddress()
-		{
-			return HnDConfiguration.Current.DefaultFromEmailAddress;
-        }
-
-
-	    /// <summary>
-        /// Gets the default to mail address.
-        /// </summary>
-        /// <returns>defaultToEmailAddress if available, otherwise an empty string</returns>
-        private static string GetDefaultToEmailAddress()
-		{
-			return HnDConfiguration.Current.DefaultToEmailAddress;
-        }
-
-
-	    /// <summary>
-        /// Gets the email password subject.
-        /// </summary>
-        /// <returns>emailPasswordSubject if available, otherwise an empty string</returns>
-        private static string GetEmailPasswordSubject()
-		{
-			return HnDConfiguration.Current.EmailPasswordSubject;
-        }
-
-
-	    /// <summary>
-		/// Gets the email thread notification subject.
-		/// </summary>
-		/// <returns>the threadnodification email subject, or an empty string if not found.</returns>
-		private static string GetEmailThreadNotificationSubject()
-		{
-			return HnDConfiguration.Current.EmailThreadNotificationSubject;
-		}
-
-
+		
 	    /// <summary>
         /// Gets the name of the site.
         /// </summary>
@@ -147,12 +108,17 @@ namespace SD.HnD.Gui
         public static Dictionary<string, string> GetEmailData(string hostName)
         {
             Dictionary<string, string> emailData = new Dictionary<string, string>();
-            emailData.Add("defaultFromEmailAddress", GetDefaultFromEmailAddress());
-            emailData.Add("defaultToEmailAddress", GetDefaultToEmailAddress());
-			emailData.Add("emailPasswordSubject", GetEmailPasswordSubject());
-			emailData.Add("emailThreadNotificationSubject", GetEmailThreadNotificationSubject());
+            emailData.Add("defaultFromEmailAddress", HnDConfiguration.Current.DefaultFromEmailAddress);
+            emailData.Add("defaultToEmailAddress", HnDConfiguration.Current.DefaultToEmailAddress);
+			emailData.Add("emailPasswordSubject", HnDConfiguration.Current.EmailPasswordSubject);
+			emailData.Add("emailThreadNotificationSubject", HnDConfiguration.Current.EmailThreadNotificationSubject);
             emailData.Add("siteName", GetSiteName());
 			emailData.Add("applicationURL", "https://" + hostName + GetVirtualRoot());
+			emailData.Add("smtpHost", HnDConfiguration.Current.SmtpConfiguration.GetValue("MailServer"));
+			emailData.Add("smtpPort", HnDConfiguration.Current.SmtpConfiguration.GetValue("MailPort"));
+			emailData.Add("smtpUserName", HnDConfiguration.Current.SmtpConfiguration.GetValue("UserName"));
+			emailData.Add("smtpPassword", HnDConfiguration.Current.SmtpConfiguration.GetValue("Password"));
+			emailData.Add("smtpEnableSsl", HnDConfiguration.Current.SmtpConfiguration.GetValue("EnableSsl"));
 
             return emailData;
         }
