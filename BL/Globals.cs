@@ -169,6 +169,7 @@ namespace SD.HnD.BL
 	/// </summary>
 	public enum EmailTemplate
 	{
+		Undefined = 0,
 		RegistrationReply = 1,
 		ThreadUpdatedNotification = 2
 	}

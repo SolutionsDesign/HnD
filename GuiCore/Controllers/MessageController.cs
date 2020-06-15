@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -155,10 +156,11 @@ namespace SD.HnD.Gui.Controllers
 			return View(messageData);
 		}
 
+		
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Add([Bind("MessageText,Subscribe")] MessageData messageData, string submitButton, int threadId = 0)
+		public async Task<ActionResult> Add([Bind("MessageText,Subscribe")] MessageData messageData, string submitButton, int threadId = 0)
 		{
 			if(submitButton != "Post")
 			{
@@ -186,11 +188,10 @@ namespace SD.HnD.Gui.Controllers
 				// allowed, proceed
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
-				newMessageId = ThreadManager.CreateNewMessageInThread(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml, 
-																	  this.HttpContext.Connection.RemoteIpAddress.ToString(), 
-																	  messageData.Subscribe, ApplicationAdapter.GetEmailTemplate(EmailTemplate.ThreadUpdatedNotification),
-																	  ApplicationAdapter.GetEmailData(this.Request.Host.Host),
-																	  _cache.GetSystemData().SendReplyNotifications);
+				newMessageId = await ThreadManager.CreateNewMessageInThread(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml,
+																			this.HttpContext.Connection.RemoteIpAddress.ToString(), messageData.Subscribe, 
+																			ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.ThreadUpdatedNotification),
+																			_cache.GetSystemData().SendReplyNotifications).ConfigureAwait(false);
 				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
 				{
@@ -199,6 +200,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 			return CalculateRedirectToMessage(thread.ThreadID, newMessageId);
 		}
+		
 		
 		[Authorize]
 		[ValidateAntiForgeryToken]

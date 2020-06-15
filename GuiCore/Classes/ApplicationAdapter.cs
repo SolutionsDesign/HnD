@@ -83,29 +83,15 @@ namespace SD.HnD.Gui
 		}
 
 
-	    /// <summary>
-        /// Gets an email template file path given the template type from the corresponding enum.
-        /// </summary>
-        /// <returns>the email template file path </returns>
-        public static string GetEmailTemplate(EmailTemplate template)
-		{
-			return template switch
-			{
-				EmailTemplate.RegistrationReply => HnDConfiguration.Current.RegistrationReplyMailTemplate,
-				EmailTemplate.ThreadUpdatedNotification => HnDConfiguration.Current.ThreadUpdatedNotificationTemplate,
-				_ => string.Empty
-			};
-		}
-
-
-        /// <summary>
-        /// Create a DTO of all needed e-mail default data.
-        /// </summary>
-        /// <param name="hostName">The name of the host, e.g. www.llblgen.com. Obtained from HttpContext.Request.Host.Host
-        /// object in the controller ctor.</param>
+		/// <summary>
+		/// Create a DTO of all needed e-mail default data.
+		/// </summary>
+		/// <param name="hostName">The name of the host, e.g. www.llblgen.com. Obtained from HttpContext.Request.Host.Host
+		/// object in the controller ctor.</param>
+		/// <param name="template">The template to add to the emailData. (optional</param>
 		/// <returns>a dictionary of the following keys (defaultFromEmailAddress, defaultToEmailAddress, defaultSMTPServer, emailPassowrdSubject,
-		/// siteName, applicationURL)</returns>
-        public static Dictionary<string, string> GetEmailData(string hostName)
+		/// siteName, applicationURL, smtpHost, smtpPort, smtpUserName, smtpPassword, smtpEnableSsl, emailTemplate)</returns>
+		public static Dictionary<string, string> GetEmailData(string hostName, EmailTemplate template=EmailTemplate.Undefined)
         {
             Dictionary<string, string> emailData = new Dictionary<string, string>();
             emailData.Add("defaultFromEmailAddress", HnDConfiguration.Current.DefaultFromEmailAddress);
@@ -119,7 +105,13 @@ namespace SD.HnD.Gui
 			emailData.Add("smtpUserName", HnDConfiguration.Current.SmtpConfiguration.GetValue("UserName"));
 			emailData.Add("smtpPassword", HnDConfiguration.Current.SmtpConfiguration.GetValue("Password"));
 			emailData.Add("smtpEnableSsl", HnDConfiguration.Current.SmtpConfiguration.GetValue("EnableSsl"));
-
+			var emailTemplate = template switch
+			{
+				EmailTemplate.RegistrationReply => HnDConfiguration.Current.RegistrationReplyMailTemplate,
+				EmailTemplate.ThreadUpdatedNotification => HnDConfiguration.Current.ThreadUpdatedNotificationTemplate,
+				_ => string.Empty
+			};
+			emailData.Add("emailTemplate", emailTemplate);
             return emailData;
         }
 

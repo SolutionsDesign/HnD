@@ -22,6 +22,7 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SD.HnD.Utility;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -273,13 +274,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="nickName">Nickname of user which password should be reset</param>
 		/// <param name="emailAddress">Emailaddress of user</param>
-		/// <param name="emailTemplate">The email template.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <returns>true if succeed, false otherwise</returns>
 		/// <exception cref="NickNameNotFoundException">Throws NickNameNotFoundException when the nickname isn't found.</exception>
 		/// <exception cref="EmailAddressDoesntMatchException">Throws EmailAddressDoesntMatchException when the emailaddress of the nickname isn't matching
 		/// with the emailaddress specified.</exception>
-		public static bool ResetPassword(string nickName, string emailAddress, string emailTemplate, Dictionary<string, string> emailData)
+		public static async Task<bool> ResetPassword(string nickName, string emailAddress, Dictionary<string, string> emailData)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -307,7 +307,7 @@ namespace SD.HnD.BL
 				if(result)
 				{
 					// mail it
-					result = HnDGeneralUtils.EmailPassword(newPassword, emailAddress, emailTemplate, emailData);
+					result = await HnDGeneralUtils.EmailPassword(newPassword, emailAddress, emailData).ConfigureAwait(false);
 				}
 				return result;
 			}
@@ -384,16 +384,15 @@ namespace SD.HnD.BL
 		/// <param name="occupation">The occupation.</param>
 		/// <param name="signature">The signature.</param>
 		/// <param name="website">The website.</param>
-		/// <param name="emailTemplatePath">The email template path.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
 		/// <param name="defaultMessagesPerPage">Messages per page to display</param>
 		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
-		public static int RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, string ipNumber, string location, 
-										  string occupation, string signature, string website, string emailTemplatePath, Dictionary<string, string> emailData,
-											bool autoSubscribeThreads, short defaultMessagesPerPage)
+		public static async Task<int> RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, string ipNumber, 
+										  string location, string occupation, string signature, string website, Dictionary<string, string> emailData, 
+										  bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
 			var newUser = new UserEntity
 						  {
@@ -431,10 +430,10 @@ namespace SD.HnD.BL
 			// now save the new user entity and the new RoleUser entity recursively in one go. 
 			using(var adapter = new DataAccessAdapter())
 			{
-				if(adapter.SaveEntity(newUser))
+				if(await adapter.SaveEntityAsync(newUser).ConfigureAwait(false))
 				{
 					// all ok, Email the password
-					HnDGeneralUtils.EmailPassword(password, emailAddress, emailTemplatePath, emailData);
+					await HnDGeneralUtils.EmailPassword(password, emailAddress, emailData).ConfigureAwait(false);
 				}
 			}
 			return newUser.UserID;

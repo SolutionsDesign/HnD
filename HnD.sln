@@ -6,8 +6,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.BL", "BL\SD.HnD.BL.c
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.Utility", "Utility\SD.HnD.Utility.csproj", "{AAEB0829-9929-4706-B7FB-F4E8BFCC32C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{CCF2120D-5F39-4EBD-AA33-E6F85DCC3CEE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DALAdapter", "DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj", "{2B4058F7-26D3-4BDA-B5FF-BE048FDCE94C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DALAdapterDBSpecific", "DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj", "{CE055BC5-BFD4-4B66-8178-FBFB01492105}"

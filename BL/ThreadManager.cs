@@ -28,6 +28,7 @@ using SD.HnD.Utility;
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -165,11 +166,11 @@ namespace SD.HnD.BL
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
 		/// <returns>MessageID if succeeded, 0 if not.</returns>
-		public static int CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, 
-												   bool subscribeToThread, string threadUpdatedNotificationTemplate, Dictionary<string,string> emailData, bool sendReplyNotifications)
+		public static Task<int> CreateNewMessageInThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, bool subscribeToThread,
+														 Dictionary<string,string> emailData, bool sendReplyNotifications)
 		{
 			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, subscribeToThread, 
-																	 threadUpdatedNotificationTemplate, emailData, sendReplyNotifications, closeThreadAfterInsert: false);
+																	 emailData, sendReplyNotifications);
 		}
 
 
@@ -180,14 +181,13 @@ namespace SD.HnD.BL
 		/// <param name="subject">The new subject for this thread</param>
 		/// <param name="isSticky">The new value for IsSticky</param>
 		/// <param name="isClosed">The new value for IsClosed</param>
-		/// <returns></returns>
-		public static bool ModifyThreadProperties(int threadID, string subject, bool isSticky, bool isClosed)
+		public static void ModifyThreadProperties(int threadID, string subject, bool isSticky, bool isClosed)
 		{
 			var thread = ThreadGuiHelper.GetThread(threadID);
 			if(thread == null)
 			{
 				// not found
-				return false;
+				return;
 			}
 			
 			// update the fields with new values
@@ -196,7 +196,21 @@ namespace SD.HnD.BL
 			thread.IsClosed = isClosed;
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(thread);
+				adapter.StartTransaction(IsolationLevel.ReadCommitted, "ModifyThreadProperties");
+				try
+				{
+					if(adapter.SaveEntity(thread))
+					{
+						// save succeeded, so remove from queue, pass the current transaction to the method so the action takes place inside this transaction.
+						SupportQueueManager.RemoveThreadFromQueue(threadID, adapter);
+					}
+					adapter.Commit();
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
 			}
 		}
 
@@ -297,9 +311,8 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread that was updated.</param>
 		/// <param name="initiatedByUserID">The user who initiated the update (who will not receive notification).</param>
-		/// <param name="emailTemplate">The email template.</param>
 		/// <param name="emailData">The email data.</param>
-		private static void SendThreadReplyNotifications(int threadID, int initiatedByUserID, string emailTemplate, Dictionary<string, string> emailData)
+		private static async Task SendThreadReplyNotifications(int threadID, int initiatedByUserID, Dictionary<string, string> emailData)
 		{
 			// get list of subscribers to thread, minus the initiator. Do this by fetching the subscriptions plus the related user entity entity instances. 
 			// The related user entities are loaded using a prefetch path. 
@@ -325,9 +338,10 @@ namespace SD.HnD.BL
 				toAddresses[i] = subscriptions[i].User.EmailAddress;
 			}
 
-#warning POTENTIAL CLONE OF SD.HnDUtility.HnDGeneralUtils.EmailPassword's HANDLING OF TEMPLATE.
 			// use template to construct message to send. 
-			var mailBody = new StringBuilder(emailTemplate);
+			string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
+			var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
+			mailBody.Append(emailTemplate);
 			var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
 			if (!string.IsNullOrEmpty(emailTemplate))
 			{
@@ -354,7 +368,7 @@ namespace SD.HnD.BL
 			try
 			{
 				//send message
-				HnDGeneralUtils.SendEmail(subject, mailBody.ToString(), fromAddress, toAddresses, emailData, false);
+				await HnDGeneralUtils.SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, toAddresses, emailData).ConfigureAwait(false);
 			}
 			catch(SmtpFailedRecipientsException)
 			{
@@ -377,22 +391,19 @@ namespace SD.HnD.BL
 		/// <param name="messageAsHTML">Message text as HTML</param>
 		/// <param name="userIDIPAddress">IP address of user calling this method</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
-		/// <param name="threadUpdatedNotificationTemplate">The thread updated notification template.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
-		/// <param name="closeThreadAfterInsert">if set to <c>true</c> it closes the thread after the message was inserted. </param>
-		/// <returns>
 		/// MessageID if succeeded, 0 if not.
 		/// </returns>
-		private static int CreateNewMessageInThreadAndPotentiallyCloseThread(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress,
-																		bool subscribeToThread, string threadUpdatedNotificationTemplate, Dictionary<string, string> emailData,
-																		bool sendReplyNotifications, bool closeThreadAfterInsert)
+		private static async Task<int> CreateNewMessageInThreadAndPotentiallyCloseThread(int threadID, int userID, string messageText, string messageAsHTML, 
+																						 string userIDIPAddress, bool subscribeToThread, 
+																						 Dictionary<string, string> emailData, bool sendReplyNotifications)
 		{
 			int messageID = 0;
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "InsertNewMessage");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "InsertNewMessage").ConfigureAwait(false);
 				try
 				{
 					var postingDate = DateTime.Now;
@@ -405,27 +416,10 @@ namespace SD.HnD.BL
 									  ThreadID = threadID,
 									  PostedFromIP = userIDIPAddress,
 								  };
-					messageID = adapter.SaveEntity(message) ? message.MessageID : 0;
+					messageID = await adapter.SaveEntityAsync(message).ConfigureAwait(false) ? message.MessageID : 0;
 					if(messageID > 0)
 					{
 						MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, postingDate, true, subscribeToThread);
-						if(closeThreadAfterInsert)
-						{
-							var thread = new ThreadEntity(threadID);
-							var result = adapter.FetchEntity(thread);
-							if(result)
-							{
-								thread.IsClosed = true;
-								thread.IsSticky = false;
-								thread.MarkedAsDone = true;
-								result = adapter.SaveEntity(thread);
-								if(result)
-								{
-									// save succeeded, so remove from queue, pass the current transaction to the method so the action takes place inside this transaction.
-									SupportQueueManager.RemoveThreadFromQueue(threadID, adapter);
-								}
-							}
-						}
 					}
 					adapter.Commit();
 				}
@@ -439,7 +433,7 @@ namespace SD.HnD.BL
 			{
 				// send notification email to all subscribers. Do this outside the transaction so a failed email send action doesn't terminate the save process
 				// of the message.
-				ThreadManager.SendThreadReplyNotifications(threadID, userID, threadUpdatedNotificationTemplate, emailData);
+				await ThreadManager.SendThreadReplyNotifications(threadID, userID, emailData).ConfigureAwait(false);
 			}
 			return messageID;
 		}

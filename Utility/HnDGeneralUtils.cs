@@ -20,15 +20,19 @@
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Net.Mail;
 using System.IO;
 using System.Security.Cryptography;
 using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Xml;
+using MailKit.Security;
 using MarkdownDeep;
+using MimeKit;
+using MimeKit.Text;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.Tools.BCLExtensions.CollectionsRelated;
 
 namespace SD.HnD.Utility
@@ -125,34 +129,27 @@ namespace SD.HnD.Utility
 		/// <param name="fromAddress">From address.</param>
 		/// <param name="toEmailAddresses">To email addresses.</param>
 		/// <param name="emailData">The email data.</param>
-		/// <param name="sendAsynchronically">if set to true, the email will be send asynchronically otherwise synchronically</param>
 		/// <returns>true if email sent, otherwise false</returns>
-		public static bool SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, Dictionary<string, string> emailData, 
-									 bool sendAsynchronically)
+		public static async Task<bool> SendEmail(string subject, string message, string fromAddress, string[] toEmailAddresses, Dictionary<string, string> emailData)
 		{
 			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? String.Empty;
-			MailMessage messageToSend = new MailMessage(fromAddress, defaultToMailAddress);
+			var messageToSend = new MimeMessage();
+			messageToSend.To.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, defaultToMailAddress));
+			messageToSend.From.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, fromAddress));
 			messageToSend.Subject=subject;
-			messageToSend.Body = message;
+			messageToSend.Body = new TextPart(TextFormat.Plain) {Text = message };
 			for(int i = 0; i < toEmailAddresses.Length; i++)
 			{
-				messageToSend.Bcc.Add(new MailAddress(toEmailAddresses[i]));
+				messageToSend.Bcc.Add(new MailboxAddress(string.Empty, toEmailAddresses[i]));
 			}
-			messageToSend.IsBodyHtml = false;
 
-			// host and smtp credentials are set in .config file
-			SmtpClient client = new SmtpClient(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")));
-			client.Credentials = new NetworkCredential(emailData.GetValue("smtpUserName"), emailData.GetValue("smtpPassword"));
-			client.EnableSsl = XmlConvert.ToBoolean(emailData.GetValue("smtpEnableSsl"));
-			if(sendAsynchronically)
+			using(var smtpClient = new MailKit.Net.Smtp.SmtpClient())
 			{
-				// send email asynchronously.
-#warning THIS SHOULD BE REFACTORED INTO ITS OWN METHOD, WHICH IS THEN ALSO ASYNC.
-				client.SendAsync(messageToSend, null);
-			}
-			else
-			{
-				client.Send(messageToSend);
+				smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
+				await smtpClient.ConnectAsync(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")), SecureSocketOptions.StartTls).ConfigureAwait(false);
+				await smtpClient.AuthenticateAsync(emailData.GetValue("smtpUserName"), emailData.GetValue("smtpPassword")).ConfigureAwait(false);
+				await smtpClient.SendAsync(messageToSend).ConfigureAwait(false);
+				await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
 			}
 			return true;
 		}
@@ -163,16 +160,14 @@ namespace SD.HnD.Utility
 		/// </summary>
 		/// <param name="password">The password to email</param>
 		/// <param name="emailAddress">The recipient's emailaddress.</param>
-		/// <param name="emailTemplate">The email template.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool EmailPassword(string password, string emailAddress, string emailTemplate, Dictionary<string, string> emailData)
+		public static Task<bool> EmailPassword(string password, string emailAddress, Dictionary<string, string> emailData)
 		{
-			StringBuilder mailBody = new StringBuilder(emailTemplate);
-
+			string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
+			var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
+			mailBody.Append(emailTemplate);
 			string applicationURL = emailData.GetValue("applicationURL") ?? String.Empty;
-#warning POTENTIAL CLONE OF SD.HnD.BL.ThreadManager.SendThreadReplyNotifications's HANDLING OF TEMPLATE.
-
 			if(!String.IsNullOrEmpty(emailTemplate))
 			{
 				// Use the existing template to format the body
@@ -185,12 +180,7 @@ namespace SD.HnD.Utility
 			// format the subject
 			string subject = (emailData.GetValue("emailPasswordSubject") ?? String.Empty) + applicationURL ;
 			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? String.Empty;
-
-			// send it
-			// host and smtp credentials are set in .config file
-			SmtpClient client = new SmtpClient();
-			client.Send(fromAddress, emailAddress, subject, mailBody.ToString());
-			return true;
+			return SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new[] {emailAddress}, emailData);
 		}
 
 
