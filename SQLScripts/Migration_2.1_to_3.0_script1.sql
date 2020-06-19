@@ -20,3 +20,31 @@ GO
 
 ALTER TABLE [dbo].[User] DROP COLUMN [SignatureAsHTML]
 GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [Password] [nvarchar](128) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [JoinDate] [datetime] NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [AmountOfPostings] [int] NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [EmailAddressIsPublic] [bit] NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [LastVisitedDate] [datetime] NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [AutoSubscribeToThread] [bit] NULL
+GO
+
+ALTER TABLE [dbo].[User] 
+	ALTER COLUMN [DefaultNumberOfMessagesPerPage] [smallint] NULL
+GO

@@ -164,25 +164,20 @@ namespace SD.HnD.BL
 		/// <returns>a dataView of the threads requested</returns>
 		public static int GetRowCountLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
 		{
+			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
 			{
 				return 0;
 			}
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						  .Select(Functions.CountRow())
-						  .From(
-								qf.Create()
-								  .Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
-								  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
-								  .Where((ThreadFields.ForumID == accessableForums)
-											 .And(ThreadFields.ThreadID.In(qf.Create()
-																			 .Select(MessageFields.ThreadID)
-																			 .Where(MessageFields.PostedByUserID == participantUserID)))
-											 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID))));
+					  .Select(ThreadFields.ThreadID)
+					  .From(qf.Thread.InnerJoin(qf.Message).On(ThreadFields.ThreadID.Equal(MessageFields.ThreadID)))
+					  .Where((ThreadFields.ForumID == accessableForums).And(MessageFields.PostedByUserID == participantUserID))
+					  .Distinct();
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(q);
+				return adapter.FetchScalar<int>(qf.Create().Select(Functions.CountRow()).From(q));
 			}
 		}
 

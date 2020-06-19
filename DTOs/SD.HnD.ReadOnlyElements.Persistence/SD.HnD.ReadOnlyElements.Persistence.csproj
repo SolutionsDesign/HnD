@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <AssemblyName>SD.HnD.ReadOnlyElements.Persistence</AssemblyName>
-        <RootNamespace>SD.HnD.ReadOnlyElements.Persistence</RootNamespace>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <Company>Solutions Design bv</Company>
-        <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>
-        <Description>Persistence code for DTO classes for HnD</Description>
-        <Copyright>(c)2002-2020 Solutions Design</Copyright>
-        <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <FileVersion>3.0.0.0</FileVersion>
-    </PropertyGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj"/>
-        <ProjectReference Include="..\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <AssemblyName>SD.HnD.ReadOnlyElements.Persistence</AssemblyName>
+    <RootNamespace>SD.HnD.ReadOnlyElements.Persistence</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>Solutions Design bv</Company>
+    <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>
+    <Description>Persistence code for DTO classes for HnD</Description>
+    <Copyright>(c)2002-2020 Solutions Design</Copyright>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj" />
+    <ProjectReference Include="..\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />
+  </ItemGroup>
 </Project>

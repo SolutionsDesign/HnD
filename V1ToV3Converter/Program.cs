@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Xml.Xsl;
@@ -11,30 +14,47 @@ using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.Utility;
-using SD.Tools.OrmProfiler.Interceptor;
+using SD.LLBLGen.Pro.DQE.SqlServer;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
-namespace UbbToMarkdownConverter
+namespace V1ToV3Converter
 {
 	/// <summary>
-	/// Simple tool which converts all stored messages from UBB to Markdown. It uses the UBB parser of the old HnD version and updated xlst templates to convert
-	/// the UBB to markdown. The Markdown is then replacing the UBB in the DB. 
+	/// Simple tool which converts a v1 database to a v3 database. It uses the UBB parser of the old HnD version and updated xlst templates to convert
+	/// the UBB to markdown. The Markdown is then replacing the UBB in the DB.
+	/// It performs the following tasks:
+	/// 	- Convert all stored messages from UBB to Markdown.
+	/// 	- Convert all thread welcome texts from UBB to Markdown
+	/// 	- Convert all messages from UBB to Markdown.
+	/// 	- Convert all thread memo's from UBB to Markdown
+	/// 	- Strips all user signatures
+	/// 	- Convert the user password storage from MD5 hash to a salted string containing old MD5 Hash which is then encrypted. 
 	/// </summary>
 	public class Program
 	{
 		private static ParserData _parserData;
+		private static RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
 		private const int BATCHSIZE = 1000;
 
 		static void Main(string[] args)
 		{
-			InterceptorCore.Initialize("UbbToMarkdownConverter");
+			// The generated code is a netstandard variant, so we have to use the RuntimeConfiguration class.
+			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", 
+													 ConfigurationManager.AppSettings["Main.ConnectionString.SQL Server (SqlClient)"]);
+			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c =>
+																		 {
+																			 c.AddCatalogNameOverwrite("HnD", "HnD_LLBLGen");
+																			 c.AddDbProviderFactory(typeof(SqlClientFactory));
+																		 });
+		
 			try
 			{
-				LoadXsltTemplates();
-				ConvertForumWelcomeTexts();
+				//LoadXsltTemplates();
+				//ConvertForumWelcomeTexts();
 				//ConvertThreadMemos();
-				//ConvertUsers();
+				ConvertUsers();
 				//ConvertMessages();
 			}
 			catch(Exception ex)
@@ -67,7 +87,8 @@ namespace UbbToMarkdownConverter
 					{
 						// html decode, so any &lt; etc. are converted back to the regular characters. 
 						f.NewThreadWelcomeText = HttpUtility.HtmlDecode(convertedText);
-						f.NewThreadWelcomeTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(f.NewThreadWelcomeText);
+						f.NewThreadWelcomeTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml(f.NewThreadWelcomeText, new Dictionary<string, string>(), 
+																							   new Dictionary<string, string>());
 					}
 				}
 				Console.Write("\tPersisting forums...");
@@ -146,16 +167,38 @@ namespace UbbToMarkdownConverter
 		private static void ConvertUsers()
 		{
 			// as in the new version we'll just use plain text, we'll reset all signatures to the empty string and users have to type in their signatures again. 
-			Console.WriteLine("Converting users. Resetting all signature texts with 1 statement.");
-			var updater = new UserEntity() {Signature = string.Empty};
+			Console.WriteLine("Converting users.");
 			using(var adapter = new DataAccessAdapter())
 			{
-				Console.Write("\tUpdating users...");
+				Console.WriteLine("\tResetting all signature texts with 1 statement.");
+				var updater = new UserEntity() {Signature = string.Empty};
+				Console.Write("\t\tUpdating users...");
 				var result = adapter.UpdateEntitiesDirectly(updater, null);
-				Console.WriteLine("DONE. Users updated: {0}", result);
+				Console.WriteLine("\tDONE. Users updated: {0}", result);
+				
+				Console.WriteLine("\n\tRehashing passwords with PBKDF2...");
+				var allUsers = (EntityCollection<UserEntity>)adapter.FetchQuery(new QueryFactory().User);
+				Console.WriteLine("\t\tNumber of users to process: {0}", allUsers.Count);
+				int count = 0;
+				foreach(var user in allUsers)
+				{
+					count++;
+					user.Password = HnDGeneralUtils.HashPassword(user.Password, performPreMD5Hashing:false);
+					if(count % 500 == 0)
+					{
+						Console.WriteLine("\t\tRehashed {0} users", count);
+					}
+				}
+
+				Console.WriteLine("\t\tDONE rehashing, persisting entities in batches to database");
+				adapter.BatchSize = 150;
+				adapter.SaveEntityCollection(allUsers);
+				Console.WriteLine("\tDONE rehashing passwords");
+				
+				Console.WriteLine("DONE converting users.");
 			}
 		}
-		
+
 
 		private static void ConvertMessages()
 		{

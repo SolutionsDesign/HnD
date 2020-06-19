@@ -30,6 +30,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using MailKit.Security;
 using MarkdownDeep;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using MimeKit;
 using MimeKit.Text;
 using SD.LLBLGen.Pro.ORMSupportClasses;
@@ -45,7 +46,23 @@ namespace SD.HnD.Utility
 		/// <summary>
 		/// Private constant for the maximum length for a generated password.
 		/// </summary>
-		private static readonly int GeneratedPasswordLength = 10;
+		private static readonly int GeneratedPasswordLength = 25;
+		/// <summary>
+		/// The length of the salt to use with every password hash.
+		/// </summary>
+		private static readonly int PasswordSaltLengthBytes = 32;
+		/// <summary>
+		/// The length of the pbkdf2 hash in bytes. 
+		/// </summary>
+		private static readonly int Pbkdf2HashLengthBytes = 32;
+		/// <summary>
+		/// The RNG to use for creating salts for passwords. 
+		/// </summary>
+		private static readonly RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
+		/// <summary>
+		/// The default number of iterations to use for hashing a password. 
+		/// </summary>
+		private static readonly int Pbkdf2Iterations = 10000;
 
 
 		/// <summary>
@@ -104,6 +121,67 @@ namespace SD.HnD.Utility
 				newPassword.Append(Convert.ToChar(randomNr));
 			}
 			return newPassword.ToString();
+		}
+
+
+		/// <summary>
+		/// Hashes the passed in string with a random salt using the Pbkdf2 hashing algorithm using HMAC SHA512. The salt is embedded
+		/// into the result which is then Base64 encoded as a string. 
+		/// </summary>
+		/// <param name="password">The string to hash. If this string is already an MD5, basd64 encoded hash, set performPreMD5Hashing to false</param>
+		/// <param name="performPreMD5Hashing">Old versions of HnD used MD5 hashed passwords and to migrate these to Pbkdf2 we rehashed the MD5Hashed variants.
+		/// To signal the passed in password is already an MD5 base64 hash, this flag has to be false. If the password is the plain password as specified
+		/// by the user, this flag has to be true. </param>
+		/// <returns>the base64 encoded byte array which contains the salt and the hash and which is ready to be saved in the database</returns>
+		public static string HashPassword(string password, bool performPreMD5Hashing)
+		{
+			var salt = new byte[PasswordSaltLengthBytes];
+			_rng.GetBytes(salt);
+			var resultAsByteArray = HnDGeneralUtils.PerformPbkdf2Hashing(password, salt, performPreMD5Hashing);
+			return Convert.ToBase64String(resultAsByteArray);
+		}
+
+
+		/// <summary>
+		/// Compares the passed in password with whether it's encoded in the passed in base64Hash. It does this by first decoding the base64 hash
+		/// then obtaining the salt from that array, Pbkdf2 hashing the password specified with that salt and then comparing the bytes obtained with the 
+		/// </summary>
+		/// <param name="base64Hash">the base64 encoded byte array which contains the salt and the hash</param>
+		/// <param name="password">The plain password to compare. This isn't an MD5 hashed variant, but a password specified by the user. </param>
+		/// <returns></returns>
+		public static bool ComparePbkdf2HashedPassword(string base64Hash, string password)
+		{
+			if(string.IsNullOrWhiteSpace(base64Hash))
+			{
+				return false;
+			}
+			if(string.IsNullOrEmpty(password))
+			{
+				return false;
+			}
+			
+			byte[] base64HashAsByteArray = Convert.FromBase64String(base64Hash);
+			if(base64HashAsByteArray.Length < (PasswordSaltLengthBytes + Pbkdf2HashLengthBytes))
+			{
+				// length of the byte array is wrong. 
+				return false;
+			}
+			var salt = new byte[PasswordSaltLengthBytes];
+			Array.Copy(base64HashAsByteArray, 0, salt, 0, PasswordSaltLengthBytes);
+			// we have to prehash with MD5 as the password passed in is a plain text password.
+			byte[] passwordPbkdf2Hashed = PerformPbkdf2Hashing(password, salt, performPreMD5Hashing: true);
+			// now we compare the arrays. We can suffice with comparing the hashed bytes however.
+			// base64HashAsBytes.Length is >= PasswordSaltLengthBytes, see above, so setting this to true is safe, it always iterates at least once.
+			bool areEqual = true;
+			for(int i = PasswordSaltLengthBytes; i < base64HashAsByteArray.Length; i++)
+			{
+				areEqual &= (passwordPbkdf2Hashed[i] == base64HashAsByteArray[i]);
+				if(!areEqual)
+				{
+					break;
+				}
+			}
+			return areEqual;
 		}
 
 
@@ -209,6 +287,30 @@ namespace SD.HnD.Utility
 						 EmojiPerSmileyShortcut = smileyMappings
 					 };
 			return md.Transform(messageText);
+		}
+		
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="password">The string to hash. If this string is already an MD5, basd64 encoded hash, set performPreMD5Hashing to false</param>
+		/// <param name="salt">the byte array with the rng produced salt to use for hashing the password specified</param>
+		/// <param name="performPreMD5Hashing">Old versions of HnD used MD5 hashed passwords and to migrate these to Pbkdf2 we rehashed the MD5Hashed variants.
+		///     To signal the passed in password is already an MD5 base64 hash, this flag has to be false. If the password is the plain password as specified
+		///     by the user, this flag has to be true. </param>
+		/// <returns>byte array with the salt in the lower indexes and the pbkdf2 hash bytes in the higher indexes</returns>
+		private static byte[] PerformPbkdf2Hashing(string password, byte[] salt, bool performPreMD5Hashing)
+		{
+			// see if we need to pre-hash the passed in string. See note above.
+			var passwordToHash = performPreMD5Hashing ? HnDGeneralUtils.CreateMD5HashedBase64String(password) : password;
+			var prf = KeyDerivationPrf.HMACSHA512;
+			byte[] hashedPassword = KeyDerivation.Pbkdf2(passwordToHash, salt, prf, Pbkdf2Iterations, Pbkdf2HashLengthBytes);
+
+			// create a byte array with both the salt (in the lower indices) and the hashed result (higher indices) and base64 encode that as a single string. 
+			var resultAsByteArray = new byte[PasswordSaltLengthBytes + Pbkdf2HashLengthBytes];
+			Array.Copy(salt, 0, resultAsByteArray, 0, PasswordSaltLengthBytes);
+			Array.Copy(hashedPassword, 0, resultAsByteArray, PasswordSaltLengthBytes, Pbkdf2HashLengthBytes);
+			return resultAsByteArray;
 		}
 	}
 }

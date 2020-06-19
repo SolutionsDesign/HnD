@@ -292,7 +292,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			this.AddElementMapping("UserEntity", @"HnD", @"dbo", "User", 19, 0);
 			this.AddElementFieldMapping("UserEntity", "UserID", "UserID", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
 			this.AddElementFieldMapping("UserEntity", "NickName", "NickName", false, "NVarChar", 20, 0, 0, false, "", null, typeof(System.String), 1);
-			this.AddElementFieldMapping("UserEntity", "Password", "Password", false, "NVarChar", 30, 0, 0, false, "", null, typeof(System.String), 2);
+			this.AddElementFieldMapping("UserEntity", "Password", "Password", false, "NVarChar", 128, 0, 0, false, "", null, typeof(System.String), 2);
 			this.AddElementFieldMapping("UserEntity", "IsBanned", "IsBanned", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 3);
 			this.AddElementFieldMapping("UserEntity", "IPNumber", "IPNumber", false, "VarChar", 25, 0, 0, false, "", null, typeof(System.String), 4);
 			this.AddElementFieldMapping("UserEntity", "Signature", "Signature", true, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 5);

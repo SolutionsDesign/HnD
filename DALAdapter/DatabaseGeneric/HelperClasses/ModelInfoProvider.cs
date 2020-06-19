@@ -301,7 +301,7 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddFieldIndexEnumForElementName(typeof(UserFieldIndex), "UserEntity");
 			this.AddElementFieldInfo("UserEntity", "UserID", typeof(System.Int32), true, false, true, false,  (int)UserFieldIndex.UserID, 0, 0, 10);
 			this.AddElementFieldInfo("UserEntity", "NickName", typeof(System.String), false, false, false, false,  (int)UserFieldIndex.NickName, 20, 0, 0);
-			this.AddElementFieldInfo("UserEntity", "Password", typeof(System.String), false, false, false, false,  (int)UserFieldIndex.Password, 30, 0, 0);
+			this.AddElementFieldInfo("UserEntity", "Password", typeof(System.String), false, false, false, false,  (int)UserFieldIndex.Password, 128, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "IsBanned", typeof(System.Boolean), false, false, false, false,  (int)UserFieldIndex.IsBanned, 0, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "IPNumber", typeof(System.String), false, false, false, false,  (int)UserFieldIndex.IPNumber, 25, 0, 0);
 			this.AddElementFieldInfo("UserEntity", "Signature", typeof(System.String), false, false, false, true,  (int)UserFieldIndex.Signature, 250, 0, 0);

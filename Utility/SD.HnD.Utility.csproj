@@ -19,6 +19,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="MailKit" Version="2.7.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.5" />
         <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />
         <PackageReference Include="SD.Tools.BCLExtensions" Version="1.2.2" />
     </ItemGroup>

@@ -556,17 +556,14 @@ namespace SD.HnD.BL
 					return AuthenticateResult.WrongUsernamePassword;
 				}
 
-				// user was found, check if the user can be authenticated and has specified the correct password.
+				// user was found. If the user is banned we're done here
 				if(user.IsBanned)
 				{
-					// user is banned. We'll report that to the caller
 					return AuthenticateResult.IsBanned;
 				}
 
-#warning ADJUST FOR #4
 				// check password and UserID. We disallow the user with id 0 to login as that's the anonymous coward ID for a user not logged in.
-				string md5HashedPassword = HnDGeneralUtils.CreateMD5HashedBase64String(password);
-				if((md5HashedPassword == user.Password) && (user.UserID != Globals.UserIDToDenyLogin))
+				if(user.UserID!=Globals.UserIDToDenyLogin && HnDGeneralUtils.ComparePbkdf2HashedPassword(user.Password, password))
 				{
 					// correct username/password combination
 					return AuthenticateResult.AllOk;

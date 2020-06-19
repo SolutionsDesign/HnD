@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <AssemblyName>SD.HnD.ReadOnlyElements</AssemblyName>
-        <RootNamespace>SD.HnD.ReadOnlyElements</RootNamespace>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <Company>Solutions Design bv</Company>
-        <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>
-        <Description>DTO classes for HnD</Description>
-        <Copyright>(c)2002-2020 Solutions Design</Copyright>
-        <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <FileVersion>3.0.0.0</FileVersion>
-    </PropertyGroup>
-    <ItemGroup>
-      <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
-      <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    </ItemGroup>
+  <PropertyGroup>
+    <AssemblyName>SD.HnD.ReadOnlyElements</AssemblyName>
+    <RootNamespace>SD.HnD.ReadOnlyElements</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>Solutions Design bv</Company>
+    <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>
+    <Description>DTO classes for HnD</Description>
+    <Copyright>(c)2002-2020 Solutions Design</Copyright>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
 </Project>

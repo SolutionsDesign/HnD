@@ -389,7 +389,7 @@
           <Field Name="Location" Type="string" IsOptional="true" MaxLength="100" FieldIndex="11" />
           <Field Name="NickName" Type="string" MaxLength="20" FieldIndex="1" />
           <Field Name="Occupation" Type="string" IsOptional="true" MaxLength="100" FieldIndex="10" />
-          <Field Name="Password" Type="string" MaxLength="30" FieldIndex="2" />
+          <Field Name="Password" Type="string" MaxLength="128" FieldIndex="2" />
           <Field Name="Signature" Type="string" IsOptional="true" MaxLength="250" FieldIndex="5" />
           <Field Name="UserID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
           <Field Name="UserTitleID" Type="int" IsAutoCreated="true" FieldIndex="8" />
@@ -676,7 +676,7 @@
       <Catalogs>
         <Catalog Name="HnD" SyncSource="1">
           <Schemas>
-            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2016-10-05T08:54:41.3244094Z">
+            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2020-06-19T09:28:10.1756407Z">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />
@@ -892,7 +892,7 @@
                   <Fields>
                     <Field Name="UserID" Ordinal="1" IsIdentity="true" IsPrimaryKey="true" DbType="8" Precision="10" />
                     <Field Name="NickName" Ordinal="2" DbType="12" Length="20" />
-                    <Field Name="Password" Ordinal="3" DbType="12" Length="30" />
+                    <Field Name="Password" Ordinal="3" DbType="12" Length="128" />
                     <Field Name="IsBanned" Ordinal="4" DbType="2" />
                     <Field Name="IPNumber" Ordinal="5" DbType="24" Length="25" />
                     <Field Name="Signature" Ordinal="6" IsOptional="true" DbType="12" Length="250" />
@@ -903,12 +903,12 @@
                     <Field Name="Occupation" Ordinal="11" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Location" Ordinal="12" IsOptional="true" DbType="12" Length="100" />
                     <Field Name="Website" Ordinal="13" IsOptional="true" DbType="12" Length="200" />
-                    <Field Name="JoinDate" Ordinal="14" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(getdate())" DbType="4" />
-                    <Field Name="AmountOfPostings" Ordinal="15" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
-                    <Field Name="EmailAddressIsPublic" Ordinal="16" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
-                    <Field Name="LastVisitedDate" Ordinal="17" IsOptional="true" TrackedChanges="2" DbType="4" />
-                    <Field Name="AutoSubscribeToThread" Ordinal="18" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
-                    <Field Name="DefaultNumberOfMessagesPerPage" Ordinal="19" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(25)" DbType="16" Precision="5" />
+                    <Field Name="JoinDate" Ordinal="14" IsOptional="true" HasDefaultValue="true" DefaultValue="(getdate())" DbType="4" />
+                    <Field Name="AmountOfPostings" Ordinal="15" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
+                    <Field Name="EmailAddressIsPublic" Ordinal="16" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="2" />
+                    <Field Name="LastVisitedDate" Ordinal="17" IsOptional="true" DbType="4" />
+                    <Field Name="AutoSubscribeToThread" Ordinal="18" IsOptional="true" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
+                    <Field Name="DefaultNumberOfMessagesPerPage" Ordinal="19" IsOptional="true" HasDefaultValue="true" DefaultValue="(25)" DbType="16" Precision="5" />
                   </Fields>
                   <UniqueConstraints>
                     <UniqueConstraint Name="TF_User_NickName_U2">

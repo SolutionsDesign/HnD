@@ -330,7 +330,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		}
 
 		/// <summary>The Password property of the Entity User<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "User"."Password".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 30.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		/// <remarks>Mapped on  table field: "User"."Password".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 128.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		public virtual System.String Password
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Password, true); }
