@@ -298,9 +298,8 @@ namespace SD.HnD.BL
 
 				// does match, reset the password
 				string newPassword = HnDGeneralUtils.GenerateRandomPassword();
-#warning UPDATE FOR #4
-				// hash the password with an MD5 hash and store that hashed value into the database.
-				user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(newPassword);
+				// hash the password with PBKDF2
+				user.Password = HnDGeneralUtils.HashPassword(newPassword, performPreMD5Hashing: true);
 
 				// store it
 				bool result = adapter.SaveEntity(user);
@@ -352,7 +351,7 @@ namespace SD.HnD.BL
 		
 			if(!string.IsNullOrEmpty(password))
 			{
-				user.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
+				user.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
 			}
 			user.Signature = signature;
 			user.Website = website;
@@ -412,8 +411,7 @@ namespace SD.HnD.BL
 						  };
 
 			string password = HnDGeneralUtils.GenerateRandomPassword();
-#warning UPDATE FOR #4
-			newUser.Password = HnDGeneralUtils.CreateMD5HashedBase64String(password);
+			newUser.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
 
             //Preferences
             newUser.AutoSubscribeToThread = autoSubscribeThreads;

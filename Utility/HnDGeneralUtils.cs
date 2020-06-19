@@ -186,20 +186,6 @@ namespace SD.HnD.Utility
 
 
 		/// <summary>
-		/// Computes the MD5 hash value for the given string and converts the result into a Base64 encoded string.
-		/// This string is directly comparable with and storable in the User table as a password.
-		/// </summary>
-		/// <param name="sToHash">String to hash and encode</param>
-		/// <returns>MD5 hashed, Base64 encoded value of the given string</returns>
-		public static string CreateMD5HashedBase64String(string sToHash)
-		{
-			// get generic MD5 hasher
-			MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
-			return Convert.ToBase64String(md5Hasher.ComputeHash(ASCIIEncoding.ASCII.GetBytes(sToHash)));
-		}
-
-
-		/// <summary>
 		/// Sends the email specified to the addresses specified.
 		/// </summary>
 		/// <param name="subject">Subject.</param>
@@ -311,6 +297,20 @@ namespace SD.HnD.Utility
 			Array.Copy(salt, 0, resultAsByteArray, 0, PasswordSaltLengthBytes);
 			Array.Copy(hashedPassword, 0, resultAsByteArray, PasswordSaltLengthBytes, Pbkdf2HashLengthBytes);
 			return resultAsByteArray;
+		}
+
+
+		/// <summary>
+		/// Computes the MD5 hash value for the given string and converts the result into a Base64 encoded string.
+		/// This string is directly comparable with and storable in the User table as a password.
+		/// </summary>
+		/// <param name="sToHash">String to hash and encode</param>
+		/// <returns>MD5 hashed, Base64 encoded value of the given string</returns>
+		private static string CreateMD5HashedBase64String(string sToHash)
+		{
+			// get generic MD5 hasher
+			MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
+			return Convert.ToBase64String(md5Hasher.ComputeHash(ASCIIEncoding.ASCII.GetBytes(sToHash)));
 		}
 	}
 }
