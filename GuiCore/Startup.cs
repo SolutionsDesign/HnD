@@ -188,6 +188,10 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("SearchAll", "Search/SearchAll/{searchParameters}", new {controller="Search", action="SearchAll"});
 			routes.MapControllerRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller="Search", action="SearchForum"});
 			routes.MapControllerRoute("SearchResults", "Search/Results/{pageNo}", new {controller="Search", action="Results", pageNo=1});
+			routes.MapControllerRoute("SearchUnattended", "SearchUnattended/", new {controller="Search", action="SearchUnattended"});
+			
+			// User
+			routes.MapControllerRoute("UserProfile", "User/{id}", new {controller = "User", action = "ViewProfile"});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

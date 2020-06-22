@@ -156,5 +156,35 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 								.InnerJoin(this.Section).On(ForumFields.SectionID.Equal(SectionFields.SectionID)));
 		}
 
+		/// <summary>Gets the query to fetch the typed list UserProfileInfo</summary>
+		/// <param name="root">Optional. If specified (not null) it's used as the root of the query to fetch the typed list, otherwise a new EntityQuery(Of UserEntity) is used</param>
+		/// <returns>Dynamic Query which fetches <see cref="SD.HnD.DALAdapter.TypedListClasses.UserProfileInfoRow"/> instances </returns>
+		public DynamicQuery<SD.HnD.DALAdapter.TypedListClasses.UserProfileInfoRow> GetUserProfileInfoTypedList(EntityQuery<UserEntity> root=null)
+		{
+			var rootOfQuery = root ?? this.User;
+			return this.Create()
+						.Select(() => new SD.HnD.DALAdapter.TypedListClasses.UserProfileInfoRow()
+								{
+									AmountOfPostings = UserFields.AmountOfPostings.ToValue<Nullable<System.Int32>>(),
+									DateOfBirth = UserFields.DateOfBirth.ToValue<Nullable<System.DateTime>>(),
+									EmailAddress = UserFields.EmailAddress.ToValue<System.String>(),
+									EmailAddressIsPublic = UserFields.EmailAddressIsPublic.ToValue<Nullable<System.Boolean>>(),
+									IconURL = UserFields.IconURL.ToValue<System.String>(),
+									IPNumber = UserFields.IPNumber.ToValue<System.String>(),
+									IsBanned = UserFields.IsBanned.ToValue<System.Boolean>(),
+									JoinDate = UserFields.JoinDate.ToValue<Nullable<System.DateTime>>(),
+									LastVisitedDate = UserFields.LastVisitedDate.ToValue<Nullable<System.DateTime>>(),
+									Location = UserFields.Location.ToValue<System.String>(),
+									NickName = UserFields.NickName.ToValue<System.String>(),
+									Occupation = UserFields.Occupation.ToValue<System.String>(),
+									Signature = UserFields.Signature.ToValue<System.String>(),
+									UserID = UserFields.UserID.ToValue<System.Int32>(),
+									Website = UserFields.Website.ToValue<System.String>(),
+									UserTitleDescription = UserTitleFields.UserTitleDescription.ToValue<System.String>()
+								})
+						.From(rootOfQuery
+								.InnerJoin(this.UserTitle).On(UserFields.UserTitleID.Equal(UserTitleFields.UserTitleID)));
+		}
+
 	}
 }

@@ -659,6 +659,33 @@
         </SettingValues>
       </OutputSettingValues>
     </TypedListDefinition>
+    <TypedListDefinition Name="UserProfileInfo">
+      <EntityAliases>
+        <EntityAlias Entity=":User" />
+        <EntityAlias Entity=":UserTitle" />
+      </EntityAliases>
+      <Fields>
+        <Field FieldAlias="AmountOfPostings" TargetField="User.AmountOfPostings" />
+        <Field FieldAlias="DateOfBirth" TargetField="User.DateOfBirth" />
+        <Field FieldAlias="EmailAddress" TargetField="User.EmailAddress" />
+        <Field FieldAlias="EmailAddressIsPublic" TargetField="User.EmailAddressIsPublic" />
+        <Field FieldAlias="IconURL" TargetField="User.IconURL" />
+        <Field FieldAlias="IPNumber" TargetField="User.IPNumber" />
+        <Field FieldAlias="IsBanned" TargetField="User.IsBanned" />
+        <Field FieldAlias="JoinDate" TargetField="User.JoinDate" />
+        <Field FieldAlias="LastVisitedDate" TargetField="User.LastVisitedDate" />
+        <Field FieldAlias="Location" TargetField="User.Location" />
+        <Field FieldAlias="NickName" TargetField="User.NickName" />
+        <Field FieldAlias="Occupation" TargetField="User.Occupation" />
+        <Field FieldAlias="Signature" TargetField="User.Signature" />
+        <Field FieldAlias="UserID" TargetField="User.UserID" />
+        <Field FieldAlias="Website" TargetField="User.Website" />
+        <Field FieldAlias="UserTitleDescription" TargetField="UserTitle.UserTitleDescription" />
+      </Fields>
+      <Relationships>
+        <Relationship Name="User.UserTitle-UserTitle.Users" StartAlias="UserTitle" EndAlias="User" JoinHint="1" />
+      </Relationships>
+    </TypedListDefinition>
   </TypedListDefinitions>
   <TargetDatabases>
     <TargetDatabase Type="2D18D138-1DD2-467E-86CC-4838250611AE" SyncSource="1">

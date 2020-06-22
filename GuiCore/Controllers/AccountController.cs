@@ -38,8 +38,8 @@ namespace SD.HnD.Gui.Controllers
 		    }
 		    return RedirectToAction("Bookmarks");
 	    }
-
-
+		
+		
 		[AllowAnonymous]
 		[HttpGet]
 		public ActionResult Login(string returnUrl)

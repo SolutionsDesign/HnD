@@ -293,6 +293,7 @@ namespace SD.HnD.Utility
 			byte[] hashedPassword = KeyDerivation.Pbkdf2(passwordToHash, salt, prf, Pbkdf2Iterations, Pbkdf2HashLengthBytes);
 
 			// create a byte array with both the salt (in the lower indices) and the hashed result (higher indices) and base64 encode that as a single string. 
+			// [<salt> (PasswordSaltLengthBytes in length) | <Pbkdf2 hashed pwd bytes> (Pbkdf2HashLengthBytes in length]
 			var resultAsByteArray = new byte[PasswordSaltLengthBytes + Pbkdf2HashLengthBytes];
 			Array.Copy(salt, 0, resultAsByteArray, 0, PasswordSaltLengthBytes);
 			Array.Copy(hashedPassword, 0, resultAsByteArray, PasswordSaltLengthBytes, Pbkdf2HashLengthBytes);

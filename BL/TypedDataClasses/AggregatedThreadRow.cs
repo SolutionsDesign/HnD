@@ -23,7 +23,7 @@ namespace SD.HnD.BL.TypedDataClasses
 		public bool MarkedAsDone { get; set; }
 		public int NumberOfViews { get; set; }
 		public int NumberOfMessages { get; set; }
-		public int LastPostbyUserID { get; set; }
+		public int LastPostByUserID { get; set; }
 		public string LastPostByNickName { get; set; }
 		public int MessageIDLastPost { get; set; }
 	}

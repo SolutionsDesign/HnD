@@ -68,6 +68,44 @@ namespace SD.HnD.DALAdapter
 		/// <summary></summary>
 		AmountOfFields
 	}
+	/// <summary>Index enum to fast-access TypedList Fields in the Columns collection of the Typed List: UserProfileInfo</summary>
+	public enum UserProfileInfoTypedListFieldIndex
+	{
+		///<summary>AmountOfPostings</summary>
+		AmountOfPostings,
+		///<summary>DateOfBirth</summary>
+		DateOfBirth,
+		///<summary>EmailAddress</summary>
+		EmailAddress,
+		///<summary>EmailAddressIsPublic</summary>
+		EmailAddressIsPublic,
+		///<summary>IconURL</summary>
+		IconURL,
+		///<summary>IPNumber</summary>
+		IPNumber,
+		///<summary>IsBanned</summary>
+		IsBanned,
+		///<summary>JoinDate</summary>
+		JoinDate,
+		///<summary>LastVisitedDate</summary>
+		LastVisitedDate,
+		///<summary>Location</summary>
+		Location,
+		///<summary>NickName</summary>
+		NickName,
+		///<summary>Occupation</summary>
+		Occupation,
+		///<summary>Signature</summary>
+		Signature,
+		///<summary>UserID</summary>
+		UserID,
+		///<summary>Website</summary>
+		Website,
+		///<summary>UserTitleDescription</summary>
+		UserTitleDescription,
+		/// <summary></summary>
+		AmountOfFields
+	}
 
 	/// <summary>Enum definition for all the entity types defined in this namespace. Used by the entityfields factory.</summary>
 	public enum EntityType

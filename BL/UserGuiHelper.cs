@@ -26,6 +26,7 @@ using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.TypedListClasses;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
@@ -62,6 +63,9 @@ namespace SD.HnD.BL
 				return adapter.FetchAsDataTable(q);
 			}
 		}
+		
+		
+		//public static List<UserProfile
 
 
 		/// <summary>
@@ -79,6 +83,22 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.FetchAsDataTable(q).DefaultView;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets a readonly object with profile data for the user specified. 
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns>A single object from a typedlist with the profile data of the user specified </returns>
+		public static UserProfileInfoRow GetUserProfileInfo(int userId)
+		{
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var q = qf.GetUserProfileInfoTypedList().Where(UserFields.UserID.Equal(userId));
+				return adapter.FetchFirst(q);
 			}
 		}
 
