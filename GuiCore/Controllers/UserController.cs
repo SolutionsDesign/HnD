@@ -35,6 +35,10 @@ namespace SD.HnD.Gui.Controllers
 											 this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement) ||
 											 this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement);
 			viewData.UserHasSystemManagementRight = this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement);
+			viewData.LastThreads = UserGuiHelper.GetLastThreadsForUserAggregatedData(
+															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
+															 id, this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+															 this.HttpContext.Session.GetUserID(), 25);
 			return View(viewData);
 		}
 	}

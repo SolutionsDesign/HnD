@@ -112,10 +112,10 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
-		/// <returns>a dataView of the threads requested</returns>
-		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+		/// <returns>a list with objects representing the last threads for the user</returns>
+		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
 		{
-			return GetLastThreadsForUserAsDataView(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
+			return GetLastThreadsForUserAggregatedData(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
 		}
 
 
@@ -129,9 +129,9 @@ namespace SD.HnD.BL
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
-		/// <returns>a dataView of the threads requested</returns>
-		public static DataView GetLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, 
-																int pageSize, int pageNumber)
+		/// <returns>a list with objects representing the last threads for the user</returns>
+		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, 
+																					int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -147,8 +147,9 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-							.Select(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf))
-							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+							.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
+							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+									 .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
 							.Where((ThreadFields.ForumID == accessableForums)
 									.And(ThreadFields.ThreadID.In(qf.Create()
 																		.Select(MessageFields.ThreadID)
@@ -168,7 +169,7 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchAsDataTable(q).DefaultView;
+				return adapter.FetchQuery(q);
 			}
 		}
 

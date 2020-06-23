@@ -223,7 +223,7 @@
 								<a href="~/Message/Goto/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
 								@if(Model.ShowDeleteMessageLink && ((Model.PageNo > 1) || (i > 0)))
 								{
-									<a href="#" data-toggle="modal" data-target="#confirmMessageDeleteModal" data-messageid="@currentMessage.MessageID" title="Delete post"><i class="fa fa-trash-o"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+									<a href="#" data-toggle="modal" data-target="#confirmMessageDeleteModal" data-messageid="@currentMessage.MessageID" title="Delete post"><i class="far fa-trash-alt"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
 								}
 							</div>
 							<div class="ps-message-tools">
@@ -241,11 +241,11 @@
                                 }
 								@if(Model.ShowEditMessageLink || (!Context.Session.IsAnonymousUser() && (currentMessage.PostedByUser.UserID == Context.Session.GetUserID())))
 								{
-									<a href="~/Message/Edit/@currentMessage.MessageID" title="Edit post"><i class="fa fa-pencil"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
+									<a href="~/Message/Edit/@currentMessage.MessageID" title="Edit post"><i class="fas fa-pencil-alt"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;")
 								}
 								@if(Model.ShowQuoteMessageLink)
 								{
-									<a href="~/Message/Add/@currentMessage.ThreadID/@currentMessage.MessageID" title="Quote and reply to post"><i class="fa fa-reply"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;")
+									<a href="~/Message/Add/@currentMessage.ThreadID/@currentMessage.MessageID" title="Quote and reply to post"><i class="fas fa-reply"></i></a>@Html.Raw("&nbsp;&nbsp;&nbsp;")
 								}
 							</div>
 						</div>

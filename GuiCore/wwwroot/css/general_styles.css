@@ -539,8 +539,6 @@ textarea.form-control{
 	box-shadow: initial;
 	border: 0;
 }
-
-
 /* #endregion*/
 
 
@@ -555,6 +553,11 @@ textarea.form-control{
 	color: #fff;
 	background:rgba(181,67,33,0.8);
 }
+/* #endregion */
+
+/* #region User profile elements */
+    .w25 { width: 25px;}
+    
 /* #endregion */
 
 /* #region general padding and margin shortcuts*/
@@ -606,13 +609,17 @@ textarea.form-control{
 		padding-right: 20px;
 	}
 
+    .pl0  { padding-left: 0;}
+    .pl10 { padding-left: 10px;}
 	.pl20 { padding-left: 20px;}
+    .pl25 { padding-left: 25px;}
 	.pl30 { padding-left: 30px;}
 	.pl35 { padding-left: 35px;}
 	.pl40 { padding-left: 40px;}
 	.pl50 { padding-left: 50px;}
 	.pl70 { padding-left: 70px;}
 	
+    .pr0  { padding-right: 0;}
 	.pr20 { padding-right: 20px;}
 	.pr30 { padding-right: 30px;}
 	.pr40 { padding-right: 40px;}
@@ -628,7 +635,6 @@ textarea.form-control{
 	.m5 { margin: 5px;}
 	.m10 { margin: 10px;}
 	.m20 { margin: 20px;}
-
 /* #endregion */
 
 /* #region general class definitions, sorted alphabetically */
@@ -924,7 +930,7 @@ img.ps-poster-avatar {
 
 	.fs-headingrow {
 		padding: 0;
-		font-weight: bold;
+		font-weight: 600;
 		font-size: 14px;
 		background-color: #efefef;
 	}

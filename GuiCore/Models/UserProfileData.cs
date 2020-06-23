@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.TypedListClasses;
 
 namespace SD.HnD.Gui.Models
@@ -11,6 +13,10 @@ namespace SD.HnD.Gui.Models
 		/// The row read from the database with the user data to display in the view.
 		/// </summary>
 		public UserProfileInfoRow ProfileDataFromDatabase { get; set; }
+		/// <summary>
+		/// The last 25 threads this user participated in
+		/// </summary>
+		public List<AggregatedThreadRow> LastThreads { get; set; }
 		/// <summary>
 		/// Flag to signal whether to view the admin section.
 		/// </summary>
