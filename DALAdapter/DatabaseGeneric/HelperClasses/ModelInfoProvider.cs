@@ -52,6 +52,7 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			InitForumRoleForumActionRightEntityInfo();
 			InitIPBanEntityInfo();
 			InitMessageEntityInfo();
+			InitPasswordResetTokenEntityInfo();
 			InitRoleEntityInfo();
 			InitRoleAuditActionEntityInfo();
 			InitRoleSystemActionRightEntityInfo();
@@ -190,6 +191,15 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddElementFieldInfo("MessageEntity", "ChangeTrackerStamp", typeof(System.Byte[]), false, false, true, false,  (int)MessageFieldIndex.ChangeTrackerStamp, 8, 0, 0);
 			this.AddElementFieldInfo("MessageEntity", "MessageText", typeof(System.String), false, false, false, true,  (int)MessageFieldIndex.MessageText, 1073741823, 0, 0);
 			this.AddElementFieldInfo("MessageEntity", "MessageTextAsHTML", typeof(System.String), false, false, false, true,  (int)MessageFieldIndex.MessageTextAsHTML, 1073741823, 0, 0);
+		}
+
+		/// <summary>Inits PasswordResetTokenEntity's info objects</summary>
+		private void InitPasswordResetTokenEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(PasswordResetTokenFieldIndex), "PasswordResetTokenEntity");
+			this.AddElementFieldInfo("PasswordResetTokenEntity", "UserID", typeof(System.Int32), true, true, false, false,  (int)PasswordResetTokenFieldIndex.UserID, 0, 0, 10);
+			this.AddElementFieldInfo("PasswordResetTokenEntity", "PasswordResetToken", typeof(System.Guid), false, false, false, false,  (int)PasswordResetTokenFieldIndex.PasswordResetToken, 0, 0, 0);
+			this.AddElementFieldInfo("PasswordResetTokenEntity", "PasswordResetRequestedOn", typeof(System.DateTime), false, false, false, false,  (int)PasswordResetTokenFieldIndex.PasswordResetRequestedOn, 0, 0, 0);
 		}
 
 		/// <summary>Inits RoleEntity's info objects</summary>

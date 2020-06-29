@@ -786,6 +786,11 @@ textarea.form-control{
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 	}
+    
+    label.above-control {
+        font-weight: 600;
+        font-size: 17px;
+    }
 	
 	.list-row-description {
 		font-size: 14px;
@@ -841,7 +846,7 @@ textarea.form-control{
 		visibility: hidden;
 	}
 
-img.ps-poster-avatar {
+    img.ps-poster-avatar {
 		width: 100px;
 		height: 100px;
 		margin-bottom: 10px;

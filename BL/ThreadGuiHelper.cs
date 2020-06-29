@@ -113,44 +113,6 @@ namespace SD.HnD.BL
 		}
 
 
-#warning OBSOLETE?
-		/// <summary>
-		/// Gets the active threads with statistics.
-		/// </summary>
-		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
-		/// <param name="hoursThreshold">The hours threshold for the query to fetch the active threads. All threads within this threshold's period of time (in hours)
-		/// are fetched.</param>
-		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
-		/// <param name="userID">The userid of the calling user.</param>
-		/// <returns>
-		/// a dataTable of Active threads with statistics
-		/// </returns>
-		public static DataTable GetActiveThreadsStatisticsAsDataTable(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
-		{
-            // return null, if the user does not have a valid list of forums to access
-            if (accessableForums == null || accessableForums.Count <= 0)
-            {
-                return null;
-            }
-
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(ThreadFields.ThreadID.CountDistinct().As("AmountThreads"),
-								MessageFields.MessageID.Count().As("AmountPostings"),
-								ThreadFields.ThreadLastPostingDate.Max().As("LastPostingDate"))
-						.From(qf.Thread.InnerJoin(qf.Message).On(ThreadFields.ThreadID==MessageFields.ThreadID))
-						.Where((ThreadFields.ForumID == accessableForums)
-								.And(ThreadFields.IsClosed == false)
-								.And(ThreadFields.MarkedAsDone == false)
-								.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
-								.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)));
-			using(var adapter = new DataAccessAdapter())
-			{
-				return adapter.FetchAsDataTable(q);
-			}
-		}
-
-
 		/// <summary>
 		/// Gets the active threads visible to the user.
 		/// </summary>
@@ -212,8 +174,8 @@ namespace SD.HnD.BL
 
 		
 		/// <summary>
-		/// Constructs a poco typed list with all the messages in the thread given. Poster info is included, so the
-		/// returned list is bindable at once to the message list repeater.
+		/// Constructs a list of hierarchical DTOs with all message data for a page. This is a list of DTOs as the attachments information is
+		/// fetched as well, which have a 1:n relationship with message. 
 		/// </summary>
 		/// <param name="threadID">ID of Thread which messages should be returned</param>
 		/// <param name="pageNo">The page no.</param>

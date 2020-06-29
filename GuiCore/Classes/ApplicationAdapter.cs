@@ -98,6 +98,7 @@ namespace SD.HnD.Gui
             emailData.Add("defaultToEmailAddress", HnDConfiguration.Current.DefaultToEmailAddress);
 			emailData.Add("emailPasswordSubject", HnDConfiguration.Current.EmailPasswordSubject);
 			emailData.Add("emailThreadNotificationSubject", HnDConfiguration.Current.EmailThreadNotificationSubject);
+			emailData.Add("passwordResetRequestSubject", HnDConfiguration.Current.PasswordResetRequestSubject);
             emailData.Add("siteName", GetSiteName());
 			emailData.Add("applicationURL", "https://" + hostName + GetVirtualRoot());
 			emailData.Add("smtpHost", HnDConfiguration.Current.SmtpConfiguration.GetValue("MailServer"));
@@ -109,6 +110,7 @@ namespace SD.HnD.Gui
 			{
 				EmailTemplate.RegistrationReply => HnDConfiguration.Current.RegistrationReplyMailTemplate,
 				EmailTemplate.ThreadUpdatedNotification => HnDConfiguration.Current.ThreadUpdatedNotificationTemplate,
+				EmailTemplate.ResetPasswordLink => HnDConfiguration.Current.ResetPasswordLinkTemplate,
 				_ => string.Empty
 			};
 			emailData.Add("emailTemplate", emailTemplate);

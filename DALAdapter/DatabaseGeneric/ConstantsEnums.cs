@@ -132,6 +132,8 @@ namespace SD.HnD.DALAdapter
 		IPBanEntity,
 		///<summary>Message</summary>
 		MessageEntity,
+		///<summary>PasswordResetToken</summary>
+		PasswordResetTokenEntity,
 		///<summary>Role</summary>
 		RoleEntity,
 		///<summary>RoleAuditAction</summary>

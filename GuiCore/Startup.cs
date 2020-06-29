@@ -156,7 +156,10 @@ namespace SD.HnD.Gui
 		private static void RegisterRoutes(IEndpointRouteBuilder routes)
 		{
 			// Only map the routes that are different than the default (which is at the end of the list). All routes not defined explicitly
-			// will match with the default {controller}/{action}/{id?}. 
+			// will match with the default {controller}/{action}/{id?}.
+			
+			// Account 
+			routes.MapControllerRoute("SpecifyNewPassword", "Account/SpecifyNewPassword/{tokenID}", new {controller="Account", action="SpecifyNewPassword"});
 			
 			// Thread
 			routes.MapControllerRoute("ViewThread", "Thread/{id}/{pageNo}", new {controller="Thread", action="Index", pageNo=1});
@@ -192,6 +195,7 @@ namespace SD.HnD.Gui
 			
 			// User
 			routes.MapControllerRoute("UserProfile", "User/{id}", new {controller = "User", action = "ViewProfile"});
+			routes.MapControllerRoute("EditProfile", "User/Edit/", new {controller = "User", action = "EditProfile"});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

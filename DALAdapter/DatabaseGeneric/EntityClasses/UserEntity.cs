@@ -41,6 +41,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		private EntityCollection<ThreadEntity> _postedMessagesInThreads;
 		private EntityCollection<ThreadEntity> _threadCollectionViaThreadSubscription;
 		private UserTitleEntity _userTitle;
+		private PasswordResetTokenEntity _passwordResetToken;
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
@@ -80,6 +81,8 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			public static readonly string PostedMessagesInThreads = "PostedMessagesInThreads";
 			/// <summary>Member name ThreadCollectionViaThreadSubscription</summary>
 			public static readonly string ThreadCollectionViaThreadSubscription = "ThreadCollectionViaThreadSubscription";
+			/// <summary>Member name PasswordResetToken</summary>
+			public static readonly string PasswordResetToken = "PasswordResetToken";
 		}
 
 		/// <summary>Static meta-data storage for navigator related information</summary>
@@ -98,6 +101,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 				AddNavigatorMetaData<UserEntity, EntityCollection<ThreadEntity>>("StartedThreads", a => a._startedThreads, (a, b) => a._startedThreads = b, a => a.StartedThreads, () => new UserRelations().ThreadEntityUsingStartedByUserID, typeof(ThreadEntity), (int)SD.HnD.DALAdapter.EntityType.ThreadEntity);
 				AddNavigatorMetaData<UserEntity, EntityCollection<ThreadSubscriptionEntity>>("ThreadSubscription", a => a._threadSubscription, (a, b) => a._threadSubscription = b, a => a.ThreadSubscription, () => new UserRelations().ThreadSubscriptionEntityUsingUserID, typeof(ThreadSubscriptionEntity), (int)SD.HnD.DALAdapter.EntityType.ThreadSubscriptionEntity);
 				AddNavigatorMetaData<UserEntity, UserTitleEntity>("UserTitle", "Users", (a, b) => a._userTitle = b, a => a._userTitle, (a, b) => a.UserTitle = b, SD.HnD.DALAdapter.RelationClasses.StaticUserRelations.UserTitleEntityUsingUserTitleIDStatic, ()=>new UserRelations().UserTitleEntityUsingUserTitleID, null, new int[] { (int)UserFieldIndex.UserTitleID }, null, true, (int)SD.HnD.DALAdapter.EntityType.UserTitleEntity);
+				AddNavigatorMetaData<UserEntity, PasswordResetTokenEntity>("PasswordResetToken", "User", (a, b) => a._passwordResetToken = b, a => a._passwordResetToken, (a, b) => a.PasswordResetToken = b, SD.HnD.DALAdapter.RelationClasses.StaticUserRelations.PasswordResetTokenEntityUsingUserIDStatic, ()=>new UserRelations().PasswordResetTokenEntityUsingUserID, null, null, null, true, (int)SD.HnD.DALAdapter.EntityType.PasswordResetTokenEntity);
 				AddNavigatorMetaData<UserEntity, EntityCollection<ForumEntity>>("StartedThreadsInForums", a => a._startedThreadsInForums, (a, b) => a._startedThreadsInForums = b, a => a.StartedThreadsInForums, () => new UserRelations().ThreadEntityUsingStartedByUserID, () => new ThreadRelations().ForumEntityUsingForumID, "UserEntity__", "Thread_", typeof(ForumEntity), (int)SD.HnD.DALAdapter.EntityType.ForumEntity);
 				AddNavigatorMetaData<UserEntity, EntityCollection<RoleEntity>>("Roles", a => a._roles, (a, b) => a._roles = b, a => a.Roles, () => new UserRelations().RoleUserEntityUsingUserID, () => new RoleUserRelations().RoleEntityUsingRoleID, "UserEntity__", "RoleUser_", typeof(RoleEntity), (int)SD.HnD.DALAdapter.EntityType.RoleEntity);
 				AddNavigatorMetaData<UserEntity, EntityCollection<ThreadEntity>>("ThreadsInBookmarks", a => a._threadsInBookmarks, (a, b) => a._threadsInBookmarks = b, a => a.ThreadsInBookmarks, () => new UserRelations().BookmarkEntityUsingUserID, () => new BookmarkRelations().ThreadEntityUsingThreadID, "UserEntity__", "Bookmark_", typeof(ThreadEntity), (int)SD.HnD.DALAdapter.EntityType.ThreadEntity);
@@ -223,6 +227,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'UserTitle' to this entity.</summary>
 		/// <returns></returns>
 		public virtual IRelationPredicateBucket GetRelationInfoUserTitle() { return CreateRelationInfoForNavigator("UserTitle"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'PasswordResetToken' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoPasswordResetToken() { return CreateRelationInfoForNavigator("PasswordResetToken"); }
 		
 		/// <inheritdoc/>
 		protected override EntityStaticMetaDataBase GetEntityStaticMetaData() {	return _staticMetaData; }
@@ -313,6 +321,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'UserTitle' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
 		public static IPrefetchPathElement2 PrefetchPathUserTitle { get { return _staticMetaData.GetPrefetchPathElement("UserTitle", CommonEntityBase.CreateEntityCollection<UserTitleEntity>()); } }
+
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'PasswordResetToken' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathPasswordResetToken { get { return _staticMetaData.GetPrefetchPathElement("PasswordResetToken", CommonEntityBase.CreateEntityCollection<PasswordResetTokenEntity>()); } }
 
 		/// <summary>The UserID property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."UserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
@@ -529,6 +541,14 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set { SetSingleRelatedEntityNavigator(value, "UserTitle"); }
 		}
 
+		/// <summary>Gets / sets related entity of type 'PasswordResetTokenEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned.<br/><br/></summary>
+		[Browsable(true)]
+		public virtual PasswordResetTokenEntity PasswordResetToken
+		{
+			get { return _passwordResetToken; }
+			set { SetSingleRelatedEntityNavigator(value, "PasswordResetToken"); }
+		}
+
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -641,6 +661,12 @@ namespace SD.HnD.DALAdapter.RelationClasses
 			get { return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToMany, "ThreadSubscription", true, new[] { UserFields.UserID, ThreadSubscriptionFields.UserID }); }
 		}
 
+		/// <summary>Returns a new IEntityRelation object, between UserEntity and PasswordResetTokenEntity over the 1:1 relation they have, using the relation between the fields: User.UserID - PasswordResetToken.UserID</summary>
+		public virtual IEntityRelation PasswordResetTokenEntityUsingUserID
+		{
+			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToOne, "PasswordResetToken", true, new[] { UserFields.UserID, PasswordResetTokenFields.UserID }); }
+		}
+
 		/// <summary>Returns a new IEntityRelation object, between UserEntity and UserTitleEntity over the m:1 relation they have, using the relation between the fields: User.UserTitleID - UserTitle.UserTitleID</summary>
 		public virtual IEntityRelation UserTitleEntityUsingUserTitleID
 		{
@@ -661,6 +687,7 @@ namespace SD.HnD.DALAdapter.RelationClasses
 		internal static readonly IEntityRelation SupportQueueThreadEntityUsingPlacedInQueueByUserIDStatic = new UserRelations().SupportQueueThreadEntityUsingPlacedInQueueByUserID;
 		internal static readonly IEntityRelation ThreadEntityUsingStartedByUserIDStatic = new UserRelations().ThreadEntityUsingStartedByUserID;
 		internal static readonly IEntityRelation ThreadSubscriptionEntityUsingUserIDStatic = new UserRelations().ThreadSubscriptionEntityUsingUserID;
+		internal static readonly IEntityRelation PasswordResetTokenEntityUsingUserIDStatic = new UserRelations().PasswordResetTokenEntityUsingUserID;
 		internal static readonly IEntityRelation UserTitleEntityUsingUserTitleIDStatic = new UserRelations().UserTitleEntityUsingUserTitleID;
 
 		/// <summary>CTor</summary>

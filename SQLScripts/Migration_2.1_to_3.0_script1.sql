@@ -48,3 +48,32 @@ GO
 ALTER TABLE [dbo].[User] 
 	ALTER COLUMN [DefaultNumberOfMessagesPerPage] [smallint] NULL
 GO
+
+
+CREATE TABLE [dbo].[PasswordResetToken] 
+(
+	[UserID] [int] NOT NULL, 
+	[PasswordResetToken] [uniqueidentifier] NOT NULL, 
+	[PasswordResetRequestedOn] [datetime] NOT NULL 
+)
+GO
+
+ALTER TABLE [dbo].[PasswordResetToken] WITH NOCHECK 
+	ADD CONSTRAINT [PK_446ab684e0591442b16f78fc437] PRIMARY KEY CLUSTERED 
+	( 
+		[UserID] 
+	)
+GO
+
+ALTER TABLE [dbo].[PasswordResetToken] 
+	ADD CONSTRAINT [FK_9f1eaa94f1fb774bb77aad91f5d] FOREIGN KEY
+	(
+		[UserID] 
+	)
+	REFERENCES [dbo].[User]
+	(
+		[UserID] 
+	)
+	ON DELETE CASCADE
+	ON UPDATE NO ACTION
+GO

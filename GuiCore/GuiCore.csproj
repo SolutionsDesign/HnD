@@ -17,7 +17,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Controllers\" />
-		<Folder Include="DataFiles" />
 		<Folder Include="Models\" />
 		<Folder Include="Views\" />
 		<Folder Include="wwwroot" />
@@ -34,6 +33,18 @@
 		<Content Update="Views\User\ViewProfile.cshtml">
 			<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\Account\ResetPassword.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\Account\SpecifyNewPassword.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\User\EditProfile.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
 	</ItemGroup>
 </Project>

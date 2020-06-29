@@ -21,6 +21,7 @@ namespace SD.HnD.Gui.Controllers
 		/// <param name="id">the user id for which the profile data has to be shown</param>
 		/// <returns></returns>
 		[HttpGet]
+		[Authorize]
 		public ActionResult ViewProfile(int id = 0)
 		{
 			var userProfileData = UserGuiHelper.GetUserProfileInfo(id);
@@ -40,6 +41,34 @@ namespace SD.HnD.Gui.Controllers
 															 id, this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
 															 this.HttpContext.Session.GetUserID(), 25);
 			return View(viewData);
+		}
+
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult EditProfile()
+		{
+			var user = UserGuiHelper.GetUser(this.HttpContext.Session.GetUserID());
+			if(user == null)
+			{
+				// not found
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new EditProfileData()
+					   {
+						   AutoSubscribeToThread = user.AutoSubscribeToThread,
+						   EmailAddress = user.EmailAddress,
+						   EmailAddressIsPublic = user.EmailAddressIsPublic ?? false,
+						   NickName = user.NickName,
+						   DateOfBirth = user.DateOfBirth ?? DateTime.MinValue,
+						   Occupation = user.Occupation ?? string.Empty,
+						   Signature = user.Signature ?? string.Empty,
+						   Website = user.Website ?? string.Empty,
+						   IconURL = user.IconURL ?? string.Empty,
+						   DefaultNumberOfMessagesPerPage = user.DefaultNumberOfMessagesPerPage
+					   };
+			return View(data);
 		}
 	}
 }

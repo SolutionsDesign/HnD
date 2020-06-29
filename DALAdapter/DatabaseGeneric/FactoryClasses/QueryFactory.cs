@@ -51,6 +51,9 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 		/// <summary>Creates and returns a new EntityQuery for the Message entity</summary>
 		public EntityQuery<MessageEntity> Message { get { return Create<MessageEntity>(); } }
 
+		/// <summary>Creates and returns a new EntityQuery for the PasswordResetToken entity</summary>
+		public EntityQuery<PasswordResetTokenEntity> PasswordResetToken { get { return Create<PasswordResetTokenEntity>(); } }
+
 		/// <summary>Creates and returns a new EntityQuery for the Role entity</summary>
 		public EntityQuery<RoleEntity> Role { get { return Create<RoleEntity>(); } }
 

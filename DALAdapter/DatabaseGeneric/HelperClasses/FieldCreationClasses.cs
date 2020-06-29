@@ -193,6 +193,17 @@ namespace SD.HnD.DALAdapter.HelperClasses
 		public static EntityField2 MessageTextAsHTML { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(MessageFieldIndex.MessageTextAsHTML); }}
 	}
 
+	/// <summary>Field Creation Class for entity PasswordResetTokenEntity</summary>
+	public partial class PasswordResetTokenFields
+	{
+		/// <summary>Creates a new PasswordResetTokenEntity.UserID field instance</summary>
+		public static EntityField2 UserID { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(PasswordResetTokenFieldIndex.UserID); }}
+		/// <summary>Creates a new PasswordResetTokenEntity.PasswordResetToken field instance</summary>
+		public static EntityField2 PasswordResetToken { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(PasswordResetTokenFieldIndex.PasswordResetToken); }}
+		/// <summary>Creates a new PasswordResetTokenEntity.PasswordResetRequestedOn field instance</summary>
+		public static EntityField2 PasswordResetRequestedOn { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(PasswordResetTokenFieldIndex.PasswordResetRequestedOn); }}
+	}
+
 	/// <summary>Field Creation Class for entity RoleEntity</summary>
 	public partial class RoleFields
 	{

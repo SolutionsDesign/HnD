@@ -176,6 +176,16 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new MessageEntity(fields); }
 	}
 
+	/// <summary>Factory to create new, empty PasswordResetTokenEntity objects.</summary>
+	[Serializable]
+	public partial class PasswordResetTokenEntityFactory : EntityFactoryBase2<PasswordResetTokenEntity> 
+	{
+		/// <summary>CTor</summary>
+		public PasswordResetTokenEntityFactory() : base("PasswordResetTokenEntity", SD.HnD.DALAdapter.EntityType.PasswordResetTokenEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new PasswordResetTokenEntity(fields); }
+	}
+
 	/// <summary>Factory to create new, empty RoleEntity objects.</summary>
 	[Serializable]
 	public partial class RoleEntityFactory : EntityFactoryBase2<RoleEntity> 
@@ -365,6 +375,8 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 					return new IPBanEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.MessageEntity:
 					return new MessageEntityFactory();
+				case SD.HnD.DALAdapter.EntityType.PasswordResetTokenEntity:
+					return new PasswordResetTokenEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.RoleEntity:
 					return new RoleEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.RoleAuditActionEntity:

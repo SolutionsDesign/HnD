@@ -316,6 +316,7 @@ namespace SD.HnD.Gui.Classes
 			this.NoiseWords = GuiHelper.LoadNoiseWordsIntoHashSet(this.FullDataFilesPath);
 			this.RegistrationReplyMailTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "RegistrationReplyMail.template"));
 			this.ThreadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "ThreadUpdatedNotification.template"));
+			this.ResetPasswordLinkTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "ResetPasswordLink.template"));
 
 			var emojiUrlPath = (this.EmojiFilesPath ?? string.Empty);
 			// replace / with \ if we're on windows and / with \ if we're on linux
@@ -370,6 +371,7 @@ namespace SD.HnD.Gui.Classes
 		public string IPBanComplainEmailAddress { get; set; } = string.Empty;
 		public string SiteName { get; set; } = string.Empty;
 		public string EmailPasswordSubject { get; set; } = string.Empty;
+		public string PasswordResetRequestSubject { get; set; } = string.Empty;
 		public string EmailThreadNotificationSubject { get; set; } = string.Empty;
 		public string EmojiFilesPath { get; set; } = "/pics/emojis";
 		public string DataFilesPath { get; set; } = "/DataFiles";
@@ -379,6 +381,7 @@ namespace SD.HnD.Gui.Classes
 		public Dictionary<string, string> EmojiFilenamesPerName { get; set; } = new Dictionary<string, string>();
 		public string RegistrationReplyMailTemplate { get; set; }
 		public string ThreadUpdatedNotificationTemplate { get; set; }
+		public string ResetPasswordLinkTemplate { get; set; }
 		public int MaxNumberOfMinutesToCacheSearchResults { get; set; }
 	}
 }

@@ -353,6 +353,26 @@ namespace SD.HnD.BL
 				return adapter.FetchEntity(user) ? user : null;
 			}
 		}
+		
+		
+		/// <summary>
+		/// Gets the password token entity for the tokenid specified or null if not found.
+		/// </summary>
+		/// <param name="tokenID"></param>
+		/// <returns></returns>
+		public static PasswordResetTokenEntity GetPasswordResetToken(string tokenID)
+		{
+			if(!Guid.TryParse(tokenID, out Guid tokenIDAsGuid))
+			{
+				return null;
+			}
+
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchFirst(new QueryFactory().PasswordResetToken.Where(PasswordResetTokenFields.PasswordResetToken.Equal(tokenIDAsGuid)));
+			}
+		}
+		
 
         /// <summary>
         /// Returns the user entity of the user with ID userID, With A UserEntityTitle prefetched.

@@ -232,17 +232,17 @@ namespace SD.HnD.Utility
 			var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
 			mailBody.Append(emailTemplate);
 			string applicationURL = emailData.GetValue("applicationURL") ?? String.Empty;
+			string siteName = emailData.GetValue("siteName") ?? String.Empty;
 			if(!String.IsNullOrEmpty(emailTemplate))
 			{
 				// Use the existing template to format the body
-				string siteName = emailData.GetValue("siteName") ?? String.Empty;
 				mailBody.Replace("[URL]", applicationURL);
 				mailBody.Replace("[SiteName]", siteName);
 				mailBody.Replace("[Password]", password);
 			}
 
 			// format the subject
-			string subject = (emailData.GetValue("emailPasswordSubject") ?? String.Empty) + applicationURL ;
+			string subject = (emailData.GetValue("emailPasswordSubject") ?? String.Empty) + siteName;
 			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? String.Empty;
 			return SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new[] {emailAddress}, emailData);
 		}

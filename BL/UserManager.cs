@@ -22,6 +22,7 @@ using System.Data;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using SD.HnD.Utility;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -266,48 +267,74 @@ namespace SD.HnD.BL
 			}
 		}
 
-
+		
 		/// <summary>
-		/// Resets the user's Password by generating a new random password which is mailed to
-		/// the emailaddress specified. Will fail if the nickname doesn't exist or the emailaddress
-		/// doesn't match with the specified emailaddress of the nickname in the database.
+		/// Emails to the user with the nickname specified a unique link which allows the user to reset their password
 		/// </summary>
 		/// <param name="nickName">Nickname of user which password should be reset</param>
-		/// <param name="emailAddress">Emailaddress of user</param>
 		/// <param name="emailData">The email data.</param>
 		/// <returns>true if succeed, false otherwise</returns>
-		/// <exception cref="NickNameNotFoundException">Throws NickNameNotFoundException when the nickname isn't found.</exception>
-		/// <exception cref="EmailAddressDoesntMatchException">Throws EmailAddressDoesntMatchException when the emailaddress of the nickname isn't matching
-		/// with the emailaddress specified.</exception>
-		public static async Task<bool> ResetPassword(string nickName, string emailAddress, Dictionary<string, string> emailData)
+		public static async Task<bool> EmailPasswordResetLink(string nickName, Dictionary<string, string> emailData)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var user = adapter.FetchFirst(new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)));
+				var qf = new QueryFactory();
+				var user = await adapter.FetchFirstAsync(qf.User.Where(UserFields.NickName.Equal(nickName)).WithPath(UserEntity.PrefetchPathPasswordResetToken))
+										.ConfigureAwait(false);
 				if(user==null)
 				{
 					// not found
-					throw new NickNameNotFoundException("Nickname: '" + nickName + "' not found");
-				}
-				// check emailaddress
-				if(!string.Equals(user.EmailAddress, emailAddress, StringComparison.InvariantCultureIgnoreCase))
-				{
-					// no match
-					throw new EmailAddressDoesntMatchException("Emailaddress '" + emailAddress + "' doesn't match.");
+					return false;
 				}
 
-				// does match, reset the password
-				string newPassword = HnDGeneralUtils.GenerateRandomPassword();
-				// hash the password with PBKDF2
-				user.Password = HnDGeneralUtils.HashPassword(newPassword, performPreMD5Hashing: true);
-
-				// store it
-				bool result = adapter.SaveEntity(user);
-				if(result)
+				if(user.PasswordResetToken == null)
 				{
-					// mail it
-					result = await HnDGeneralUtils.EmailPassword(newPassword, emailAddress, emailData).ConfigureAwait(false);
+					user.PasswordResetToken = new PasswordResetTokenEntity();
 				}
+				user.PasswordResetToken.PasswordResetToken = Guid.NewGuid();
+				user.PasswordResetToken.PasswordResetRequestedOn = DateTime.Now;
+				
+				// first persist the token
+				bool result = await adapter.SaveEntityAsync(user, refetchAfterSave: true).ConfigureAwait(false);
+				if(!result)
+				{
+					return false;
+				}
+
+				// then email an email to the user with the link to reset the password.
+				// use template to construct message to send. 
+				string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
+				var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
+				mailBody.Append(emailTemplate);
+				var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
+				string siteName = emailData.GetValue("siteName") ?? string.Empty;
+				if (!string.IsNullOrEmpty(emailTemplate))
+				{
+					// Use the existing template to format the body
+					mailBody.Replace("[URL]", applicationURL);
+					mailBody.Replace("[SiteName]", siteName);
+					mailBody.Replace("[Token]", user.PasswordResetToken.PasswordResetToken.ToString());
+				}
+
+				// format the subject
+				string subject =  (emailData.GetValue("passwordResetRequestSubject") ?? string.Empty) + siteName;
+				string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
+
+				try
+				{
+					//send message
+					result = await HnDGeneralUtils.SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new [] {user.EmailAddress}, 
+															 emailData).ConfigureAwait(false);
+				}
+				catch(SmtpFailedRecipientsException)
+				{
+					// swallow as it shouldn't have any effect on further operations
+				}
+				catch(SmtpException)
+				{
+					// swallow, as there's nothing we can do
+				}
+				// rest: problematic, so bubble upwards.
 				return result;
 			}
 		}
@@ -435,6 +462,38 @@ namespace SD.HnD.BL
 				}
 			}
 			return newUser.UserID;
+		}
+		
+
+		/// <summary>
+		/// Resets the password for the user related to the password token specified to the newPassword specified
+		/// It'll then remove the password reset token entity specified
+		/// </summary>
+		/// <param name="newPassword">the new password specified</param>
+		/// <param name="passwordResetToken">the reset token. Will be removed in this method if password reset is successful</param>
+		/// <returns>true if successful, false otherwise</returns>
+		public static bool ResetPassword(string newPassword, PasswordResetTokenEntity passwordResetToken)
+		{
+			if(string.IsNullOrWhiteSpace(newPassword) || passwordResetToken==null)
+			{
+				return false;
+			}
+
+			using(var adapter = new DataAccessAdapter())
+			{
+				var qf = new QueryFactory();
+				var user = adapter.FetchFirst(qf.User.Where(UserFields.UserID.Equal(passwordResetToken.UserID)));
+				if(user == null)
+				{
+					return false;
+				}
+
+				user.Password = HnDGeneralUtils.HashPassword(newPassword, performPreMD5Hashing: true);
+				var uow = new UnitOfWork2();
+				uow.AddForSave(user);
+				uow.AddForDelete(passwordResetToken);
+				return uow.Commit(adapter) == 2;
+			}
 		}
 
 

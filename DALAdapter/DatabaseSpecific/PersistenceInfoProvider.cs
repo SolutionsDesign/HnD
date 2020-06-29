@@ -47,6 +47,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			InitForumRoleForumActionRightEntityMappings();
 			InitIPBanEntityMappings();
 			InitMessageEntityMappings();
+			InitPasswordResetTokenEntityMappings();
 			InitRoleEntityMappings();
 			InitRoleAuditActionEntityMappings();
 			InitRoleSystemActionRightEntityMappings();
@@ -181,6 +182,15 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			this.AddElementFieldMapping("MessageEntity", "ChangeTrackerStamp", "ChangeTrackerStamp", false, "Timestamp", 8, 0, 0, false, "", null, typeof(System.Byte[]), 5);
 			this.AddElementFieldMapping("MessageEntity", "MessageText", "MessageText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 6);
 			this.AddElementFieldMapping("MessageEntity", "MessageTextAsHTML", "MessageTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 7);
+		}
+
+		/// <summary>Inits PasswordResetTokenEntity's mappings</summary>
+		private void InitPasswordResetTokenEntityMappings()
+		{
+			this.AddElementMapping("PasswordResetTokenEntity", @"HnD", @"dbo", "PasswordResetToken", 3, 0);
+			this.AddElementFieldMapping("PasswordResetTokenEntity", "UserID", "UserID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("PasswordResetTokenEntity", "PasswordResetToken", "PasswordResetToken", false, "UniqueIdentifier", 0, 0, 0, false, "", null, typeof(System.Guid), 1);
+			this.AddElementFieldMapping("PasswordResetTokenEntity", "PasswordResetRequestedOn", "PasswordResetRequestedOn", false, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 2);
 		}
 
 		/// <summary>Inits RoleEntity's mappings</summary>

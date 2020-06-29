@@ -66,6 +66,8 @@ namespace SD.HnD.DALAdapter.Linq
 					return this.IPBan;
 				case SD.HnD.DALAdapter.EntityType.MessageEntity:
 					return this.Message;
+				case SD.HnD.DALAdapter.EntityType.PasswordResetTokenEntity:
+					return this.PasswordResetToken;
 				case SD.HnD.DALAdapter.EntityType.RoleEntity:
 					return this.Role;
 				case SD.HnD.DALAdapter.EntityType.RoleAuditActionEntity:
@@ -136,6 +138,9 @@ namespace SD.HnD.DALAdapter.Linq
 		
 		/// <summary>returns the datasource to use in a Linq query when targeting MessageEntity instances in the database.</summary>
 		public DataSource2<MessageEntity> Message {	get { return new DataSource2<MessageEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
+		
+		/// <summary>returns the datasource to use in a Linq query when targeting PasswordResetTokenEntity instances in the database.</summary>
+		public DataSource2<PasswordResetTokenEntity> PasswordResetToken {	get { return new DataSource2<PasswordResetTokenEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
 		
 		/// <summary>returns the datasource to use in a Linq query when targeting RoleEntity instances in the database.</summary>
 		public DataSource2<RoleEntity> Role {	get { return new DataSource2<RoleEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }

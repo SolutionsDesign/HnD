@@ -161,7 +161,6 @@ namespace SD.HnD.BL
 		/// <param name="messageAsHTML">Message text as HTML</param>
 		/// <param name="userIDIPAddress">IP address of user calling this method</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
-		/// <param name="threadUpdatedNotificationTemplate">The thread updated notification template.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
@@ -362,7 +361,7 @@ namespace SD.HnD.BL
 			}
 
 			// format the subject
-			string subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty) + applicationURL;
+			string subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty);
 			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 			try

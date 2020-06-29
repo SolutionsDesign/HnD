@@ -278,6 +278,13 @@
           <Field Name="ThreadID" Type="int" IsAutoCreated="true" FieldIndex="3" />
         </Fields>
       </EntityDefinition>
+      <EntityDefinition Name="PasswordResetToken" ObjectID="7355d0f0-72ad-4ae2-979b-081599805bf7">
+        <Fields>
+          <Field Name="PasswordResetRequestedOn" Type="datetime" FieldIndex="2" />
+          <Field Name="PasswordResetToken" Type="guid" FieldIndex="1" />
+          <Field Name="UserID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
+        </Fields>
+      </EntityDefinition>
       <EntityDefinition Name="Role" ObjectID="df733d80-3efe-40c4-8d2f-28187368cdc5">
         <Fields>
           <Field Name="RoleDescription" Type="string" MaxLength="50" FieldIndex="1" />
@@ -564,6 +571,11 @@
           <FieldFieldRelationship FkField="UserID" PkField="UserID" />
         </FieldRelationships>
       </NormalRelationship>
+      <NormalRelationship Name="User.PasswordResetToken-PasswordResetToken.User" Start=":User" End=":PasswordResetToken" StartNavigator="PasswordResetToken" EndNavigator="User" Type="1" StartIsPkSide="true" DeleteRuleAction="1">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="UserID" PkField="UserID" />
+        </FieldRelationships>
+      </NormalRelationship>
       <NormalRelationship Name="User.UserTitle-UserTitle.Users" Start=":User" End=":UserTitle" StartNavigator="UserTitle" EndNavigator="Users" Type="4">
         <FieldRelationships>
           <FieldFieldRelationship FkField="UserTitleID" PkField="UserTitleID" />
@@ -703,7 +715,7 @@
       <Catalogs>
         <Catalog Name="HnD" SyncSource="1">
           <Schemas>
-            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2020-06-19T09:28:10.1756407Z">
+            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2020-06-26T09:40:13.1034647Z">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />
@@ -814,6 +826,14 @@
                     <Field Name="ChangeTrackerStamp" Ordinal="6" IsTimestamp="true" DbType="21" Length="8" />
                     <Field Name="MessageText" Ordinal="7" IsOptional="true" DbType="11" Length="1073741823" />
                     <Field Name="MessageTextAsHTML" Ordinal="8" IsOptional="true" DbType="11" Length="1073741823" />
+                  </Fields>
+                </Table>
+                <Table Name="PasswordResetToken">
+                  <PkConstraintName Name="PK_446ab684e0591442b16f78fc437" />
+                  <Fields>
+                    <Field Name="UserID" Ordinal="1" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="PasswordResetToken" Ordinal="2" DbType="25" />
+                    <Field Name="PasswordResetRequestedOn" Ordinal="3" DbType="4" />
                   </Fields>
                 </Table>
                 <Table Name="Role">
@@ -1039,6 +1059,11 @@
                 <FieldPair PkField="dbo:User:UserID" FkField="dbo:Message:PostedByUserID" />
               </FieldPairs>
             </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="dbo:PasswordResetToken:FK_9f1eaa94f1fb774bb77aad91f5d" DeleteRuleAction="1">
+              <FieldPairs>
+                <FieldPair PkField="dbo:User:UserID" FkField="dbo:PasswordResetToken:UserID" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
             <ForeignKeyConstraint Name="dbo:RoleAuditAction:TF_AuditAction_TF_RoleAuditAction_FK1">
               <FieldPairs>
                 <FieldPair PkField="dbo:AuditAction:AuditActionID" FkField="dbo:RoleAuditAction:AuditActionID" />
@@ -1230,6 +1255,13 @@
             <FieldMapping FieldName="PostedFromIP" TargetFieldName="PostedFromIP" />
             <FieldMapping FieldName="PostingDate" TargetFieldName="PostingDate" />
             <FieldMapping FieldName="ThreadID" TargetFieldName="ThreadID" />
+          </FieldMappings>
+        </EntityMapping>
+        <EntityMapping EntityName=":PasswordResetToken" TargetName="HnD:dbo:PasswordResetToken">
+          <FieldMappings>
+            <FieldMapping FieldName="PasswordResetRequestedOn" TargetFieldName="PasswordResetRequestedOn" />
+            <FieldMapping FieldName="PasswordResetToken" TargetFieldName="PasswordResetToken" />
+            <FieldMapping FieldName="UserID" TargetFieldName="UserID" />
           </FieldMappings>
         </EntityMapping>
         <EntityMapping EntityName=":Role" TargetName="HnD:dbo:Role">

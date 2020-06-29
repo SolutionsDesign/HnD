@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Rendering
-@model SD.HnD.Gui.Models.LoginModel
+@model SD.HnD.Gui.Models.LoginData
 
 @{
     ViewBag.Title = "HnD | Login";
@@ -40,7 +40,7 @@
 					<div class="mt20">
 						<button type="submit" class="btn btn-default btn-primary"> Log in </button>
 						<div class="pull-right">
-							<a href="resetpassword.html" class="forgot"><small>Forgot your password?</small></a>
+							<a href="~/Account/ResetPassword" class="forgot"><small>Forgot your password?</small></a>
 						</div>
 					</div>
 				}
@@ -48,4 +48,3 @@
 		</div>
 	</div>
 </div>
-

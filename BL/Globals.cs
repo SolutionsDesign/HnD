@@ -171,6 +171,7 @@ namespace SD.HnD.BL
 	{
 		Undefined = 0,
 		RegistrationReply = 1,
-		ThreadUpdatedNotification = 2
+		ThreadUpdatedNotification = 2,
+		ResetPasswordLink = 3,
 	}
 }

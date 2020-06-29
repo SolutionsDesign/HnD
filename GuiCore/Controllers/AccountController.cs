@@ -38,8 +38,74 @@ namespace SD.HnD.Gui.Controllers
 		    }
 		    return RedirectToAction("Bookmarks");
 	    }
+
+
+		[AllowAnonymous]
+		[HttpGet]
+		public ActionResult ResetPassword()
+		{
+			return View(new ResetPasswordData());
+		}
 		
-		
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> ResetPasswordAsync([Bind("NickName")] ResetPasswordData data)
+		{
+			if(!ModelState.IsValid)
+			{
+				return View(data);
+			}
+			await PerformResetPasswordAsync(data);
+			return View(data);
+		}
+
+
+		[AllowAnonymous]
+		[HttpGet]
+		public ActionResult SpecifyNewPassword(string tokenID)
+		{
+			// the token might be invalid or non existent.
+			bool tokenIsValid = UserGuiHelper.GetPasswordResetToken(tokenID)!=null;
+			if(!tokenIsValid)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			return View();
+		}
+
+
+		[AllowAnonymous]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult SpecifyNewPassword([Bind("NewPassword", "ConfirmNewPassword")] NewPasswordData data,string tokenID)
+		{
+			// the token might be invalid or non existent.
+			var passwordResetToken = UserGuiHelper.GetPasswordResetToken(tokenID);
+			if(passwordResetToken==null)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(!ModelState.IsValid)
+			{
+				return View(data);
+			}
+
+			if(string.IsNullOrWhiteSpace(data.NewPassword))
+			{
+				data.NewPassword = string.Empty;
+				data.ConfirmNewPassword = string.Empty;
+				return View(data);
+			}
+			if(!UserManager.ResetPassword(data.NewPassword, passwordResetToken))
+			{
+				return View(data);
+			}
+			// all done, user can now login.
+			return RedirectToAction("Login", "Account");
+		}
+
+
 		[AllowAnonymous]
 		[HttpGet]
 		public ActionResult Login(string returnUrl)
@@ -57,9 +123,10 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToLocal("~/");
 	    }
 
+		
         [HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> LoginAsync([Bind("NickName, Password, RememberMe")] LoginModel data, string returnUrl)
+		public async Task<IActionResult> LoginAsync([Bind("NickName, Password, RememberMe")] LoginData data, string returnUrl)
         {
 	        if(!ModelState.IsValid)
 	        {
@@ -76,7 +143,7 @@ namespace SD.HnD.Gui.Controllers
         }
 
 
-		private async Task<SecurityManager.AuthenticateResult> PerformLoginAsync(LoginModel data)
+		private async Task<SecurityManager.AuthenticateResult> PerformLoginAsync(LoginData data)
 	    {
 			UserEntity user = null;
 			SecurityManager.AuthenticateResult result = SecurityManager.AuthenticateUser(data.NickName, data.Password, out user);
@@ -111,6 +178,14 @@ namespace SD.HnD.Gui.Controllers
 			}
 			return result;
 	    }
+		
+
+		private async Task PerformResetPasswordAsync(ResetPasswordData data)
+		{
+			bool result = await UserManager.EmailPasswordResetLink(data.NickName, ApplicationAdapter.GetEmailData(this.Request.Host.Host, 
+																												  EmailTemplate.ResetPasswordLink)).ConfigureAwait(false);
+			data.EmailSent = result;
+		}
 
 
 		private ActionResult RedirectToLocal(string returnUrl)

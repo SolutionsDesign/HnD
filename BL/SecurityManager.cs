@@ -566,6 +566,9 @@ namespace SD.HnD.BL
 				if(user.UserID!=Globals.UserIDToDenyLogin && HnDGeneralUtils.ComparePbkdf2HashedPassword(user.Password, password))
 				{
 					// correct username/password combination
+					// delete any password reset tokens
+					adapter.DeleteEntitiesDirectly(typeof(PasswordResetTokenEntity), new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)));
+					// all ok
 					return AuthenticateResult.AllOk;
 				}
 				// something was wrong, report wrong authentication combination
