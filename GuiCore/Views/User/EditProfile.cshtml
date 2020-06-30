@@ -16,14 +16,26 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-sm-8 col-sm-offset-1">
+		<div class="col-sm-8">
 			<h1 class="br-bottom mt30">Edit your profile</h1>
-
+			<p>
+				Below you can change your information currently known by the forum system. If you want to change your password, please specify 
+				a value in the two password boxes, otherwise leave these boxes blank. When no password is filled in, your current password is kept.
+			</p>
+			<p>
+				No information will be disclosed to other parties than this forum system itself. You decide which information you want to specify in the 
+				non-mandatory fields. The email-address you specify is used to send you a reset password link if you request it from the system 
+				in the case you forgot your password. It can be made hidden for visitors of the forums. 
+			</p>
+			<p>
+				Fields marked with <strong>*</strong> are mandatory.
+			</p>
 			<div class="mb40">
 				@using(Html.BeginForm("EditProfile", "User", null, FormMethod.Post, true, new {role="form"}))
 				{
 					@Html.AntiForgeryToken()
 					@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+					<div class="caption"><span>Registration information</span></div>
 					<div class="form-group">
 						<label for="nickName" class="control-label above-control">Nickname</label><br/>
 						<span id="nickName" class="form-control-static">@Model.NickName</span>
@@ -40,10 +52,59 @@
 					</div>
 					<div class="form-group">
 						@Html.LabelFor(m => m.EmailAddress, "Email-address* ", new {@class = "control-label above-control"})
-						@Html.TextBoxFor(m => m.EmailAddress, new {@class = "form-control", placeholder = " Email-address", autofocus = "", required="true"})
+						@Html.TextBoxFor(m => m.EmailAddress, new {@class = "form-control", placeholder = " Email-address", autofocus = "true"})
 						@Html.ValidationMessageFor(m => m.EmailAddress, "", new {@class = "text-danger"})
 					</div>
-
+					<br/>
+					<div class="caption"><span>Personal information</span></div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.IconURL, "User icon URL", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.IconURL, new {@class = "form-control", placeholder = " https://example.com/myavatar.jpg"})
+						@Html.ValidationMessageFor(m => m.IconURL, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.DateOfBirth, "Date of birth", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.DateOfBirth, "{0:dd/MM/yyyy}", new {@class = "form-control", placeholder = " dd/mm/yyyy"})
+						@Html.ValidationMessageFor(m => m.DateOfBirth, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.Occupation, "Occupation", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.Occupation, new {@class = "form-control", placeholder = " "})
+						@Html.ValidationMessageFor(m => m.Occupation, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.Location, "Location", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.Location, new {@class = "form-control", placeholder = " "})
+						@Html.ValidationMessageFor(m => m.Location, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.Website, "Website", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.Website, new {@class = "form-control", placeholder = " https://example.com"})
+						@Html.ValidationMessageFor(m => m.Website, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.Signature, "Signature", new {@class = "control-label above-control"})
+						@Html.TextAreaFor(m => m.Signature, new {@class = "form-control", placeholder = " "})
+						@Html.ValidationMessageFor(m => m.Signature, "", new {@class = "text-danger"})
+					</div>
+					<br/>
+					<div class="caption"><span>Preferences</span></div>
+					<div class="form-group">
+						@Html.CheckBoxFor(m => m.EmailAddressIsPublic)&nbsp;
+						@Html.DisplayNameFor(m => m.EmailAddressIsPublic)
+					</div>
+					<div class="form-group">
+						@Html.CheckBoxFor(m => m.AutoSubscribeToThread)&nbsp;
+						@Html.DisplayNameFor(m => m.AutoSubscribeToThread)<br/>
+						<div class="small">Overridable per thread</div>
+					</div>
+					<div class="form-group">
+						@Html.EditorFor(m=>m.DefaultNumberOfMessagesPerPage, new { htmlAttributes = new { @class = "form-control", @style = "width:75px; display:initial" } })&nbsp;
+						@Html.DisplayNameFor(m=>m.DefaultNumberOfMessagesPerPage)<br/>
+						@Html.ValidationMessageFor(m => m.DefaultNumberOfMessagesPerPage, "", new {@class = "text-danger"})
+					</div>
+              
+					                                             
 					<div class="mt20">
 						<button type="submit" class="btn btn-default btn-primary"> Update </button>
 					</div>
@@ -52,3 +113,15 @@
 		</div>
 	</div>
 </div>
+@section scripts
+{
+	<script type="text/javascript">
+            $(function () {
+                $('#DateOfBirth').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    format: "dd/mm/yyyy"
+                });
+            });
+</script>
+}

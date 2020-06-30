@@ -376,7 +376,7 @@ namespace SD.HnD.BL
 			user.Occupation = occupation;
 			user.UserTitleID = userTitleID;
 		
-			if(!string.IsNullOrEmpty(password))
+			if(!string.IsNullOrWhiteSpace(password))
 			{
 				user.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
 			}
@@ -503,8 +503,7 @@ namespace SD.HnD.BL
 		/// absent and which then would create a potential cross-site scripting error. 
 		/// </summary>
 		/// <param name="toEncode">To encode.</param>
-		/// <remarks>Fields which are filled in by the user are encoded using HtmlEncoding. The signature is parsed by the UBB parser and therefore already 
-		/// is free from potential scripting code as tag markers are already converted to html encoded characters. </remarks>
+		/// <remarks>Fields which are filled in by the user are encoded using HtmlEncoding. </remarks>
 		private static void EncodeUserTextFields(UserEntity toEncode)
 		{
 			toEncode.EmailAddress = HttpUtility.HtmlEncode(toEncode.EmailAddress);
@@ -512,6 +511,7 @@ namespace SD.HnD.BL
 			toEncode.Location = HttpUtility.HtmlEncode(toEncode.Location);
 			toEncode.Website = HttpUtility.HtmlEncode(toEncode.Website);
 			toEncode.IconURL = HttpUtility.HtmlEncode(toEncode.IconURL);
+			toEncode.Signature = HttpUtility.HtmlEncode(toEncode.Signature);
 		}
 	}
 }

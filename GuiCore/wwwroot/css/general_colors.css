@@ -1,4 +1,4 @@
-﻿/* define colors here*/
+/* define colors here*/
 /* HnD main colors: @color: #970303; */
 /* alert boxes colors */
 /* no need to define anything below this point */
@@ -65,6 +65,12 @@ mark {
 }
 .editor-toolbar-divider {
   border-right-color: #b9b9b9;
+}
+.caption:before {
+  background: #d2d2d2;
+}
+.caption span {
+  background: #f1f1f1;
 }
 .footer-links > li > a:hover,
 .footer-links > li > a:focus,
@@ -262,3 +268,4 @@ mark {
     color: #066A8B;
   }
 }
+/*# sourceMappingURL=general_colors.css.map */

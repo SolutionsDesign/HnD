@@ -698,8 +698,32 @@ textarea.form-control{
 		border: 1px solid transparent;
 		border-radius: 4px;
 	}
+        
+    .caption {
+        font-size: 85%;
+        font-style: italic;
+        text-align: right;
+        position: relative;
+    }
+    
+    .caption span {
+        padding-left: 10px;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .caption:before {
+        content: "";
+        display: block;
+        height: 1px;
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        z-index: 0;
+    }
 
-	.checkbox-inline {
+
+    .checkbox-inline {
 		margin-top: 5px;
 	}
 	.clear { clear: both; }
