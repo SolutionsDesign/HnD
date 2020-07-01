@@ -13,6 +13,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.4" />
 		<PackageReference Include="SD.LLBLGen.Pro.DQE.SqlServer" Version="5.7.0" />
 		<PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />
+		<PackageReference Include="SD.Tools.OrmProfiler.Interceptor.NetCore" Version="2.0.2" />
 		<PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
 	</ItemGroup>
 	<ItemGroup>
@@ -42,7 +43,19 @@
 		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>
-		<Content Update="Views\User\EditProfile.cshtml">
+		<Content Update="Views\Shared\SimpleThreadLister.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\Account\EditProfile.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\Account\Threads.cshtml">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<Content Update="Views\Shared\MyThreadsPager.cshtml">
 		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 		  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</Content>

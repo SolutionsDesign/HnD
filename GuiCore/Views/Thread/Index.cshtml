@@ -276,7 +276,7 @@
 												@if(userMayManageAttachments)
 												{
 												<td>
-													<a href="#" data-toggle="modal" data-target="#confirmAttachmentDeleteModal" data-messageid="@currentMessage.MessageID" data-attachmentid="@attachment.AttachmentID" data-filename="@attachment.Filename" title="Download file '@attachment.Filename'"><i class="fa fa-trash-o"></i></a>
+													<a href="#" data-toggle="modal" data-target="#confirmAttachmentDeleteModal" data-messageid="@currentMessage.MessageID" data-attachmentid="@attachment.AttachmentID" data-filename="@attachment.Filename" title="Download file '@attachment.Filename'"><i class="far fa-trash-alt"></i></a>
 												</td>
 												}
 												<td>
@@ -294,8 +294,8 @@
 												<td>
 													@if(Model.UserCanApproveAttachments)
 													{
-														string iconName = attachment.Approved ? "check-square-o" : "square-o";
-														<a href="#" onclick="toggleAttachmentApproval(@currentMessage.MessageID, @attachment.AttachmentID);return false;" title="Toggle approval of attachment '@attachment.Filename'"><i class="fa fa-@iconName" id="icon_attachment_@attachment.AttachmentID"></i></a>
+														string iconName = attachment.Approved ? "check-square" : "square";
+														<a href="#" onclick="toggleAttachmentApproval(@currentMessage.MessageID, @attachment.AttachmentID);return false;" title="Toggle approval of attachment '@attachment.Filename'"><i class="far fa-@iconName" id="icon_attachment_@attachment.AttachmentID"></i></a>
 													}
 													else
 													{
@@ -670,7 +670,7 @@
 					attachmentId,
 					function(result) {
 						if (result.success) {
-							$('#icon_attachment_' + attachmentId).attr('class', result.newstate ? 'fa fa-check-square-o' : 'fa fa-square-o');
+							$('#icon_attachment_' + attachmentId).attr('class', result.newstate ? 'far fa-check-square' : 'far fa-square');
 						}
 					},
 					function(xhr) {

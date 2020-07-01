@@ -86,7 +86,7 @@ namespace SD.HnD.Gui.Controllers
 																							 _cache.GetSystemData().HoursThresholdForActiveThreads,
 																							 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
 																							 this.HttpContext.Session.GetUserID());
-			var viewData = new ActiveThreadsData() {ActiveThreads = aggregatedActiveThreadsData};
+			var viewData = new ThreadsData() {ThreadRows = aggregatedActiveThreadsData};
 			return View(viewData);
 		}
 
@@ -94,7 +94,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditProperties([Bind("Subject, IsSticky, IsClosed")] ThreadPropertiesModel properties, int id = 0)
+		public ActionResult EditProperties(ThreadPropertiesModel properties, int id = 0)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -243,6 +243,7 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
 		}
 
+		
 		[Authorize]
 		[HttpGet]
 		public ActionResult Add(int forumId = 0)
@@ -272,7 +273,9 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Add([Bind("MessageText, ThreadSubject, IsSticky, Subscribe")] NewThreadData newThreadData, string submitButton, int forumId = 0)
+		public ActionResult Add([Bind(nameof(NewThreadData.MessageText), nameof(NewThreadData.ThreadSubject), nameof(NewThreadData.IsSticky), 
+				 					  nameof(NewThreadData.Subscribe))] NewThreadData newThreadData, 
+								string submitButton, int forumId = 0)
 		{
 			if(submitButton != "Post")
 			{

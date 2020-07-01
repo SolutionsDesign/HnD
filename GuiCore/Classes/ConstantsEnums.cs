@@ -14,5 +14,6 @@ namespace SD.HnD.Gui.Classes
 		public static readonly string AuditActions = "User:AuditActions";
 		public static readonly string SessionInitialized = "Session:Initialized";
 		public static readonly string SearchResultsKey = "User:SearchResultsKey";
+		public static readonly string MyThreadsRowCount = "User:MyThreadsRowCount";
 	}
 }

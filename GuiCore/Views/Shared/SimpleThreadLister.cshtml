@@ -1,0 +1,52 @@
+@using SD.HnD.Gui
+@model List<SD.HnD.BL.TypedDataClasses.AggregatedThreadRow>
+
+@foreach(var threadRow in Model)
+{
+    var iconClass = "icon-nonewpost";
+    var iconType = "fa-comments";
+    var lastPostingDateAsString = "Never";
+    var stickyClass = string.Empty;
+    if(threadRow.IsClosed)
+    {
+        iconType = "fa-lock";
+    }
+    if(threadRow.IsSticky)
+    {
+        iconType = "fa-thumb-tack";
+        stickyClass = " stickyThread";
+    }
+    if(threadRow.ThreadLastPostingDate.HasValue)
+    {
+        lastPostingDateAsString = threadRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+        if(threadRow.ThreadLastPostingDate.Value > Context.Session.GetLastVisitDate())
+        {
+            iconClass = "icon-newpost";
+        }
+    }
+    <div class="row fs-row @stickyClass">
+        <div class="col-sm-8 col-xs-8">
+            <div class="column-wrapper-sm">
+                <div class="column-fixed-sm">
+                    <i class="fa @iconType @iconClass"></i>
+                </div>
+                <div class="column-fluent">
+                    <a href="~/Thread/@threadRow.ThreadID/1">@threadRow.Subject</a>
+                    <span class="list-row-description notonmobile pt3">
+                        Posted in forum: <a href="~/Forum/@threadRow.ForumID/1">@threadRow.ForumName</a><br/>
+                        Started by: <a href="~/User/@threadRow.ThreadStartedByUserID">@threadRow.ThreadStartedByNickName</a><br/>
+                    </span>
+                </div>
+                <div class="column-clear"></div>
+            </div>
+        </div>
+		<div class="col-sm-1 notonmobile">@threadRow.NumberOfMessages</div>
+		<div class="col-sm-1 notonmobile">@threadRow.NumberOfViews</div>
+        <div class="col-sm-2 col-xs-4">
+            <a href="~/Message/Goto/@threadRow.MessageIDLastPost">@lastPostingDateAsString</a>
+            <span class="list-row-description notonmobile pt3">
+                By: <a href="~/User/@threadRow.LastPostByUserID">@threadRow.LastPostByNickName</a>
+            </span>
+        </div>
+    </div>
+}

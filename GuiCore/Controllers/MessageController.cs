@@ -160,7 +160,8 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> Add([Bind("MessageText,Subscribe")] MessageData messageData, string submitButton, int threadId = 0)
+		public async Task<ActionResult> Add([Bind(nameof(MessageData.MessageText), nameof(MessageData.Subscribe))] MessageData messageData, 
+											string submitButton, int threadId = 0)
 		{
 			if(submitButton != "Post")
 			{
@@ -205,7 +206,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Edit([Bind("MessageText")] MessageData messageData, string submitButton, int id = 0)
+		public ActionResult Edit([Bind(nameof(MessageData.MessageText))] MessageData messageData, string submitButton, int id = 0)
 		{
 			if(!ModelState.IsValid)
 			{

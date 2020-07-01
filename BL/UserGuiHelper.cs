@@ -113,7 +113,8 @@ namespace SD.HnD.BL
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, 
+																					List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
 		{
 			return GetLastThreadsForUserAggregatedData(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
 		}
@@ -130,7 +131,8 @@ namespace SD.HnD.BL
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID, 
+		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, 
+																					List<int> forumsWithThreadsFromOthers, int callingUserID, 
 																					int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
@@ -182,8 +184,8 @@ namespace SD.HnD.BL
 		/// <param name="participantUserID">The participant user ID of the user of which the threads have to be obtained.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="callingUserID">The calling user ID.</param>
-		/// <returns>a dataView of the threads requested</returns>
-		public static int GetRowCountLastThreadsForUserAsDataView(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
+		/// <returns>the total number of threads the user participated in</returns>
+		public static int GetRowCountLastThreadsForUser(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)

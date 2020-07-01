@@ -43,7 +43,7 @@ namespace SD.HnD.Gui.Controllers
 		/// <returns></returns>
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult SearchAdvanced([Bind("SearchParameters, SearchTarget, TargetForums, FirstSortClause, SecondSortClause")] AdvancedSearchModel searchData)
+		public ActionResult SearchAdvanced(AdvancedSearchModel searchData)
 		{
 			if(string.IsNullOrWhiteSpace(searchData.SearchParameters))
 			{

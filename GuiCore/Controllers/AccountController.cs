@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.Gui.Classes;
 using SD.HnD.Gui.Models;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
@@ -16,19 +19,27 @@ namespace SD.HnD.Gui.Controllers
 {
     public class AccountController : Controller
     {
+		private IMemoryCache _cache;
+		
+		public AccountController(IMemoryCache cache)
+		{
+			_cache = cache;
+		}
+		
+		
 	    [Authorize]
 	    [HttpGet]
 	    public ActionResult Bookmarks()
 	    {
 		    var bookmarkData = UserGuiHelper.GetBookmarksAggregatedData(this.HttpContext.Session.GetUserID());
-		    var viewData = new BookmarksData() {Bookmarks = bookmarkData};
+		    var viewData = new ThreadsData() {ThreadRows = bookmarkData};
 		    return View(viewData);
 	    }
 
 
 	    [Authorize]
 	    [HttpPost]
-	    [ValidateAntiForgeryToken]
+		[ValidateAntiForgeryToken]
 	    public ActionResult UpdateBookmarks(int[] threadIdsToUnbookmark)
 	    {
 			// the user manager will take care of threads which are passed to this method and which don't exist. We'll only do a limit
@@ -38,7 +49,112 @@ namespace SD.HnD.Gui.Controllers
 		    }
 		    return RedirectToAction("Bookmarks");
 	    }
+		
 
+		[HttpGet]
+		[Authorize]
+		public ActionResult Threads(int pageNo = 1)
+		{
+			var userID = this.HttpContext.Session.GetUserID();
+			if(userID <= 0 )
+			{
+				// not found
+				return RedirectToAction("Index", "Home");
+			}
+
+			int rowCount = this.HttpContext.Session.GetInt32(SessionKeys.MyThreadsRowCount) ?? 0;
+			if(rowCount <= 0)
+			{
+				rowCount = UserGuiHelper.GetRowCountLastThreadsForUser(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
+																	   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+																	   userID);
+				this.HttpContext.Session.SetInt32(SessionKeys.MyThreadsRowCount, rowCount);
+			}
+
+			int pageSize = _cache.GetSystemData().PageSizeSearchResults;
+			if(pageSize <= 0)
+			{
+				pageSize = 50;
+			}
+			int rowCountCapped = rowCount;
+			if(rowCount > 500)
+			{
+				// maximum is 500
+				rowCountCapped = 500;
+			}
+			int numberOfPages = (rowCountCapped / pageSize);
+			if((numberOfPages * pageSize) < rowCountCapped)
+			{
+				numberOfPages++;
+			}
+			var data = new MyThreadsData() {RowCount = rowCount, NumberOfPages = numberOfPages, PageNo = pageNo};
+			data.ThreadRows = UserGuiHelper.GetLastThreadsForUserAggregatedData(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
+																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+																				userID, pageSize, pageNo);
+			return View(data);
+		}
+		
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult EditProfile()
+		{
+			var user = UserGuiHelper.GetUser(this.HttpContext.Session.GetUserID());
+			if(user == null)
+			{
+				// not found
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new EditProfileData()
+					   {
+						   AutoSubscribeToThread = user.AutoSubscribeToThread,
+						   EmailAddress = user.EmailAddress,
+						   EmailAddressIsPublic = user.EmailAddressIsPublic ?? false,
+						   NickName = user.NickName,
+						   DateOfBirth = user.DateOfBirth,
+						   Occupation = user.Occupation ?? string.Empty,
+						   Location = user.Location ?? string.Empty,
+						   Signature = user.Signature ?? string.Empty,
+						   Website = user.Website ?? string.Empty,
+						   IconURL = user.IconURL ?? string.Empty,
+						   DefaultNumberOfMessagesPerPage = user.DefaultNumberOfMessagesPerPage
+					   };
+			data.Sanitize();
+			return View(data);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditProfile(EditProfileData data)
+		{
+			var userID = this.HttpContext.Session.GetUserID();
+			if(userID <= 0 )
+			{
+				// not found
+				return RedirectToAction("Index", "Home");
+			}
+			if(!ModelState.IsValid)
+			{
+				return View(data);
+			}
+		
+			data.Sanitize();
+			data.StripProtocolsFromUrls();
+			var result = UserManager.UpdateUserProfile(userID, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL, data.Location,
+													   data.Occupation, data.NewPassword, data.Signature, data.Website, this.HttpContext.Session.GetUserTitleID(), 
+													   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);
+			if(result)
+			{
+				this.HttpContext.Session.UpdateUserSettings(data);
+				return RedirectToAction("ViewProfile", "User", new {id = 2});
+			}
+
+			return View(data);
+		}
+		
 
 		[AllowAnonymous]
 		[HttpGet]
@@ -50,7 +166,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> ResetPasswordAsync([Bind("NickName")] ResetPasswordData data)
+		public async Task<IActionResult> ResetPasswordAsync(ResetPasswordData data)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -77,8 +193,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult SpecifyNewPassword([Bind("NewPassword", "ConfirmNewPassword")] NewPasswordData data,string tokenID)
+		public ActionResult SpecifyNewPassword(NewPasswordData data,string tokenID)
 		{
 			// the token might be invalid or non existent.
 			var passwordResetToken = UserGuiHelper.GetPasswordResetToken(tokenID);
@@ -126,7 +241,7 @@ namespace SD.HnD.Gui.Controllers
 		
         [HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> LoginAsync([Bind("NickName, Password, RememberMe")] LoginData data, string returnUrl)
+		public async Task<IActionResult> LoginAsync(LoginData data, string returnUrl)
         {
 	        if(!ModelState.IsValid)
 	        {

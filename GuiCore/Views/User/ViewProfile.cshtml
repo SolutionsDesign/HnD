@@ -100,55 +100,7 @@
                     <div class="col-sm-1 notonmobile plr10">Views</div>
                     <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
                 </div>
-                @foreach(var lastThreadRow in Model.LastThreads)
-                {
-                    var iconClass = "icon-nonewpost";
-                    var iconType = "fa-comments";
-                    var lastPostingDateAsString = "Never";
-                    var stickyClass = string.Empty;
-                    if(lastThreadRow.IsClosed)
-                    {
-                        iconType = "fa-lock";
-                    }
-                    if(lastThreadRow.IsSticky)
-                    {
-                        iconType = "fa-thumb-tack";
-                        stickyClass = " stickyThread";
-                    }
-                    if(lastThreadRow.ThreadLastPostingDate.HasValue)
-                    {
-                        lastPostingDateAsString = lastThreadRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
-                        if(lastThreadRow.ThreadLastPostingDate.Value > Context.Session.GetLastVisitDate())
-                        {
-                            iconClass = "icon-newpost";
-                        }
-                    }
-                    <div class="row fs-row @stickyClass">
-                        <div class="col-sm-8 col-xs-8">
-                            <div class="column-wrapper-sm">
-                                <div class="column-fixed-sm">
-                                    <i class="fa @iconType @iconClass"></i>
-                                </div>
-                                <div class="column-fluent">
-                                    <a href="~/Thread/@lastThreadRow.ThreadID/1">@lastThreadRow.Subject</a>
-                                    <span class="list-row-description notonmobile pt3">
-                                        Posted in forum: <a href="~/Forum/@lastThreadRow.ForumID/1">@lastThreadRow.ForumName</a><br/>
-                                        Started by: <a href="~/User/@lastThreadRow.ThreadStartedByUserID">@lastThreadRow.ThreadStartedByNickName</a><br/>
-                                    </span>
-                                </div>
-                                <div class="column-clear"></div>
-                            </div>
-                        </div>
-						<div class="col-sm-1 notonmobile">@lastThreadRow.NumberOfMessages</div>
-						<div class="col-sm-1 notonmobile">@lastThreadRow.NumberOfViews</div>
-                        <div class="col-sm-2 col-xs-4">
-                            <a href="~/Message/Goto/@lastThreadRow.MessageIDLastPost">@lastPostingDateAsString</a>
-                            <span class="list-row-description notonmobile pt3">
-                                By: <a href="~/User/@lastThreadRow.LastPostByUserID">@lastThreadRow.LastPostByNickName</a>
-                            </span>
-                        </div>
-                    </div>
-                }
+				@await Html.PartialAsync("SimpleThreadLister", Model.LastThreads)
             </div>
 		}
     </div>

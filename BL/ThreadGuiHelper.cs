@@ -310,11 +310,7 @@ namespace SD.HnD.BL
 					   ThreadFields.MarkedAsDone,
 					   ThreadFields.NumberOfViews,
 					   UserFields.NickName.Source("ThreadStarterUser").As("ThreadStartedByNickName"),
-					   qf.Create()
-							 .Select(MessageFields.MessageID.Count())
-							 .CorrelatedOver(MessageFields.ThreadID == ThreadFields.ThreadID)
-							 .ToScalar()
-							 .As("NumberOfMessages"),
+					   qf.Field("NumberOfMessages").Source("LastMessage"),
 					   UserFields.UserID.Source("LastPostingUser").As("LastPostByUserID"),
 					   UserFields.NickName.Source("LastPostingUser").As("LastPostByNickName"),
 					   MessageFields.MessageID.Source("LastMessage").As("MessageIDLastPost"),
@@ -345,10 +341,12 @@ namespace SD.HnD.BL
 			return qf.Thread
 					 .LeftJoin(qf.User.As("ThreadStarterUser")).On(ThreadFields.StartedByUserID == UserFields.UserID.Source("ThreadStarterUser"))
 					 .InnerJoin(qf.Create("LastMessage")
-								  .Select(MessageFields.MessageID.Source("m1"), MessageFields.PostedByUserID.Source("m1"), MessageFields.ThreadID.Source("m1"))
+								  .Select(MessageFields.MessageID.Source("m1"), MessageFields.PostedByUserID.Source("m1"), MessageFields.ThreadID.Source("m1"),
+										  qf.Field("NumberOfMessages").Source("m2"))
 								  .From(qf.Message.As("m1")
 										  .InnerJoin(qf.Message
-													   .Select(MessageFields.ThreadID, MessageFields.MessageID.Max().As("MaxMessageID"))
+													   .Select(MessageFields.ThreadID, MessageFields.MessageID.Max().As("MaxMessageID"), 
+															   MessageFields.MessageID.Count().As("NumberOfMessages"))
 													   .GroupBy(MessageFields.ThreadID)
 													   .As("m2"))
 												.On(MessageFields.MessageID.Source("m1").Equal(qf.Field("MaxMessageID").Source("m2")))))

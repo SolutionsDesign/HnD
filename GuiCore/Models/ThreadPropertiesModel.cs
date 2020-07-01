@@ -10,6 +10,7 @@ namespace SD.HnD.Gui.Models
 	{
 		[Required]
 		[MaxLength(250)]
+		[MinLength(5)]
 		public string Subject { get; set; }
 		public bool IsSticky { get; set; }
 		public bool IsClosed { get; set; }

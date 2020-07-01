@@ -25,6 +25,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 		
+		[HttpGet]
 		public ActionResult Index()
 		{
 			var accessableForums = HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);

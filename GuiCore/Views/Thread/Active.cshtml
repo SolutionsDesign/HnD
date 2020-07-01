@@ -1,6 +1,6 @@
 ﻿@using Microsoft.Extensions.Caching.Memory
 @using SD.HnD.Gui
-@model SD.HnD.Gui.Models.ActiveThreadsData
+@model SD.HnD.Gui.Models.ThreadsData
 @inject IMemoryCache _cache
 @{
     ViewBag.Title = "HnD | Active Threads";
@@ -30,7 +30,7 @@
                 Active threads
             </div>
         </div>
-		@if(Model.ActiveThreads.Count <= 0)
+		@if(Model.ThreadRows.Count <= 0)
         {
             <div class="row fs-row pb30">
                 <div class="col-sm-12">
@@ -48,55 +48,7 @@
 	                    <div class="col-sm-1 notonmobile plr10">Views</div>
 	                    <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
                     </div>
-                    @foreach(var activeThreadRow in Model.ActiveThreads)
-                    {
-                        var iconClass = "icon-nonewpost";
-                        var iconType = "fa-comments";
-                        var lastPostingDateAsString = "Never";
-                        var stickyClass = string.Empty;
-                        if(activeThreadRow.IsClosed)
-                        {
-                            iconType = "fa-lock";
-                        }
-                        if(activeThreadRow.IsSticky)
-                        {
-                            iconType = "fa-thumb-tack";
-                            stickyClass = " stickyThread";
-                        }
-                        if(activeThreadRow.ThreadLastPostingDate.HasValue)
-                        {
-                            lastPostingDateAsString = activeThreadRow.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
-                            if(activeThreadRow.ThreadLastPostingDate.Value > Context.Session.GetLastVisitDate())
-                            {
-                                iconClass = "icon-newpost";
-                            }
-                        }
-                        <div class="row fs-row @stickyClass">
-                            <div class="col-sm-8 col-xs-8">
-                                <div class="column-wrapper-sm">
-                                    <div class="column-fixed-sm">
-                                        <i class="fa @iconType @iconClass"></i>
-                                    </div>
-                                    <div class="column-fluent">
-                                        <a href="~/Thread/@activeThreadRow.ThreadID/1">@activeThreadRow.Subject</a>
-                                        <span class="list-row-description notonmobile pt3">
-                                            Posted in forum: <a href="~/Forum/@activeThreadRow.ForumID/1">@activeThreadRow.ForumName</a><br/>
-                                            Started by: <a href="~/User/@activeThreadRow.ThreadStartedByUserID">@activeThreadRow.ThreadStartedByNickName</a><br/>
-                                        </span>
-                                    </div>
-                                    <div class="column-clear"></div>
-                                </div>
-                            </div>
-							<div class="col-sm-1 notonmobile">@activeThreadRow.NumberOfMessages</div>
-							<div class="col-sm-1 notonmobile">@activeThreadRow.NumberOfViews</div>
-                            <div class="col-sm-2 col-xs-4">
-                                <a href="~/Message/Goto/@activeThreadRow.MessageIDLastPost">@lastPostingDateAsString</a>
-                                <span class="list-row-description notonmobile pt3">
-                                    By: <a href="~/User/@activeThreadRow.LastPostByUserID">@activeThreadRow.LastPostByNickName</a>
-                                </span>
-                            </div>
-                        </div>
-                    }
+					@await Html.PartialAsync("SimpleThreadLister", Model.ThreadRows)
                 </div>
             </div>
 		}

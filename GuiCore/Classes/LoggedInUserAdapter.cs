@@ -7,6 +7,7 @@ using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.Gui.Classes;
+using SD.HnD.Gui.Models;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
@@ -31,6 +32,13 @@ namespace SD.HnD.Gui
 			session.SetInt32(SessionKeys.DefaultNumberOfMessagesPerPage, user.DefaultNumberOfMessagesPerPage);
 			session.SetInt32(SessionKeys.AutoSubscribeToThread, user.AutoSubscribeToThread ? 1 : 0);
 			session.SetInt32(SessionKeys.AmountOfPostings, user.AmountOfPostings ?? 0);
+		}
+
+
+		public static void UpdateUserSettings(this ISession session, EditProfileData data)
+		{
+			session.SetInt32(SessionKeys.DefaultNumberOfMessagesPerPage, data.DefaultNumberOfMessagesPerPage);
+			session.SetInt32(SessionKeys.AutoSubscribeToThread, data.AutoSubscribeToThread ? 1 : 0);
 		}
 
 

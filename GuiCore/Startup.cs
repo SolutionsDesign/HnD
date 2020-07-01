@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using SD.HnD.Gui.Classes;
 using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses.Contrib;
+using SD.Tools.OrmProfiler.Interceptor;
 
 namespace SD.HnD.Gui
 {
@@ -29,10 +31,9 @@ namespace SD.HnD.Gui
 		// For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
 			services.AddDistributedMemoryCache();
 			services.AddSession();
-			services.AddControllersWithViews();
+			services.AddControllersWithViews(options=>options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddMemoryCache();
 			services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -141,9 +142,11 @@ namespace SD.HnD.Gui
 			{
 				RuntimeConfiguration.AddConnectionString(kvp.Key, kvp.Value);
 			}
+
 			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c=>
 																		 {
-																			 c.AddDbProviderFactory(typeof(Microsoft.Data.SqlClient.SqlClientFactory))
+																			 c.AddDbProviderFactory(InterceptorCore.Initialize("HnD", 
+																								    typeof(Microsoft.Data.SqlClient.SqlClientFactory)))
 																			  .SetDefaultCompatibilityLevel(llblgenProConfig.SqlServerCompatibilityAsEnum);
 																			 foreach(var kvp in llblgenProConfig.CatalogNameOverwrites)
 																			 {
@@ -160,6 +163,8 @@ namespace SD.HnD.Gui
 			
 			// Account 
 			routes.MapControllerRoute("SpecifyNewPassword", "Account/SpecifyNewPassword/{tokenID}", new {controller="Account", action="SpecifyNewPassword"});
+			routes.MapControllerRoute("EditProfile", "Account/Edit/", new {controller = "Account", action = "EditProfile"});
+			routes.MapControllerRoute("ViewMyThreads", "Account/Threads/{pageNo}", new {controller = "Account", action = "Threads", pageNo = 1});
 			
 			// Thread
 			routes.MapControllerRoute("ViewThread", "Thread/{id}/{pageNo}", new {controller="Thread", action="Index", pageNo=1});
@@ -192,10 +197,11 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller="Search", action="SearchForum"});
 			routes.MapControllerRoute("SearchResults", "Search/Results/{pageNo}", new {controller="Search", action="Results", pageNo=1});
 			routes.MapControllerRoute("SearchUnattended", "SearchUnattended/", new {controller="Search", action="SearchUnattended"});
+			routes.MapControllerRoute("SearchAdvanced", "Search/SearchAdvanced/", new {controller = "Search", action = "SearchAdvanced"});
+			routes.MapControllerRoute("SearchAdvancedUI", "Search", new {controller = "Search", action = "AdvancedSearch"});
 			
 			// User
 			routes.MapControllerRoute("UserProfile", "User/{id}", new {controller = "User", action = "ViewProfile"});
-			routes.MapControllerRoute("EditProfile", "User/Edit/", new {controller = "User", action = "EditProfile"});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

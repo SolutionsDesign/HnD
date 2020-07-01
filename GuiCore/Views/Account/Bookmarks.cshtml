@@ -1,5 +1,5 @@
 ﻿@using SD.HnD.Gui
-@model SD.HnD.Gui.Models.BookmarksData
+@model SD.HnD.Gui.Models.ThreadsData
 
 @{
     ViewBag.Title = "HnD | My Bookmarks";
@@ -29,7 +29,7 @@
                 My bookmarks
             </div>
         </div>
-		@if(Model.Bookmarks.Count <= 0)
+		@if(Model.ThreadRows.Count <= 0)
         {
             <div class="row fs-row pb30">
                 <div class="col-sm-12">
@@ -49,7 +49,7 @@
 							<div class="col-sm-1 notonmobile plr10">Views</div>
 							<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
 						</div>
-						@foreach(var bookmarkRow in Model.Bookmarks)
+						@foreach(var bookmarkRow in Model.ThreadRows)
 						{
 							var iconClass = "icon-nonewpost";
 							var iconType = "fa-comments";
