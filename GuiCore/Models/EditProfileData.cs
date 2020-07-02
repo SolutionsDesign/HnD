@@ -7,9 +7,7 @@ namespace SD.HnD.Gui.Models
 {
 	public class EditProfileData
 	{
-		[StringLength(20)]
-		[MinLength(2)]
-		public string NickName { get; set; }
+		public virtual string NickName { get; set; }
 		[DataType(DataType.Password)]
 		[StringLength(100)]
 		[MinLength(8)]
@@ -46,6 +44,7 @@ namespace SD.HnD.Gui.Models
 		[DisplayName("Notify me of thread replies")]
 		public bool AutoSubscribeToThread { get; set; }
 		[DisplayName("Number of messages per page")]
+		[Range(2, 1000)]
 		public short DefaultNumberOfMessagesPerPage { get; set; }
 
 
@@ -69,6 +68,11 @@ namespace SD.HnD.Gui.Models
 			if(!string.IsNullOrWhiteSpace(this.NewPassword) && string.IsNullOrWhiteSpace(this.ConfirmNewPassword))
 			{
 				this.NewPassword = string.Empty;
+			}
+
+			if(this.DefaultNumberOfMessagesPerPage < 2 || this.DefaultNumberOfMessagesPerPage > 1000)
+			{
+				this.DefaultNumberOfMessagesPerPage = 25;
 			}
 		}
 

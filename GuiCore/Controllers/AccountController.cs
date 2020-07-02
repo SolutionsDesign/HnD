@@ -149,11 +149,46 @@ namespace SD.HnD.Gui.Controllers
 			if(result)
 			{
 				this.HttpContext.Session.UpdateUserSettings(data);
-				return RedirectToAction("ViewProfile", "User", new {id = 2});
+				return RedirectToAction("ViewProfile", "User", new {id = userID});
 			}
 
 			return View(data);
 		}
+
+
+		[AllowAnonymous]
+		[HttpGet]
+		public ActionResult Register()
+		{
+			return View(new NewProfileData() { DefaultNumberOfMessagesPerPage = (short)this.HttpContext.Session.GetUserDefaultNumberOfMessagesPerPage() });
+		}
+		
+		
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> RegisterAsync(NewProfileData data)
+		{
+			if(!ModelState.IsValid)
+			{
+				return View(data);
+			}
+		
+			data.Sanitize();
+			data.StripProtocolsFromUrls();
+			var result = await UserManager.RegisterNewUser(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
+														   this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
+														   data.Occupation, data.Signature, data.Website,
+														   ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.RegistrationReply),
+														   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);
+			if(result > 0)
+			{
+				this.HttpContext.Session.UpdateUserSettings(data);
+				return RedirectToAction("Login", "Account");
+			}
+
+			return View(data);
+		}
+		
 		
 
 		[AllowAnonymous]
