@@ -21,6 +21,14 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 		[HttpGet]
+		public ActionResult GotoOldVersion(int messageID)
+		{
+			// We expect the messageID as argument in the querystring. Typical URL is /Message/OldGoto/?MessageID=10000
+			return RedirectToAction("Goto", "Message", new {id = messageID});
+		}
+
+		
+		[HttpGet]
 		public ActionResult Goto(int id = 0)
 		{
 			var message = MessageGuiHelper.GetMessage(id);

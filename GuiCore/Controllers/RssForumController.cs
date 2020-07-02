@@ -17,6 +17,15 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
+
+		
+		[HttpGet]
+		public ActionResult IndexOldVersion(int forumID)
+		{
+			// We expect the ForumID as argument in the querystring. Typical URL is /RssForum/Old/?ForumID=10
+			return RedirectToAction("Index", "RssForum", new {id = forumID});
+		}
+		
 		
 		[ResponseCache(Location = ResponseCacheLocation.Client, Duration = 60*10, VaryByQueryKeys = new[]{"id"})]
         public ActionResult Index(int id=0)

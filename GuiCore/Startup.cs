@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +71,18 @@ namespace SD.HnD.Gui
 				app.UseExceptionHandler("/Home/Error");
 			}
 
+			// Rewrite webforms urls from old versions to urls for this version. We do that using a redirect and not a rewrite, as
+			// these urls should be replaced, so we need the client to know about the new url in the address bar (if applicable).
+			// One thing to understand is that the regex is only applied on the *path* of the URL. If you include query elements in the regex,
+			// it won't match. This requires the specific controller actions we've added to deal with the query arguments. 
+			var redirectOptions = new RewriteOptions()
+								  .AddRedirect("^default.aspx", "Home", (int)HttpStatusCode.PermanentRedirect)
+								  .AddRedirect("^[gG]oto[mM]essage.aspx(.*)", "Message/OldGoto/$1", (int)HttpStatusCode.PermanentRedirect)
+								  .AddRedirect("^[rR]ss[fF]orum.aspx(.*)", "RssForum/Old/$1", (int)HttpStatusCode.PermanentRedirect)
+								  .AddRedirect("^[mM]essages.aspx(.*)", "Thread/Old/$1", (int)HttpStatusCode.PermanentRedirect)
+								  .AddRedirect("^[sS]earch[uU]nattended.aspx(.*)", "SearchUnattended/$1", (int)HttpStatusCode.PermanentRedirect);
+			app.UseRewriter(redirectOptions);
+			
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			
@@ -158,6 +172,11 @@ namespace SD.HnD.Gui
 		
 		private static void RegisterRoutes(IEndpointRouteBuilder routes)
 		{
+			// old version -> new version routes which require special routing data. 
+			routes.MapControllerRoute("ViewThreadOldRedirect", "Thread/Old/", new {controller="Thread", action="IndexOldVersion", pageNo=1});
+			routes.MapControllerRoute("RssForumOldRedirect", "RssForum/Old/", new {controller="RssForum", action="IndexOldVersion"});
+			routes.MapControllerRoute("MessageOldGotoRedirect", "Message/OldGoto/", new {controller="Message", action="GotoOldVersion"});
+			
 			// Only map the routes that are different than the default (which is at the end of the list). All routes not defined explicitly
 			// will match with the default {controller}/{action}/{id?}.
 			

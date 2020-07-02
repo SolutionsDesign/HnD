@@ -18,6 +18,14 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
+
+
+		[HttpGet]
+		public ActionResult IndexOldVersion(int threadID)
+		{
+			// We expect the ThreadID as argument in the querystring. Typical URL is /Thread/Old/?ThreadID=1012
+			return RedirectToAction("Index", "Thread", new {id = threadID});
+		}
 		
 		
 		[HttpGet]
