@@ -44,5 +44,12 @@ namespace SD.HnD.Gui.Controllers
 			model.IsAnonymousUser = HttpContext.Session.IsAnonymousUser();
 			return View(model);
 		}
+
+
+		[HttpGet]
+		public ActionResult TermsOfUsage()
+		{
+			return View();
+		}
 	}
 }
