@@ -137,8 +137,14 @@ namespace SD.HnD.Gui
 
 			// always write new cookie
 			// cookie path is set to '/', to avoid path name casing mismatches. The cookie has a unique name anyway.
-			context.Response.Cookies.Append(lastVisitDateCookieName,DateTime.Now.ToString("ddMMyyyyHHmm"), 
-											new CookieOptions() { Expires = new DateTimeOffset(DateTime.Now.AddYears(1)), Path = "/"});
+			context.Response.Cookies.Append(lastVisitDateCookieName, DateTime.Now.ToString("ddMMyyyyHHmm"),
+											new CookieOptions()
+											{
+												Expires = new DateTimeOffset(DateTime.Now.AddYears(1)), 
+												Path = "/",
+												SameSite = SameSiteMode.Lax, 		
+												HttpOnly = true			// no js accessibility
+											});
 
 			if(session.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 			{
