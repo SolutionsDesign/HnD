@@ -1,0 +1,45 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model SD.HnD.Gui.Models.Admin.SystemParametersData
+
+@{
+	ViewBag.Title = "HnD | Admin | Edit System Parameters";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Edit System Parameters</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Edit System Parameters</h1>
+			<p>
+				Below you can set several system parameters at once. Once you have saved these parameters, the forum system will reload these values into the
+                application cache so new sessions will use the new settings immediately. Click <i>Cancel</i> to disgard changes and to go back to the home page.
+			</p>
+			<p>
+				Anonymous users are users who are not logged in. The role assigned to them should have only those rights you want anonymous users to have, which
+                should be only a few (e.g. only access rights to a subset of your forums).
+			</p>
+			<p>
+				Fields marked with <strong>*</strong> are mandatory.
+			</p>
+			<div class="mb40">
+				@using(Html.BeginForm("EditSystemParameters", "SystemAdmin", null, FormMethod.Post, true, new {role="form"}))
+				{
+					@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+					                                             
+					<div class="mt20">
+						<button type="submit" class="btn btn-default btn-primary"> Update </button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

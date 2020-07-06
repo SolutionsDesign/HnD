@@ -31,7 +31,7 @@
 		<ProjectReference Include="..\Utility\SD.HnD.Utility.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Update="Views\Error\HandleErrorCode.cshtml">
+	  <Content Update="Views\Admin\SystemParameters.cshtml">
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
