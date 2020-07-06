@@ -30,4 +30,10 @@
 		<ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj" />
 		<ProjectReference Include="..\Utility\SD.HnD.Utility.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Update="Views\Error\HandleErrorCode.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
 </Project>

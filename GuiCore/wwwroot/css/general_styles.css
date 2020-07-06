@@ -1189,3 +1189,69 @@ textarea.form-control{
 	}
 }
 /* #endregion*/
+
+
+/* #region Error Page Specific */
+.text-404 {
+    font-size: 280px;
+    font-weight: bold;
+    line-height: 100%;
+    display: block;
+    text-align: center;
+    color: #ccccd2;
+}
+
+.page-404 {
+    padding: 70px 0 80px;
+}
+
+.over-404 {
+    position: absolute;
+    top: 55%;
+    -webkit-transform: translateY(-55%);
+    -ms-transform: translateY(-55%);
+    transform: translateY(-55%);
+    width: 100%;
+}
+
+.title-404 {
+    font-weight: 600;
+    color: #666670;
+    font-size: 40px;
+    margin-bottom: 60px;
+    text-align: center;
+    line-height: 36px;
+}
+
+.content-404 {
+    position: relative;
+    text-align: center;
+}
+
+@media (max-width:767px) {
+    .page-404 .text-404 {
+        font-size: 130px;
+        margin-bottom: 30px;
+    }
+
+    .page-404 .over-404 {
+        position: relative;
+        top: 0;
+        -webkit-transform: translateY(0);
+        -ms-transform: translateY(0);
+        transform: translateY(0);
+        width: 100%;
+    }
+
+    .page-404 {
+        padding: 50px 0;
+    }
+
+    .title-404 {
+        font-size: 36px;
+        margin-bottom: 30px;
+        line-height: 46px;
+    }
+}
+
+/* #endregion */

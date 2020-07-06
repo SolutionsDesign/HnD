@@ -68,7 +68,7 @@ namespace SD.HnD.Gui
 			}
 			else
 			{
-				app.UseExceptionHandler("/Home/Error");
+				app.UseExceptionHandler("/Error/500");
 			}
 
 			// Rewrite webforms urls from old versions to urls for this version. We do that using a redirect and not a rewrite, as
@@ -86,10 +86,20 @@ namespace SD.HnD.Gui
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			
-			app.Use(async (c, n) =>
+			app.Use(async (ctx, next) =>
 					{
-						await n();
+						await next();
+
+						if(ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+						{
+							//Re-execute the request so the user gets the error page
+							string originalPath = ctx.Request.Path.Value;
+							ctx.Items["originalPath"] = originalPath;
+							ctx.Request.Path = "/Error/404";
+							await next();
+						}
 					});
+			
 			app.UseRouting();
 			app.UseResponseCaching();
 			app.UseAuthentication();
@@ -221,6 +231,9 @@ namespace SD.HnD.Gui
 			
 			// User
 			routes.MapControllerRoute("UserProfile", "User/{id}", new {controller = "User", action = "ViewProfile"});
+			
+			// Error
+			routes.MapControllerRoute("ErrorHandler", "Error/{errorCode}", new {controller = "Error", action = "HandleErrorCode"});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Http
+@using SD.HnD.Gui
+@model SD.HnD.Gui.Models.ErrorData
+@{
+	ViewBag.Title = string.Format("HnD | {0}", Model.ErrorCode);
+}
+<section class="page-404">
+    <div class="container">
+    	<div class="row">
+    		<div class="col-sm-12 col-md-10 col-md-offset-1">
+    			<div class="content-404">
+    				<div class="relative">
+    					<div class="text-404">@Model.ErrorCode</div>
+    					<h2 class="title-404 over-404">@Model.ErrorTitle</h2>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-8 col-md-8 col-md-offset-2">
+    			<p class="mt20 mb40 text-center">
+					@Model.ErrorText
+				</p>
+			</div>
+		</div>
+    </div>
+</section>
