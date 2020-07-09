@@ -33,5 +33,50 @@ namespace SD.HnD.Gui.Controllers
 					   };
 			return View("~/Views/Admin/SystemParameters.cshtml", data);
 		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult SystemParameters(SystemParametersData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction == "cancel")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			
+			if(!ModelState.IsValid)
+			{
+				return View("~/Views/Admin/SystemParameters.cshtml", data);
+			}
+
+			if(SystemManager.StoreNewSystemSettings(_cache.GetSystemData().ID, data.SystemData.DefaultRoleNewUser, data.SystemData.AnonymousRole,
+													data.SystemData.DefaultUserTitleNewUser, data.SystemData.HoursThresholdForActiveThreads,
+													data.SystemData.PageSizeSearchResults, data.SystemData.MinNumberOfThreadsToFetch,
+													data.SystemData.MinNumberOfNonStickyVisibleThreads, data.SystemData.SendReplyNotifications))
+			{
+				_cache.Remove(CacheKeys.SystemData);
+				data.Persisted = true;
+			}
+			return View("~/Views/Admin/SystemParameters.cshtml", data);
+		}
+
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult ReparseMessages()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			return View("~/Views/Admin/ReparseMessages.cshtml");
+
+		}
 	}
 }

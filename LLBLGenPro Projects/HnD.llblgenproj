@@ -340,13 +340,42 @@
           <Field Name="AnonymousRole" Type="int" IsAutoCreated="true" FieldIndex="2" />
           <Field Name="DefaultRoleNewUser" Type="int" IsAutoCreated="true" FieldIndex="1" />
           <Field Name="DefaultUserTitleNewUser" Type="int" FieldIndex="3" />
-          <Field Name="HoursThresholdForActiveThreads" Type="short" FieldIndex="4" />
+          <Field Name="HoursThresholdForActiveThreads" Type="short" FieldIndex="4">
+            <OutputSettingValues>
+              <Attributes>
+                <Attribute Value="Range(1, 1000)" />
+              </Attributes>
+            </OutputSettingValues>
+          </Field>
           <Field Name="ID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
-          <Field Name="MinNumberOfNonStickyVisibleThreads" Type="short" FieldIndex="7" />
-          <Field Name="MinNumberOfThreadsToFetch" Type="short" FieldIndex="6" />
-          <Field Name="PageSizeSearchResults" Type="short" FieldIndex="5" />
+          <Field Name="MinNumberOfNonStickyVisibleThreads" Type="short" FieldIndex="7">
+            <OutputSettingValues>
+              <Attributes>
+                <Attribute Value="Range(1, 1000)" />
+              </Attributes>
+            </OutputSettingValues>
+          </Field>
+          <Field Name="MinNumberOfThreadsToFetch" Type="short" FieldIndex="6">
+            <OutputSettingValues>
+              <Attributes>
+                <Attribute Value="Range(1, 1000)" />
+              </Attributes>
+            </OutputSettingValues>
+          </Field>
+          <Field Name="PageSizeSearchResults" Type="short" FieldIndex="5">
+            <OutputSettingValues>
+              <Attributes>
+                <Attribute Value="Range(2, 1000)" />
+              </Attributes>
+            </OutputSettingValues>
+          </Field>
           <Field Name="SendReplyNotifications" Type="bool" FieldIndex="8" />
         </Fields>
+        <OutputSettingValues>
+          <Namespaces>
+            <Namespace Name="System.ComponentModel.DataAnnotations" />
+          </Namespaces>
+        </OutputSettingValues>
       </EntityDefinition>
       <EntityDefinition Name="Thread" ObjectID="8d072da2-085b-42a2-acf1-222d5c88fbde">
         <Fields>

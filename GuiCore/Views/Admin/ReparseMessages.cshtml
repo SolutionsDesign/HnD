@@ -2,7 +2,7 @@
 @model SD.HnD.Gui.Models.Admin.SystemParametersData
 
 @{
-	ViewBag.Title = "HnD | Admin | Edit System Parameters";
+	ViewBag.Title = "HnD | Admin | Reparse Messages";
 }
 <div class="container">
 	<div class="row">
@@ -12,23 +12,18 @@
 					<a href="~/">Home</a>
 				</li>
 				<li>Admin</li>
-				<li class="active">Edit System Parameters</li>
+				<li class="active">Reparse Messages</li>
 			</ol>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="br-bottom mt30">Edit System Parameters</h1>
+			<h1 class="br-bottom mt30">Reparse Messages</h1>
 			<p>
-				Below you can set several system parameters at once. Once you have saved these parameters, the forum system will reload these values into the
-                application cache so new sessions will use the new settings immediately. Click <i>Cancel</i> to disgard changes and to go back to the home page.
-			</p>
-			<p>
-				Anonymous users are users who are not logged in. The role assigned to them should have only those rights you want anonymous users to have, which
-                should be only a few (e.g. only access rights to a subset of your forums).
-			</p>
-			<p>
-				All fields are mandatory.<br/><br/>
+				As HnD uses pre-rendered HTML, you can re-render the messages' HTML
+				by specifying the start date for the set of messages to reparse and re-render. This is useful if you updated the markdown parser or emoji 
+				bindings or other elements that affect the HTML output of the markdown parser. 
+				<br/><br/>
 			</p>
 			<div class="mb40">
 			@if(Model.Persisted)

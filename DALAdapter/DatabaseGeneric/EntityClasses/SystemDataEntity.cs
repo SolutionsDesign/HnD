@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -182,6 +182,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The HoursThresholdForActiveThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."HoursThresholdForActiveThreads".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Range(1, 1000)]
 		public virtual System.Int16 HoursThresholdForActiveThreads
 		{
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.HoursThresholdForActiveThreads, true); }
@@ -190,6 +191,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PageSizeSearchResults property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Range(2, 1000)]
 		public virtual System.Int16 PageSizeSearchResults
 		{
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.PageSizeSearchResults, true); }
@@ -198,6 +200,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MinNumberOfThreadsToFetch property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfThreadsToFetch".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Range(1, 1000)]
 		public virtual System.Int16 MinNumberOfThreadsToFetch
 		{
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfThreadsToFetch, true); }
@@ -206,6 +209,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfNonStickyVisibleThreads".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Range(1, 1000)]
 		public virtual System.Int16 MinNumberOfNonStickyVisibleThreads
 		{
 			get { return (System.Int16)GetValue((int)SystemDataFieldIndex.MinNumberOfNonStickyVisibleThreads, true); }

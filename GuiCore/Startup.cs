@@ -237,6 +237,7 @@ namespace SD.HnD.Gui
 			
 			// Admin
 			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters", new {controller = "SystemAdmin", action = "SystemParameters"});
+			routes.MapControllerRoute("ReparseMessages", "Admin/ReparseMessages", new {controller = "SystemAdmin", action = "ReparseMessages"});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

@@ -20,18 +20,16 @@ namespace SD.HnD.DALAdapter.EntityClasses
 {
 	// __LLBLGENPRO_USER_CODE_REGION_START AdditionalNamespaces
 	// __LLBLGENPRO_USER_CODE_REGION_END
-
 	/// <summary>Entity class which represents the entity 'PasswordResetToken'.<br/><br/></summary>
 	[Serializable]
 	public partial class PasswordResetTokenEntity : CommonEntityBase
 		// __LLBLGENPRO_USER_CODE_REGION_START AdditionalInterfaces
-		// __LLBLGENPRO_USER_CODE_REGION_END
-	
+		// __LLBLGENPRO_USER_CODE_REGION_END	
 	{
 		private UserEntity _user;
+
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
-
 		private static PasswordResetTokenEntityStaticMetaData _staticMetaData = new PasswordResetTokenEntityStaticMetaData();
 		private static PasswordResetTokenRelations _relationsFactory = new PasswordResetTokenRelations();
 
@@ -114,7 +112,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			PerformDependencyInjection();
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassMembers
 			// __LLBLGENPRO_USER_CODE_REGION_END
-
 			OnInitClassMembersComplete();
 		}
 
@@ -129,7 +126,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			InitClassMembers();
 			// __LLBLGENPRO_USER_CODE_REGION_START InitClassEmpty
 			// __LLBLGENPRO_USER_CODE_REGION_END
-
 
 			OnInitialized();
 		}
@@ -172,9 +168,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			get { return _user; }
 			set { SetSingleRelatedEntityNavigator(value, "User"); }
 		}
+
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END
-
 
 	}
 }
