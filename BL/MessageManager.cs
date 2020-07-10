@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using SD.HnD.Utility;
 
 using SD.LLBLGen.Pro.QuerySpec;
@@ -138,65 +139,72 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Re-parses all messages from start date till now or when amountToIndex is reached. This routine will read messagetext for a message,
-		/// parse its markdown to HTML, and update the MessageTextAsHTML field with the parse result directly. It's mainly used to apply a change in html output for given input, e.g. when 
+		/// Re-parses all messages. This routine will read messagetext for a message, parse its markdown to HTML, and update the MessageTextAsHTML field with
+		/// the parse result directly. It's mainly used to apply a change in html output for given input, e.g. when
 		/// markdown to HTML for messages have been changed, and is not used often, hence it's simply processing one entity at a time, keeping the connection open. It's not 
 		/// fetching all entities and then persisting them again, as that would be potentially harmful for memory as a forum system can have a lot of messages. 
 		/// </summary>
-		/// <param name="amountToParse">Amount to parse.</param>
-		/// <param name="startDate">Start date.</param>
 		/// <param name="emojiFilenamesPerName">the emojiname to filename mappings</param>
 		/// <param name="smileyMappings">The shortcut to emoji mappings for the old smileys</param>
+		/// <param name="consoleLogger">to log low-level feedback. For development. In release builds it's not used.</param>
 		/// <returns>
 		/// the amount of messages re-parsed
 		/// </returns>
-		public static int ReParseMessages(int amountToParse, DateTime startDate, Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings)
+		public static async Task<int> ReParseMessagesAsync(Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings, 
+														   Action<string> consoleLogger)
 		{
 			// index is blocks of 100 messages.
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(MessageFields.MessageID, MessageFields.MessageText)
-						.Where(MessageFields.PostingDate >= new DateTime(startDate.Year, startDate.Month, startDate.Day, 0, 0, 0, 0));
-
-			if(amountToParse <= 0)
-			{
-				// If we don't have a specific amount of messages to parse, then parse all messages posted till Now.
-				q.AndWhere(MessageFields.PostingDate <= DateTime.Now);
-			}
+						.Select(MessageFields.MessageID, MessageFields.MessageText);
 
 			bool parsingFinished = false;
 			int amountProcessed = 0;
-			int pageSize = 100;
+			int pageSize = 200;
 			int pageNo = 1;
 			using(var adapter = new DataAccessAdapter())
 			{
+				adapter.BatchSize = pageSize;
 				while(!parsingFinished)
 				{
 					q.Page(pageNo, pageSize);
-					DataTable messagesToParse = adapter.FetchAsDataTable(q);
-					parsingFinished = (messagesToParse.Rows.Count <= 0);
+					var messagesToParse = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+					parsingFinished = (messagesToParse.Count <= 0);
 
 					if(!parsingFinished)
 					{
-						foreach(DataRow row in messagesToParse.Rows)
+						foreach(object[] row in messagesToParse)
 						{
-							MessageEntity directUpdater = new MessageEntity();
+							var directUpdater = new MessageEntity();
 							directUpdater.IsNew = false;
 
-							// use the in-memory message entity to create an update query without fetching the entity first.
-							directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row["MessageID"]);
-							directUpdater.MessageTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml((string)row["MessageText"], emojiFilenamesPerName, smileyMappings);
-							directUpdater.Fields.IsDirty = true;
-							adapter.SaveEntity(directUpdater);
-						}
-						amountProcessed += messagesToParse.Rows.Count;
-						pageNo++;
+							try
+							{
+								// use the in-memory message entity to create an update query without fetching the entity first.
+								// we're fetching an array of 2 values per row. We don't do a typed projection as we just want the data to be as small as possible
+								directUpdater.Fields[(int)MessageFieldIndex.MessageID].ForcedCurrentValueWrite((int)row[0]);
+								directUpdater.MessageTextAsHTML = HnDGeneralUtils.TransformMarkdownToHtml((string)row[1], emojiFilenamesPerName, smileyMappings);
+								directUpdater.Fields.IsDirty = true;
+							}
+							catch(Exception ex)
+							{
+#if DEBUG
+								consoleLogger(string.Format("Exception occurred at msgid: {0}\n{1}", (int)row[0], ex.Message));
+								throw;
+#endif
+							}
 
-						if(amountToParse > 0)
-						{
-							parsingFinished = (amountToParse <= amountProcessed);
+							await adapter.SaveEntityAsync(directUpdater).ConfigureAwait(false);
 						}
+						amountProcessed += messagesToParse.Count;
+						pageNo++;
 					}
+#if DEBUG
+					if(pageNo % 10 == 0)
+					{
+						consoleLogger(string.Format("{0} messages done...", amountProcessed));
+					}
+#endif
 				}
 			}
 			return amountProcessed;

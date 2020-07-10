@@ -1,5 +1,5 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
-@model SD.HnD.Gui.Models.Admin.SystemParametersData
+@model SD.HnD.Gui.Models.Admin.ReparsingMessageData
 
 @{
 	ViewBag.Title = "HnD | Admin | Reparse Messages";
@@ -20,67 +20,23 @@
 		<div class="col-sm-8">
 			<h1 class="br-bottom mt30">Reparse Messages</h1>
 			<p>
-				As HnD uses pre-rendered HTML, you can re-render the messages' HTML
-				by specifying the start date for the set of messages to reparse and re-render. This is useful if you updated the markdown parser or emoji 
-				bindings or other elements that affect the HTML output of the markdown parser. 
+				As HnD uses pre-rendered HTML, you can re-render the messages' HTML by clicking the button below. This task is likely to take a while, so
+				be patient. 
 				<br/><br/>
 			</p>
 			<div class="mb40">
-			@if(Model.Persisted)
+			@if(Model.Completed)
 			{
 				<p>
-					Changes persisted successfully.
+					@Model.NumberOfMessagesReparsed messages reparsed.
 				</p>
 			}
 			else
 			{
-				@using(Html.BeginForm("SystemParameters", "SystemAdmin", null, FormMethod.Post, true, new {role="form"}))
+				@using(Html.BeginForm("ReparseMessages", "SystemAdmin", null, FormMethod.Post, true, new {role="form"}))
 				{
-					@Html.ValidationSummary(true, "", new {@class = "text-danger"})
-					
-					<div class="form-group">
-						@Html.LabelFor(m => m.SystemData.DefaultRoleNewUser, "Default role of a new user", new {@class = "control-label above-control"})
-						@Html.DropDownListFor(m=>m.SystemData.DefaultRoleNewUser, new SelectList(Model.AllRoles, "RoleID", "RoleDescription"), new {@class = "form-control"})
-					</div>
-					<div class="form-group">
-						@Html.LabelFor(m => m.SystemData.AnonymousRole, "Role of anonymous users", new {@class = "control-label above-control"})
-						@Html.DropDownListFor(m=>m.SystemData.AnonymousRole, new SelectList(Model.AllRoles, "RoleID", "RoleDescription"), new {@class = "form-control"})
-					</div>
-					<div class="form-group">
-						@Html.LabelFor(m => m.SystemData.DefaultUserTitleNewUser, "Default user title for new users", new {@class = "control-label above-control"})
-						@Html.DropDownListFor(m=>m.SystemData.DefaultUserTitleNewUser, new SelectList(Model.AllUserTitles, "UserTitleID", "UserTitleDescription"), new {@class = "form-control"})
-					</div>
-					<div class="form-group">
-						@Html.EditorFor(m=>m.SystemData.HoursThresholdForActiveThreads, new { htmlAttributes = new { @class = "form-control", @style = "width:75px; display:initial" } })&nbsp;
-						<span>Hours threshold for Active Threads</span><br/>
-						@Html.ValidationMessageFor(m => m.SystemData.HoursThresholdForActiveThreads, "", new {@class = "text-danger"})
-					</div>
-					<div class="form-group">
-						@Html.EditorFor(m=>m.SystemData.PageSizeSearchResults, new { htmlAttributes = new { @class = "form-control", @style = "width:75px; display:initial" } })&nbsp;
-						<span>Page size in search results</span><br/>
-						@Html.ValidationMessageFor(m => m.SystemData.PageSizeSearchResults, "", new {@class = "text-danger"})
-					</div>
-					<div class="form-group">
-						@Html.EditorFor(m=>m.SystemData.MinNumberOfThreadsToFetch, new { htmlAttributes = new { @class = "form-control", @style = "width:75px; display:initial" } })&nbsp;
-						<span>Minimal number of threads to fetch for a forum</span><br/>
-						@Html.ValidationMessageFor(m => m.SystemData.MinNumberOfThreadsToFetch, "", new {@class = "text-danger"})
-					</div>
-					<div class="form-group">
-						@Html.EditorFor(m=>m.SystemData.MinNumberOfNonStickyVisibleThreads, new { htmlAttributes = new { @class = "form-control", @style = "width:75px; display:initial" } })&nbsp;
-						<span>Minimal number of non-sticky visible threads for a forum</span><br/>
-						@Html.ValidationMessageFor(m => m.SystemData.MinNumberOfNonStickyVisibleThreads, "", new {@class = "text-danger"})
-					</div>
-					<div class="form-group">
-						@Html.CheckBoxFor(m => m.SystemData.SendReplyNotifications)&nbsp;
-						<span>Send reply notifications</span><br/>
-						<div class="small">When this option has been enabled, the system will send notification emails to subscribers who have subscribed to a thread in which 
-							a new message was posted. When this option has been disabled, the system won't send notification emails and users aren't able to subscribe/unsubscribe 
-							to threads. 
-						</div>
-					</div>
-
 					<div class="mt20">
-						<button type="submit" name="submitAction" value="save" class="btn btn-default btn-primary"> Save </button>
+						<button type="submit" name="submitAction" value="save" class="btn btn-default btn-primary"> Reparse messages </button>
 						&nbsp;&nbsp;&nbsp;
 						<button type="submit" name="submitAction" value="cancel" class="btn btn-default"> Cancel </button>
 					</div>

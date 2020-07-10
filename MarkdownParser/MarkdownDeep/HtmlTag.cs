@@ -233,6 +233,7 @@ namespace MarkdownDeep
 
 		private static HtmlTag ParseHelper(StringScanner p)
 		{
+		
 			// Does it look like a tag?
 			if (p.Current != '<')
 				return null;
@@ -248,7 +249,7 @@ namespace MarkdownDeep
 				if (p.Find("-->"))
 				{
 					var t = new HtmlTag("!");
-					t.m_attributes.Add("content", p.Extract());
+					t.m_attributes["content"] = p.Extract();
 					t.m_closed = true;
 					p.SkipForward(3);
 					return t;
@@ -320,7 +321,7 @@ namespace MarkdownDeep
 							return null;
 
 						// Store the value
-						tag.m_attributes.Add(attributeName, p.Extract());
+						tag.m_attributes[attributeName] = p.Extract();
 
 						// Skip closing quote
 						p.SkipForward(1);
@@ -335,13 +336,13 @@ namespace MarkdownDeep
 						if (!p.Eof)
 						{
 							// Store the value
-							tag.m_attributes.Add(attributeName, p.Extract());
+							tag.m_attributes[attributeName] = p.Extract();
 						}
 					}
 				}
 				else
 				{
-					tag.m_attributes.Add(attributeName, "");
+					tag.m_attributes[attributeName] = string.Empty;
 				}
 			}
 

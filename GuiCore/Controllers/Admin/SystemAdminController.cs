@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -66,7 +68,7 @@ namespace SD.HnD.Gui.Controllers
 			return View("~/Views/Admin/SystemParameters.cshtml", data);
 		}
 
-
+		
 		[HttpGet]
 		[Authorize]
 		public ActionResult ReparseMessages()
@@ -75,8 +77,36 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			return View("~/Views/Admin/ReparseMessages.cshtml");
+			
+			var data = new ReparsingMessageData();
+			data.Completed = false;
+			
+			return View("~/Views/Admin/ReparseMessages.cshtml", data);
+		}
+		
 
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> ReparseMessagesAsync(string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			
+			if(submitAction == "cancel")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			
+			var data = new ReparsingMessageData();
+			Action<string> consoleLogger = s => Console.WriteLine(s); 
+			data.NumberOfMessagesReparsed = await MessageManager.ReParseMessagesAsync(ApplicationAdapter.GetEmojiFilenamesPerName(), 
+																					  ApplicationAdapter.GetSmileyMappings(), consoleLogger).ConfigureAwait(false);
+			data.Completed = true;
+			
+			return View("~/Views/Admin/ReparseMessages.cshtml", data);
 		}
 	}
 }
