@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>SD.HnD.ReadOnlyElements</AssemblyName>
-    <RootNamespace>SD.HnD.ReadOnlyElements</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Solutions Design bv</Company>
     <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>

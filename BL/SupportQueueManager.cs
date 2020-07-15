@@ -25,6 +25,8 @@ using SD.HnD.DALAdapter.HelperClasses;
 using System.Data;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
@@ -39,20 +41,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Creates a new support queue.
 		/// </summary>
-		/// <param name="queueName">Name of the queue.</param>
-		/// <param name="queueDescription">The queue description.</param>
-		/// <param name="orderNo">The order no.</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool CreateNewSupportQueue(string queueName, string queueDescription, short orderNo)
+		/// <param name="newDataDto">the dto with the data for the new queue</param>
+		/// <returns>the id of the new queue or 0 if failed</returns>
+		public static int CreateNewSupportQueue(SupportQueueDto newDataDto)
 		{
+			var newSupportQueue = new SupportQueueEntity();
+			newSupportQueue.UpdateFromSupportQueue(newDataDto);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(new SupportQueueEntity
-										  {
-											  QueueDescription = queueDescription,
-											  QueueName = queueName,
-											  OrderNo = orderNo
-										  });
+				var result = adapter.SaveEntity(newSupportQueue);
+				return result ? newSupportQueue.QueueID : 0;
 			}
 		}
 
@@ -60,22 +58,21 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Modifies the support queue definition data.
 		/// </summary>
-		/// <param name="queueID">The queue ID of the queue to modify the definition data of.</param>
-		/// <param name="queueName">Name of the queue.</param>
-		/// <param name="queueDescription">The queue description.</param>
-		/// <param name="orderNo">The order no.</param>
+		/// <param name="toUpdate">the dto containing the data of the support queue to update</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool ModifySupportQueue(int queueID, string queueName, string queueDescription, short orderNo)
+		public static bool ModifySupportQueue(SupportQueueDto toUpdate)
 		{
-			var toModify = SupportQueueGuiHelper.GetSupportQueue(queueID);
+			if(toUpdate == null)
+			{
+				return false;
+			}
+			var toModify = SupportQueueGuiHelper.GetSupportQueue(toUpdate.QueueID);
 			if(toModify == null)
 			{
 				// not found
 				return false;
 			}
-			toModify.QueueName = queueName;
-			toModify.QueueDescription = queueDescription;
-			toModify.OrderNo = orderNo;
+			toModify.UpdateFromSupportQueue(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.SaveEntity(toModify);

@@ -59,7 +59,11 @@
 							@if(Context.User.Identity.IsAuthenticated)
 							{
 								<li>
-									<a href="~/Account/Logout">Log out</a>
+					                @using(Html.BeginForm("Logout", "Account", FormMethod.Post))
+					                {
+										@Html.AntiForgeryToken()
+						                <input type="submit" value="Log out" style="line-height: 20px;padding: 15px;border: 0" class="btn-link"/>
+					                }
 								</li>
 							}
 							else
@@ -102,7 +106,11 @@
 												<a href="~/Admin/SystemParameters">Edit System Parameters</a>
 											</li>
 											<li>
-												<a href="~/Admin/ReparseMessages">Reparse messages</a>
+												<a href="~/Admin/ReparseMessages">Reparse Messages</a>
+											</li>
+											<li role="presentation" class="divider"></li>
+											<li>
+												<a href="~/Admin/SupportQueues">Manage Support Queues</a>
 											</li>
 										}
 									</ul>

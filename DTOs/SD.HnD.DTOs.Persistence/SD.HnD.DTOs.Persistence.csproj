@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>SD.HnD.ReadOnlyElements.Persistence</AssemblyName>
     <RootNamespace>SD.HnD.ReadOnlyElements.Persistence</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Company>Solutions Design bv</Company>
@@ -13,7 +12,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj" />
-    <ProjectReference Include="..\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj" />
+    <ProjectReference Include="..\SD.HnD.DTOs\SD.HnD.DTOs.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />

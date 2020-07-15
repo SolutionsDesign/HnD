@@ -640,7 +640,7 @@
 		<script type="text/javascript">
 			$('#subscribeButton').bind("click",
 				function() {
-					performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID',
+					performAjaxMethodCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleSubscribe/@Model.Thread.ThreadID',
 						function(result) {
 							handleThreadToggleAjaxCallResult('#subscribeButton', result);
 						},
@@ -650,7 +650,7 @@
 				});
 			$('#bookmarkButton').bind("click",
 				function() {
-					performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID',
+					performAjaxMethodCall('@ApplicationAdapter.GetVirtualRoot()Thread/ToggleBookmark/@Model.Thread.ThreadID',
 						function(result) {
 							handleThreadToggleAjaxCallResult('#bookmarkButton', result);
 						},
@@ -664,7 +664,7 @@
 	{
 		<script type="text/javascript">
 			function toggleAttachmentApproval(messageId, attachmentId) {
-				performAjaxToggleCall('@ApplicationAdapter.GetVirtualRoot()Attachment/ToggleApproval/' +
+				performAjaxMethodCall('@ApplicationAdapter.GetVirtualRoot()Attachment/ToggleApproval/' +
 					messageId +
 					'/' +
 					attachmentId,

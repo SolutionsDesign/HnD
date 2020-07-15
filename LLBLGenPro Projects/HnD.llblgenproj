@@ -1414,43 +1414,30 @@
   </MappingStores>
   <ModelViews />
   <DerivedModels>
-    <DerivedModel Name="ReadOnlyElements" ObjectID="4996e435-4538-49b1-bf1e-9dfaeed4e342" TargetFrameworkName="DTO Class Model" UseLegacyDefaults="false">
+    <DerivedModel Name="DTOs" ObjectID="4996e435-4538-49b1-bf1e-9dfaeed4e342" TargetFrameworkName="DTO Class Model" UseLegacyDefaults="false">
       <CodeGenerationMetaDataDefaults>
         <TargetElement Type="32768">
           <Defaults>
-            <Attributes>
-              <Attribute Value="Serializable" />
-              <Attribute Value="DataContract" />
-            </Attributes>
-          </Defaults>
-        </TargetElement>
-        <TargetElement Type="65536">
-          <Defaults>
-            <Attributes>
-              <Attribute Value="Serializable" />
-              <Attribute Value="DataContract" />
-            </Attributes>
+            <Namespaces>
+              <Namespace Name="System.ComponentModel.DataAnnotations" />
+            </Namespaces>
           </Defaults>
         </TargetElement>
         <TargetElement Type="131072">
           <Defaults>
             <Attributes>
-              <Attribute Value="DataMember" />
+              <Attribute Value="StringLength($length)" />
+              <Attribute Value="Required" />
             </Attributes>
-          </Defaults>
-        </TargetElement>
-        <TargetElement Type="262144">
-          <Defaults>
-            <Attributes>
-              <Attribute Value="DataMember" />
-            </Attributes>
-          </Defaults>
-        </TargetElement>
-        <TargetElement Type="524288">
-          <Defaults>
-            <Attributes>
-              <Attribute Value="DataMember" />
-            </Attributes>
+            <AttributeRules>
+              <Rule Index="0">
+                <RuleExpression Property="SourceFieldType" Operator="1" Value="string (System.String)" />
+                <RuleExpression ConcatenateOperator="1" Property="SourceFieldLength" Operator="3" Value="1024" />
+              </Rule>
+              <Rule Index="1">
+                <RuleExpression Property="SourceFieldIsOptional" Operator="8" />
+              </Rule>
+            </AttributeRules>
           </Defaults>
         </TargetElement>
       </CodeGenerationMetaDataDefaults>
@@ -1464,8 +1451,8 @@
           <FrameworkName Value="DTO Class Model" />
           <LanguageName Value="C#" />
           <PlatformName Value=".NET Standard 2.0" />
-          <PresetName Value="SD.DTOClasses.ReadOnlyDTOs" />
-          <RootNamespace Value="SD.HnD.ReadOnlyElements" />
+          <PresetName Value="SD.DTOClasses.ReadWriteDTOs" />
+          <RootNamespace Value="SD.HnD.DTOs" />
           <TemplateGroup Value="General" />
           <TemplateBindings>
             <Binding Name="SD.DTOClassModel.NETStandard20" />
@@ -1546,6 +1533,23 @@
             </Field>
             <Field Name="ThreadID">
               <EntityField Name="ThreadID" />
+            </Field>
+          </Fields>
+        </Document>
+        <Document Name="SupportQueue">
+          <RootEntity Entity=":SupportQueue" />
+          <Fields>
+            <Field Name="OrderNo">
+              <EntityField Name="OrderNo" />
+            </Field>
+            <Field Name="QueueDescription">
+              <EntityField Name="QueueDescription" />
+            </Field>
+            <Field Name="QueueID">
+              <EntityField Name="QueueID" />
+            </Field>
+            <Field Name="QueueName">
+              <EntityField Name="QueueName" />
             </Field>
           </Fields>
         </Document>

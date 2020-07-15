@@ -5,89 +5,83 @@ using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;	
 
-namespace SD.HnD.ReadOnlyElements.DtoClasses
+namespace SD.HnD.DTOs.DtoClasses
 { 
 	/// <summary> DTO class which is derived from the entity 'Message'.</summary>
-	[Serializable]
-	[DataContract]
 	public partial class MessageInThreadDto
 	{
 		/// <summary>Gets or sets the Attachments field. </summary>
-		[DataMember]
 		public List<MessageInThreadDtoTypes.AttachmentDto> Attachments { get; set; }
 		/// <summary>Gets or sets the MessageID field. Derived from Entity Model Field 'Message.MessageID'</summary>
-		[DataMember]
+		[Required]
 		public System.Int32 MessageID { get; set; }
 		/// <summary>Gets or sets the MessageTextAsHTML field. Derived from Entity Model Field 'Message.MessageTextAsHTML'</summary>
-		[DataMember]
 		public System.String MessageTextAsHTML { get; set; }
 		/// <summary>Gets or sets the PostedByUser field. </summary>
-		[DataMember]
 		public MessageInThreadDtoTypes.PostedByUserDto PostedByUser { get; set; }
 		/// <summary>Gets or sets the PostedFromIP field. Derived from Entity Model Field 'Message.PostedFromIP'</summary>
-		[DataMember]
+		[StringLength(25)]
+		[Required]
 		public System.String PostedFromIP { get; set; }
 		/// <summary>Gets or sets the PostingDate field. Derived from Entity Model Field 'Message.PostingDate'</summary>
-		[DataMember]
+		[Required]
 		public System.DateTime PostingDate { get; set; }
 		/// <summary>Gets or sets the ThreadID field. Derived from Entity Model Field 'Message.ThreadID (FK)'</summary>
-		[DataMember]
+		[Required]
 		public System.Int32 ThreadID { get; set; }
 	}
 
 	namespace MessageInThreadDtoTypes
 	{
 		/// <summary> DTO class which is derived from the entity 'Attachment (Attachments)'.</summary>
-		[Serializable]
-		[DataContract]
 		public partial class AttachmentDto
 		{
 			/// <summary>Gets or sets the AddedOn field. Derived from Entity Model Field 'Attachment.AddedOn'</summary>
-			[DataMember]
+			[Required]
 			public System.DateTime AddedOn { get; set; }
 			/// <summary>Gets or sets the Approved field. Derived from Entity Model Field 'Attachment.Approved'</summary>
-			[DataMember]
+			[Required]
 			public System.Boolean Approved { get; set; }
 			/// <summary>Gets or sets the AttachmentID field. Derived from Entity Model Field 'Attachment.AttachmentID'</summary>
-			[DataMember]
+			[Required]
 			public System.Int32 AttachmentID { get; set; }
 			/// <summary>Gets or sets the Filename field. Derived from Entity Model Field 'Attachment.Filename'</summary>
-			[DataMember]
+			[StringLength(255)]
+			[Required]
 			public System.String Filename { get; set; }
 			/// <summary>Gets or sets the Filesize field. Derived from Entity Model Field 'Attachment.Filesize'</summary>
-			[DataMember]
+			[Required]
 			public System.Int32 Filesize { get; set; }
 		}
 
 		/// <summary> DTO class which is derived from the entity 'User (PostedByUser)'.</summary>
-		[Serializable]
-		[DataContract]
 		public partial class PostedByUserDto
 		{
 			/// <summary>Gets or sets the AmountOfPostings field. Derived from Entity Model Field 'User.AmountOfPostings'</summary>
-			[DataMember]
 			public Nullable<System.Int32> AmountOfPostings { get; set; }
 			/// <summary>Gets or sets the IconURL field. Derived from Entity Model Field 'User.IconURL'</summary>
-			[DataMember]
+			[StringLength(250)]
 			public System.String IconURL { get; set; }
 			/// <summary>Gets or sets the JoinDate field. Derived from Entity Model Field 'User.JoinDate'</summary>
-			[DataMember]
 			public Nullable<System.DateTime> JoinDate { get; set; }
 			/// <summary>Gets or sets the Location field. Derived from Entity Model Field 'User.Location'</summary>
-			[DataMember]
+			[StringLength(100)]
 			public System.String Location { get; set; }
 			/// <summary>Gets or sets the NickName field. Derived from Entity Model Field 'User.NickName'</summary>
-			[DataMember]
+			[StringLength(20)]
+			[Required]
 			public System.String NickName { get; set; }
 			/// <summary>Gets or sets the Signature field. Derived from Entity Model Field 'User.Signature'</summary>
-			[DataMember]
+			[StringLength(250)]
 			public System.String Signature { get; set; }
 			/// <summary>Gets or sets the UserID field. Derived from Entity Model Field 'User.UserID'</summary>
-			[DataMember]
+			[Required]
 			public System.Int32 UserID { get; set; }
 			/// <summary>Gets or sets the UserTitleDescription field. Derived from Entity Model Field 'UserTitle.UserTitleDescription (PostedByUser.UserTitle)'</summary>
-			[DataMember]
+			[StringLength(50)]
+			[Required]
 			public System.String UserTitleDescription { get; set; }
 		}
 	}

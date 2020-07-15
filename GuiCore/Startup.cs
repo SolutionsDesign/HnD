@@ -238,6 +238,11 @@ namespace SD.HnD.Gui
 			// Admin
 			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters", new {controller = "SystemAdmin", action = "SystemParameters"});
 			routes.MapControllerRoute("ReparseMessages", "Admin/ReparseMessages", new {controller = "SystemAdmin", action = "ReparseMessages"});
+			routes.MapControllerRoute("GetSupportQueues", "Admin/GetSupportQueues", new {controller = "SupportQueuesAdmin", action = "GetSupportQueues"});
+			routes.MapControllerRoute("ManageSupportQueues", "Admin/SupportQueues", new {controller = "SupportQueuesAdmin", action = "SupportQueues"});
+			routes.MapControllerRoute("UpdateSupportQueue", "Admin/UpdateSupportQueue", new {controller = "SupportQueuesAdmin", action = "UpdateSupportQueue"});
+			routes.MapControllerRoute("InsertSupportQueue", "Admin/InsertSupportQueue", new {controller = "SupportQueuesAdmin", action = "InsertSupportQueue"});
+			routes.MapControllerRoute("DeleteSupportQueue", "Admin/DeleteSupportQueue/{id}", new {controller = "SupportQueuesAdmin", action = "DeleteSupportQueue", id =0});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

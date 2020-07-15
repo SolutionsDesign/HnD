@@ -26,8 +26,8 @@
 		<ProjectReference Include="..\BL\SD.HnD.BL.csproj" />
 		<ProjectReference Include="..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj" />
 		<ProjectReference Include="..\DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj" />
-		<ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj" />
-		<ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj" />
+		<ProjectReference Include="..\DTOs\SD.HnD.DTOs.Persistence\SD.HnD.DTOs.Persistence.csproj" />
+		<ProjectReference Include="..\DTOs\SD.HnD.DTOs\SD.HnD.DTOs.csproj" />
 		<ProjectReference Include="..\Utility\SD.HnD.Utility.csproj" />
 	</ItemGroup>
 	<ItemGroup>
@@ -36,6 +36,10 @@
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>
 	  <Content Update="Views\Admin\ReparseMessages.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\Admin\SupportQueues.cshtml">
 	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	  </Content>

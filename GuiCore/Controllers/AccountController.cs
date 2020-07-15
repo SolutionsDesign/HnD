@@ -265,6 +265,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
+		[HttpPost]
 	    [Authorize]
 	    public async Task<IActionResult> LogoutAsync()
 	    {

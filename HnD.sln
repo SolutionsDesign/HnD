@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		WebEssentials2015-Settings.json = WebEssentials2015-Settings.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.ReadOnlyElements", "DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj", "{8B1438A4-9AC7-40E8-9628-5CC1D07052AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DTOs", "DTOs\SD.HnD.DTOs\SD.HnD.DTOs.csproj", "{8B1438A4-9AC7-40E8-9628-5CC1D07052AC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.ReadOnlyElements.Persistence", "DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj", "{E3419FBD-14FB-4FFF-B59F-91B621C77246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SD.HnD.DTOs.Persistence", "DTOs\SD.HnD.DTOs.Persistence\SD.HnD.DTOs.Persistence.csproj", "{E3419FBD-14FB-4FFF-B59F-91B621C77246}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkdownDeep", "MarkdownParser\MarkdownDeep\MarkdownDeep.csproj", "{CA92ED76-CC93-4D56-BC85-0FE89C6DA9FF}"
 EndProject

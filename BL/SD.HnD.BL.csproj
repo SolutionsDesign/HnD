@@ -11,17 +11,17 @@
         <FileVersion>3.0.0.0</FileVersion>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj"/>
-        <ProjectReference Include="..\DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj"/>
-        <ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements.Persistence\SD.HnD.ReadOnlyElements.Persistence.csproj"/>
-        <ProjectReference Include="..\DTOs\SD.HnD.ReadOnlyElements\SD.HnD.ReadOnlyElements.csproj"/>
-        <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj"/>
+        <ProjectReference Include="..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj" />
+        <ProjectReference Include="..\DALAdapter\DatabaseSpecific\SD.HnD.DALAdapterDBSpecific.csproj" />
+        <ProjectReference Include="..\DTOs\SD.HnD.DTOs.Persistence\SD.HnD.DTOs.Persistence.csproj" />
+        <ProjectReference Include="..\DTOs\SD.HnD.DTOs\SD.HnD.DTOs.csproj" />
+        <ProjectReference Include="..\Utility\SD.HnD.Utility.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="LICENSE.txt"/>
+        <Content Include="LICENSE.txt" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0"/>
-        <PackageReference Include="SD.Tools.BCLExtensions" Version="1.2.2"/>
+        <PackageReference Include="SD.LLBLGen.Pro.ORMSupportClasses" Version="5.7.0" />
+        <PackageReference Include="SD.Tools.BCLExtensions" Version="1.2.2" />
     </ItemGroup>
 </Project>

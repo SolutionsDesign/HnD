@@ -29,6 +29,8 @@ using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
@@ -52,6 +54,22 @@ namespace SD.HnD.BL
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the support queue entities projected to DTOs from the derived model 'DTOs'. 
+		/// </summary>
+		/// <returns></returns>
+		public static IEnumerable<SupportQueueDto> GetAllSupportQueueDTOs()
+		{
+			var qf = new QueryFactory();
+			var q = qf.SupportQueue.ProjectToSupportQueueDto(qf)
+					  .OrderBy(SupportQueueFields.OrderNo.Source("__BQ").Ascending());
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q);
+			}
+		}
+		
 
 		/// <summary>
 		/// Gets all support queues known in the system, sorted by orderno, ascending.

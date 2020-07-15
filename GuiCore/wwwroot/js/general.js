@@ -55,12 +55,12 @@ function injectToken(data) {
 
 
 // Used for making a POST ajax call to the url specified in urlToPostTo. 
-// expects the json method to return on success a JSON result object with a flag 'success' and a flag 'newstate' with the new state of the flag toggled.
-function performAjaxToggleCall(urlToPostTo, successCallback, errorCallback) {
+// expects the json method to return on success a JSON result object
+function performAjaxMethodCall(urlToPostTo, successCallback, errorCallback) {
 	$.ajax({
 		url: urlToPostTo,
 		data: injectToken({}),
-		contenttype: "application/json; charset=utf-8",
+		contenttype: "application/json;charset=utf-8",
 		success: successCallback,
 		error: errorCallback, 
 		dataType: 'json',
@@ -68,3 +68,15 @@ function performAjaxToggleCall(urlToPostTo, successCallback, errorCallback) {
 	});
 }
 
+// Used for making a POST ajax call to the url specified in urlToPostTo, with no callbacks. 
+// expects the json method to return on success a JSON result object
+function performAjaxMethodCallWithData(urlToPostTo, dataObject) {
+	$.ajax({
+		url: urlToPostTo,
+		data: JSON.stringify(dataObject),
+		contentType: 'application/json;charset=utf-8',
+		headers: { "RequestVerificationToken": $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val() },
+		dataType: 'json',
+		type: 'POST'
+	});
+}
