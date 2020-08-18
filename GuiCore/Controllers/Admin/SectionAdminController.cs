@@ -12,14 +12,14 @@ using SD.HnD.Gui.Models.Admin;
 namespace SD.HnD.Gui.Controllers
 {
 	/// <summary>
-	/// Controller which exposes a WebAPI to be used with the jsGrid using views for support queues.
+	/// Controller which exposes a WebAPI to be used with the jsGrid using views for sections.
 	/// The methods in this controller therefore use the Http action as prefix.
 	/// </summary>
-	public class SupportQueuesAdminController : Controller
+	public class SectionAdminController : Controller
 	{	
 		private IMemoryCache _cache;
 		
-		public SupportQueuesAdminController(IMemoryCache cache)
+		public SectionAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
@@ -27,26 +27,26 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult SupportQueues()
+		public ActionResult Sections()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			return View("~/Views/Admin/SupportQueues.cshtml");
+			return View("~/Views/Admin/Sections.cshtml");
 		}
 		
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult<IEnumerable<SupportQueueDto>> GetSupportQueues()
+		public ActionResult<IEnumerable<SectionDto>> GetSections()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var supportQueueDtos = SupportQueueGuiHelper.GetAllSupportQueueDTOs();
+			var supportQueueDtos = SectionGuiHelper.GetAllSectionDtos();
 			return Ok(supportQueueDtos);
 		}
 
@@ -54,17 +54,17 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateSupportQueue([FromBody] SupportQueueDto toUpdate)
+		public ActionResult UpdateSection([FromBody] SectionDto toUpdate)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var result = SupportQueueManager.ModifySupportQueue(toUpdate);
+			var result = SectionManager.ModifySection(toUpdate);
 			if(result)
 			{
-				_cache.Remove(CacheKeys.AllSupportQueues);
+				_cache.Remove(CacheKeys.AllSections);
 			}
 			// jsGrid requires the updated object as return value.
 			return Json(toUpdate);
@@ -74,18 +74,18 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult InsertSupportQueue([FromBody] SupportQueueDto toInsert)
+		public ActionResult InsertSection([FromBody] SectionDto toInsert)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var queueId = SupportQueueManager.CreateNewSupportQueue(toInsert);
-			if(queueId>0)
+			var sectionId = SectionManager.AddNewSection(toInsert);
+			if(sectionId>0)
 			{
-				_cache.Remove(CacheKeys.AllSupportQueues);
-				toInsert.QueueID = queueId;
+				_cache.Remove(CacheKeys.AllSections);
+				toInsert.SectionID = sectionId;
 			}
 			// jsGrid requires the inserted object as return value.
 			return Json(toInsert);
@@ -95,7 +95,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteSupportQueue(int id)
+		public ActionResult DeleteSection(int id)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -105,13 +105,19 @@ namespace SD.HnD.Gui.Controllers
 			var result = false;
 			if(id>0)
 			{
-				result = SupportQueueManager.DeleteSupportQueue(id);
+				result = SectionManager.DeleteSection(id);
 				if(result)
 				{
-					_cache.Remove(CacheKeys.AllSupportQueues);
+					_cache.Remove(CacheKeys.AllSections);
 				}
 			}
-			return Json(new {success=result});
+
+			if(result)
+			{
+				return Json(new {success = true});
+			}
+
+			return ValidationProblem("The section wasn't deleted. Likely because it contained one or more forums. First delete the forums, then delete the section.");
 		}
 	}
 }

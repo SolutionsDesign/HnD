@@ -14,11 +14,11 @@
 @alert-tip: #1abc9c;
 @alert-tip-background: lighten(@alert-tip, 55%);
 @alert-neutral: #ddd;
-@alert-neutral-background: lighten(@alert-neutral, 55%);
+@alert-neutral-background: lighten(@alert-neutral, 40%);
 @alert-danger: #e22222;
-@alert-danger-background: lighten(@alert-danger, 55%);
+@alert-danger-background: lighten(@alert-danger, 40%);
 @alert-warning: #f0b37e;
-@alert-warning-background: lighten(@alert-warning, 50%);
+@alert-warning-background: lighten(@alert-warning, 25%);
 
 
 /* no need to define anything below this point */
@@ -290,8 +290,8 @@ mark {
 }
 
 .alert.alert-danger {
-    color: initial;
-	background: @alert-danger-background;
+  background: @alert-danger-background;
+  color: initial;
 }
  
 .alert.alert-danger .alert-title {
@@ -306,6 +306,7 @@ mark {
 .alert.alert-warning .alert-title {
 	background: @alert-warning;
 }
+
 
 .alert.alert-info {
     color: initial;

@@ -20,11 +20,14 @@
 using System;
 using System.Data;
 using System.Collections;
+using System.Collections.Generic;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 
@@ -35,6 +38,17 @@ namespace SD.HnD.BL
 	/// </summary>
 	public static class SectionGuiHelper
 	{
+		public static List<SectionDto> GetAllSectionDtos()
+		{
+			var qf = new QueryFactory();
+			var q = qf.Section.OrderBy(SectionFields.OrderNo.Ascending()).ProjectToSectionDto(qf);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.FetchQuery(q);
+			}
+		}
+		
+		
 		/// <summary>
 		/// Constructs a DataView from the datatable which contains all sections available, plus the # of forums in the section.
 		/// Sections and forums are sorted on OrderNo ascending, then on Name  ascending.

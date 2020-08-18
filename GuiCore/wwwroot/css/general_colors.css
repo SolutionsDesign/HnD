@@ -197,15 +197,15 @@ mark {
   background: #6ab0de;
 }
 .alert.alert-danger {
+  background: #fad6d6;
   color: initial;
-  background: #ffffff;
 }
 .alert.alert-danger .alert-title {
   background: #e22222;
 }
 .alert.alert-warning {
   color: initial;
-  background: #ffffff;
+  background: #fdf6f0;
 }
 .alert.alert-warning .alert-title {
   background: #f0b37e;

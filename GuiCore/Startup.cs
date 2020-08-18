@@ -238,11 +238,16 @@ namespace SD.HnD.Gui
 			// Admin
 			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters", new {controller = "SystemAdmin", action = "SystemParameters"});
 			routes.MapControllerRoute("ReparseMessages", "Admin/ReparseMessages", new {controller = "SystemAdmin", action = "ReparseMessages"});
-			routes.MapControllerRoute("GetSupportQueues", "Admin/GetSupportQueues", new {controller = "SupportQueuesAdmin", action = "GetSupportQueues"});
-			routes.MapControllerRoute("ManageSupportQueues", "Admin/SupportQueues", new {controller = "SupportQueuesAdmin", action = "SupportQueues"});
-			routes.MapControllerRoute("UpdateSupportQueue", "Admin/UpdateSupportQueue", new {controller = "SupportQueuesAdmin", action = "UpdateSupportQueue"});
-			routes.MapControllerRoute("InsertSupportQueue", "Admin/InsertSupportQueue", new {controller = "SupportQueuesAdmin", action = "InsertSupportQueue"});
-			routes.MapControllerRoute("DeleteSupportQueue", "Admin/DeleteSupportQueue/{id}", new {controller = "SupportQueuesAdmin", action = "DeleteSupportQueue", id =0});
+			routes.MapControllerRoute("GetSupportQueues", "Admin/GetSupportQueues", new {controller = "SupportQueueAdmin", action = "GetSupportQueues"});
+			routes.MapControllerRoute("ManageSupportQueues", "Admin/SupportQueues", new {controller = "SupportQueueAdmin", action = "SupportQueues"});
+			routes.MapControllerRoute("UpdateSupportQueue", "Admin/UpdateSupportQueue", new {controller = "SupportQueueAdmin", action = "UpdateSupportQueue"});
+			routes.MapControllerRoute("InsertSupportQueue", "Admin/InsertSupportQueue", new {controller = "SupportQueueAdmin", action = "InsertSupportQueue"});
+			routes.MapControllerRoute("DeleteSupportQueue", "Admin/DeleteSupportQueue/{id}", new {controller = "SupportQueueAdmin", action = "DeleteSupportQueue", id =0});
+			routes.MapControllerRoute("GetSections", "Admin/GetSections", new {controller = "SectionAdmin", action = "GetSections"});
+			routes.MapControllerRoute("ManageSections", "Admin/Sections", new {controller = "SectionAdmin", action = "Sections"});
+			routes.MapControllerRoute("UpdateSection", "Admin/UpdateSection", new {controller = "SectionAdmin", action = "UpdateSection"});
+			routes.MapControllerRoute("InsertSection", "Admin/InsertSection", new {controller = "SectionAdmin", action = "InsertSection"});
+			routes.MapControllerRoute("DeleteSection", "Admin/DeleteSection/{id}", new {controller = "SectionAdmin", action = "DeleteSection", id =0});
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

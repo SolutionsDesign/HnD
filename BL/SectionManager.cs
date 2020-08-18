@@ -21,7 +21,12 @@ using System;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -33,18 +38,20 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Adds a new section to the forum system.
 		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="description">The description.</param>
-		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
+		/// <param name="toInsert">The dto with the values to insert</param>
 		/// <returns>
 		/// the SectionID of the new section. Or Zero if failed
 		/// </returns>
-        public static int AddNewSection(string name, string description, short orderNo)
+		public static int AddNewSection(SectionDto toInsert)
 		{
+			if(toInsert == null)
+			{
+				return 0;
+			}
             var section = new SectionEntity();
-            section.SectionName = name;
-            section.SectionDescription = description;
-			section.OrderNo = orderNo;
+            section.SectionName = toInsert.SectionName;
+            section.SectionDescription = toInsert.SectionDescription;
+			section.OrderNo = toInsert.OrderNo;
 
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -56,32 +63,30 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Modifies the given section's name and description
 		/// </summary>
-        /// <param name="ID">ID of section to modify</param>
-        /// <param name="name">New name of section</param>
-        /// <param name="description">Description of section</param>
-		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
+		/// <param name="toUpdate">the dto containing the values to update the associated entity with</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool ModifySection(int ID, string name, string description, short orderNo)
+		public static bool ModifySection(SectionDto toUpdate)
 		{
+			if(toUpdate == null)
+			{
+				return false;
+			}
             // load the entity from the database
-            var section = new SectionEntity(ID);
+			var section = SectionGuiHelper.GetSection(toUpdate.SectionID);
+			if(section == null)
+			{
+				return false;
+			}
+			section.UpdateFromSection(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
-				var result = adapter.FetchEntity(section);
-				if(!result)
-				{
-					return false;
-				}
-				section.SectionName = name;
-				section.SectionDescription = description;
-				section.OrderNo = orderNo;
 				return adapter.SaveEntity(section);
 			}
 		}
 		
 		
 		/// <summary>
-		/// Removes the given section from the database. Returns true if succeeded.
+		/// Removes the given section from the database. Returns true if succeeded. Only allows deletion if the section is empty
 		/// </summary>
         /// <param name="ID">ID of section to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
@@ -89,11 +94,20 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
+				// first check if the section has any forums
+				var qf = new QueryFactory();
+				var q = qf.Forum.Where(ForumFields.SectionID == ID).Select(Functions.CountRow());
+				var numberOfForums = adapter.FetchScalar<int?>(q);
+				if(numberOfForums.HasValue && numberOfForums > 0)
+				{
+					// has forums, can't delete this section.
+					return false;
+				}
+				
 				// trying to delete the entity directly from the database without first loading it.
-				var numberOfDeletedRows = adapter.DeleteEntitiesDirectly(typeof(SectionEntity), new RelationPredicateBucket(SectionFields.SectionID == ID));
+				var numberOfDeletedRows = adapter.DeleteEntitiesDirectly(typeof(SectionEntity), new RelationPredicateBucket(SectionFields.SectionID.Equal(ID)));
 
 				// there should only be one deleted row, since we are filtering by the PK.
-				// return true if there's 1, otherwise false.
 				return (numberOfDeletedRows == 1);
 			}
 		}

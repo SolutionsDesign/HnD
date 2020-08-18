@@ -77,6 +77,17 @@ function performAjaxMethodCallWithData(urlToPostTo, dataObject) {
 		contentType: 'application/json;charset=utf-8',
 		headers: { "RequestVerificationToken": $('#__AjaxAntiForgeryForm input[name=__RequestVerificationToken]').val() },
 		dataType: 'json',
-		type: 'POST'
+		type: 'POST',
+		error: (jqXHR , err) => { displayErrorModal(jqXHR.responseJSON) },
+		success: (result, status, jqXHR) => {},
 	});
+}
+
+
+// this function requires a div on the page with id 'jsErrorMessage'
+function displayErrorModal(responseJson)
+{
+	$("#jsErrorMessageTitle").text(responseJson.title);
+	$("#jsErrorMessageDetail").text(responseJson.detail);
+	$("#jsErrorMessageContainer").removeClass("hidden");
 }

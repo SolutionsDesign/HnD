@@ -1536,6 +1536,23 @@
             </Field>
           </Fields>
         </Document>
+        <Document Name="Section">
+          <RootEntity Entity=":Section" />
+          <Fields>
+            <Field Name="OrderNo">
+              <EntityField Name="OrderNo" />
+            </Field>
+            <Field Name="SectionDescription">
+              <EntityField Name="SectionDescription" />
+            </Field>
+            <Field Name="SectionID">
+              <EntityField Name="SectionID" />
+            </Field>
+            <Field Name="SectionName">
+              <EntityField Name="SectionName" />
+            </Field>
+          </Fields>
+        </Document>
         <Document Name="SupportQueue">
           <RootEntity Entity=":SupportQueue" />
           <Fields>
