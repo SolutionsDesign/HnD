@@ -416,9 +416,9 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
-		public static async Task<int> RegisterNewUser(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, string ipNumber, 
-										  string location, string occupation, string signature, string website, Dictionary<string, string> emailData, 
-										  bool autoSubscribeThreads, short defaultMessagesPerPage)
+		public static async Task<int> RegisterNewUserAsync(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, 
+														   string ipNumber, string location, string occupation, string signature, string website, 
+														   Dictionary<string, string> emailData, bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
 			var newUser = new UserEntity
 						  {

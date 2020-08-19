@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using SD.HnD.Gui.Classes;
 using SD.LLBLGen.Pro.DQE.SqlServer;
@@ -46,7 +48,6 @@ namespace SD.HnD.Gui
 								   options.Cookie.Name = "HnDAuthenticationCookie";
 							   });
 			services.AddResponseCaching();
-			
 			// First we need to configure LLBLGen Pro
 			ConfigureLLBLGenPro(services);
 			// Then we can configure HnD as it needs the database.
@@ -248,6 +249,8 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("UpdateSection", "Admin/UpdateSection", new {controller = "SectionAdmin", action = "UpdateSection"});
 			routes.MapControllerRoute("InsertSection", "Admin/InsertSection", new {controller = "SectionAdmin", action = "InsertSection"});
 			routes.MapControllerRoute("DeleteSection", "Admin/DeleteSection/{id}", new {controller = "SectionAdmin", action = "DeleteSection", id =0});
+			routes.MapControllerRoute("AddForum", "Admin/AddForum", new {controller = "ForumAdmin", action = "AddForum"});
+			
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");

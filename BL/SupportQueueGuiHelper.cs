@@ -59,7 +59,7 @@ namespace SD.HnD.BL
 		/// Gets the support queue entities projected to DTOs from the derived model 'DTOs'. 
 		/// </summary>
 		/// <returns></returns>
-		public static IEnumerable<SupportQueueDto> GetAllSupportQueueDTOs()
+		public static List<SupportQueueDto> GetAllSupportQueueDTOs()
 		{
 			var qf = new QueryFactory();
 			var q = qf.SupportQueue.ProjectToSupportQueueDto(qf)

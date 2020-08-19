@@ -75,26 +75,29 @@
 						<div class="col-sm-1 notonmobile plr10">Posts</div>
 						<div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
 					</div>
-					@foreach(var forumRow in forumView)
+					@if(forumView != null)
 					{
-						var iconClass = "icon-nonewpost";
-						var lastPostingDateAsString = "Never";
-						if(forumRow.ForumLastPostingDate.HasValue)
+						@foreach(var forumRow in forumView)
 						{
-							lastPostingDateAsString = forumRow.ForumLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
-							if(forumRow.ForumLastPostingDate.Value > Model.UserLastVisitDate)
+							var iconClass = "icon-nonewpost";
+							var lastPostingDateAsString = "Never";
+							if(forumRow.ForumLastPostingDate.HasValue)
 							{
-								iconClass = "icon-newpost";
+								lastPostingDateAsString = forumRow.ForumLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
+								if(forumRow.ForumLastPostingDate.Value > Model.UserLastVisitDate)
+								{
+									iconClass = "icon-newpost";
+								}
 							}
-						}
-						<div class="row fs-row">
-							<div class="col-sm-8 col-xs-8">
-								<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@forumRow.ForumName</a>
+							<div class="row fs-row">
+								<div class="col-sm-8 col-xs-8">
+									<span class="glyphicon glyphicon-folder-close @iconClass" aria-hidden="true"></span><a href="~/Forum/@forumRow.ForumID/1" class="plr10">@forumRow.ForumName</a>
+								</div>
+								<div class="col-sm-1 notonmobile">@forumRow.AmountThreads</div>
+								<div class="col-sm-1 notonmobile">@forumRow.AmountMessages</div>
+								<div class="col-sm-2 col-xs-4 text-nowrap-responsive">@lastPostingDateAsString</div>
 							</div>
-							<div class="col-sm-1 notonmobile">@forumRow.AmountThreads</div>
-							<div class="col-sm-1 notonmobile">@forumRow.AmountMessages</div>
-							<div class="col-sm-2 col-xs-4 text-nowrap-responsive">@lastPostingDateAsString</div>
-						</div>
+						}
 					}
 				</div>
 			</div>

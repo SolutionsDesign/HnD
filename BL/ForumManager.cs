@@ -19,6 +19,7 @@
 */
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -48,9 +49,9 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// ForumID of new forum or 0 if something went wrong.
 		/// </returns>
-		public static int CreateNewForum(int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID, 
-										int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage, 
-										string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
+		public static async Task<int>  CreateNewForumAsync(int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID, 
+														   int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage, 
+														   string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
 			var newForum = new ForumEntity
 						   {
@@ -68,7 +69,8 @@ namespace SD.HnD.BL
 						   };
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(newForum) ? newForum.ForumID : 0;
+				var toReturn = await adapter.SaveEntityAsync(newForum);
+				return toReturn ? newForum.ForumID : 0;
 			}
 		}
 

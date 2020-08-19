@@ -84,7 +84,8 @@ function performAjaxMethodCallWithData(urlToPostTo, dataObject) {
 }
 
 
-// this function requires a div on the page with id 'jsErrorMessage'
+// this function requires a div on the page with id 'jsErrorMessageContainer', which contains a span with id 'jsErrorMessageTitle' and a
+// an element with id 'jsErrorMessageDetail'.
 function displayErrorModal(responseJson)
 {
 	$("#jsErrorMessageTitle").text(responseJson.title);

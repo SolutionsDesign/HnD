@@ -175,7 +175,7 @@ namespace SD.HnD.Gui.Controllers
 		
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
-			var result = await UserManager.RegisterNewUser(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
+			var result = await UserManager.RegisterNewUserAsync(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
 														   this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
 														   data.Occupation, data.Signature, data.Website,
 														   ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.RegistrationReply),
