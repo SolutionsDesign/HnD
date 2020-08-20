@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -151,6 +151,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The QueueID property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."QueueID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 QueueID
 		{
 			get { return (System.Int32)GetValue((int)SupportQueueFieldIndex.QueueID, true); }
@@ -158,6 +159,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The QueueName property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."QueueName".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String QueueName
 		{
 			get { return (System.String)GetValue((int)SupportQueueFieldIndex.QueueName, true); }
@@ -166,6 +170,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The QueueDescription property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."QueueDescription".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(250)]
+		[MinLength(2)]
 		public virtual System.String QueueDescription
 		{
 			get { return (System.String)GetValue((int)SupportQueueFieldIndex.QueueDescription, true); }
@@ -174,6 +181,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The OrderNo property of the Entity SupportQueue<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueue"."OrderNo".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int16 OrderNo
 		{
 			get { return (System.Int16)GetValue((int)SupportQueueFieldIndex.OrderNo, true); }

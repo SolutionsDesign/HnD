@@ -154,6 +154,34 @@
     </SettingValues>
   </OutputSettingValues>
   <CodeGenerationMetaDataDefaults>
+    <TargetElement Type="2">
+      <Defaults>
+        <Namespaces>
+          <Namespace Name="System.ComponentModel.DataAnnotations" />
+        </Namespaces>
+      </Defaults>
+    </TargetElement>
+    <TargetElement Type="64">
+      <Defaults>
+        <Attributes>
+          <Attribute Value="Required" />
+          <Attribute Value="StringLength($length)" />
+          <Attribute Value="MinLength(2)" />
+        </Attributes>
+        <AttributeRules>
+          <Rule Index="0">
+            <RuleExpression Property="IsOptional" Operator="8" />
+          </Rule>
+          <Rule Index="1">
+            <RuleExpression Property="FieldType" Operator="1" Value="string (System.String)" />
+          </Rule>
+          <Rule Index="2">
+            <RuleExpression Property="IsOptional" Operator="8" />
+            <RuleExpression ConcatenateOperator="1" Property="FieldType" Operator="1" Value="string (System.String)" />
+          </Rule>
+        </AttributeRules>
+      </Defaults>
+    </TargetElement>
     <TargetElement Type="256">
       <Defaults>
         <Attributes>
@@ -371,11 +399,6 @@
           </Field>
           <Field Name="SendReplyNotifications" Type="bool" FieldIndex="8" />
         </Fields>
-        <OutputSettingValues>
-          <Namespaces>
-            <Namespace Name="System.ComponentModel.DataAnnotations" />
-          </Namespaces>
-        </OutputSettingValues>
       </EntityDefinition>
       <EntityDefinition Name="Thread" ObjectID="8d072da2-085b-42a2-acf1-222d5c88fbde">
         <Fields>

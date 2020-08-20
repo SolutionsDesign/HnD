@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -169,6 +169,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ForumID property of the Entity ForumRoleForumActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ForumRoleForumActionRight"."ForumID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 ForumID
 		{
 			get { return (System.Int32)GetValue((int)ForumRoleForumActionRightFieldIndex.ForumID, true); }
@@ -177,6 +178,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The RoleID property of the Entity ForumRoleForumActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ForumRoleForumActionRight"."RoleID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 RoleID
 		{
 			get { return (System.Int32)GetValue((int)ForumRoleForumActionRightFieldIndex.RoleID, true); }
@@ -185,6 +187,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ActionRightID property of the Entity ForumRoleForumActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ForumRoleForumActionRight"."ActionRightID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 ActionRightID
 		{
 			get { return (System.Int32)GetValue((int)ForumRoleForumActionRightFieldIndex.ActionRightID, true); }

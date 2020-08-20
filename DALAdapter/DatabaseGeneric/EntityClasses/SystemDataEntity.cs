@@ -151,6 +151,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ID property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."ID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 ID
 		{
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.ID, true); }
@@ -158,6 +159,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The DefaultRoleNewUser property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."DefaultRoleNewUser".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 DefaultRoleNewUser
 		{
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultRoleNewUser, true); }
@@ -166,6 +168,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AnonymousRole property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."AnonymousRole".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 AnonymousRole
 		{
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.AnonymousRole, true); }
@@ -174,6 +177,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The DefaultUserTitleNewUser property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."DefaultUserTitleNewUser".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 DefaultUserTitleNewUser
 		{
 			get { return (System.Int32)GetValue((int)SystemDataFieldIndex.DefaultUserTitleNewUser, true); }
@@ -182,6 +186,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The HoursThresholdForActiveThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."HoursThresholdForActiveThreads".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		[Range(1, 1000)]
 		public virtual System.Int16 HoursThresholdForActiveThreads
 		{
@@ -191,6 +196,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PageSizeSearchResults property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."PageSizeSearchResults".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		[Range(2, 1000)]
 		public virtual System.Int16 PageSizeSearchResults
 		{
@@ -200,6 +206,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MinNumberOfThreadsToFetch property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfThreadsToFetch".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		[Range(1, 1000)]
 		public virtual System.Int16 MinNumberOfThreadsToFetch
 		{
@@ -209,6 +216,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MinNumberOfNonStickyVisibleThreads property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."MinNumberOfNonStickyVisibleThreads".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		[Range(1, 1000)]
 		public virtual System.Int16 MinNumberOfNonStickyVisibleThreads
 		{
@@ -218,6 +226,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The SendReplyNotifications property of the Entity SystemData<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SystemData"."SendReplyNotifications".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean SendReplyNotifications
 		{
 			get { return (System.Boolean)GetValue((int)SystemDataFieldIndex.SendReplyNotifications, true); }

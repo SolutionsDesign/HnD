@@ -69,7 +69,7 @@ namespace SD.HnD.BL
 						   };
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.SaveEntityAsync(newForum);
+				var toReturn = await adapter.SaveEntityAsync(newForum).ConfigureAwait(false);
 				return toReturn ? newForum.ForumID : 0;
 			}
 		}
@@ -91,7 +91,7 @@ namespace SD.HnD.BL
 		/// <param name="newThreadWelcomeText">The new thread welcome text, as shown when a new thread is created. Can be null.</param>
 		/// <param name="newThreadWelcomeTextAsHTML">The new thread welcome text as HTML, is null when newThreadWelcomeText is null or empty.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool ModifyForum(int forumID, int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID,
+		public static async Task<bool> ModifyForum(int forumID, int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID,
 										int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
 										string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
@@ -114,7 +114,8 @@ namespace SD.HnD.BL
 			forum.NewThreadWelcomeTextAsHTML = newThreadWelcomeTextAsHTML;
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(forum);
+				var toReturn = await adapter.SaveEntityAsync(forum).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 

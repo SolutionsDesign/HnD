@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -139,6 +139,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The UserTitleID property of the Entity UserTitle<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "UserTitle"."UserTitleID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 UserTitleID
 		{
 			get { return (System.Int32)GetValue((int)UserTitleFieldIndex.UserTitleID, true); }
@@ -146,6 +147,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The UserTitleDescription property of the Entity UserTitle<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "UserTitle"."UserTitleDescription".<br/>Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String UserTitleDescription
 		{
 			get { return (System.String)GetValue((int)UserTitleFieldIndex.UserTitleDescription, true); }

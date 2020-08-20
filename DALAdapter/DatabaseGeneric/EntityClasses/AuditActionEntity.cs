@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -163,6 +163,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AuditActionID property of the Entity AuditAction<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "AuditAction"."AuditActionID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 AuditActionID
 		{
 			get { return (System.Int32)GetValue((int)AuditActionFieldIndex.AuditActionID, true); }
@@ -171,6 +172,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AuditActionDescription property of the Entity AuditAction<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "AuditAction"."AuditActionDescription".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String AuditActionDescription
 		{
 			get { return (System.String)GetValue((int)AuditActionFieldIndex.AuditActionDescription, true); }

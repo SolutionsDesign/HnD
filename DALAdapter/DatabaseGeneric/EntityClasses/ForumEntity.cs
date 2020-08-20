@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -187,6 +187,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ForumID property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."ForumID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 ForumID
 		{
 			get { return (System.Int32)GetValue((int)ForumFieldIndex.ForumID, true); }
@@ -194,6 +195,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The SectionID property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."SectionID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 SectionID
 		{
 			get { return (System.Int32)GetValue((int)ForumFieldIndex.SectionID, true); }
@@ -202,6 +204,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ForumName property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."ForumName".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String ForumName
 		{
 			get { return (System.String)GetValue((int)ForumFieldIndex.ForumName, true); }
@@ -210,6 +215,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ForumDescription property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."ForumDescription".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(250)]
+		[MinLength(2)]
 		public virtual System.String ForumDescription
 		{
 			get { return (System.String)GetValue((int)ForumFieldIndex.ForumDescription, true); }
@@ -226,6 +234,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The HasRSSFeed property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."HasRSSFeed".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean HasRSSFeed
 		{
 			get { return (System.Boolean)GetValue((int)ForumFieldIndex.HasRSSFeed, true); }
@@ -242,6 +251,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The DefaultThreadListInterval property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."DefaultThreadListInterval".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte DefaultThreadListInterval
 		{
 			get { return (System.Byte)GetValue((int)ForumFieldIndex.DefaultThreadListInterval, true); }
@@ -250,6 +260,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The OrderNo property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."OrderNo".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int16 OrderNo
 		{
 			get { return (System.Int16)GetValue((int)ForumFieldIndex.OrderNo, true); }
@@ -274,6 +285,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The NewThreadWelcomeText property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."NewThreadWelcomeText".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(1073741823)]
 		public virtual System.String NewThreadWelcomeText
 		{
 			get { return (System.String)GetValue((int)ForumFieldIndex.NewThreadWelcomeText, true); }
@@ -282,6 +294,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The NewThreadWelcomeTextAsHTML property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."NewThreadWelcomeTextAsHTML".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(1073741823)]
 		public virtual System.String NewThreadWelcomeTextAsHTML
 		{
 			get { return (System.String)GetValue((int)ForumFieldIndex.NewThreadWelcomeTextAsHTML, true); }

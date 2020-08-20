@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -152,6 +152,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPBanID property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPBanID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 IPBanID
 		{
 			get { return (System.Int32)GetValue((int)IPBanFieldIndex.IPBanID, true); }
@@ -159,6 +160,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPSegment1 property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPSegment1".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte IPSegment1
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.IPSegment1, true); }
@@ -167,6 +169,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPSegment2 property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPSegment2".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte IPSegment2
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.IPSegment2, true); }
@@ -175,6 +178,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPSegment3 property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPSegment3".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte IPSegment3
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.IPSegment3, true); }
@@ -183,6 +187,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPSegment4 property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPSegment4".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte IPSegment4
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.IPSegment4, true); }
@@ -191,6 +196,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Range property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."Range".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte Range
 		{
 			get { return (System.Byte)GetValue((int)IPBanFieldIndex.Range, true); }
@@ -199,6 +205,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPBanSetByUserID property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetByUserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 IPBanSetByUserID
 		{
 			get { return (System.Int32)GetValue((int)IPBanFieldIndex.IPBanSetByUserID, true); }
@@ -207,6 +214,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPBanSetOn property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."IPBanSetOn".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.DateTime IPBanSetOn
 		{
 			get { return (System.DateTime)GetValue((int)IPBanFieldIndex.IPBanSetOn, true); }
@@ -215,6 +223,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Reason property of the Entity IPBan<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "IPBan"."Reason".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(1073741823)]
+		[MinLength(2)]
 		public virtual System.String Reason
 		{
 			get { return (System.String)GetValue((int)IPBanFieldIndex.Reason, true); }

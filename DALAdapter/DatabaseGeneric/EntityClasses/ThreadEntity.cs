@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -247,6 +247,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ThreadID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."ThreadID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 ThreadID
 		{
 			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ThreadID, true); }
@@ -254,6 +255,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ForumID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."ForumID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 ForumID
 		{
 			get { return (System.Int32)GetValue((int)ThreadFieldIndex.ForumID, true); }
@@ -262,6 +264,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Subject property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."Subject".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(250)]
+		[MinLength(2)]
 		public virtual System.String Subject
 		{
 			get { return (System.String)GetValue((int)ThreadFieldIndex.Subject, true); }
@@ -270,6 +275,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The StartedByUserID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."StartedByUserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 StartedByUserID
 		{
 			get { return (System.Int32)GetValue((int)ThreadFieldIndex.StartedByUserID, true); }
@@ -286,6 +292,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IsSticky property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."IsSticky".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean IsSticky
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsSticky, true); }
@@ -294,6 +301,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IsClosed property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."IsClosed".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean IsClosed
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.IsClosed, true); }
@@ -302,6 +310,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MarkedAsDone property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."MarkedAsDone".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean MarkedAsDone
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.MarkedAsDone, true); }
@@ -318,6 +327,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Memo property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."Memo".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(1073741823)]
 		public virtual System.String Memo
 		{
 			get { return (System.String)GetValue((int)ThreadFieldIndex.Memo, true); }

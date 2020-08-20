@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -139,6 +139,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AttachmentID property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."AttachmentID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 AttachmentID
 		{
 			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.AttachmentID, true); }
@@ -146,6 +147,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MessageID property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."MessageID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 MessageID
 		{
 			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.MessageID, true); }
@@ -154,6 +156,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Filename property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."Filename".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 255.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(255)]
+		[MinLength(2)]
 		public virtual System.String Filename
 		{
 			get { return (System.String)GetValue((int)AttachmentFieldIndex.Filename, true); }
@@ -162,6 +167,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Approved property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."Approved".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean Approved
 		{
 			get { return (System.Boolean)GetValue((int)AttachmentFieldIndex.Approved, true); }
@@ -170,6 +176,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Filecontents property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."Filecontents".<br/>Table field type characteristics (type, precision, scale, length): Image, 0, 0, 2147483647.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte[] Filecontents
 		{
 			get { return (System.Byte[])GetValue((int)AttachmentFieldIndex.Filecontents, true); }
@@ -178,6 +185,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Filesize property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."Filesize".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 Filesize
 		{
 			get { return (System.Int32)GetValue((int)AttachmentFieldIndex.Filesize, true); }
@@ -186,6 +194,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AddedOn property of the Entity Attachment<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Attachment"."AddedOn".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.DateTime AddedOn
 		{
 			get { return (System.DateTime)GetValue((int)AttachmentFieldIndex.AddedOn, true); }

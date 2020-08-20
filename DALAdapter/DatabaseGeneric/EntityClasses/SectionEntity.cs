@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -139,6 +139,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The SectionID property of the Entity Section<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Section"."SectionID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 SectionID
 		{
 			get { return (System.Int32)GetValue((int)SectionFieldIndex.SectionID, true); }
@@ -146,6 +147,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The SectionName property of the Entity Section<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Section"."SectionName".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String SectionName
 		{
 			get { return (System.String)GetValue((int)SectionFieldIndex.SectionName, true); }
@@ -154,6 +158,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The SectionDescription property of the Entity Section<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Section"."SectionDescription".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(250)]
+		[MinLength(2)]
 		public virtual System.String SectionDescription
 		{
 			get { return (System.String)GetValue((int)SectionFieldIndex.SectionDescription, true); }
@@ -162,6 +169,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The OrderNo property of the Entity Section<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Section"."OrderNo".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int16 OrderNo
 		{
 			get { return (System.Int16)GetValue((int)SectionFieldIndex.OrderNo, true); }

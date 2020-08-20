@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -175,6 +175,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MessageID property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."MessageID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 MessageID
 		{
 			get { return (System.Int32)GetValue((int)MessageFieldIndex.MessageID, true); }
@@ -182,6 +183,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PostingDate property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."PostingDate".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.DateTime PostingDate
 		{
 			get { return (System.DateTime)GetValue((int)MessageFieldIndex.PostingDate, true); }
@@ -190,6 +192,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PostedByUserID property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."PostedByUserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 PostedByUserID
 		{
 			get { return (System.Int32)GetValue((int)MessageFieldIndex.PostedByUserID, true); }
@@ -198,6 +201,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ThreadID property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."ThreadID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 ThreadID
 		{
 			get { return (System.Int32)GetValue((int)MessageFieldIndex.ThreadID, true); }
@@ -206,6 +210,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PostedFromIP property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."PostedFromIP".<br/>Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(25)]
+		[MinLength(2)]
 		public virtual System.String PostedFromIP
 		{
 			get { return (System.String)GetValue((int)MessageFieldIndex.PostedFromIP, true); }
@@ -214,6 +221,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ChangeTrackerStamp property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."ChangeTrackerStamp".<br/>Table field type characteristics (type, precision, scale, length): Timestamp, 0, 0, 8.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Byte[] ChangeTrackerStamp
 		{
 			get { return (System.Byte[])GetValue((int)MessageFieldIndex.ChangeTrackerStamp, true); }
@@ -221,6 +229,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MessageText property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."MessageText".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(1073741823)]
 		public virtual System.String MessageText
 		{
 			get { return (System.String)GetValue((int)MessageFieldIndex.MessageText, true); }
@@ -229,6 +238,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The MessageTextAsHTML property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."MessageTextAsHTML".<br/>Table field type characteristics (type, precision, scale, length): NText, 0, 0, 1073741823.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(1073741823)]
 		public virtual System.String MessageTextAsHTML
 		{
 			get { return (System.String)GetValue((int)MessageFieldIndex.MessageTextAsHTML, true); }

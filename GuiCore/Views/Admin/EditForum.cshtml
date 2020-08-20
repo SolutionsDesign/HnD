@@ -5,7 +5,7 @@
 @model SD.HnD.Gui.Models.Admin.AddEditForumData
 
 @{
-	ViewBag.Title = "HnD | Admin | Add Forum";
+	ViewBag.Title = "HnD | Admin | Edit Forum";
 }
 
 @section stylesheets
@@ -22,29 +22,19 @@
 					<a href="~/">Home</a>
 				</li>
 				<li>Admin</li>
-				<li class="active">Add Forum</li>
+				<li class="active">Edit Forum</li>
 			</ol>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="br-bottom mt30">Add Forum</h1>
-			<p>
-				Below you can add a new forum to the system. The forum will be added to the section you specify. No forum rights are assigned to any 
-				role for this forum, therefore it will not show up in the forum list of the section specified until you assign at least access rights for 
-				this forum to some role in the system.
-			</p>
-			<p>
-				The default support queue is the queue to which threads in the forum are added to if the thread is new, or gets a new message. 
-				Assign only a support queue to a forum if messages in the forum require attention from a special group of users who have queue content 
-				management access rights. 
-				<br/><br/>
-			</p>
+			<h1 class="br-bottom mt30">Edit Forum @Model.ForumEdited.ForumName</h1>
+			<br/><br/>
 		</div>
 	</div>
 	<div class="row mb40">
 		<div class="col-sm-8">
-			@using(Html.BeginForm("AddForum", "ForumAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			@using(Html.BeginForm("EditForum", "ForumAdmin", new {id = Model.ForumEdited.ForumID}, FormMethod.Post, true, new {role = "form"}))
 			{
 				var supportQueuesSelectItems = Model.AllExistingSupportQueues.Select(q => new SelectListItem(q.QueueName, q.QueueID.ToString())).ToList();
 				supportQueuesSelectItems.Insert(0, new SelectListItem("None", "-1"));
@@ -99,11 +89,10 @@
 				</div>
 
 				<div class="mt20">
-					<button type="submit" name="submitAction" value="add" class="btn btn-default btn-primary"> Add </button>
+					<button type="submit" name="submitAction" value="add" class="btn btn-default btn-primary"> Save </button>
 					&nbsp;&nbsp;&nbsp;
 					<button type="submit" name="submitAction" value="cancel" formnovalidate class="btn btn-default"> Cancel </button>
 				</div>
-
 			}
 		</div>
 	</div>

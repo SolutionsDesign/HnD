@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -163,6 +163,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ActionRightID property of the Entity ActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ActionRight"."ActionRightID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 ActionRightID
 		{
 			get { return (System.Int32)GetValue((int)ActionRightFieldIndex.ActionRightID, true); }
@@ -171,6 +172,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ActionRightDescription property of the Entity ActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ActionRight"."ActionRightDescription".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 50.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(50)]
+		[MinLength(2)]
 		public virtual System.String ActionRightDescription
 		{
 			get { return (System.String)GetValue((int)ActionRightFieldIndex.ActionRightDescription, true); }
@@ -179,6 +183,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AppliesToForum property of the Entity ActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ActionRight"."AppliesToForum".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean AppliesToForum
 		{
 			get { return (System.Boolean)GetValue((int)ActionRightFieldIndex.AppliesToForum, true); }
@@ -187,6 +192,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The AppliesToSystem property of the Entity ActionRight<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "ActionRight"."AppliesToSystem".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean AppliesToSystem
 		{
 			get { return (System.Boolean)GetValue((int)ActionRightFieldIndex.AppliesToSystem, true); }

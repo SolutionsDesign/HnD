@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -139,6 +139,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The UserID property of the Entity PasswordResetToken<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "PasswordResetToken"."UserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 UserID
 		{
 			get { return (System.Int32)GetValue((int)PasswordResetTokenFieldIndex.UserID, true); }
@@ -147,6 +148,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PasswordResetToken property of the Entity PasswordResetToken<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "PasswordResetToken"."PasswordResetToken".<br/>Table field type characteristics (type, precision, scale, length): UniqueIdentifier, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Guid PasswordResetToken
 		{
 			get { return (System.Guid)GetValue((int)PasswordResetTokenFieldIndex.PasswordResetToken, true); }
@@ -155,6 +157,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PasswordResetRequestedOn property of the Entity PasswordResetToken<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "PasswordResetToken"."PasswordResetRequestedOn".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.DateTime PasswordResetRequestedOn
 		{
 			get { return (System.DateTime)GetValue((int)PasswordResetTokenFieldIndex.PasswordResetRequestedOn, true); }

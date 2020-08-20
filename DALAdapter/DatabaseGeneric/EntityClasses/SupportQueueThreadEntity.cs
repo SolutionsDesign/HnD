@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -187,6 +187,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The QueueID property of the Entity SupportQueueThread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueueThread"."QueueID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 QueueID
 		{
 			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.QueueID, true); }
@@ -195,6 +196,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ThreadID property of the Entity SupportQueueThread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueueThread"."ThreadID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, false</remarks>
+		[Required]
 		public virtual System.Int32 ThreadID
 		{
 			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.ThreadID, true); }
@@ -203,6 +205,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PlacedInQueueByUserID property of the Entity SupportQueueThread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueueThread"."PlacedInQueueByUserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 PlacedInQueueByUserID
 		{
 			get { return (System.Int32)GetValue((int)SupportQueueThreadFieldIndex.PlacedInQueueByUserID, true); }
@@ -211,6 +214,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The PlacedInQueueOn property of the Entity SupportQueueThread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "SupportQueueThread"."PlacedInQueueOn".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.DateTime PlacedInQueueOn
 		{
 			get { return (System.DateTime)GetValue((int)SupportQueueThreadFieldIndex.PlacedInQueueOn, true); }

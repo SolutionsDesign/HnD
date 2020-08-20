@@ -1,0 +1,121 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui
+@inject IAntiforgery antiforgery
+@{
+	ViewBag.Title = "HnD | Admin | Manage Forums";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage Forums</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Manage Forums</h1>
+			<p>
+				Below you are able to manage forums in the forum system: you can add new ones and edit and delete existing forums.
+				When deleting a forum, all threads and all messages of these threads are deleted as well. Only delete forums if it's 
+				really necessary.
+			</p>	
+			<p>
+				To edit a forum, just click the row. A separate editor will open.
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-12">
+			<div class="alert alert-danger hidden" role="alert" id="jsErrorMessageContainer">
+				<span id="jsErrorMessageTitle" class="alert-title"></span>
+				<p id="jsErrorMessageDetail"></p>
+			</div>
+			<div id="jsGrid"></div>
+		</div>
+	</div>
+</div>
+
+@section scripts
+{
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+	<script>
+		var deletionFailed = false;
+		
+        $(function() {
+            $("#jsGrid").jsGrid({
+                height: "auto",
+                width: "100%",
+                
+                inserting: false,
+                editing: false,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                
+                pageSize: 15,
+                pageButtonCount: 5,
+                
+                deleteConfirm: "Do you really want to delete this forum?",
+                
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetForums",
+                            dataType: "json",
+                            data:filter
+                        });
+                    },
+                    deleteItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/DeleteForum/" + item.forumID, {});
+                    }
+                },
+                
+                rowClick: function (args) {
+                	editForum(args.item.forumID);
+                },
+                fields: [
+                    { name:"forumID", title: "ID", type: "number", width: 25, editing:false, inserting:false},
+                    { name:"forumName", title: "Forum name", type: "text", width: 70 },
+                    { name:"sectionName", title: "Section name", type: "text", width: 70 },
+                    { name:"forumOrderNo", title: "Order no", type: "number", width:30 },
+                    { 
+                    	type: "control",                 
+                    	modeSwitchButton: false,
+                    	editButton:false,
+						headerTemplate: function() {
+						 return $("<button>").attr("type", "button").text("Add")
+								 .on("click", function () {
+									 redirectToAdd();
+								 });
+						} 
+                    }
+                ]
+            });
+            
+        var editForum = function (forumId)
+        {
+        	window.location.replace("@ApplicationAdapter.GetVirtualRoot()Admin/EditForum/" + forumId);
+        }
+            
+        var redirectToAdd = function () 
+        {
+        	window.location.replace("@ApplicationAdapter.GetVirtualRoot()Admin/AddForum");
+        }
+    });
+    </script>
+}

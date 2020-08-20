@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -328,6 +328,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The UserID property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."UserID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
+		[Required]
 		public virtual System.Int32 UserID
 		{
 			get { return (System.Int32)GetValue((int)UserFieldIndex.UserID, true); }
@@ -335,6 +336,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The NickName property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."NickName".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 20.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(20)]
+		[MinLength(2)]
 		public virtual System.String NickName
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.NickName, true); }
@@ -343,6 +347,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Password property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Password".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 128.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(128)]
+		[MinLength(2)]
 		public virtual System.String Password
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Password, true); }
@@ -351,6 +358,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IsBanned property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."IsBanned".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Boolean IsBanned
 		{
 			get { return (System.Boolean)GetValue((int)UserFieldIndex.IsBanned, true); }
@@ -359,6 +367,9 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IPNumber property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."IPNumber".<br/>Table field type characteristics (type, precision, scale, length): VarChar, 0, 0, 25.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
+		[StringLength(25)]
+		[MinLength(2)]
 		public virtual System.String IPNumber
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.IPNumber, true); }
@@ -367,6 +378,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Signature property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Signature".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(250)]
 		public virtual System.String Signature
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Signature, true); }
@@ -375,6 +387,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The IconURL property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."IconURL".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 250.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(250)]
 		public virtual System.String IconURL
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.IconURL, true); }
@@ -383,6 +396,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The EmailAddress property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."EmailAddress".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 200.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(200)]
 		public virtual System.String EmailAddress
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.EmailAddress, true); }
@@ -391,6 +405,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The UserTitleID property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."UserTitleID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 UserTitleID
 		{
 			get { return (System.Int32)GetValue((int)UserFieldIndex.UserTitleID, true); }
@@ -407,6 +422,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Occupation property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Occupation".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(100)]
 		public virtual System.String Occupation
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Occupation, true); }
@@ -415,6 +431,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Location property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Location".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 100.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(100)]
 		public virtual System.String Location
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Location, true); }
@@ -423,6 +440,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The Website property of the Entity User<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "User"."Website".<br/>Table field type characteristics (type, precision, scale, length): NVarChar, 0, 0, 200.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
+		[StringLength(200)]
 		public virtual System.String Website
 		{
 			get { return (System.String)GetValue((int)UserFieldIndex.Website, true); }

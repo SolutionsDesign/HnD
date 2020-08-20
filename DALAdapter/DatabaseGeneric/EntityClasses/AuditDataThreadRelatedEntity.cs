@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.RelationClasses;
-
+using System.ComponentModel.DataAnnotations;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.DALAdapter.EntityClasses
@@ -141,6 +141,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 
 		/// <summary>The ThreadID property of the Entity AuditDataThreadRelated<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "AuditDataThreadRelated"."ThreadID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
+		[Required]
 		public virtual System.Int32 ThreadID
 		{
 			get { return (System.Int32)GetValue((int)AuditDataThreadRelatedFieldIndex.ThreadID, true); }
