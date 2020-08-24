@@ -16,4 +16,12 @@ namespace SD.HnD.Gui.Classes
 		public static readonly string SearchResultsKey = "User:SearchResultsKey";
 		public static readonly string MyThreadsRowCount = "User:MyThreadsRowCount";
 	}
+
+	public enum AdminFindUserState
+	{
+		Start,
+		SearchParametersSpecified,
+		UsersFound,
+		UsersSelected,
+	}
 }

@@ -5,14 +5,13 @@
 @model SD.HnD.Gui.Models.Admin.AddEditForumData
 
 @{
-	ViewBag.Title = "HnD | Admin | Add Forum";
+	ViewBag.Title = "HnD | Admin | Add forum";
 }
 
 @section stylesheets
 {
 	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
-	<link href="~/Content/FormFactory/FormFactory.css" rel="stylesheet" type="text/css"/>
 }
 <div class="container">
 	<div class="row">
@@ -49,7 +48,7 @@
 				var supportQueuesSelectItems = Model.AllExistingSupportQueues.Select(q => new SelectListItem(q.QueueName, q.QueueID.ToString())).ToList();
 				supportQueuesSelectItems.Insert(0, new SelectListItem("None", "-1"));
 
-				@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 				<div class="caption"><span>General information</span></div>
 				<div class="form-group">
 					@Html.LabelFor(m => m.ForumEdited.ForumName, "Forum name* ", new {@class = "control-label above-control"})

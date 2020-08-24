@@ -254,6 +254,7 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("AddForum", "Admin/AddForum", new {controller = "ForumAdmin", action = "AddForum"});
 			routes.MapControllerRoute("EditForum", "Admin/EditForum/{id}", new {controller = "ForumAdmin", action = "EditForum", id=0});
 			routes.MapControllerRoute("DeleteForum", "Admin/DeleteForum/{id}", new {controller = "ForumAdmin", action = "DeleteForum", id=0});
+			routes.MapControllerRoute("BanUnbanUser", "Admin/BanUnbanUser", new {controller = "UserAdmin", action = "BanUnbanUser"});
 			
 			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  

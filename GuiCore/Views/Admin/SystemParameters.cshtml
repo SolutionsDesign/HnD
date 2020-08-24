@@ -41,8 +41,8 @@
 			{
 				@using(Html.BeginForm("SystemParameters", "SystemAdmin", null, FormMethod.Post, true, new {role="form"}))
 				{
+					@Html.AntiForgeryToken()
 					@Html.ValidationSummary(true, "", new {@class = "text-danger"})
-					
 					<div class="form-group">
 						@Html.LabelFor(m => m.SystemData.DefaultRoleNewUser, "Default role of a new user", new {@class = "control-label above-control"})
 						@Html.DropDownListFor(m=>m.SystemData.DefaultRoleNewUser, new SelectList(Model.AllRoles, "RoleID", "RoleDescription"), new {@class = "form-control"})

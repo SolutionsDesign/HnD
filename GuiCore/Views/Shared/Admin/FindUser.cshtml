@@ -1,0 +1,38 @@
+﻿@using SD.HnD.Gui.Classes
+@model SD.HnD.Gui.Models.Admin.FindUserData
+<div class="caption"><span>Filter information</span></div>
+@switch(Model.FindUserState)
+{
+	case AdminFindUserState.Start:
+<div class="form-group">
+	@Html.CheckBoxFor(m=>m.FilterOnRole)&nbsp;
+	@Html.LabelFor(m => m.FilterOnRole, "Filter on role", new {@class = "control-label above-control"})
+	@Html.DropDownListFor(m => m.SelectedRoleID, @Model.Roles?.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control"})
+</div>
+<div class="form-group">
+	@Html.CheckBoxFor(m=>m.FilterOnNickName)&nbsp;
+	@Html.LabelFor(m => m.FilterOnNickName, "Filter on nickname", new {@class = "control-label above-control"})
+	@Html.TextBoxFor(m => m.SpecifiedNickName, new {@class = "form-control", placeholder = " "})
+</div>
+<div class="form-group">
+	@Html.CheckBoxFor(m=>m.FilterOnEmailAddress)&nbsp;
+	@Html.LabelFor(m => m.FilterOnEmailAddress, "Filter on email-address", new {@class = "control-label above-control"})
+	@Html.TextBoxFor(m => m.SpecifiedEmailAddress, new {@class = "form-control", placeholder = " "})
+</div>
+<div class="mt20">
+	<button type="submit" name="submitAction" value="Find" class="btn btn-default"> Find </button>
+</div>
+		break;
+	case AdminFindUserState.UsersFound:
+<div><p>@Model.FilterToString()</p></div>	
+<div class="caption"><span>Users matching the filter(s)</span></div>
+<div class="form-group">
+	@Html.ListBoxFor(m => m.SelectedUserIDs, Model.FoundUsers?.Select(u=>new SelectListItem(u.NickName, u.UserID.ToString())), new {@class = "form-control", size=Math.Min(Math.Max(5, Model.FoundUsers?.Count??0), 10)})
+</div>
+<div class="mt20">
+	<button type="submit" name="submitAction" value="PerformAction" class="btn btn-default"> @Model.ActionButtonText </button>
+	&nbsp;&nbsp;
+	<button type="submit" name="submitAction" value="SearchAgain" class="btn btn-default"> Search again </button>
+</div>
+		break;
+}
