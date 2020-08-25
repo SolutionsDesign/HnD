@@ -9,8 +9,10 @@ namespace SD.HnD.Gui.Models.Admin
 		public BanUnbanUserData(FindUserData data)
 		{
 			this.FindUserData = data;
+			this.FinalActionResult = string.Empty;
 		}
 		
 		public FindUserData FindUserData { get; }
+		public string FinalActionResult { get; set; }
 	}
 }

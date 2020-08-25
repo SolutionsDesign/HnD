@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +29,9 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			return GotoBanUnbanUserView(new BanUnbanUserData());
+			var data = new BanUnbanUserData();
+			FillUserDataForState(data.FindUserData, AdminFindUserState.Start, string.Empty, "BanUnbanUser_Find");
+			return View("~/Views/Admin/BanUnbanUser.cshtml", data);
 		}
 
 
@@ -42,18 +45,17 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(!data.IsAnythingChecked)
+			BanUnbanUserData newData = null;
+			if(data.IsAnythingChecked)
 			{
-				return GotoBanUnbanUserView(new BanUnbanUserData());
+				FillUserDataForState(data, AdminFindUserState.UsersFound, "Ban / Unban selected user", "BanUnbanUser_UserSelected");
+				newData = new BanUnbanUserData(data);
 			}
-			
-			data.FoundUsers = UserGuiHelper.FindUsers( data.FilterOnRole, data.SelectedRoleID, data.FilterOnNickName,
-													   data.SpecifiedNickName, data.FilterOnEmailAddress,
-													   data.SpecifiedEmailAddress);
-			data.FindUserState = AdminFindUserState.UsersFound;
-			data.ActionButtonText = "Ban / Unban selected user";
-			data.ActionToPostTo = "BanUnbanUser_ToggleBanFlag";
-			return GotoBanUnbanUserView(new BanUnbanUserData(data), "BanUnbanUser_UserSelected");
+			else
+			{
+				newData = new BanUnbanUserData();
+			}
+			return View("~/Views/Admin/BanUnbanUser.cshtml", newData);
 		}
 
 
@@ -81,24 +83,77 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return BanUnbanUser_Find(data);
 			}
-			
-			data.FoundUsers = UserGuiHelper.FindUsers( data.FilterOnRole, data.SelectedRoleID, data.FilterOnNickName,
-													  data.SpecifiedNickName, data.FilterOnEmailAddress,
-													  data.SpecifiedEmailAddress);
-			data.FindUserState = AdminFindUserState.UsersFound;
-			data.ActionButtonText = "Ban / Unban selected user";
-			data.ActionToPostTo = "BanUnbanUser_ToggleBanFlag";
-			return GotoBanUnbanUserView(new BanUnbanUserData(data), "BanUnbanUser_UserSelected");
+
+			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "BanUnbanUser_ToggleBanFlag");
+			return View("~/Views/Admin/BanUnbanUser.cshtml", new BanUnbanUserData(data));
 		}
 
-		
-		
-		private ActionResult GotoBanUnbanUserView(BanUnbanUserData data, string actionName = "BanUnbanUser_Find")
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult BanUnbanUser_ToggleBanFlag(FindUserData data, string submitAction)
 		{
-			data.FindUserData.ActionToPostTo = actionName;
-			data.FindUserData.Roles = SecurityGuiHelper.GetAllRoles();
-			return View("~/Views/Admin/BanUnbanUser.cshtml", data);
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction != "ToggleBanFlag")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			{
+				return BanUnbanUser_Find(data);
+			}
+
+			int userIdToToggleBanFlagOf = data.SelectedUserIDs.FirstOrDefault();
+			bool result = UserManager.ToggleBanFlagValue(userIdToToggleBanFlagOf, out bool newBanFlagValue);
+			if(newBanFlagValue)
+			{
+				var user = UserGuiHelper.GetUser(userIdToToggleBanFlagOf);
+				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
+			}
+			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
+			var viewData = new BanUnbanUserData(data);
+			if(result)
+			{
+				viewData.FinalActionResult = newBanFlagValue ? "The user now banned" : "The user has been unbanned";
+			}
+			else
+			{
+				viewData.FinalActionResult = "Toggling the ban flag failed.";
+			}
+
+			return View("~/Views/Admin/BanUnbanUser.cshtml", viewData);
 		}
 
+
+		private static void FillUserDataForState(FindUserData data, AdminFindUserState stateToFillDataFor, string actionButtonText, string actionToPostTo)
+		{
+			data.Roles = SecurityGuiHelper.GetAllRoles();
+			switch(stateToFillDataFor)
+			{
+				case AdminFindUserState.Start:
+					// no-op
+					break;
+				case AdminFindUserState.UsersFound:
+					data.FoundUsers = UserGuiHelper.FindUsers(data.FilterOnRole, data.SelectedRoleID, data.FilterOnNickName,
+															  data.SpecifiedNickName, data.FilterOnEmailAddress,
+															  data.SpecifiedEmailAddress);
+					break;
+				case AdminFindUserState.FinalAction:
+				case AdminFindUserState.PostAction:
+					data.SelectedUsers = UserGuiHelper.GetAllUsersInRange(data.SelectedUserIDs);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(stateToFillDataFor), stateToFillDataFor, null);
+			}
+			data.FindUserState = stateToFillDataFor;
+			data.ActionButtonText = actionButtonText;
+			data.ActionToPostTo = actionToPostTo;
+		}
 	}
 }

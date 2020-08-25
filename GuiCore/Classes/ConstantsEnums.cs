@@ -20,8 +20,8 @@ namespace SD.HnD.Gui.Classes
 	public enum AdminFindUserState
 	{
 		Start,
-		SearchParametersSpecified,
 		UsersFound,
-		UsersSelected,
+		FinalAction,
+		PostAction
 	}
 }

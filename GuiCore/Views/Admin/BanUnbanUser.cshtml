@@ -45,6 +45,21 @@
 			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
 			{
 				@await Html.PartialAsync("Admin/FindUser", Model.FindUserData)
+				switch(Model.FindUserData.FindUserState)
+				{
+					case AdminFindUserState.FinalAction:
+						string bannedText = Model.FindUserData.SelectedUsers.FirstOrDefault()?.IsBanned==true ? "Banned" : "Not banned";
+						<div><p>Are you sure you want to toggle the ban flag for this user? (current status is: <b>@bannedText</b>)</p></div>
+						<div class="mt20">
+							<button type="submit" name="submitAction" value="ToggleBanFlag" class="btn btn-default"> Yes </button>
+							&nbsp;&nbsp;
+							<button type="submit" name="submitAction" value="Cancel" class="btn btn-default"> No </button>
+						</div>
+						break;
+					case AdminFindUserState.PostAction:
+						<div><p>@Model.FinalActionResult</p></div>
+						break;
+				}
 			}			
 		</div>
 	</div>

@@ -30,6 +30,7 @@ namespace SD.HnD.Gui.Models.Admin
 		public string ActionButtonText { get; set; }
 		public EntityCollection<UserEntity> FoundUsers { get; set; }
 		public List<int> SelectedUserIDs { get; set; }
+		public EntityCollection<UserEntity> SelectedUsers { get; set; }
 		
 		public bool FilterOnRole { get; set; }
 		public bool FilterOnNickName { get; set; }
