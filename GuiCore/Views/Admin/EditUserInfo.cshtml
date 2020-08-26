@@ -1,0 +1,118 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model SD.HnD.Gui.Models.EditUserInfoData
+
+@{
+	ViewBag.Title = "HnD | Admin | Edit profile";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li class="active">Edit a user profile</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Edit a user profile</h1>
+			@if(Model.InfoEdited)
+			{
+				<div class="caption"><span>Update result</span></div>
+				<p>The information has been successfully updated</p>
+			}
+			else
+			{
+				<p>
+					Below you can change the profile information of a user currently known by the forum system. When you're done, click the Update 
+					button to make the changes take effect. If you want to set the password to a new value, specify a new password in the two textboxes for 
+					new password, otherwise leave them empty and the current password will be kept. 			
+				</p>
+				<p>
+					Fields marked with <strong>*</strong> are mandatory.
+				</p>
+				<div class="mb40">
+					@using(Html.BeginForm("EditUserInfo_FinalAction", "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+					{
+						@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+						<div class="caption"><span>Registration information</span></div>
+						<div class="form-group">
+							<label for="nickName" class="control-label above-control">Nickname</label><br/>
+							<span id="nickName" class="form-control-static">@Model.NickName (UserId: @Model.UserId)</span>
+							<input type="hidden" name="UserId" value="@Model.UserId"/>
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.NewPassword, "New password", new {@class = "control-label above-control"})
+							@Html.PasswordFor(m => m.NewPassword, new {@class = "form-control", placeholder = " New password"})
+							@Html.ValidationMessageFor(m => m.NewPassword, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.ConfirmNewPassword, "Confirm new password", new {@class = "control-label above-control"})
+							@Html.PasswordFor(m => m.ConfirmNewPassword, new {@class = "form-control", placeholder = " Please confirm the new password"})
+							@Html.ValidationMessageFor(m => m.ConfirmNewPassword, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.EmailAddress, "Email-address* ", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.EmailAddress, new {@class = "form-control", placeholder = " Email-address", autofocus = "true"})
+							@Html.ValidationMessageFor(m => m.EmailAddress, "", new {@class = "text-danger"})
+						</div>
+						<br/>
+						<div class="caption"><span>Personal information</span></div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.IconURL, "User icon URL", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.IconURL, new {@class = "form-control", placeholder = " https://example.com/myavatar.jpg"})
+							@Html.ValidationMessageFor(m => m.IconURL, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.DateOfBirth, "Date of birth", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.DateOfBirth, "{0:dd/MM/yyyy}", new {@class = "form-control", placeholder = " dd/mm/yyyy"})
+							@Html.ValidationMessageFor(m => m.DateOfBirth, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.Occupation, "Occupation", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.Occupation, new {@class = "form-control", placeholder = " "})
+							@Html.ValidationMessageFor(m => m.Occupation, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.Location, "Location", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.Location, new {@class = "form-control", placeholder = " "})
+							@Html.ValidationMessageFor(m => m.Location, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.Website, "Website", new {@class = "control-label above-control"})
+							@Html.TextBoxFor(m => m.Website, new {@class = "form-control", placeholder = " https://example.com"})
+							@Html.ValidationMessageFor(m => m.Website, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.Signature, "Signature", new {@class = "control-label above-control"})
+							@Html.TextAreaFor(m => m.Signature, new {@class = "form-control", placeholder = " "})
+							@Html.ValidationMessageFor(m => m.Signature, "", new {@class = "text-danger"})
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.UserTitleId, "User title", new {@class = "control-label above-control"})
+							@Html.DropDownListFor(m => m.UserTitleId, @Model.UserTitles.Select(t => new SelectListItem(t.UserTitleDescription, t.UserTitleID.ToString())), new {@class = "form-control"})
+							@Html.ValidationMessageFor(m => m.UserTitleId, "", new {@class = "text-danger"})
+						</div>
+						<div class="mt20">
+							<button type="submit" class="btn btn-default btn-primary"> Update </button>
+						</div>
+					}
+				</div>
+			}
+		</div>
+	</div>
+</div>
+@section scripts
+{
+	<script type="text/javascript">
+            $(function () {
+                $('#DateOfBirth').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    format: "dd/mm/yyyy"
+                });
+            });
+</script>
+}

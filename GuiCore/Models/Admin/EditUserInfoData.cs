@@ -3,12 +3,15 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using SD.HnD.BL;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui.Models
 {
-	public class EditProfileData
+	public class EditUserInfoData 
 	{
-		public virtual string NickName { get; set; }
+		public int UserId { get; set; }
+		public string NickName { get; set; }
 		[DataType(DataType.Password)]
 		[StringLength(100)]
 		[MinLength(8)]
@@ -39,15 +42,10 @@ namespace SD.HnD.Gui.Models
 		[Url]
 		[FileExtensions(Extensions = "jpg,png,bmp")]
 		public string IconURL { get; set; }
-		// preferences
-		[DisplayName("Email-address is public")]
-		public bool EmailAddressIsPublic { get; set; }
-		[DisplayName("Notify me of thread replies")]
-		public bool AutoSubscribeToThread { get; set; }
-		[DisplayName("Number of messages per page")]
-		[Range(2, 1000)]
-		public short DefaultNumberOfMessagesPerPage { get; set; }
-
+		[Range(1, 1000)]
+		public int UserTitleId { get; set; }
+		public EntityCollection<UserTitleEntity> UserTitles { get; set; }
+		public bool InfoEdited { get; set; }
 
 		public void Sanitize()
 		{
@@ -61,17 +59,11 @@ namespace SD.HnD.Gui.Models
 				}
 			}
 
-			if(this.DefaultNumberOfMessagesPerPage < 1 || this.DefaultNumberOfMessagesPerPage > 1000)
-			{
-				this.DefaultNumberOfMessagesPerPage = 25;
-			}
-
 			if(!string.IsNullOrWhiteSpace(this.NewPassword) && string.IsNullOrWhiteSpace(this.ConfirmNewPassword))
 			{
 				this.NewPassword = string.Empty;
 			}
 		}
-
 
 		public void StripProtocolsFromUrls()
 		{

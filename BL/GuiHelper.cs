@@ -20,6 +20,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace SD.HnD.BL
@@ -53,6 +54,33 @@ namespace SD.HnD.BL
 				}
 			}
 			return noiseWords;
+		}
+		
+		public static string StripProtocolsFromUrl(string url)
+		{
+			string toReturn = url;
+			if(!string.IsNullOrEmpty(toReturn))
+			{
+				var urlAsUri = new Uri(url);
+				toReturn = urlAsUri.Host + urlAsUri.PathAndQuery + urlAsUri.Fragment;
+			}
+			return toReturn;
+		}
+
+
+		public static string SanitizeUrl(string toSanitize)
+		{
+			string toReturn = toSanitize;
+			if(!string.IsNullOrEmpty(toReturn))
+			{
+				if(!(toReturn.StartsWith("http://", true, CultureInfo.InvariantCulture) ||
+					 toReturn.StartsWith("https://", true, CultureInfo.InvariantCulture)))
+				{
+					toReturn = "https://" + toReturn;
+				}
+			}
+
+			return toReturn;
 		}
 	}
 }

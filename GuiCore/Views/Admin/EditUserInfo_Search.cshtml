@@ -1,0 +1,47 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Classes
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.FindUserData
+
+@{
+	ViewBag.Title = "HnD | Admin | Edit user info";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Edit user info</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Edit User Info</h1>
+			<p>
+				Below you can change the profile information of a user currently known by the forum system. First you have to select the user of whom 
+				you want to modify the profile, and then click <b>Manage profile</b> to manage the profile data. 
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm(Model.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			{
+				@await Html.PartialAsync("Admin/FindUser", Model)
+			}			
+		</div>
+	</div>
+</div>

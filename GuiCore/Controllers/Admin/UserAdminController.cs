@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
 using SD.HnD.Gui.Classes;
+using SD.HnD.Gui.Models;
 using SD.HnD.Gui.Models.Admin;
 
 namespace SD.HnD.Gui.Controllers
@@ -17,6 +18,127 @@ namespace SD.HnD.Gui.Controllers
 		public UserAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
+		}
+
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult EditUserInfo()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new FindUserData();
+			FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "EditUserInfo_Find");
+			return View("~/Views/Admin/EditUserInfo_Search.cshtml", data);
+		}
+
+		
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditUserInfo_Find(FindUserData data)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			FindUserData newData = null;
+			if(data.IsAnythingChecked)
+			{
+				FillUserDataForState(data, AdminFindUserState.UsersFound, "Manage profile", "EditUserInfo_UserSelected");
+				newData = data;
+			}
+			else
+			{
+				newData = new FindUserData();
+			}
+			return View("~/Views/Admin/EditUserInfo_Search.cshtml", newData);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditUserInfo_UserSelected(FindUserData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction == "SearchAgain")
+			{
+				return EditUserInfo();
+			}
+
+			if(submitAction != "PerformAction")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			{
+				return EditUserInfo_Find(data);
+			}
+
+			var user = UserGuiHelper.GetUser(data.SelectedUserIDs.FirstOrDefault());
+			if(user == null)
+			{
+				// not found
+				return RedirectToAction("Index", "Home");
+			}
+
+			var newData = new EditUserInfoData()
+					   {
+						   UserId = user.UserID,
+						   EmailAddress = user.EmailAddress,
+						   NickName = user.NickName,
+						   DateOfBirth = user.DateOfBirth,
+						   Occupation = user.Occupation ?? string.Empty,
+						   Location = user.Location ?? string.Empty,
+						   Signature = user.Signature ?? string.Empty,
+						   Website = user.Website ?? string.Empty,
+						   IconURL = user.IconURL ?? string.Empty,
+						   UserTitleId = user.UserTitleID,
+						   UserTitles = UserGuiHelper.GetAllUserTitles(),
+					   };
+			newData.Sanitize();
+			return View("~/Views/Admin/EditUserInfo.cshtml", newData);
+		}
+		
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult EditUserInfo_FinalAction(EditUserInfoData data)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			data.UserTitles = UserGuiHelper.GetAllUserTitles();
+
+			if(!ModelState.IsValid)
+			{
+				return View("~/Views/Admin/EditUserInfo.cshtml", data);
+			}
+			data.Sanitize();
+			data.StripProtocolsFromUrls();
+			bool result = false;
+			var user = UserGuiHelper.GetUser(data.UserId);
+			if(user != null)
+			{
+				result = UserManager.UpdateUserProfile(data.UserId, data.DateOfBirth, data.EmailAddress, user.EmailAddressIsPublic ?? false, data.IconURL, 
+													   data.Location, data.Occupation, data.NewPassword, data.Signature, data.Website, data.UserTitleId,
+													   user.AutoSubscribeToThread, user.DefaultNumberOfMessagesPerPage);
+			}
+
+			data.InfoEdited = result;
+			return View("~/Views/Admin/EditUserInfo.cshtml", data);
 		}
 		
 		
