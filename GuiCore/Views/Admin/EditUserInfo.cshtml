@@ -44,6 +44,14 @@
 							<input type="hidden" name="UserId" value="@Model.UserId"/>
 						</div>
 						<div class="form-group">
+							<label for="IPAddress" class="control-label above-control">IP Address</label><br/>
+							<span id="IPAddress" class="form-control-static">@Model.IPAddress</span>
+						</div>
+						<div class="form-group">
+							<label for="LastVisitDate" class="control-label above-control">Last visit date</label><br/>
+							<span id="IPAddress" class="form-control-static">@Model.LastVisitDate</span>
+						</div>
+						<div class="form-group">
 							@Html.LabelFor(m => m.NewPassword, "New password", new {@class = "control-label above-control"})
 							@Html.PasswordFor(m => m.NewPassword, new {@class = "form-control", placeholder = " New password"})
 							@Html.ValidationMessageFor(m => m.NewPassword, "", new {@class = "text-danger"})

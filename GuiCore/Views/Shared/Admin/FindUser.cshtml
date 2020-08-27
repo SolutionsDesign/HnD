@@ -43,9 +43,12 @@
 		<div class="caption"><span>Final action</span></div>
 		break;
 	case AdminFindUserState.PostAction:
-		<div class="caption"><span>Users selected</span></div>
-		<input type="hidden" name="selectedUserIds" value="@string.Join(",", Model.SelectedUsers.Select(u=>u.UserID))"/>
-		<div><p>@string.Join(", ", Model.SelectedUsers.Select(u=>u.NickName))</p></div>
+		if(Model.SelectedUsers?.Count > 0)
+		{
+			<div class="caption"><span>Users selected</span></div>
+			<input type="hidden" name="selectedUserIds" value="@string.Join(",", Model.SelectedUsers.Select(u => u.UserID))"/>
+			<div><p>@string.Join(", ", Model.SelectedUsers.Select(u => u.NickName))</p></div>
+		}
 		<div class="caption"><span>Final action result</span></div>
 		break;
 }

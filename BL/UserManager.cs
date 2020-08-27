@@ -184,6 +184,12 @@ namespace SD.HnD.BL
 				// user doesn't exist
 				return false;
 			}
+
+			if(toDelete.NickName == "Admin")
+			{
+				// can't delete admin
+				return false;
+			}
 			using(var adapter = new DataAccessAdapter())
 			{ 
 				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteUser");
@@ -208,7 +214,7 @@ namespace SD.HnD.BL
 					// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
 					// be deleted directly from the db.
 					var qf = new QueryFactory();
-					var auditData = adapter.FetchQuery(qf.User.Where(AuditDataCoreFields.UserID == userID));
+					var auditData = adapter.FetchQuery(qf.User.Where(UserFields.UserID == userID));
 					adapter.DeleteEntityCollection(auditData);
 
 					// set IP bans set by this user to userid 0

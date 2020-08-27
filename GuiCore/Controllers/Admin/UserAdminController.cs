@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
+using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Classes;
 using SD.HnD.Gui.Models;
 using SD.HnD.Gui.Models.Admin;
@@ -46,17 +48,15 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			FindUserData newData = null;
 			if(data.IsAnythingChecked)
 			{
 				FillUserDataForState(data, AdminFindUserState.UsersFound, "Manage profile", "EditUserInfo_UserSelected");
-				newData = data;
 			}
 			else
 			{
-				newData = new FindUserData();
+				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "EditUserInfo_Find");
 			}
-			return View("~/Views/Admin/EditUserInfo_Search.cshtml", newData);
+			return View("~/Views/Admin/EditUserInfo_Search.cshtml", data);
 		}
 
 
@@ -104,6 +104,8 @@ namespace SD.HnD.Gui.Controllers
 						   Website = user.Website ?? string.Empty,
 						   IconURL = user.IconURL ?? string.Empty,
 						   UserTitleId = user.UserTitleID,
+						   IPAddress = user.IPNumber,
+						   LastVisitDate = user.LastVisitedDate.HasValue ? user.LastVisitedDate.Value.ToString("f") : "Never",
 						   UserTitles = UserGuiHelper.GetAllUserTitles(),
 					   };
 			newData.Sanitize();
@@ -141,6 +143,113 @@ namespace SD.HnD.Gui.Controllers
 			return View("~/Views/Admin/EditUserInfo.cshtml", data);
 		}
 		
+				
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult DeleteUser()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new DeleteUserData();
+			FillUserDataForState(data.FindUserData, AdminFindUserState.Start, string.Empty, "DeleteUser_Find");
+			return View("~/Views/Admin/DeleteUser.cshtml", data);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteUser_Find(FindUserData data)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			DeleteUserData newData = null;
+			if(data.IsAnythingChecked)
+			{
+				FillUserDataForState(data, AdminFindUserState.UsersFound, "Delete selected user", "DeleteUser_UserSelected");
+				// filter out the currently logged in user, Anonymous (0) and Admin (1)
+				FilterFoundUsers(data);			
+			}
+			else
+			{
+				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "DeleteUser_Find");
+			}
+			newData = new DeleteUserData(data);
+			return View("~/Views/Admin/DeleteUser.cshtml", newData);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteUser_UserSelected(FindUserData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction == "SearchAgain")
+			{
+				return DeleteUser();
+			}
+
+			if(submitAction != "PerformAction")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			{
+				return DeleteUser_Find(data);
+			}
+
+			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "DeleteUser_Perform");
+			return View("~/Views/Admin/DeleteUser.cshtml", new DeleteUserData(data));
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteUser_Perform(FindUserData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction != "Delete")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			{
+				return DeleteUser_Find(data);
+			}
+
+			int userIdToDelete = data.SelectedUserIDs.FirstOrDefault();
+			var user = UserGuiHelper.GetUser(userIdToDelete);
+			bool result = UserManager.DeleteUser(userIdToDelete);
+			if(result)
+			{
+				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
+			}
+			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
+			var viewData = new DeleteUserData(data);
+			viewData.FinalActionResult = result ? "The user has been deleted" : "Deleting the user failed, perhaps you selected a user that couldn't be deleted?";
+
+			return View("~/Views/Admin/DeleteUser.cshtml", viewData);
+		}
+		
 		
 		[HttpGet]
 		[Authorize]
@@ -171,12 +280,14 @@ namespace SD.HnD.Gui.Controllers
 			if(data.IsAnythingChecked)
 			{
 				FillUserDataForState(data, AdminFindUserState.UsersFound, "Ban / Unban selected user", "BanUnbanUser_UserSelected");
-				newData = new BanUnbanUserData(data);
+				// filter out the currently logged in user, Anonymous (0) and Admin (1)
+				FilterFoundUsers(data);			
 			}
 			else
 			{
-				newData = new BanUnbanUserData();
+				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "BanUnbanUser_Find");
 			}
+			newData = new BanUnbanUserData(data);
 			return View("~/Views/Admin/BanUnbanUser.cshtml", newData);
 		}
 
@@ -206,7 +317,7 @@ namespace SD.HnD.Gui.Controllers
 				return BanUnbanUser_Find(data);
 			}
 
-			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "BanUnbanUser_ToggleBanFlag");
+			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "BanUnbanUser_Perform");
 			return View("~/Views/Admin/BanUnbanUser.cshtml", new BanUnbanUserData(data));
 		}
 
@@ -214,7 +325,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_ToggleBanFlag(FindUserData data, string submitAction)
+		public ActionResult BanUnbanUser_Perform(FindUserData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -242,7 +353,7 @@ namespace SD.HnD.Gui.Controllers
 			var viewData = new BanUnbanUserData(data);
 			if(result)
 			{
-				viewData.FinalActionResult = newBanFlagValue ? "The user now banned" : "The user has been unbanned";
+				viewData.FinalActionResult = newBanFlagValue ? "The user is now banned" : "The user has been unbanned";
 			}
 			else
 			{
@@ -276,6 +387,29 @@ namespace SD.HnD.Gui.Controllers
 			data.FindUserState = stateToFillDataFor;
 			data.ActionButtonText = actionButtonText;
 			data.ActionToPostTo = actionToPostTo;
+		}
+		
+
+		private void FilterFoundUsers(FindUserData toFilter)
+		{
+			if(toFilter?.FoundUsers == null)
+			{
+				return;
+			}
+			// filter out the currently logged in user, admin (1) and anonymous (0)
+			var loggedInUserId = this.HttpContext.Session.GetUserID();
+			var toRemove = new List<UserEntity>();
+			foreach(var e in toFilter.FoundUsers)
+			{
+				if(e.UserID < 2 || e.UserID == loggedInUserId)
+				{
+					toRemove.Add(e);
+				}
+			}
+			foreach(var e in toRemove)
+			{
+				toFilter.FoundUsers.Remove(e);
+			}
 		}
 	}
 }

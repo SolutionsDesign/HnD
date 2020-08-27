@@ -11,6 +11,8 @@ namespace SD.HnD.Gui.Models
 	public class EditUserInfoData 
 	{
 		public int UserId { get; set; }
+		public string IPAddress { get; set; }
+		public string LastVisitDate { get; set; }
 		public string NickName { get; set; }
 		[DataType(DataType.Password)]
 		[StringLength(100)]
