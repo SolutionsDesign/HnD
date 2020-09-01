@@ -1,12 +1,12 @@
 namespace SD.HnD.Gui.Models.Admin
 {
-	public class DeleteUserData
+	public class ActionWithUserSearchData
 	{
-		public DeleteUserData() : this(new FindUserData() { SingleSelect = true})
+		public ActionWithUserSearchData() : this(new FindUserData() { SingleSelect = true})
 		{
 		}
 
-		public DeleteUserData(FindUserData data)
+		public ActionWithUserSearchData(FindUserData data)
 		{
 			this.FindUserData = data;
 			this.FinalActionResult = string.Empty;

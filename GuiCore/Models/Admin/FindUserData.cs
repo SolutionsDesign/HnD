@@ -13,6 +13,8 @@ namespace SD.HnD.Gui.Models.Admin
 	/// </summary>
 	public class FindUserData
 	{
+		private string _filterAsString = string.Empty;
+		
 		public FindUserData() : this(AdminFindUserState.Start)
 		{
 		}
@@ -39,6 +41,12 @@ namespace SD.HnD.Gui.Models.Admin
 		public string SpecifiedNickName { get; set; }
 		public string SpecifiedEmailAddress { get; set; }
 
+
+		public void OverrideFilterAsString(string toUse)
+		{
+			_filterAsString = toUse;
+		}
+
 		public bool IsAnythingChecked
 		{
 			get { return this.FilterOnRole || this.FilterOnEmailAddress || this.FilterOnNickName;  }
@@ -47,6 +55,11 @@ namespace SD.HnD.Gui.Models.Admin
 
 		public string FilterToString()
 		{
+			if(!string.IsNullOrWhiteSpace(_filterAsString))
+			{
+				return _filterAsString;
+			}
+			
 			if(!this.IsAnythingChecked)
 			{
 				return "No filter specified";

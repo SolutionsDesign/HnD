@@ -27,14 +27,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		public ActionResult EditUserInfo()
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			var data = new FindUserData();
-			FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "EditUserInfo_Find");
-			return View("~/Views/Admin/EditUserInfo_Search.cshtml", data);
+			return ActionWithUserSearch_Start(() => new ActionWithUserSearchData(), "EditUserInfo_Find", "~/Views/Admin/EditUserInfo_Search.cshtml");
 		}
 
 		
@@ -43,20 +36,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult EditUserInfo_Find(FindUserData data)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			if(data.IsAnythingChecked)
-			{
-				FillUserDataForState(data, AdminFindUserState.UsersFound, "Manage profile", "EditUserInfo_UserSelected");
-			}
-			else
-			{
-				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "EditUserInfo_Find");
-			}
-			return View("~/Views/Admin/EditUserInfo_Search.cshtml", data);
+			return ActionWithUserSearch_Find(data, "Manage profile", "EditUserInfo_UserSelected", "EditUserInfo_Find", "~/Views/Admin/EditUserInfo_Search.cshtml", false);
 		}
 
 
@@ -142,21 +122,13 @@ namespace SD.HnD.Gui.Controllers
 			data.InfoEdited = result;
 			return View("~/Views/Admin/EditUserInfo.cshtml", data);
 		}
-		
 				
 		
 		[HttpGet]
 		[Authorize]
 		public ActionResult DeleteUser()
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			var data = new DeleteUserData();
-			FillUserDataForState(data.FindUserData, AdminFindUserState.Start, string.Empty, "DeleteUser_Find");
-			return View("~/Views/Admin/DeleteUser.cshtml", data);
+			return ActionWithUserSearch_Start(() => new ActionWithUserSearchData(), "DeleteUser_Find", "~/Views/Admin/DeleteUser.cshtml");
 		}
 
 
@@ -165,24 +137,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteUser_Find(FindUserData data)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			DeleteUserData newData = null;
-			if(data.IsAnythingChecked)
-			{
-				FillUserDataForState(data, AdminFindUserState.UsersFound, "Delete selected user", "DeleteUser_UserSelected");
-				// filter out the currently logged in user, Anonymous (0) and Admin (1)
-				FilterFoundUsers(data);			
-			}
-			else
-			{
-				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "DeleteUser_Find");
-			}
-			newData = new DeleteUserData(data);
-			return View("~/Views/Admin/DeleteUser.cshtml", newData);
+			return ActionWithUserSearch_Find(data, "Delete selected user", "DeleteUser_UserSelected", "DeleteUser_Find", "~/Views/Admin/DeleteUser.cshtml", true);
 		}
 
 
@@ -191,30 +146,9 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteUser_UserSelected(FindUserData data, string submitAction)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			if(submitAction == "SearchAgain")
-			{
-				return DeleteUser();
-			}
-
-			if(submitAction != "PerformAction")
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
-			{
-				return DeleteUser_Find(data);
-			}
-
-			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "DeleteUser_Perform");
-			return View("~/Views/Admin/DeleteUser.cshtml", new DeleteUserData(data));
+			return ActionWithUserSearch_UserSelected(data, submitAction, () => DeleteUser(), (d) => DeleteUser_Find(data), "DeleteUser_Perform", "~/Views/Admin/DeleteUser.cshtml");
 		}
-
+		
 
 		[HttpPost]
 		[Authorize]
@@ -244,58 +178,34 @@ namespace SD.HnD.Gui.Controllers
 				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
 			}
 			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
-			var viewData = new DeleteUserData(data);
+			var viewData = new ActionWithUserSearchData(data);
 			viewData.FinalActionResult = result ? "The user has been deleted" : "Deleting the user failed, perhaps you selected a user that couldn't be deleted?";
 
 			return View("~/Views/Admin/DeleteUser.cshtml", viewData);
 		}
-		
+				
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult BanUnbanUser()
+		public ActionResult ShowAuditInfoUser()
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			var data = new BanUnbanUserData();
-			FillUserDataForState(data.FindUserData, AdminFindUserState.Start, string.Empty, "BanUnbanUser_Find");
-			return View("~/Views/Admin/BanUnbanUser.cshtml", data);
+			return ActionWithUserSearch_Start(() => new ActionWithUserSearchData(), "ShowAuditInfoUser_Find", "~/Views/Admin/ShowAuditInfoUser.cshtml");
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_Find(FindUserData data)
+		public ActionResult ShowAuditInfoUser_Find(FindUserData data)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
-			{
-				return RedirectToAction("Index", "Home");
-			}
-
-			BanUnbanUserData newData = null;
-			if(data.IsAnythingChecked)
-			{
-				FillUserDataForState(data, AdminFindUserState.UsersFound, "Ban / Unban selected user", "BanUnbanUser_UserSelected");
-				// filter out the currently logged in user, Anonymous (0) and Admin (1)
-				FilterFoundUsers(data);			
-			}
-			else
-			{
-				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, "BanUnbanUser_Find");
-			}
-			newData = new BanUnbanUserData(data);
-			return View("~/Views/Admin/BanUnbanUser.cshtml", newData);
+			return ActionWithUserSearch_Find(data, "View audit info", "ShowAuditInfoUser_UserSelected", "ShowAuditInfoUser_Find", "~/Views/Admin/ShowAuditInfoUser.cshtml", false);
 		}
 
-
+		
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_UserSelected(FindUserData data, string submitAction)
+		public ActionResult ShowAuditInfoUser_UserSelected(FindUserData data, string submitAction, string filterAsString, string foundUserIds)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -304,7 +214,7 @@ namespace SD.HnD.Gui.Controllers
 
 			if(submitAction == "SearchAgain")
 			{
-				return BanUnbanUser();
+				return ShowAuditInfoUser();
 			}
 
 			if(submitAction != "PerformAction")
@@ -312,13 +222,50 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0 || string.IsNullOrWhiteSpace(foundUserIds))
 			{
-				return BanUnbanUser_Find(data);
+				return ShowAuditInfoUser_Find(data);
 			}
 
-			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, "BanUnbanUser_Perform");
-			return View("~/Views/Admin/BanUnbanUser.cshtml", new BanUnbanUserData(data));
+			int selectedUserId = data.SelectedUserIDs.FirstOrDefault();
+			var auditDataForView = new ShowAuditInfoUserData(data);
+			auditDataForView.AuditData = SecurityGuiHelper.GetAllAuditsForUser(selectedUserId);
+			auditDataForView.AuditedUser = UserGuiHelper.GetUser(selectedUserId);
+			data.OverrideFilterAsString(filterAsString);
+			// we'll keep the search form open so we can quickly view data of multiple users without searching again. This means we'll keep the finduserdata state
+			// as it is, as this is the end state of this action anyway.
+			data.ActionButtonText = "View audit info";
+			data.FindUserState = AdminFindUserState.UsersFound;
+			var userIDsFoundAsString = foundUserIds.Split(',');
+			var userIDsOfUsersToLoad = userIDsFoundAsString.Select(us => Convert.ToInt32(us)).ToList();
+			data.FoundUsers = UserGuiHelper.GetUsers(userIDsOfUsersToLoad);
+			return View("~/Views/Admin/ShowAuditInfoUser.cshtml", auditDataForView);
+		}
+		
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult BanUnbanUser()
+		{
+			return ActionWithUserSearch_Start(() => new ActionWithUserSearchData(), "BanUnbanUser_Find", "~/Views/Admin/BanUnbanUser.cshtml");
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult BanUnbanUser_Find(FindUserData data)
+		{
+			return ActionWithUserSearch_Find(data, "Ban / Unban selected user", "BanUnbanUser_UserSelected", "BanUnbanUser_Find", "~/Views/Admin/BanUnbanUser.cshtml", true);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult BanUnbanUser_UserSelected(FindUserData data, string submitAction)
+		{
+			return ActionWithUserSearch_UserSelected(data, submitAction, () => BanUnbanUser(), (d) => BanUnbanUser_Find(data), "BanUnbanUser_Perform", "~/Views/Admin/BanUnbanUser.cshtml");
 		}
 
 
@@ -350,7 +297,7 @@ namespace SD.HnD.Gui.Controllers
 				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
 			}
 			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
-			var viewData = new BanUnbanUserData(data);
+			var viewData = new ActionWithUserSearchData(data);
 			if(result)
 			{
 				viewData.FinalActionResult = newBanFlagValue ? "The user is now banned" : "The user has been unbanned";
@@ -410,6 +357,72 @@ namespace SD.HnD.Gui.Controllers
 			{
 				toFilter.FoundUsers.Remove(e);
 			}
+		}
+		
+		
+		private ActionResult ActionWithUserSearch_Start(Func<ActionWithUserSearchData> dataCreatorFunc, string nextActionName, string viewName)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = dataCreatorFunc();
+			FillUserDataForState(data.FindUserData, AdminFindUserState.Start, string.Empty, nextActionName);
+			return View(viewName, data);
+		}
+		
+		
+		private ActionResult ActionWithUserSearch_Find(FindUserData data, string actionButtonText, string nextActionNameValidSearchData, 
+														string nextActionNameInvalidSearchData, string viewName, bool filterOutFixedUsers)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.IsAnythingChecked)
+			{
+				FillUserDataForState(data, AdminFindUserState.UsersFound, actionButtonText, nextActionNameValidSearchData);
+				if(filterOutFixedUsers)
+				{
+					// filter out the currently logged in user, Anonymous (0) and Admin (1)
+					FilterFoundUsers(data);
+				}
+			}
+			else
+			{
+				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, nextActionNameInvalidSearchData);
+			}
+			return View(viewName, new ActionWithUserSearchData(data));
+		}
+		
+		
+		private ActionResult ActionWithUserSearch_UserSelected(FindUserData data, string submitAction, Func<ActionResult> actionSearchAgainFunc, 
+																Func<FindUserData, ActionResult> actionNoneSelectedFunc, string nextActionName, string viewName)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction == "SearchAgain")
+			{
+				return actionSearchAgainFunc();
+			}
+
+			if(submitAction != "PerformAction")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			{
+				return actionNoneSelectedFunc(data);
+			}
+
+			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, nextActionName);
+			return View(viewName, new ActionWithUserSearchData(data));
 		}
 	}
 }

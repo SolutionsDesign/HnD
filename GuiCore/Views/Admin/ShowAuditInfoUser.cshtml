@@ -1,0 +1,107 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.BL
+@using SD.HnD.DALAdapter.EntityClasses
+@using SD.HnD.Gui.Classes
+@using SD.HnD.Gui.Controllers
+@using SD.HnD.Gui.Models.Admin
+@model SD.HnD.Gui.Models.Admin.ActionWithUserSearchData
+
+@{
+	ViewBag.Title = "HnD | Admin | Show Audit Info for a User";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Show Audit Info for a User</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Show Audit Info for a User</h1>
+			<p>
+				Below you can view the audit info for a user. First select the user using the Find User portion of the form, then show the user's information.  
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			{
+				@await Html.PartialAsync("Admin/FindUser", Model.FindUserData)
+			}
+		</div>
+	</div>
+	@{
+		var auditViewData = Model as ShowAuditInfoUserData;
+		if(auditViewData != null)
+		{
+			// show audit data
+			<div class="row">
+			    <div class="col-sm-12 fs-header">
+			        <span class="plr7">Audit info for user '@auditViewData.AuditedUser.NickName'</span>
+			    </div>
+			</div>
+			<div class="row">
+			    <div class="col-sm-12">
+			        <div class="row fs-headingrow">
+        				<div class="col-sm-3 plr15">Action</div>
+        				<div class="col-sm-2 plr15">Audited on</div>
+        				<div class="col-sm-7 plr15">Additional info</div>
+			        </div>
+				</div>
+			</div>
+			foreach(var auditCore in auditViewData.AuditData)
+			{
+				var actionAsString = ((AuditActions)auditCore.AuditActionID).ToString();
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="row">
+							<div class="col-sm-3">@actionAsString</div>
+							<div class="col-sm-2">@auditCore.AuditedOn.ToString("dd-MMM-yyyy HH:mm:ss")</div>
+							<div class="col-sm-7">
+								@switch((AuditActions)auditCore.AuditActionID)
+								{
+									case AuditActions.AuditNewMessage:
+									case AuditActions.AuditAlteredMessage:
+									case AuditActions.AuditApproveAttachment:
+										var auditMessageData = auditCore as AuditDataMessageRelatedEntity;
+										if(auditMessageData != null)
+										{
+											<a href="~/Message/Goto/@auditMessageData.MessageID">@($"Message in thread '{auditMessageData.Message.Thread.Subject}'")</a>
+										}
+										break;
+									case AuditActions.AuditEditMemo:
+									case AuditActions.AuditNewThread:
+										var auditThreadData = auditCore as AuditDataThreadRelatedEntity;
+										if(auditThreadData != null)
+										{
+											<a href="~/Thread/@auditThreadData.ThreadID">@($"Thread: '{auditThreadData.Thread.Subject}'")</a>
+										}
+										break;
+									case AuditActions.AuditLogin:
+									<span>&nbsp;</span>
+										break;
+								}
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		}
+	}
+</div>

@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using SD.HnD.Gui.Classes
 @using SD.HnD.Gui.Controllers
-@model SD.HnD.Gui.Models.Admin.FindUserData
+@model SD.HnD.Gui.Models.Admin.ActionWithUserSearchData
 
 @{
 	ViewBag.Title = "HnD | Admin | Edit user info";
@@ -38,9 +38,9 @@
 	</div>
 	<div class="row mb40">
 		<div class="col-sm-8">
-			@using(Html.BeginForm(Model.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
 			{
-				@await Html.PartialAsync("Admin/FindUser", Model)
+				@await Html.PartialAsync("Admin/FindUser", Model.FindUserData)
 			}			
 		</div>
 	</div>

@@ -355,6 +355,22 @@ namespace SD.HnD.BL
 				return adapter.FetchEntity(user) ? user : null;
 			}
 		}
+
+
+		/// <summary>
+		/// Returns the set of user entities which IDs are in the list specified
+		/// </summary>
+		/// <param name="userIDsOfUsersToLoad"></param>
+		/// <returns></returns>
+		public static EntityCollection<UserEntity> GetUsers(List<int> userIDsOfUsersToLoad)
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				var users = new EntityCollection<UserEntity>();
+				adapter.FetchEntityCollection(users, new RelationPredicateBucket(UserFields.UserID.In(userIDsOfUsersToLoad)));
+				return users;
+			}
+		}
 		
 		
 		/// <summary>

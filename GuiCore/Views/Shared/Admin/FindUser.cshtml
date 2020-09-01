@@ -24,6 +24,8 @@
 		</div>
 		break;
 	case AdminFindUserState.UsersFound:
+		<input type="hidden" name="filterAsString" Value="@Model.FilterToString()"/>
+		<input type="hidden" name="foundUserIds" Value='@string.Join(",", Model.FoundUsers.Take(100).Select(u=>u.UserID))'/>                                                                          
 		<div class="caption"><span>Filter information</span></div>
 		<div><p>@Model.FilterToString()</p></div>	
 		<div class="caption"><span>Users matching the filter(s)</span></div>
@@ -31,7 +33,7 @@
 			@Html.ListBoxFor(m => m.SelectedUserIDs, Model.FoundUsers?.Select(u=>new SelectListItem(u.NickName, u.UserID.ToString())), new {@class = "form-control", size=Math.Min(Math.Max(5, Model.FoundUsers?.Count??0), 10)})
 		</div>
 		<div class="mt20">
-			<button type="submit" name="submitAction" value="PerformAction" class="btn btn-default"> @Model.ActionButtonText </button>
+			<button type="submit" name="submitAction" value="PerformAction" class="btn btn-default btn-primary"> @Model.ActionButtonText </button>
 			&nbsp;&nbsp;
 			<button type="submit" name="submitAction" value="SearchAgain" class="btn btn-default"> Search again </button>
 		</div>
