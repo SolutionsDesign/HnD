@@ -35,6 +35,8 @@ using System.Net.Mail;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.Linq;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
@@ -196,20 +198,74 @@ namespace SD.HnD.BL
 				return adapter.SaveEntity(toLog);
 			}
 		}
-
-
+		
+		
 		/// <summary>
-		/// Persists the IP ban unit of work passed into this method. The call to this method originates from the form which manages IP bans with
-		/// one LLBLGenProDataSource controls which is used to persist changes. This LLBLGenProDataSource produces a UnitOfWork when the
-		/// PerformWork event is raised and this UoW contains the changes to persist. This routine persists these changes. 
+		/// Adds the given IPBan
 		/// </summary>
-		/// <param name="uow">The unitofwork object which contains 1 or more changes (with standard .NET controls, this is 1) to persist.</param>
-		public static void PersistIPBanUnitOfWork(UnitOfWork2 uow)
+		/// <param name="toAdd">the dto containing the values to add as a new entity</param>
+		/// <returns>the ID of the new IPBan, or 0 if it failed</returns>
+		public static int AddNewIPBan(IPBanDto toAdd)
 		{
-			// pass a new transaction to the commit routine and auto-commit this transaction when the transaction is complete.
-			uow.Commit(new DataAccessAdapter(), true);
+			if(toAdd == null)
+			{
+				return 0;
+			}
+			var toInsert = new IPBanEntity()
+						   {
+							   IPSegment1 = toAdd.IPSegment1,
+							   IPSegment2 = toAdd.IPSegment2,
+							   IPSegment3 = toAdd.IPSegment3,
+							   IPSegment4 = toAdd.IPSegment4,
+							   Range = toAdd.Range,
+							   Reason = toAdd.Reason,
+							   IPBanSetByUserID = toAdd.IPBanSetByUserID
+						   };
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.SaveEntity(toInsert) ? toInsert.IPBanID : 0;
+			}
+		}
+		
+		
+		/// <summary>
+		/// Modifies the given IPBan
+		/// </summary>
+		/// <param name="toUpdate">the dto containing the values to update the associated entity with</param>
+		/// <returns>True if succeeded, false otherwise</returns>
+		public static bool ModifyIPBan(IPBanDto toUpdate)
+		{
+			if(toUpdate == null)
+			{
+				return false;
+			}
+			// load the entity from the database
+			var ipBan = SecurityGuiHelper.GetIPBan(toUpdate.IPBanID);
+			if(ipBan == null)
+			{
+				return false;
+			}
+			ipBan.UpdateFromIPBan(toUpdate);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.SaveEntity(ipBan);
+			}
 		}
 
+		
+		/// <summary>
+		/// Deletes the ipban with the id specified 
+		/// </summary>
+		/// <param name="idToDelete">the id of the ip ban to delete</param>
+		/// <returns>true if succeeded, false otherwise</returns>
+		public static bool DeleteIPBan(int idToDelete)
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				return adapter.DeleteEntitiesDirectly(typeof(IPBanEntity), new RelationPredicateBucket(IPBanFields.IPBanID.Equal(idToDelete))) > 0;
+			}
+		}
+		
 
 		/// <summary>
 		/// Creates a new Role in the system. If the user specified a role description that is already available, the unique constraint violation will be 

@@ -1486,6 +1486,71 @@
         </LastUsedPreferences>
       </CodeGenerationCyclePreferences>
       <Documents>
+        <Document Name="IPBan">
+          <RootEntity Entity=":IPBan" />
+          <Fields>
+            <Field Name="IPBanID">
+              <EntityField Name="IPBanID" />
+            </Field>
+            <Field Name="IPBanSetByUserID">
+              <EntityField Name="IPBanSetByUserID" />
+              <OutputSettingValues>
+                <IgnoredDefaultAttributes>
+                  <Attribute Value="Required" />
+                </IgnoredDefaultAttributes>
+              </OutputSettingValues>
+            </Field>
+            <Field Name="IPBanSetOn">
+              <EntityField Name="IPBanSetOn" />
+            </Field>
+            <Field Name="IPSegment1">
+              <EntityField Name="IPSegment1" />
+              <OutputSettingValues>
+                <Attributes>
+                  <Attribute Value="Range(1, 255)" />
+                </Attributes>
+              </OutputSettingValues>
+            </Field>
+            <Field Name="IPSegment2">
+              <EntityField Name="IPSegment2" />
+              <OutputSettingValues>
+                <Attributes>
+                  <Attribute Value="Range(1,255)" />
+                </Attributes>
+              </OutputSettingValues>
+            </Field>
+            <Field Name="IPSegment3">
+              <EntityField Name="IPSegment3" />
+              <OutputSettingValues>
+                <Attributes>
+                  <Attribute Value="Range(1,255)" />
+                </Attributes>
+              </OutputSettingValues>
+            </Field>
+            <Field Name="IPSegment4">
+              <EntityField Name="IPSegment4" />
+              <OutputSettingValues>
+                <Attributes>
+                  <Attribute Value="Range(1, 255)" />
+                </Attributes>
+              </OutputSettingValues>
+            </Field>
+            <Field Name="Range">
+              <EntityField Name="Range" />
+            </Field>
+            <Field Name="Reason">
+              <EntityField Name="Reason" />
+            </Field>
+            <Field Name="SetByUserNickName">
+              <EntityField Name="NickName" Entity=":User" NavigatorPath="SetByUser" />
+              <OutputSettingValues>
+                <IgnoredDefaultAttributes>
+                  <Attribute Value="Required" />
+                </IgnoredDefaultAttributes>
+              </OutputSettingValues>
+            </Field>
+          </Fields>
+        </Document>
         <Document Name="MessageInThread">
           <RootEntity Entity=":Message" />
           <Fields>

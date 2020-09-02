@@ -21,7 +21,7 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
-
+		
 		
 		[HttpGet]
 		[Authorize]

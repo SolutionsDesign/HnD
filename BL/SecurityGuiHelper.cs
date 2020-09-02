@@ -30,7 +30,11 @@ using System.Collections.Generic;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.Linq;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
+using System.Linq;
 
 namespace SD.HnD.BL
 {
@@ -101,24 +105,41 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Gets all IP ban entities, sorted by range for the page specified.
+		/// Gets all IP ban DTOs, sorted by IP segments ascending
 		/// </summary>
-		/// <param name="pageNo">The page number for the page to read. Specify 0 to fetch all ip bans.</param>
-		/// <param name="pageSize">Size of the page to fetch. Specify 0 to fetch all ip bans.</param>
-		/// <param name="prefetchUser">If set to true, it will prefetch the user entity into the ipBan entity, for the user who set the IPBan</param>
+		/// <returns>
+		/// the collection of ipban DTOs requested
+		/// </returns>
+		public static List<IPBanDto> GetAllIPBanDTOs()
+		{
+			var qf = new QueryFactory();
+			var q2 = qf.IPBan
+					  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), IPBanFields.IPSegment4.Ascending())
+					  .ProjectToIPBanDto(qf);
+			using(var adapter = new DataAccessAdapter())
+			{
+				//return adapter.FetchQuery(q);
+				var metaData = new LinqMetaData(adapter);
+				var q = (from i in metaData.IPBan
+						 orderby i.IPSegment1, i.IPSegment2, i.IPSegment3, i.IPSegment4
+						 select i)
+					.ProjectToIPBanDto();
+				return q.ToList();
+			}
+		}
+
+
+		/// <summary>
+		/// Gets all IP ban entities, sorted by IP segments ascending
+		/// </summary>
 		/// <returns>
 		/// the collection of ipban entities requested
 		/// </returns>
-		public static EntityCollection<IPBanEntity> GetAllIPBans(int pageNo, int pageSize, bool prefetchUser)
+		public static EntityCollection<IPBanEntity> GetAllIPBans()
 		{
 			var qf = new QueryFactory();
 			var q = qf.IPBan
-					  .OrderBy(IPBanFields.Range.Ascending())
-					  .Page(pageNo, pageSize);
-			if(prefetchUser)
-			{
-				q.WithPath(IPBanEntity.PrefetchPathSetByUser);
-			}
+					  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), IPBanFields.IPSegment4.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.FetchQuery(q, new EntityCollection<IPBanEntity>());
@@ -127,18 +148,20 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Gets the total IP ban count
+		/// Gets the IPBan entity with the ID specified or null if not found
 		/// </summary>
-		/// <returns>the # of IPBans stored in the database.</returns>
-		public static int GetTotalIPBanCount()
+		/// <param name="ipBanId"></param>
+		/// <returns></returns>
+		public static IPBanEntity GetIPBan(int ipBanId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(new QueryFactory().Create().Select(Functions.CountRow()));
+				var toFetch = new IPBanEntity(ipBanId);
+				return adapter.FetchEntity(toFetch) ? toFetch : null;
 			}
 		}
 
-
+		
 		/// <summary>
 		/// Constructs a dataview with all the roles available, complete with statistics (#users, if the role is used as anonymous role or default user role)
 		/// </summary>

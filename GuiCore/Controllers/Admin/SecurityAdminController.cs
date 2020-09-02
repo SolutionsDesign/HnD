@@ -15,55 +15,57 @@ namespace SD.HnD.Gui.Controllers
 	/// Controller which exposes a WebAPI to be used with the jsGrid using views for sections.
 	/// The methods in this controller therefore use the Http action as prefix.
 	/// </summary>
-	public class SectionAdminController : Controller
+	public class SecurityAdminController : Controller
 	{	
 		private IMemoryCache _cache;
 		
-		public SectionAdminController(IMemoryCache cache)
+		public SecurityAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
-		
+						
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult Sections()
+		public ActionResult IPBans()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			return View("~/Views/Admin/Sections.cshtml");
+			return View("~/Views/Admin/IPBans.cshtml");
 		}
 		
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult<IEnumerable<SectionDto>> GetSections()
+		public ActionResult<IEnumerable<SectionDto>> GetIPBans()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var supportQueueDtos = SectionGuiHelper.GetAllSectionDtos();
-			return Ok(supportQueueDtos);
+			var ipBanDtos = SecurityGuiHelper.GetAllIPBanDTOs();
+			return Ok(ipBanDtos);
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateSection([FromBody] SectionDto toUpdate)
+		public ActionResult UpdateIPBan([FromBody] IPBanDto toUpdate)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			var result = SectionManager.ModifySection(toUpdate);
+
+			toUpdate.IPBanSetOn = DateTime.Now;
+			var result = SecurityManager.ModifyIPBan(toUpdate);
 			if(result)
 			{
-				_cache.Remove(CacheKeys.AllSections);
+				_cache.Remove(CacheKeys.AllIPBans);
 			}
 			// jsGrid requires the updated object as return value.
 			return Json(toUpdate);
@@ -73,18 +75,20 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult InsertSection([FromBody] SectionDto toInsert)
+		public ActionResult InsertIPBan([FromBody] IPBanDto toInsert)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var sectionId = SectionManager.AddNewSection(toInsert);
-			if(sectionId>0)
+			toInsert.IPBanSetByUserID = this.HttpContext.Session.GetUserID();
+			toInsert.IPBanSetOn = DateTime.Now;
+			var ipBanId = SecurityManager.AddNewIPBan(toInsert);
+			if(ipBanId>0)
 			{
-				_cache.Remove(CacheKeys.AllSections);
-				toInsert.SectionID = sectionId;
+				_cache.Remove(CacheKeys.AllIPBans);
+				toInsert.IPBanID = ipBanId;
 			}
 			// jsGrid requires the inserted object as return value.
 			return Json(toInsert);
@@ -94,7 +98,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteSection(int id)
+		public ActionResult DeleteIPBan(int id)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -104,10 +108,10 @@ namespace SD.HnD.Gui.Controllers
 			var result = false;
 			if(id>0)
 			{
-				result = SectionManager.DeleteSection(id);
+				result = SecurityManager.DeleteIPBan(id);
 				if(result)
 				{
-					_cache.Remove(CacheKeys.AllSections);
+					_cache.Remove(CacheKeys.AllIPBans);
 				}
 			}
 
@@ -116,7 +120,7 @@ namespace SD.HnD.Gui.Controllers
 				return Json(new {success = true});
 			}
 
-			return ValidationProblem("The section wasn't deleted. Likely because it contained one or more forums. First delete the forums, then delete the section.");
+			return ValidationProblem("The IPBan wasn't deleted.");
 		}
 	}
 }

@@ -1,0 +1,127 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui
+@inject IAntiforgery antiforgery
+@{
+	ViewBag.Title = "HnD | Admin | Manage IP Bans";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage IP Bans</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Manage IP Bans</h1>
+			<p>
+				The grid below allows you to manage the IP bans currently defined. The grid allows you to add, edit and remove IP bans. IP bans are bans on an IP range. 
+				An IP number has 4 segments: aaa.bbb.ccc.ddd. By specifying a range, which can be 8, 16, 24 or 32 for the significant bits in the IP segments specified, 
+				you are able to specify how IP addresses are matched against the set IP ban.
+			</p>
+			<p>
+                Example: you set as IP ban: 1.2.3.4/24, where '24' is the range. When a user with IP address 1.2.3.5 tries to connect to the website, their IP 
+				address matches with this IP ban, as the range is 24, i.e. the first 3 segments, and thus the IP address matches the IP ban if the first 3 segments are 
+				the same, which is the case: 1.2.3. 
+			</p>
+			<p>
+				Would the user have the IP address: 2.2.3.4, it wouldn't be a match, as 2.2.3 isn't equal to 1.2.3. 
+			</p>
+			<p>
+				All fields are mandatory.<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-12">
+			<div class="alert alert-danger hidden" role="alert" id="jsErrorMessageContainer">
+				<span id="jsErrorMessageTitle" class="alert-title"></span>
+				<p id="jsErrorMessageDetail"></p>
+			</div>
+			<div id="jsGrid"></div>
+		</div>
+	</div>
+</div>
+
+@section scripts
+{
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+	<script>
+		var deletionFailed = false;
+		
+        $(function() {
+            $("#jsGrid").jsGrid({
+                height: "auto",
+                width: "100%",
+                
+                inserting: true,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                
+                pageSize: 25,
+                pageButtonCount: 5,
+                
+                deleteConfirm: "Do you really want to delete this IP Ban?",
+                
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetIPBans",
+                            dataType: "json",
+                            data:filter
+                        });
+                    },
+                    insertItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/InsertIPBan", item);
+                    },
+                    updateItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/UpdateIPBan", item);
+                    },
+                    deleteItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/DeleteIPBan/" + item.ipBanID, {});
+                    }
+                },
+                onItemInserted : function (args) { 
+                		args.grid.loadData();
+                	},
+                onItemDeleted : function (args) { 
+                		args.grid.loadData();
+                	},
+                fields: [
+                    { name:"ipBanID", title: "ID", type: "number", width: 20, editing:false, inserting:false, sorting:false},
+                    { name:"ipSegment1", title: "S1", type: "number", width: 30},
+                    { name:"ipSegment2", title: "S2", type: "number", width: 30},
+                    { name:"ipSegment3", title: "S3", type: "number", width: 30},
+                    { name:"ipSegment4", title: "S4", type: "number", width: 30},
+                    { name:"range", title: "Range", type: "select", width: 25, valueField: "Id", textField:"Name", selectedIndex:2, valueType:"number",
+                        items: [
+                             { Name: "8", Id: 8 },
+                             { Name: "16", Id: 16 },
+                             { Name: "24", Id: 24 },
+                             { Name: "32", Id: 32 }
+                        ]
+                    },
+                    { name:"ipBanSetOnAsString", title: "Set on", type: "string", width: 40, editing:false, inserting:false },
+                    { name:"reason", title: "Reason", type: "textarea", width: 100 },
+                    { type: "control"}
+                ]
+            });
+        });
+    </script>
+}

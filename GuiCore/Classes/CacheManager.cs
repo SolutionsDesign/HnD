@@ -171,7 +171,7 @@ namespace SD.HnD.Gui
 			if(toReturn == null)
 			{
 				// not there, store it.
-				var allIPBans = SecurityGuiHelper.GetAllIPBans(0, 0, false);
+				var allIPBans = SecurityGuiHelper.GetAllIPBans();
 				toReturn = new Dictionary<int, Dictionary<string, IPBanEntity>>();
 				foreach(var currentIPBan in allIPBans)
 				{
