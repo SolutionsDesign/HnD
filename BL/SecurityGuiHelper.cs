@@ -266,7 +266,7 @@ namespace SD.HnD.BL
 		/// <param name="forumID">The forum ID.</param>
 		/// <returns>filled entity collection
 		/// </returns>
-		public static EntityCollection<ForumRoleForumActionRightEntity> GetForumActionRightRolesFoForumRole(int roleID, int forumID)
+		public static EntityCollection<ForumRoleForumActionRightEntity> GetForumActionRightRolesForForumRole(int roleID, int forumID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{

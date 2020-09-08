@@ -24,7 +24,54 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
-								
+
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult ManageRoleRights()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var roleId = SecurityGuiHelper.GetAllRoles().FirstOrDefault()?.RoleID ?? 0;
+			var forumId = ForumGuiHelper.GetAllForumIds().FirstOrDefault();
+			return ManageRightsForForum(new ManageForumRoleRightsData() {RoleID = roleId, ForumID = forumId});
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult ManageRightsForForum(ManageForumRoleRightsData data, string submitAction="")
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			data.AvailableRoles = SecurityGuiHelper.GetAllRoles();
+			data.AvailableActionRights = SecurityGuiHelper.GetAllActionRightsApplybleToAForum();
+			data.AvailableForums = ForumGuiHelper.GetAllForumsWithSectionNames();
+			switch(submitAction)
+			{
+				case "save":
+					// save the data, then after this action, it'll reload the data and show it.
+					data.LastActionResult = SecurityManager.SaveForumActionRightsForForumRole(data.ActionRightsSet, data.RoleID, data.ForumID) ? "Save successful" : "Save failed";
+					break;
+				case "cancel":
+					return RedirectToAction("Index", "Home");
+				default:
+					// nothin'
+					break;
+			}
+			// postback which should simply fill in the data and show the form
+			data.ActionRightsSet = SecurityGuiHelper.GetForumActionRightRolesForForumRole(data.RoleID, data.ForumID).Select(r => r.ActionRightID).ToList();
+
+			return View("~/Views/Admin/ManageRightsPerForum.cshtml", data);
+		}
+		
 		
 		[HttpGet]
 		[Authorize]

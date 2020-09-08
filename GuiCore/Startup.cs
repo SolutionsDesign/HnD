@@ -269,6 +269,10 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("EditRole", "Admin/EditRole/{id}", new {controller = "SecurityAdmin", action = "EditRole", id=0});
 			routes.MapControllerRoute("DeleteRole", "Admin/DeleteRole/{id}", new {controller = "SecurityAdmin", action = "DeleteRole", id =0});
 			
+			routes.MapControllerRoute("ManageRoleRights", "Admin/ManageRoleRights", new {controller = "SecurityAdmin", action = "ManageRoleRights"});
+			routes.MapControllerRoute("ManageRightsForForum", "Admin/ManageRightsForForum", new {controller = "SecurityAdmin", action = "ManageRightsForForum"});
+			
+			
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute( "default",  "{controller=Home}/{action=Index}/{id?}");
 		}

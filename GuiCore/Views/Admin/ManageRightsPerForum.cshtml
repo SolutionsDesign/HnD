@@ -1,0 +1,90 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.ManageForumRoleRightsData
+
+@{
+	ViewBag.Title = "HnD | Admin | Manage role rights per forum";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage Role Rights Per Forum</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="br-bottom mt30">Manage Role Rights Per Forum</h1>
+			<p>
+				Below you can specify which action rights a given role - forum combination will get. All users in a given role inherit the rights of that role for that
+				forum. Rights are accumulative, so if a user is in role A, B and C, the user has all rights of A, B and C for a given forum. This means that
+				you mainly have to focus on the default roles for a user and the default anonymous role (specified in System parameters).
+			</p>
+			<p>
+				All additional roles will then simply define extra rights for the users in those roles, as all users are in the default user role anyway, unless you 
+				explicitly remove the user from that role.
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm("ManageRightsForForum", "SecurityAdmin", null, FormMethod.Post, true, new {role = "form", name="rolePerForumForm"}))
+			{
+				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+				<div class="caption"><span>Role - action right selection</span></div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.RoleID, "Role", new {@class = "control-label above-control"})
+					@Html.DropDownListFor(m => m.RoleID, @Model.AvailableRoles.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control", onchange="document.rolePerForumForm.submit();"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumID, "Forum", new {@class = "control-label above-control"})
+					@Html.DropDownListFor(m => m.ForumID, @Model.AvailableForums.Select(af => new SelectListItem(af.SectionName + " | " + af.ForumName, af.ForumID.ToString())), new {@class = "form-control", onchange="document.rolePerForumForm.submit();"})
+				</div>
+				<div class="caption"><span>Available action rights for this combination</span></div>
+				<div class="form-group">
+					<button type="button" class="btn btn-default" id="CheckAllButton" onclick="doCheckUncheckRights(true);">Check all</button>&nbsp;&nbsp;
+					<button type="button" class="btn btn-default" id="CheckNoneButton" onclick="doCheckUncheckRights(false);">Check none</button>
+				</div>	
+				<div class="form-group">
+					@foreach(var actionRight in Model.AvailableActionRights)
+					{
+						var actionRightChecked = Model.ActionRightsSet.Contains(actionRight.ActionRightID) ? "checked" : string.Empty;
+						<input name="ActionRightsSet" type="checkbox" value="@actionRight.ActionRightID" @actionRightChecked/>  @actionRight.ActionRightDescription<br/>
+					}
+				</div>
+				<div class="mt20">
+					<button type="submit" name="submitAction" value="save" class="btn btn-default btn-primary"> Save </button>
+					&nbsp;&nbsp;&nbsp;
+					<button type="submit" name="submitAction" value="cancel" formnovalidate class="btn btn-default"> Cancel </button>
+				</div>
+				<div>@Model.LastActionResult</div>
+			}
+		</div>
+	</div>
+</div>
+@section scripts
+{
+	<script>
+		function doCheckUncheckRights(newValue)
+		{
+			var allRightsCheckboxes = document.getElementsByName("ActionRightsSet");
+			for (var i=0;i<allRightsCheckboxes.length;i++) {
+				allRightsCheckboxes[i].checked = newValue;
+			}
+		}
+	</script>
+}
