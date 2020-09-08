@@ -16,7 +16,7 @@
     <Property Name="AutoAddManyToManyRelationships" Value="false" />
     <Property Name="AutoAssignSequencesToIntegerPks" Value="true" />
     <Property Name="AutoAssignTypeConverterToFieldMapping" Value="true" />
-    <Property Name="AutomaticallyGenerateSourceCodeOnProjectSave" Value="false" />
+    <Property Name="AutomaticallyGenerateSourceCodeOnProjectSave" Value="true" />
     <Property Name="ConnectionStringKeyNamePattern" Value="Main.ConnectionString.{$ProviderName}" />
     <Property Name="DefaultDDLSQLScriptDestinationFolder" Value=".\DDLSQLScripts" />
     <Property Name="DefaultDeleteRuleAction" Value="1" />
@@ -93,7 +93,9 @@
   <TypeShortcuts>
     <TypeShortcut Shortcut="CategoryType" Type="EnumTypes.CategoryType, EnumTypes" />
   </TypeShortcuts>
-  <IgnoredWarnings />
+  <IgnoredWarnings>
+    <IgnoredWarning ID="DZ0009" />
+  </IgnoredWarnings>
   <SavedSearchQueries />
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
@@ -1621,6 +1623,17 @@
             </Field>
             <Field Name="ThreadID">
               <EntityField Name="ThreadID" />
+            </Field>
+          </Fields>
+        </Document>
+        <Document Name="Role">
+          <RootEntity Entity=":Role" />
+          <Fields>
+            <Field Name="RoleDescription">
+              <EntityField Name="RoleDescription" />
+            </Field>
+            <Field Name="RoleID">
+              <EntityField Name="RoleID" />
             </Field>
           </Fields>
         </Document>

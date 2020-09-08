@@ -45,7 +45,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult EditUserInfo_UserSelected(FindUserData data, string submitAction)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -98,7 +98,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult EditUserInfo_FinalAction(EditUserInfoData data)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -155,7 +155,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteUser_Perform(FindUserData data, string submitAction)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -207,7 +207,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult ShowAuditInfoUser_UserSelected(FindUserData data, string submitAction, string filterAsString, string foundUserIds)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -274,7 +274,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult BanUnbanUser_Perform(FindUserData data, string submitAction)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -362,7 +362,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		private ActionResult ActionWithUserSearch_Start(Func<ActionWithUserSearchData> dataCreatorFunc, string nextActionName, string viewName)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -401,7 +401,7 @@ namespace SD.HnD.Gui.Controllers
 		private ActionResult ActionWithUserSearch_UserSelected(FindUserData data, string submitAction, Func<ActionResult> actionSearchAgainFunc, 
 																Func<FindUserData, ActionResult> actionNoneSelectedFunc, string nextActionName, string viewName)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}

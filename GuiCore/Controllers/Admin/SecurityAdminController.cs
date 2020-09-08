@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
 using SD.HnD.DTOs.DtoClasses;
 using SD.HnD.Gui.Models.Admin;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -23,13 +24,180 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
-						
+								
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult Roles()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			return View("~/Views/Admin/Roles.cshtml");
+		}
+		
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult<IEnumerable<SectionDto>> GetRoles()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var roleDtos = SecurityGuiHelper.GetAllRoleDTOs();
+			return Ok(roleDtos);
+		}
+		
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult EditRole(int id)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new AddEditRoleData();
+			data.RoleEdited = SecurityGuiHelper.GetRole(id);
+			if(data.RoleEdited == null)
+			{
+				return RedirectToRoute("ManageRoles");
+			}
+			FillAddEditRoleData(data);
+			data.SystemRightsSet = SecurityGuiHelper.GetAllSystemActionRightIDsForRole(id);
+			data.AuditActionsSet = SecurityGuiHelper.GetAllAuditActionIDsForRole(id);
+			return View("~/Views/Admin/EditRole.cshtml", data);
+		}
+		
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> EditRole(AddEditRoleData data, string submitAction, int id = 0)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+			if(submitAction == "cancel" || id <= 0)
+			{
+				return RedirectToRoute("ManageRoles");
+			}
+			if(!ModelState.IsValid)
+			{
+				FillAddEditRoleData(data);
+				return View("~/Views/Admin/EditRole.cshtml", data);
+			}
+			try
+			{
+				var result = await SecurityManager.ModifyRoleAsync(id, data.RoleEdited.RoleDescription, data.SystemRightsSet, data.AuditActionsSet);
+				if(!result)
+				{
+					ModelState.AddModelError(string.Empty, "Save failed.");
+					FillAddEditRoleData(data);
+					return View("~/Views/Admin/EditRole.cshtml", data);
+				}
+			}
+			catch(ORMQueryExecutionException)
+			{
+				ModelState.AddModelError("RoleEdited.RoleDescription", "Save failed, likely due to the role description not being unique. Please specify a unique role description name.");
+				FillAddEditRoleData(data);
+				return View("~/Views/Admin/EditRole.cshtml", data);
+			}
+			return View("~/Views/Admin/Roles.cshtml", data);			
+		}
+
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult AddRole()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new AddEditRoleData();
+			FillAddEditRoleData(data);
+			return View("~/Views/Admin/AddRole.cshtml", data);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public async Task<ActionResult> AddRole(AddEditRoleData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction == "cancel")
+			{
+				return RedirectToRoute("ManageRoles");
+			}
+			if(!ModelState.IsValid)
+			{
+				FillAddEditRoleData(data);
+				return View("~/Views/Admin/AddRole.cshtml", data);
+			}
+
+			try
+			{
+				await SecurityManager.CreateNewRoleAsync(data.RoleEdited.RoleDescription, data.SystemRightsSet, data.AuditActionsSet);
+			}
+			catch(ORMQueryExecutionException ex)
+			{
+				ModelState.AddModelError("RoleDescription", "Save failed, likely due to the role description not being unique. Please specify a unique role description name." + ex.Message);
+				FillAddEditRoleData(data);
+				return View("~/Views/Admin/AddRole.cshtml", data);
+			}
+			return View("~/Views/Admin/Roles.cshtml", data);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult DeleteRole(int id)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var result = false;
+			if(id>0)
+			{
+				// check if the role is set as a default role in system settings. If so, it's not deleted
+				var systemSettings = _cache.GetSystemData();
+				if(systemSettings.AnonymousRole == id || systemSettings.DefaultRoleNewUser == id)
+				{
+					return ValidationProblem("The role wasn't deleted because it's a role that's set as a default in System Settings.");
+				}
+
+				result = SecurityManager.DeleteRole(id);
+			}
+
+			if(result)
+			{
+				return Json(new {success = true});
+			}
+
+			return ValidationProblem("The role wasn't deleted.");
+		}
+		
 		
 		[HttpGet]
 		[Authorize]
 		public ActionResult IPBans()
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -41,7 +209,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		public ActionResult<IEnumerable<SectionDto>> GetIPBans()
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -56,7 +224,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult UpdateIPBan([FromBody] IPBanDto toUpdate)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -77,7 +245,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult InsertIPBan([FromBody] IPBanDto toInsert)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -100,7 +268,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteIPBan(int id)
 		{
-			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -121,6 +289,13 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			return ValidationProblem("The IPBan wasn't deleted.");
+		}
+		
+		
+		private void FillAddEditRoleData(AddEditRoleData data)
+		{
+			data.AvailableSystemRights = SecurityGuiHelper.GetAllSystemActionRights();
+			data.AvailableAuditActions = SecurityGuiHelper.GetAllAuditActions();
 		}
 	}
 }

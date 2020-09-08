@@ -284,7 +284,7 @@ namespace SD.HnD.Gui
 		/// forumsActionRightsInSession, which is stored in the user's Session object under 'forumsActionRights' 
 		/// which keeps per ActionRightID a list of ForumIDs. 
 		/// Since in general the number of Action Rights will be less than the number of forums, we decided to group forum IDs per each action right.
-		/// An example: A "Power User" Role, has "Access Forum" Action right for the followoing Forums: 1,3,4 and 8, then in the collection of the 
+		/// An example: A "Power User" Role, has "Access Forum" Action right for the following Forums: 1,3,4 and 8, then in the collection of the 
 		/// action right 'Access forum', the ForumIDs 1, 3, 4, and 8 are placed. 
 		/// </summary>
 		/// <param name="session">The session the method works on</param>

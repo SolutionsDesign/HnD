@@ -308,7 +308,6 @@ namespace SD.HnD.Gui.Controllers
 					// update last visit date in db
 					UserManager.UpdateLastVisitDateForUser(user.UserID);
 					// done
-					//FormsAuthentication.SetAuthCookie(user.NickName, data.RememberMe);
 					var claims = new List<Claim> {new Claim(ClaimTypes.Name, user.NickName)};
 					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 					var authProperties = new AuthenticationProperties() {IsPersistent = data.RememberMe};

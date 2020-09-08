@@ -1,0 +1,118 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui
+@inject IAntiforgery antiforgery
+@{
+	ViewBag.Title = "HnD | Admin | Manage roles";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage Roles</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Manage Roles</h1>
+			<p>
+				Below you are able to manage the roles in the forum system: you can add new ones and edit and delete existing roles.
+				Only roles which aren't set as a default role in <a href="~/Admin/SystemParameters">the System Settings</a> can be deleted.  
+			</p>	
+			<p>
+				To edit a role, just click the row. A separate editor will open.
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			<div class="alert alert-danger hidden" role="alert" id="jsErrorMessageContainer">
+				<span id="jsErrorMessageTitle" class="alert-title"></span>
+				<p id="jsErrorMessageDetail"></p>
+			</div>
+			<div id="jsGrid"></div>
+		</div>
+	</div>
+</div>
+
+@section scripts
+{
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+	<script>
+		var deletionFailed = false;
+		
+        $(function() {
+            $("#jsGrid").jsGrid({
+                height: "auto",
+                width: "100%",
+                
+                inserting: false,
+                editing: true,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                
+                pageSize: 10,
+                pageButtonCount: 5,
+                
+                deleteConfirm: "Do you really want to delete this role?",
+                
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetRoles",
+                            dataType: "json",
+                            data:filter
+                        });
+                    },
+                    deleteItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/DeleteRole/" + item.roleID, {});
+                    }
+                },
+                rowClick: function (args) {
+                	editRole(args.item.roleID);
+                },
+                fields: [
+                    { name:"roleID", title: "ID", type: "number", width: 20, editing:false, inserting:false},
+                    { name:"roleDescription", title: "Role description", type: "text", width: 100 },
+                    { 
+                    	type: "control",
+                    	width: 20,                 
+                    	modeSwitchButton: false,
+                    	editButton:false,
+						headerTemplate: function() {
+						 return $("<button>").attr("type", "button").text("Add")
+								 .on("click", function () {
+									 redirectToAdd();
+								 });
+						} 
+                    }
+                ]
+            });
+                        
+        var editRole = function (roleId)
+        {
+        	window.location.replace("@ApplicationAdapter.GetVirtualRoot()Admin/EditRole/" + roleId);
+        }
+            
+        var redirectToAdd = function () 
+        {
+        	window.location.replace("@ApplicationAdapter.GetVirtualRoot()Admin/AddRole");
+        }
+    });
+    </script>
+}

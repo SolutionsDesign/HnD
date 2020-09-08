@@ -90,7 +90,7 @@
 					}
 					if(threadRow.IsSticky)
 					{
-						iconType = "fa-thumb-tack";
+						iconType = "fa-thumbtack";
 						stickyClass = " stickyThread";
 					}
 					if(threadRow.ThreadLastPostingDate.HasValue)
@@ -113,7 +113,7 @@
 									{
 										<span class="empty-space-unanswered">&nbsp;</span>
 									}
-									<i class="fa @iconType @iconClass"></i>
+									<i class="fas @iconType @iconClass"></i>
 								</div>
 								<div class="column-fluent">
 									<a href="~/Thread/@threadRow.ThreadID/1">@threadRow.Subject</a>

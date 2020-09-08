@@ -1,1 +1,0 @@
-<%@ Page language="c#" CodeFile="Rssforum.aspx.cs" ContentType="text/xml" AutoEventWireup="true" Inherits="SD.HnD.Gui.Rssforum" %>

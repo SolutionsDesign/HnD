@@ -47,6 +47,21 @@ namespace SD.HnD.BL
 		/// Gets all role objects.
 		/// </summary>
 		/// <returns></returns>
+		public static List<RoleDto> GetAllRoleDTOs()
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				var metaData = new LinqMetaData(adapter);
+				var q = metaData.Role.OrderBy(r => r.RoleDescription).ProjectToRoleDto();
+				return q.ToList();
+			}
+		}
+
+		
+		/// <summary>
+		/// Gets all role objects.
+		/// </summary>
+		/// <returns></returns>
 		public static EntityCollection<RoleEntity> GetAllRoles()
 		{
 			using(var adapter = new DataAccessAdapter())
@@ -69,16 +84,21 @@ namespace SD.HnD.BL
 		}
 
 
+
 		/// <summary>
-		/// Gets all audit actions for role.
+		/// Gets all auditaction ids associated to the role with the id specified.
 		/// </summary>
-		/// <param name="roleID">Role ID.</param>
+		/// <param name="roleID"></param>
 		/// <returns></returns>
-		public static EntityCollection<RoleAuditActionEntity> GetAllAuditActionsForRole(int roleID)
+		public static List<int> GetAllAuditActionIDsForRole(int roleID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().RoleAuditAction.Where(RoleAuditActionFields.RoleID == roleID), new EntityCollection<RoleAuditActionEntity>());
+				var qf = new QueryFactory();
+				var q = qf.RoleAuditAction
+						  .Where(RoleAuditActionFields.RoleID.Equal(roleID))
+						  .Select(()=>RoleAuditActionFields.AuditActionID.ToValue<int>());
+				return adapter.FetchQuery(q);
 			}
 		}
 
@@ -161,7 +181,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+#warning REMOVE		
 		/// <summary>
 		/// Constructs a dataview with all the roles available, complete with statistics (#users, if the role is used as anonymous role or default user role)
 		/// </summary>
@@ -222,18 +242,22 @@ namespace SD.HnD.BL
 
 		
 		/// <summary>
-		/// Retrieves an entitycollection with all the systemactionright-role combinations currently defined for the role specified
+		/// Gets all ids for the system action rights associated to the role with id specified
 		/// </summary>
-		/// <param name="roleID">The role which system action rights should be retrieved.</param>
-		/// <returns>filled collection with entities of type RoleSystemActionRightEntity</returns>
-		public static EntityCollection<RoleSystemActionRightEntity> GetSystemActionRightRolesForRole(int roleID)
+		/// <param name="roleID"></param>
+		/// <returns></returns>
+		public static List<int> GetAllSystemActionRightIDsForRole(int roleID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().RoleSystemActionRight.Where(RoleSystemActionRightFields.RoleID == roleID), new EntityCollection<RoleSystemActionRightEntity>());
+				var qf = new QueryFactory();
+				var q = qf.RoleSystemActionRight
+						  .Where(RoleSystemActionRightFields.RoleID.Equal(roleID))
+						  .Select(()=>RoleSystemActionRightFields.ActionRightID.ToValue<int>());
+				return adapter.FetchQuery(q);
 			}
 		}
-
+		
 
 		/// <summary>
 		/// Retrieves an entitycollection with all the forum-actionright-role combinations currently defined for the role specified for the given forum

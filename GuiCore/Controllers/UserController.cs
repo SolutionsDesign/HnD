@@ -24,6 +24,12 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		public ActionResult ViewProfile(int id = 0)
 		{
+			var userID = this.HttpContext.Session.GetUserID();
+			if(userID <= 0 || id == 0)
+			{
+				// not useful
+				return RedirectToAction("Index", "Home");
+			}
 			var userProfileData = UserGuiHelper.GetUserProfileInfo(id);
 			if(userProfileData == null)
 			{

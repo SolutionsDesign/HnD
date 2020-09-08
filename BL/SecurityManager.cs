@@ -32,6 +32,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.Linq;
@@ -265,15 +266,17 @@ namespace SD.HnD.BL
 				return adapter.DeleteEntitiesDirectly(typeof(IPBanEntity), new RelationPredicateBucket(IPBanFields.IPBanID.Equal(idToDelete))) > 0;
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Creates a new Role in the system. If the user specified a role description that is already available, the unique constraint violation will be 
 		/// caught and 0 is returned in that case.
 		/// </summary>
 		/// <param name="roleDescription">Description to store</param>
-		/// <returns>new RoleID if succeeded. If the description was already available, 0 is returned</returns></returns>
-		public static int CreateNewRole(string roleDescription)
+		/// <param name="systemActionRightsSet">The id's of the action rights set for system rights for this new role</param>
+		/// <param name="auditActionsSet">the ids of the audit actions set for the role</param>
+		/// <returns>new RoleID if succeeded. If the description was already available, 0 is returned</returns>
+		public static async Task<int> CreateNewRoleAsync(string roleDescription, List<int> systemActionRightsSet, List<int> auditActionsSet)
 		{
 			if(CheckIfRoleDescriptionIsPresent(roleDescription))
 			{
@@ -282,49 +285,51 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				var newRole = new RoleEntity {RoleDescription = roleDescription};
-				return adapter.SaveEntity(newRole) ? newRole.RoleID : 0;
+				var newRole = new RoleEntity { RoleDescription = roleDescription };
+				// we'll now create the intermediate entities for several m:n relationships. 
+				foreach(int actionRightID in systemActionRightsSet)
+				{
+					// The roleid will be inserted in the recursive graph save below
+					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
+				}
+				foreach(int auditActionID in auditActionsSet)
+				{
+					// The roleid will be inserted in the recursive graph save below
+					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
+				}
+				
+				var toReturn = await adapter.SaveEntityAsync(newRole).ConfigureAwait(false);
+				return toReturn ? newRole.RoleID : 0;
 			}
 		}
 
 
 		/// <summary>
-		/// Modifies the given role: it resets the system action rights for the given role to the given set of action rights and it modifies
+		/// Updates the role entity with the id specified, with the role description and system action rights set
+		/// It resets the system action rights for the given role to the given set of action rights and it modifies
 		/// the role description for the given role. If the user specified a role description that is already available, false will be returned to signal
 		/// that the save failed.
 		/// </summary>
-		/// <param name="actionRightIDs">The action rights.</param>
-		/// <param name="roleID">The role ID.</param>
-		/// <param name="roleDescription">The role description.</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool ModifyRole(List<int> actionRightIDs, int roleID, string roleDescription)
+		/// <param name="roleID">the id of the role</param>
+		/// <param name="roleDescription">the new description of the role</param>
+		/// <param name="systemActionRightsSet">the system action rights to assign to the role</param>
+		/// <param name="auditActionsSet">the ids of the audit actions set for the role</param>
+		/// <returns></returns>
+		public static async Task<bool> ModifyRoleAsync(int roleID, string roleDescription, List<int> systemActionRightsSet, List<int> auditActionsSet)
 		{
-			var roleActionRights = new EntityCollection<RoleSystemActionRightEntity>();
-			// add new role-systemactionright entities which we'll save to the database after that
-			foreach(int actionRightID in actionRightIDs)
-			{
-				var toAdd = new RoleSystemActionRightEntity
-							{
-								ActionRightID = actionRightID,
-								RoleID = roleID
-							};
-				roleActionRights.Add(toAdd);
-			}
-
 			using(var adapter = new DataAccessAdapter())
 			{
-				// read the existing role entity from the database. 
-				var roleToModify = new RoleEntity(roleID);
-				var result = adapter.FetchEntity(roleToModify);
-				if(!result)
+				var qf = new QueryFactory();
+				var q = qf.Role.Where(RoleFields.RoleID.Equal(roleID));
+				var role = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				if(role == null)
 				{
-					// not found
 					return false;
 				}
 
-				// check if the description is different. If so, we've to check if the new roledescription is already present. If so, we'll
-				// abort the save
-				if(roleToModify.RoleDescription != roleDescription)
+				// check if the description is different. If so, we've to check if the new roledescription is already present. If so, we'll abort the save
+				role.RoleDescription = roleDescription;
+				if(role.Fields.GetIsChanged((int)RoleFieldIndex.RoleID))
 				{
 					if(CheckIfRoleDescriptionIsPresent(roleDescription))
 					{
@@ -332,17 +337,23 @@ namespace SD.HnD.BL
 						return false;
 					}
 				}
-
+				foreach(int actionRightID in systemActionRightsSet)
+				{
+					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
+				}
+				foreach(int auditActionID in auditActionsSet)
+				{
+					role.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
+				}
+				
 				// all set. We're going to delete all Role - SystemAction Rights combinations first, as we're going to re-insert them later on. 
 				// We'll use a transaction to be able to roll back all our changes if something fails. 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "ModifyRole");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "ModifyRole").ConfigureAwait(false);
 				try
 				{
-					adapter.DeleteEntitiesDirectly(typeof(RoleSystemActionRightEntity), new RelationPredicateBucket(RoleSystemActionRightFields.RoleID == roleID));
-					adapter.SaveEntityCollection(roleActionRights);
-					// we'll now save the role and the role description, if it's changed. Otherwise the save action will be a no-op. 
-					roleToModify.RoleDescription = roleDescription;
-					adapter.SaveEntity(roleToModify);
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleID)));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleID)));
+					await adapter.SaveEntityAsync(role).ConfigureAwait(false);
 					// all done, commit the transaction
 					adapter.Commit();
 					return true;
@@ -350,49 +361,6 @@ namespace SD.HnD.BL
 				catch
 				{
 					// failed, roll back transaction.
-					adapter.Rollback();
-					throw;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Saves the audit actions for role specified. First removes all present rows for the roleid
-		/// </summary>
-		/// <param name="auditActionIDs">Audit action IDs.</param>
-		/// <param name="roleID">Role ID.</param>
-		/// <returns>true if the save action succeeded, false otherwise</returns>
-		public static bool SaveAuditActionsForRole(List<int> auditActionIDs, int roleID)
-		{
-			var roleAuditActions = new EntityCollection<RoleAuditActionEntity>();
-			foreach(int auditActionID in auditActionIDs)
-			{
-				var newRoleAuditAction = new RoleAuditActionEntity
-										 {
-											 AuditActionID = auditActionID,
-											 RoleID = roleID
-										 };
-				roleAuditActions.Add(newRoleAuditAction);
-			}
-			using(var adapter = new DataAccessAdapter())
-			{ 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "SaveAuditActionsForRole");
-				try
-				{
-					// first delete the current entities directly from the db
-					adapter.DeleteEntitiesDirectly(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID == roleID));
-
-					// THEN save all new entities
-					adapter.SaveEntityCollection(roleAuditActions);
-
-					// succeeded, commit transaction
-					adapter.Commit();
-					return true;
-				}
-				catch
-				{
-					// failed, rollback transaction
 					adapter.Rollback();
 					throw;
 				}
