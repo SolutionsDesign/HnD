@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using SD.HnD.Gui.Controllers
+@using SD.HnD.Gui
 @model SD.HnD.Gui.Models.Admin.ManageForumRoleRightsData
 
 @{
@@ -48,11 +49,13 @@
 				<div class="caption"><span>Role - action right selection</span></div>
 				<div class="form-group">
 					@Html.LabelFor(m => m.RoleID, "Role", new {@class = "control-label above-control"})
-					@Html.DropDownListFor(m => m.RoleID, @Model.AvailableRoles.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control", onchange="document.rolePerForumForm.submit();"})
+					@Html.DropDownListFor(m => m.RoleID, @Model.AvailableRoles.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), 
+										  new {@class = "form-control", onchange="getActionRightsForSelection();"})
 				</div>
 				<div class="form-group">
 					@Html.LabelFor(m => m.ForumID, "Forum", new {@class = "control-label above-control"})
-					@Html.DropDownListFor(m => m.ForumID, @Model.AvailableForums.Select(af => new SelectListItem(af.SectionName + " | " + af.ForumName, af.ForumID.ToString())), new {@class = "form-control", onchange="document.rolePerForumForm.submit();"})
+					@Html.DropDownListFor(m => m.ForumID, @Model.AvailableForums.Select(af => new SelectListItem(af.SectionName + " | " + af.ForumName, af.ForumID.ToString())), 
+										  new {@class = "form-control", onchange="getActionRightsForSelection();"})
 				</div>
 				<div class="caption"><span>Available action rights for this combination</span></div>
 				<div class="form-group">
@@ -71,7 +74,7 @@
 					&nbsp;&nbsp;&nbsp;
 					<button type="submit" name="submitAction" value="cancel" formnovalidate class="btn btn-default"> Cancel </button>
 				</div>
-				<div>@Model.LastActionResult</div>
+				<div id="ResultMessage">@Model.LastActionResult</div>
 			}
 		</div>
 	</div>
@@ -85,6 +88,30 @@
 			for (var i=0;i<allRightsCheckboxes.length;i++) {
 				allRightsCheckboxes[i].checked = newValue;
 			}
+		}
+
+		
+		function getActionRightsForSelection()
+		{
+			$.ajax({
+				url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetActionRights",
+				type: "GET",
+				data: {roleID: $("#RoleID").val(), forumID: $("#ForumID").val()},
+				contentType: 'application/json;charset=utf-8',
+				dataType: 'json',
+				success: function (result) 
+					{
+						// this isn't the most optimal in all cases, but we're not facing a cartesian product with 10000x10000 values, so this is ok.
+						var allRightsCheckboxes = document.getElementsByName("ActionRightsSet");
+						for (var i=0;i<allRightsCheckboxes.length;i++)
+						{
+							allRightsCheckboxes[i].checked = result.indexOf(parseInt(allRightsCheckboxes[i].value))!==-1;
+						}
+					},
+				error: function () {
+					$("#ResultMessage").text("Api call failed");
+					}
+			});
 		}
 	</script>
 }

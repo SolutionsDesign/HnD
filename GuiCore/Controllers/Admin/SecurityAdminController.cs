@@ -71,11 +71,53 @@ namespace SD.HnD.Gui.Controllers
 
 			return View("~/Views/Admin/ManageRightsPerForum.cshtml", data);
 		}
+
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult GetActionRights(int roleID, int forumID)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			return Ok(SecurityGuiHelper.GetForumActionRightRolesForForumRole(roleID, forumID).Select(r => r.ActionRightID).ToList());
+		}
+
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult ManageUsersPerRole()
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var data = new UsersInRolesData();
+			data.AvailableRoles = SecurityGuiHelper.GetAllRoles();
+			return View("~/Views/Admin/ManageUsersPerRole.cshtml", data);
+		}
 		
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult Roles()
+		public ActionResult<IEnumerable<SectionDto>> GetUsersInRole(int id)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var roleDtos = UserGuiHelper.GetAllUserInRoleDtosForRole(id);
+			return Ok(roleDtos);
+		}
+		
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult ManageRoles()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
 			{
@@ -242,7 +284,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult IPBans()
+		public ActionResult ManageIPBans()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{

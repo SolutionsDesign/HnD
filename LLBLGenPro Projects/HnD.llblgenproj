@@ -1671,6 +1671,23 @@
             </Field>
           </Fields>
         </Document>
+        <Document Name="UserInRole">
+          <RootEntity Entity=":User" />
+          <Fields>
+            <Field Name="AmountOfPostings">
+              <EntityField Name="AmountOfPostings" />
+            </Field>
+            <Field Name="EmailAddress">
+              <EntityField Name="EmailAddress" />
+            </Field>
+            <Field Name="NickName">
+              <EntityField Name="NickName" />
+            </Field>
+            <Field Name="UserID">
+              <EntityField Name="UserID" />
+            </Field>
+          </Fields>
+        </Document>
       </Documents>
     </DerivedModel>
   </DerivedModels>

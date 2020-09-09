@@ -30,8 +30,12 @@ using SD.HnD.DALAdapter.TypedListClasses;
 
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
+using System.Linq;
 using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.Linq;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
@@ -307,26 +311,24 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Returns the users who are not currently in the given Role
+		/// Gets all UserInRole dto's for the role with the id specified. UserInRole dto's are instances of the derived element UserInRole which is
+		/// a projection of a User entity.
 		/// </summary>
-		/// <param name="roleID">Role to use as filter</param>
-		/// <returns>entitycollection with data requested</returns>
-		public static EntityCollection<UserEntity> GetAllUsersNotInRole(int roleID)
+		/// <param name="roleID"></param>
+		/// <returns></returns>
+		public static List<UserInRoleDto> GetAllUserInRoleDtosForRole(int roleID)
 		{
-			return GetAllUsersBasedOnRoleLogic(roleID, getUsersInRole: false);
+			using(var adapter = new DataAccessAdapter())
+			{
+				var qf = new QueryFactory();
+				var q = qf.User
+						  .Where(UserFields.UserID
+										   .In(qf.RoleUser.Where(RoleUserFields.RoleID.Equal(roleID)).Select(RoleUserFields.UserID)))
+						  .ProjectToUserInRoleDto(qf);
+				return adapter.FetchQuery(q);
+			}
 		}
-
-
-		/// <summary>
-		/// Returns the users who are currently in the given Role
-		/// </summary>
-		/// <param name="iRoleID">Role to use as filter</param>
-		/// <returns>UserCollection with data requested</returns>
-		public static EntityCollection<UserEntity> GetAllUsersInRole(int roleID)
-		{
-			return GetAllUsersBasedOnRoleLogic(roleID, getUsersInRole: true);
-		}
-
+		
 
 		/// <summary>
 		/// Gets all users in range specified

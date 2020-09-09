@@ -27,7 +27,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult Sections()
+		public ActionResult ManageSections()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{

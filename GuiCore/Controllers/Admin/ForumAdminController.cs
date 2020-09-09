@@ -24,7 +24,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult Forums()
+		public ActionResult ManageForums()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
