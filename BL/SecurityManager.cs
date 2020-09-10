@@ -445,22 +445,23 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Removes all users which ID's are stored in UsersToRemove, from the role with ID RoleID.
+		/// Removes the user with the userid specified from the role with ID RoleID.
 		/// </summary>
-		/// <param name="userIDsToRemove">ArrayList with UserIDs of the users to Remove</param>
+		/// <param name="userID">userid of user to remove from the role with roleid specified</param>
 		/// <param name="roleID">ID of role the users will be removed from</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool RemoveUsersFromRole(List<int> userIDsToRemove, int roleID)
+		public static bool RemoveUserFromRole(int roleID, int userID)
 		{
-			if(userIDsToRemove.Count<=0)
+			if(userID <= 0)
 			{
-				return true;
+				return false;
 			}
 
-			// we'll delete all role-user combinations for the users in the given range plus for the given role. We'll do that with a query directly onto the DB.
+			// we'll delete the role-user combination for the user plus for the given role with a query directly onto the DB.
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.DeleteEntitiesDirectly(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID.In(userIDsToRemove).And(RoleUserFields.RoleID.Equal(roleID)))) > 0;
+				return adapter.DeleteEntitiesDirectly(typeof(RoleUserEntity), 
+													  new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID).And(RoleUserFields.RoleID.Equal(roleID)))) > 0;
 			}
 		}
 

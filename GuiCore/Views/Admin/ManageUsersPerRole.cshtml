@@ -46,6 +46,10 @@
 			</div>
 		</div>
 		<div class="col-sm-12">
+			<div class="alert alert-danger hidden" role="alert" id="jsErrorMessageContainer">
+            	<span id="jsErrorMessageTitle" class="alert-title"></span>
+            	<p id="jsErrorMessageDetail"></p>
+            </div>
 			<div id="jsGrid"></div>
 		</div>	
 	</div>
@@ -83,7 +87,7 @@
                         });
                     },
                     deleteItem: function(item) {
-                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/RemoveUserFromRole", {roleId: $("#RoleID").val(), userId: item.userID});
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/RemoveUserFromRole", {roleID: parseInt($("#RoleID").val()), userID: item.userID});
                     }
                 },
                 fields: [

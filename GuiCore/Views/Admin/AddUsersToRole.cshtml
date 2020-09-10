@@ -3,10 +3,10 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 @using SD.HnD.Gui.Classes
 @using SD.HnD.Gui.Controllers
-@model SD.HnD.Gui.Models.Admin.ActionWithUserSearchData
+@model SD.HnD.Gui.Models.Admin.AddUsersToRoleData
 
 @{
-	ViewBag.Title = "HnD | Admin | Delete user";
+	ViewBag.Title = "HnD | Admin | Add users to role";
 }
 
 @section stylesheets
@@ -22,16 +22,16 @@
 					<a href="~/">Home</a>
 				</li>
 				<li>Admin</li>
-				<li class="active">Delete User</li>
+				<li class="active">Add Users to Role</li>
 			</ol>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-8">
-			<h1 class="br-bottom mt30">Delete User</h1>
+			<h1 class="br-bottom mt30">Add Users to Role</h1>
 			<p>
-				Below you can delete a user. First select the user to delete using the Find User portion of the form, then you have to confirm you want to delete the user
-                selected. You can't delete yourself, Admin (UserID 1) nor the Anonymous user (UserID 0).
+				Below you can add one or more users to the role <b>@Model.SelectedRoleDescription</b>. First select the users to add using the Find User portion of the form,
+				then you have to confirm you want to add them to the role.
 				<br/><br/>
 			</p>
 		</div>
@@ -40,13 +40,15 @@
 		<div class="col-sm-8">
 			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
 			{
+				<input type="hidden" name="selectedRoleID" value="@Model.SelectedRoleID"/>
+				
 				@await Html.PartialAsync("Admin/FindUser", Model)
 				switch(Model.FindUserData.FindUserState)
 				{
 					case AdminFindUserState.FinalAction:
-						<div><p>Are you sure you want to delete user <b>@Model.FindUserData.SelectedUsers.FirstOrDefault()?.NickName</b>?</p></div>
+						<div><p>Are you sure you want to add these users to the role?</p></div>
 						<div class="mt20">
-							<button type="submit" name="submitAction" value="Delete" class="btn btn-default"> Yes </button>
+							<button type="submit" name="submitAction" value="Add" class="btn btn-default"> Yes </button>
 							&nbsp;&nbsp;
 							<button type="submit" name="submitAction" value="Cancel" class="btn btn-default"> No </button>
 						</div>

@@ -34,16 +34,17 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditUserInfo_Find(FindUserData data)
+		public ActionResult EditUserInfo_Find(ActionWithUserSearchData data)
 		{
-			return ActionWithUserSearch_Find(data, "Manage profile", "EditUserInfo_UserSelected", "EditUserInfo_Find", "~/Views/Admin/EditUserInfo_Search.cshtml", false);
+			return ActionWithUserSearch_Find((d) => new ActionWithUserSearchData(d), data.FindUserData, "Manage profile", "EditUserInfo_UserSelected", "EditUserInfo_Find", 
+											 "~/Views/Admin/EditUserInfo_Search.cshtml", false);
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditUserInfo_UserSelected(FindUserData data, string submitAction)
+		public ActionResult EditUserInfo_UserSelected(ActionWithUserSearchData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -60,12 +61,12 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			if(data.FindUserData.SelectedUserIDs==null || data.FindUserData.SelectedUserIDs.Count<=0)
 			{
 				return EditUserInfo_Find(data);
 			}
 
-			var user = UserGuiHelper.GetUser(data.SelectedUserIDs.FirstOrDefault());
+			var user = UserGuiHelper.GetUser(data.FindUserData.SelectedUserIDs.FirstOrDefault());
 			if(user == null)
 			{
 				// not found
@@ -122,7 +123,36 @@ namespace SD.HnD.Gui.Controllers
 			data.InfoEdited = result;
 			return View("~/Views/Admin/EditUserInfo.cshtml", data);
 		}
-				
+		
+		
+		[HttpGet]
+		[Authorize]
+		public ActionResult AddUsersToRole(int id=0)
+		{
+			return ActionWithUserSearch_Start(() => CreateFilledAddUsersToRoleData(null, id), "AddUsersToRole_Find", "~/Views/Admin/AddUsersToRole.cshtml");
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult AddUsersToRole_Find(AddUsersToRoleData data)
+		{
+			return ActionWithUserSearch_Find((d)=>CreateFilledAddUsersToRoleData(d, data.SelectedRoleID), data.FindUserData, "Add selected users to role", 
+											 "AddUsersToRole_UsersSelected", "AddUsersToRole_Find", "~/Views/Admin/AddUsersToRole.cshtml", true);
+		}
+
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult AddUsersToRole_UsersSelected(AddUsersToRoleData data, string submitAction)
+		{
+			return ActionWithUserSearch_UserSelected((d)=>CreateFilledAddUsersToRoleData(d, data.SelectedRoleID), data.FindUserData, submitAction, 
+													 () => AddUsersToRole(data.SelectedRoleID), (d) => AddUsersToRole_Find(data), "AddUsersToRole_Perform", 
+													 "~/Views/Admin/AddUsersToRole.cshtml");
+		}
+		
 		
 		[HttpGet]
 		[Authorize]
@@ -135,25 +165,27 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteUser_Find(FindUserData data)
+		public ActionResult DeleteUser_Find(ActionWithUserSearchData data)
 		{
-			return ActionWithUserSearch_Find(data, "Delete selected user", "DeleteUser_UserSelected", "DeleteUser_Find", "~/Views/Admin/DeleteUser.cshtml", true);
+			return ActionWithUserSearch_Find(d=>new ActionWithUserSearchData(d), data.FindUserData, "Delete selected user", "DeleteUser_UserSelected", "DeleteUser_Find", 
+											 "~/Views/Admin/DeleteUser.cshtml", true);
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteUser_UserSelected(FindUserData data, string submitAction)
+		public ActionResult DeleteUser_UserSelected(ActionWithUserSearchData data, string submitAction)
 		{
-			return ActionWithUserSearch_UserSelected(data, submitAction, () => DeleteUser(), (d) => DeleteUser_Find(data), "DeleteUser_Perform", "~/Views/Admin/DeleteUser.cshtml");
+			return ActionWithUserSearch_UserSelected(d=>new ActionWithUserSearchData(d), data.FindUserData, submitAction, () => DeleteUser(), (d) => DeleteUser_Find(data), 
+													 "DeleteUser_Perform", "~/Views/Admin/DeleteUser.cshtml");
 		}
 		
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteUser_Perform(FindUserData data, string submitAction)
+		public ActionResult DeleteUser_Perform(ActionWithUserSearchData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -165,20 +197,20 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			if(data.FindUserData.SelectedUserIDs==null || data.FindUserData.SelectedUserIDs.Count<=0)
 			{
 				return DeleteUser_Find(data);
 			}
 
-			int userIdToDelete = data.SelectedUserIDs.FirstOrDefault();
+			int userIdToDelete = data.FindUserData.SelectedUserIDs.FirstOrDefault();
 			var user = UserGuiHelper.GetUser(userIdToDelete);
 			bool result = UserManager.DeleteUser(userIdToDelete);
 			if(result)
 			{
 				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
 			}
-			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
-			var viewData = new ActionWithUserSearchData(data);
+			FillUserDataForState(data.FindUserData, AdminFindUserState.PostAction, string.Empty, string.Empty);
+			var viewData = new ActionWithUserSearchData(data.FindUserData);
 			viewData.FinalActionResult = result ? "The user has been deleted" : "Deleting the user failed, perhaps you selected a user that couldn't be deleted?";
 
 			return View("~/Views/Admin/DeleteUser.cshtml", viewData);
@@ -196,16 +228,17 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult ShowAuditInfoUser_Find(FindUserData data)
+		public ActionResult ShowAuditInfoUser_Find(ActionWithUserSearchData data)
 		{
-			return ActionWithUserSearch_Find(data, "View audit info", "ShowAuditInfoUser_UserSelected", "ShowAuditInfoUser_Find", "~/Views/Admin/ShowAuditInfoUser.cshtml", false);
+			return ActionWithUserSearch_Find(d=>new ActionWithUserSearchData(d), data.FindUserData, "View audit info", "ShowAuditInfoUser_UserSelected", 
+											 "ShowAuditInfoUser_Find", "~/Views/Admin/ShowAuditInfoUser.cshtml", false);
 		}
 
 		
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult ShowAuditInfoUser_UserSelected(FindUserData data, string submitAction, string filterAsString, string foundUserIds)
+		public ActionResult ShowAuditInfoUser_UserSelected(ActionWithUserSearchData data, string submitAction, string filterAsString, string foundUserIds)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -222,23 +255,23 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0 || string.IsNullOrWhiteSpace(foundUserIds))
+			if(data.FindUserData.SelectedUserIDs==null || data.FindUserData.SelectedUserIDs.Count<=0 || string.IsNullOrWhiteSpace(foundUserIds))
 			{
 				return ShowAuditInfoUser_Find(data);
 			}
 
-			int selectedUserId = data.SelectedUserIDs.FirstOrDefault();
-			var auditDataForView = new ShowAuditInfoUserData(data);
+			int selectedUserId = data.FindUserData.SelectedUserIDs.FirstOrDefault();
+			var auditDataForView = new ShowAuditInfoUserData(data.FindUserData);
 			auditDataForView.AuditData = SecurityGuiHelper.GetAllAuditsForUser(selectedUserId);
 			auditDataForView.AuditedUser = UserGuiHelper.GetUser(selectedUserId);
-			data.OverrideFilterAsString(filterAsString);
+			data.FindUserData.OverrideFilterAsString(filterAsString);
 			// we'll keep the search form open so we can quickly view data of multiple users without searching again. This means we'll keep the finduserdata state
 			// as it is, as this is the end state of this action anyway.
-			data.ActionButtonText = "View audit info";
-			data.FindUserState = AdminFindUserState.UsersFound;
+			data.FindUserData.ActionButtonText = "View audit info";
+			data.FindUserData.FindUserState = AdminFindUserState.UsersFound;
 			var userIDsFoundAsString = foundUserIds.Split(',');
 			var userIDsOfUsersToLoad = userIDsFoundAsString.Select(us => Convert.ToInt32(us)).ToList();
-			data.FoundUsers = UserGuiHelper.GetUsers(userIDsOfUsersToLoad);
+			data.FindUserData.FoundUsers = UserGuiHelper.GetUsers(userIDsOfUsersToLoad);
 			return View("~/Views/Admin/ShowAuditInfoUser.cshtml", auditDataForView);
 		}
 		
@@ -254,25 +287,27 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_Find(FindUserData data)
+		public ActionResult BanUnbanUser_Find(ActionWithUserSearchData data)
 		{
-			return ActionWithUserSearch_Find(data, "Ban / Unban selected user", "BanUnbanUser_UserSelected", "BanUnbanUser_Find", "~/Views/Admin/BanUnbanUser.cshtml", true);
+			return ActionWithUserSearch_Find(d=>new ActionWithUserSearchData(d), data.FindUserData, "Ban / Unban selected user", "BanUnbanUser_UserSelected", "BanUnbanUser_Find", 
+											 "~/Views/Admin/BanUnbanUser.cshtml", true);
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_UserSelected(FindUserData data, string submitAction)
+		public ActionResult BanUnbanUser_UserSelected(ActionWithUserSearchData data, string submitAction)
 		{
-			return ActionWithUserSearch_UserSelected(data, submitAction, () => BanUnbanUser(), (d) => BanUnbanUser_Find(data), "BanUnbanUser_Perform", "~/Views/Admin/BanUnbanUser.cshtml");
+			return ActionWithUserSearch_UserSelected(d=>new ActionWithUserSearchData(d), data.FindUserData, submitAction, () => BanUnbanUser(), (d) => BanUnbanUser_Find(data), 
+													 "BanUnbanUser_Perform", "~/Views/Admin/BanUnbanUser.cshtml");
 		}
 
 
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_Perform(FindUserData data, string submitAction)
+		public ActionResult BanUnbanUser_Perform(ActionWithUserSearchData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -284,20 +319,20 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(data.SelectedUserIDs==null || data.SelectedUserIDs.Count<=0)
+			if(data.FindUserData.SelectedUserIDs==null || data.FindUserData.SelectedUserIDs.Count<=0)
 			{
 				return BanUnbanUser_Find(data);
 			}
 
-			int userIdToToggleBanFlagOf = data.SelectedUserIDs.FirstOrDefault();
+			int userIdToToggleBanFlagOf = data.FindUserData.SelectedUserIDs.FirstOrDefault();
 			bool result = UserManager.ToggleBanFlagValue(userIdToToggleBanFlagOf, out bool newBanFlagValue);
 			if(newBanFlagValue)
 			{
 				var user = UserGuiHelper.GetUser(userIdToToggleBanFlagOf);
 				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
 			}
-			FillUserDataForState(data, AdminFindUserState.PostAction, string.Empty, string.Empty);
-			var viewData = new ActionWithUserSearchData(data);
+			FillUserDataForState(data.FindUserData, AdminFindUserState.PostAction, string.Empty, string.Empty);
+			var viewData = new ActionWithUserSearchData(data.FindUserData);
 			if(result)
 			{
 				viewData.FinalActionResult = newBanFlagValue ? "The user is now banned" : "The user has been unbanned";
@@ -373,8 +408,8 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 		
-		private ActionResult ActionWithUserSearch_Find(FindUserData data, string actionButtonText, string nextActionNameValidSearchData, 
-														string nextActionNameInvalidSearchData, string viewName, bool filterOutFixedUsers)
+		private ActionResult ActionWithUserSearch_Find(Func<FindUserData, ActionWithUserSearchData> dataCreatorFunc, FindUserData data, string actionButtonText, 
+													   string nextActionNameValidSearchData, string nextActionNameInvalidSearchData, string viewName, bool filterOutFixedUsers)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -394,12 +429,13 @@ namespace SD.HnD.Gui.Controllers
 			{
 				FillUserDataForState(data, AdminFindUserState.Start, string.Empty, nextActionNameInvalidSearchData);
 			}
-			return View(viewName, new ActionWithUserSearchData(data));
+			return View(viewName, dataCreatorFunc(data));
 		}
 		
 		
-		private ActionResult ActionWithUserSearch_UserSelected(FindUserData data, string submitAction, Func<ActionResult> actionSearchAgainFunc, 
-																Func<FindUserData, ActionResult> actionNoneSelectedFunc, string nextActionName, string viewName)
+		private ActionResult ActionWithUserSearch_UserSelected(Func<FindUserData, ActionWithUserSearchData> dataCreatorFunc, FindUserData data, string submitAction, 
+															   Func<ActionResult> actionSearchAgainFunc, Func<FindUserData, ActionResult> actionNoneSelectedFunc, 
+															   string nextActionName, string viewName)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -422,7 +458,14 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			FillUserDataForState(data, AdminFindUserState.FinalAction, string.Empty, nextActionName);
-			return View(viewName, new ActionWithUserSearchData(data));
+			return View(viewName, dataCreatorFunc(data));
+		}
+		
+
+		private AddUsersToRoleData CreateFilledAddUsersToRoleData(FindUserData userData, int roleID)
+		{
+			var selectedRole = SecurityGuiHelper.GetRole(roleID);
+			return new AddUsersToRoleData(userData) { SelectedRoleDescription = selectedRole?.RoleDescription ?? string.Empty, SelectedRoleID = selectedRole?.RoleID ?? 0};
 		}
 	}
 }

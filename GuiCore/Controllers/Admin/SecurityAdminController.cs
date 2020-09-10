@@ -115,6 +115,30 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 		
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult RemoveUserFromRole([FromBody] RemoveUserFromRoleData data)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			var result = false;
+			if(data.RoleID > 0 && data.UserID > 0)
+			{
+				result = SecurityManager.RemoveUserFromRole(data.RoleID, data.UserID);
+			}
+
+			if(result)
+			{
+				return Json(new {success = true});
+			}
+			return ValidationProblem("The user wasn't removed from the role.");
+		}
+		
+		
 		[HttpGet]
 		[Authorize]
 		public ActionResult ManageRoles()

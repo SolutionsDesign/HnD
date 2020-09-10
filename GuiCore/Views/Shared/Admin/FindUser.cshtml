@@ -1,55 +1,56 @@
 ﻿@using SD.HnD.Gui.Classes
-@model SD.HnD.Gui.Models.Admin.FindUserData
-@switch(Model.FindUserState)
+@model SD.HnD.Gui.Models.Admin.ActionWithUserSearchData
+@switch(Model.FindUserData.FindUserState)
 {
 	case AdminFindUserState.Start:
 		<div class="caption"><span>Filter information</span></div>
 		<div class="form-group">
-			@Html.CheckBoxFor(m=>m.FilterOnRole)&nbsp;
-			@Html.LabelFor(m => m.FilterOnRole, "Filter on role", new {@class = "control-label above-control"})
-			@Html.DropDownListFor(m => m.SelectedRoleID, @Model.Roles?.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control"})
+			@Html.CheckBoxFor(m=>m.FindUserData.FilterOnRole)&nbsp;
+			@Html.LabelFor(m => m.FindUserData.FilterOnRole, "Filter on role", new {@class = "control-label above-control"})
+			@Html.DropDownListFor(m => m.FindUserData.SelectedRoleID, @Model.FindUserData.Roles?.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control"})
 		</div>
 		<div class="form-group">
-			@Html.CheckBoxFor(m=>m.FilterOnNickName)&nbsp;
-			@Html.LabelFor(m => m.FilterOnNickName, "Filter on nickname", new {@class = "control-label above-control"})
-			@Html.TextBoxFor(m => m.SpecifiedNickName, new {@class = "form-control", placeholder = " "})
+			@Html.CheckBoxFor(m=>m.FindUserData.FilterOnNickName)&nbsp;
+			@Html.LabelFor(m => m.FindUserData.FilterOnNickName, "Filter on nickname", new {@class = "control-label above-control"})
+			@Html.TextBoxFor(m => m.FindUserData.SpecifiedNickName, new {@class = "form-control", placeholder = " "})
 		</div>
 		<div class="form-group">
-			@Html.CheckBoxFor(m=>m.FilterOnEmailAddress)&nbsp;
-			@Html.LabelFor(m => m.FilterOnEmailAddress, "Filter on email-address", new {@class = "control-label above-control"})
-			@Html.TextBoxFor(m => m.SpecifiedEmailAddress, new {@class = "form-control", placeholder = " "})
+			@Html.CheckBoxFor(m=>m.FindUserData.FilterOnEmailAddress)&nbsp;
+			@Html.LabelFor(m => m.FindUserData.FilterOnEmailAddress, "Filter on email-address", new {@class = "control-label above-control"})
+			@Html.TextBoxFor(m => m.FindUserData.SpecifiedEmailAddress, new {@class = "form-control", placeholder = " "})
 		</div>
 		<div class="mt20">
 			<button type="submit" name="submitAction" value="Find" class="btn btn-default"> Find </button>
 		</div>
 		break;
 	case AdminFindUserState.UsersFound:
-		<input type="hidden" name="filterAsString" Value="@Model.FilterToString()"/>
-		<input type="hidden" name="foundUserIds" Value='@string.Join(",", Model.FoundUsers.Take(100).Select(u=>u.UserID))'/>                                                                          
+		<input type="hidden" name="FilterAsString" Value="@Model.FindUserData.FilterToString()"/>
+		<input type="hidden" name="FoundUserIds" Value='@string.Join(",", Model.FindUserData.FoundUsers.Take(100).Select(u=>u.UserID))'/>                                                                          
 		<div class="caption"><span>Filter information</span></div>
-		<div><p>@Model.FilterToString()</p></div>	
+		<div><p>@Model.FindUserData.FilterToString()</p></div>	
 		<div class="caption"><span>Users matching the filter(s)</span></div>
 		<div class="form-group">
-			@Html.ListBoxFor(m => m.SelectedUserIDs, Model.FoundUsers?.Select(u=>new SelectListItem(u.NickName, u.UserID.ToString())), new {@class = "form-control", size=Math.Min(Math.Max(5, Model.FoundUsers?.Count??0), 10)})
+			@Html.ListBoxFor(m => m.FindUserData.SelectedUserIDs, Model.FindUserData.FoundUsers?.Select(u=>new SelectListItem(u.NickName, u.UserID.ToString())), 
+							 new {@class = "form-control", size=Math.Min(Math.Max(5, Model.FindUserData.FoundUsers?.Count??0), 10)})
 		</div>
 		<div class="mt20">
-			<button type="submit" name="submitAction" value="PerformAction" class="btn btn-default btn-primary"> @Model.ActionButtonText </button>
+			<button type="submit" name="submitAction" value="PerformAction" class="btn btn-default btn-primary"> @Model.FindUserData.ActionButtonText </button>
 			&nbsp;&nbsp;
 			<button type="submit" name="submitAction" value="SearchAgain" class="btn btn-default"> Search again </button>
 		</div>
 		break;
 	case AdminFindUserState.FinalAction:
 		<div class="caption"><span>Users selected</span></div>
-		<input type="hidden" name="selectedUserIds" value="@string.Join(",", Model.SelectedUsers.Select(u=>u.UserID))"/>
-		<div><p>@string.Join(", ", Model.SelectedUsers.Select(u=>u.NickName))</p></div>
+		<input type="hidden" name="FindUserData.SelectedUserIDs" value="@string.Join(",", Model.FindUserData.SelectedUsers.Select(u=>u.UserID))"/>
+		<div><p>@string.Join(", ", Model.FindUserData.SelectedUsers.Select(u=>u.NickName))</p></div>
 		<div class="caption"><span>Final action</span></div>
 		break;
 	case AdminFindUserState.PostAction:
-		if(Model.SelectedUsers?.Count > 0)
+		if(Model.FindUserData.SelectedUsers?.Count > 0)
 		{
 			<div class="caption"><span>Users selected</span></div>
-			<input type="hidden" name="selectedUserIds" value="@string.Join(",", Model.SelectedUsers.Select(u => u.UserID))"/>
-			<div><p>@string.Join(", ", Model.SelectedUsers.Select(u => u.NickName))</p></div>
+			<input type="hidden" name="FindUserData.SelectedUserIDs" value="@string.Join(",", Model.FindUserData.SelectedUsers.Select(u => u.UserID))"/>
+			<div><p>@string.Join(", ", Model.FindUserData.SelectedUsers.Select(u => u.NickName))</p></div>
 		}
 		<div class="caption"><span>Final action result</span></div>
 		break;

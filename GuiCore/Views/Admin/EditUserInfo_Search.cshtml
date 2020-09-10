@@ -40,7 +40,7 @@
 		<div class="col-sm-8">
 			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
 			{
-				@await Html.PartialAsync("Admin/FindUser", Model.FindUserData)
+				@await Html.PartialAsync("Admin/FindUser", Model)
 			}			
 		</div>
 	</div>
