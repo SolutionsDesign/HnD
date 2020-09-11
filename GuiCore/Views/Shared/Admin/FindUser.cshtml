@@ -41,7 +41,12 @@
 		break;
 	case AdminFindUserState.FinalAction:
 		<div class="caption"><span>Users selected</span></div>
-		<input type="hidden" name="FindUserData.SelectedUserIDs" value="@string.Join(",", Model.FindUserData.SelectedUsers.Select(u=>u.UserID))"/>
+		@foreach(var userID in Model.FindUserData.SelectedUsers.Select(u => u.UserID))
+		{
+			// with multiple values we've to emit a hidden element with the same name otherwise it won't
+			// get bound to a List<int> on the server. Yes really.
+			<input type="hidden" name="FindUserData.SelectedUserIDs" value="@userID"/>
+		}
 		<div><p>@string.Join(", ", Model.FindUserData.SelectedUsers.Select(u=>u.NickName))</p></div>
 		<div class="caption"><span>Final action</span></div>
 		break;

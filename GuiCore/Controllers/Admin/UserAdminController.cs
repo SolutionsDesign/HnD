@@ -139,7 +139,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult AddUsersToRole_Find(AddUsersToRoleData data)
 		{
 			return ActionWithUserSearch_Find((d)=>CreateFilledAddUsersToRoleData(d, data.SelectedRoleID), data.FindUserData, "Add selected users to role", 
-											 "AddUsersToRole_UsersSelected", "AddUsersToRole_Find", "~/Views/Admin/AddUsersToRole.cshtml", true);
+											 "AddUsersToRole_UsersSelected", "AddUsersToRole_Find", "~/Views/Admin/AddUsersToRole.cshtml", false, data.SelectedRoleID);
 		}
 
 
@@ -152,6 +152,33 @@ namespace SD.HnD.Gui.Controllers
 													 () => AddUsersToRole(data.SelectedRoleID), (d) => AddUsersToRole_Find(data), "AddUsersToRole_Perform", 
 													 "~/Views/Admin/AddUsersToRole.cshtml");
 		}
+		
+
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult AddUsersToRole_Perform(AddUsersToRoleData data, string submitAction)
+		{
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(submitAction != "Add")
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(data.FindUserData.SelectedUserIDs==null || data.FindUserData.SelectedUserIDs.Count<=0)
+			{
+				return AddUsersToRole_Find(data);
+			}
+
+			bool result = SecurityManager.AddUsersToRole(data.FindUserData.SelectedUserIDs, data.SelectedRoleID);
+			// simply redirect to manage users per role route
+			return RedirectToRoute("ManageUsersPerRole");
+		}
+
 		
 		
 		[HttpGet]
@@ -346,7 +373,8 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-		private static void FillUserDataForState(FindUserData data, AdminFindUserState stateToFillDataFor, string actionButtonText, string actionToPostTo)
+		private static void FillUserDataForState(FindUserData data, AdminFindUserState stateToFillDataFor, string actionButtonText, string actionToPostTo, 
+												 int roleIDWhichUsersToExclude=0 )
 		{
 			data.Roles = SecurityGuiHelper.GetAllRoles();
 			switch(stateToFillDataFor)
@@ -355,9 +383,8 @@ namespace SD.HnD.Gui.Controllers
 					// no-op
 					break;
 				case AdminFindUserState.UsersFound:
-					data.FoundUsers = UserGuiHelper.FindUsers(data.FilterOnRole, data.SelectedRoleID, data.FilterOnNickName,
-															  data.SpecifiedNickName, data.FilterOnEmailAddress,
-															  data.SpecifiedEmailAddress);
+					data.FoundUsers = UserGuiHelper.FindUsers(data.FilterOnRole, data.SelectedRoleID, data.FilterOnNickName, data.SpecifiedNickName, data.FilterOnEmailAddress,
+															  data.SpecifiedEmailAddress, roleIDWhichUsersToExclude);
 					break;
 				case AdminFindUserState.FinalAction:
 				case AdminFindUserState.PostAction:
@@ -409,7 +436,8 @@ namespace SD.HnD.Gui.Controllers
 		
 		
 		private ActionResult ActionWithUserSearch_Find(Func<FindUserData, ActionWithUserSearchData> dataCreatorFunc, FindUserData data, string actionButtonText, 
-													   string nextActionNameValidSearchData, string nextActionNameInvalidSearchData, string viewName, bool filterOutFixedUsers)
+													   string nextActionNameValidSearchData, string nextActionNameInvalidSearchData, string viewName, bool filterOutFixedUsers, 
+													   int roleIDWhichUsersToExclude=0)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -418,7 +446,7 @@ namespace SD.HnD.Gui.Controllers
 
 			if(data.IsAnythingChecked)
 			{
-				FillUserDataForState(data, AdminFindUserState.UsersFound, actionButtonText, nextActionNameValidSearchData);
+				FillUserDataForState(data, AdminFindUserState.UsersFound, actionButtonText, nextActionNameValidSearchData, roleIDWhichUsersToExclude);
 				if(filterOutFixedUsers)
 				{
 					// filter out the currently logged in user, Anonymous (0) and Admin (1)

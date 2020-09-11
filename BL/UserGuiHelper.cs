@@ -208,7 +208,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Finds the users matching the filter criteria.
 		/// </summary>
@@ -218,8 +218,10 @@ namespace SD.HnD.BL
 		/// <param name="nickName">Name of the nick.</param>
 		/// <param name="filterOnEmailAddress"><see langword="true"/> if [filter on email address]; otherwise, <see langword="false"/>.</param>
 		/// <param name="emailAddress">Email address.</param>
+		/// <param name="roleIDWhichUsersToExclude">The role id which users to exclude. </param>
 		/// <returns>User objects matching the query</returns>
-		public static EntityCollection<UserEntity> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, string emailAddress)
+		public static EntityCollection<UserEntity> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
+															 string emailAddress, int roleIDWhichUsersToExclude=0)
 		{
 			var qf = new QueryFactory();
 			var q = qf.User
@@ -235,6 +237,10 @@ namespace SD.HnD.BL
 			if(filterOnEmailAddress)
 			{
 				q.AndWhere(UserFields.EmailAddress.Contains(emailAddress));
+			}
+			if(roleIDWhichUsersToExclude > 0)
+			{
+				q.AndWhere(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleIDWhichUsersToExclude)));
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
