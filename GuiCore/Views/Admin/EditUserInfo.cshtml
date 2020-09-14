@@ -103,6 +103,16 @@
 							@Html.DropDownListFor(m => m.UserTitleId, @Model.UserTitles.Select(t => new SelectListItem(t.UserTitleDescription, t.UserTitleID.ToString())), new {@class = "form-control"})
 							@Html.ValidationMessageFor(m => m.UserTitleId, "", new {@class = "text-danger"})
 						</div>
+						<div class="caption"><span>Security information</span></div>
+						<div class="form-group">
+							@Html.CheckBoxFor(m => m.IsBanned)&nbsp;
+							@Html.DisplayNameFor(m => m.IsBanned)
+						</div>
+						<div class="form-group">
+							@Html.LabelFor(m => m.RoleIDs, "Roles the user is in", new {@class = "control-label above-control"})
+							@Html.ListBoxFor(m => m.RoleIDs, @Model.Roles.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), new {@class = "form-control", size=Math.Min(5, Math.Max(10, Model.Roles.Count))})
+							@Html.ValidationMessageFor(m => m.RoleIDs, "", new {@class = "text-danger"})
+						</div>
 						<div class="mt20">
 							<button type="submit" class="btn btn-default btn-primary"> Update </button>
 						</div>

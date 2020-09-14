@@ -128,7 +128,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditProfile(EditProfileData data)
+		public async Task<ActionResult> EditProfileAsync(EditProfileData data)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
 			if(userID <= 0 )
@@ -143,9 +143,9 @@ namespace SD.HnD.Gui.Controllers
 		
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
-			var result = UserManager.UpdateUserProfile(userID, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL, data.Location,
-													   data.Occupation, data.NewPassword, data.Signature, data.Website, this.HttpContext.Session.GetUserTitleID(), 
-													   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);
+			var result = await UserManager.UpdateUserProfileAsync(userID, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL, data.Location,
+																   data.Occupation, data.NewPassword, data.Signature, data.Website, this.HttpContext.Session.GetUserTitleID(), 
+																   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage, null, null);
 			if(result)
 			{
 				this.HttpContext.Session.UpdateUserSettings(data);

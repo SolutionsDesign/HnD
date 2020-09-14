@@ -87,6 +87,9 @@ namespace SD.HnD.Gui.Controllers
 						   UserTitleId = user.UserTitleID,
 						   IPAddress = user.IPNumber,
 						   LastVisitDate = user.LastVisitedDate.HasValue ? user.LastVisitedDate.Value.ToString("f") : "Never",
+						   IsBanned = user.IsBanned,
+						   RoleIDs = SecurityGuiHelper.GetAllRoleIDsForUser(user.UserID),
+						   Roles = SecurityGuiHelper.GetAllRoles(),
 						   UserTitles = UserGuiHelper.GetAllUserTitles(),
 					   };
 			newData.Sanitize();
@@ -97,7 +100,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditUserInfo_FinalAction(EditUserInfoData data)
+		public async Task<ActionResult> EditUserInfo_FinalActionAsync(EditUserInfoData data)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -115,9 +118,9 @@ namespace SD.HnD.Gui.Controllers
 			var user = UserGuiHelper.GetUser(data.UserId);
 			if(user != null)
 			{
-				result = UserManager.UpdateUserProfile(data.UserId, data.DateOfBirth, data.EmailAddress, user.EmailAddressIsPublic ?? false, data.IconURL, 
-													   data.Location, data.Occupation, data.NewPassword, data.Signature, data.Website, data.UserTitleId,
-													   user.AutoSubscribeToThread, user.DefaultNumberOfMessagesPerPage);
+				result = await UserManager.UpdateUserProfileAsync(data.UserId, data.DateOfBirth, data.EmailAddress, user.EmailAddressIsPublic ?? false, data.IconURL, 
+																   data.Location, data.Occupation, data.NewPassword, data.Signature, data.Website, data.UserTitleId,
+																   user.AutoSubscribeToThread, user.DefaultNumberOfMessagesPerPage, data.IsBanned, data.RoleIDs);
 			}
 
 			data.InfoEdited = result;

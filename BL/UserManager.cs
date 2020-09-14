@@ -360,12 +360,14 @@ namespace SD.HnD.BL
 		/// <param name="signature">The signature.</param>
 		/// <param name="website">The website.</param>
 		/// <param name="userTitleID">The user title ID.</param>
-        /// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
-        /// <param name="defaultMessagesPerPage">Messages per page to display</param>
+		/// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
+		/// <param name="defaultMessagesPerPage">Messages per page to display</param>
+		/// <param name="isBanned">flag whether the user is banned or not. Can be null, in which case the value is left untouched</param>
+		/// <param name="roleIDs">The RoleIDs of the roles the user is in. Can be null, in which case no roles are updated</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool UpdateUserProfile(int userID, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
-											string location, string occupation, string password, string signature, string website, int userTitleID, 
-											bool autoSubscribeThreads, short defaultMessagesPerPage)
+		public static async Task<bool> UpdateUserProfileAsync(int userID, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
+															 string location, string occupation, string password, string signature, string website, int userTitleID, 
+															 bool autoSubscribeThreads, short defaultMessagesPerPage, bool? isBanned=null, List<int> roleIDs=null)
 		{
             var user = UserGuiHelper.GetUser(userID);
             if (user == null)
@@ -381,7 +383,11 @@ namespace SD.HnD.BL
 			user.Location = location;
 			user.Occupation = occupation;
 			user.UserTitleID = userTitleID;
-		
+			if(isBanned.HasValue)
+			{
+				user.IsBanned = isBanned.Value;
+			}
+
 			if(!string.IsNullOrWhiteSpace(password))
 			{
 				user.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
@@ -396,9 +402,36 @@ namespace SD.HnD.BL
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(user);
 
+			if(roleIDs != null)
+			{
+				// Add new entities for the user for all roleid's in the list specified. We'll first delete the ones the user is already in below directly
+				foreach(var roleId in roleIDs)
+				{
+					user.RoleUser.Add(new RoleUserEntity() {RoleID = roleId});
+				}
+			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(user);
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "Update User Info").ConfigureAwait(false);
+				try
+				{
+					if(roleIDs != null)
+					{
+						// first remove the user from all roles, we'll do that directly.
+						await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID))).ConfigureAwait(false);
+					}
+
+					// then save everything in one go.
+					bool toReturn = await adapter.SaveEntityAsync(user).ConfigureAwait(false);
+					adapter.Commit();
+					return toReturn;
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
 			}
 		}
 

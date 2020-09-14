@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
@@ -47,6 +48,9 @@ namespace SD.HnD.Gui.Models
 		[Range(1, 1000)]
 		public int UserTitleId { get; set; }
 		public EntityCollection<UserTitleEntity> UserTitles { get; set; }
+		public List<int> RoleIDs { get; set; }
+		public EntityCollection<RoleEntity> Roles { get; set; }
+		public bool IsBanned { get; set; }
 		public bool InfoEdited { get; set; }
 
 		public void Sanitize()

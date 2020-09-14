@@ -418,5 +418,21 @@ namespace SD.HnD.BL
 
 			return toReturn;
 		}
+
+
+		/// <summary>
+		/// Gets a list of all the RoleIDs of the roles the user with the userid specified is in
+		/// </summary>
+		/// <param name="userId"></param>
+		/// <returns></returns>
+		public static List<int> GetAllRoleIDsForUser(int userId)
+		{
+			var qf = new QueryFactory();
+			using(var adapter = new DataAccessAdapter())
+			{
+				var q = qf.RoleUser.Where(RoleUserFields.UserID.Equal(userId)).Select(()=>RoleUserFields.RoleID.ToValue<int>());
+				return adapter.FetchQuery(q);
+			}
+		}
 	}
 }
