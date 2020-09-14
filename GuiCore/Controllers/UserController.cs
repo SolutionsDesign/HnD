@@ -22,7 +22,7 @@ namespace SD.HnD.Gui.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		[Authorize]
-		public ActionResult ViewProfile(int id = 0)
+		public async Task<ActionResult> ViewProfileAsync(int id = 0)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
 			if(userID <= 0 || id == 0)
@@ -30,7 +30,7 @@ namespace SD.HnD.Gui.Controllers
 				// not useful
 				return RedirectToAction("Index", "Home");
 			}
-			var userProfileData = UserGuiHelper.GetUserProfileInfo(id);
+			var userProfileData = await UserGuiHelper.GetUserProfileInfoAsync(id);
 			if(userProfileData == null)
 			{
 				// not found
@@ -42,9 +42,9 @@ namespace SD.HnD.Gui.Controllers
 											 this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement) ||
 											 this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement);
 			viewData.UserHasSystemManagementRight = this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement);
-			viewData.LastThreads = UserGuiHelper.GetLastThreadsForUserAggregatedData(
-															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
-															 id, this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+			viewData.LastThreads = await UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(
+															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), id, 
+															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
 															 this.HttpContext.Session.GetUserID(), 25);
 			viewData.CurrentlyLoggedInUserID = this.HttpContext.Session.GetUserID(); 
 			return View(viewData);

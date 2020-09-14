@@ -31,6 +31,7 @@ using SD.HnD.DALAdapter.TypedListClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.Linq;
@@ -96,13 +97,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userId"></param>
 		/// <returns>A single object from a typedlist with the profile data of the user specified </returns>
-		public static UserProfileInfoRow GetUserProfileInfo(int userId)
+		public static async Task<UserProfileInfoRow> GetUserProfileInfoAsync(int userId)
 		{
 			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
 				var q = qf.GetUserProfileInfoTypedList().Where(UserFields.UserID.Equal(userId));
-				return adapter.FetchFirst(q);
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -117,10 +119,10 @@ namespace SD.HnD.BL
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, 
-																					List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+		public static Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserID, 
+																							   List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
 		{
-			return GetLastThreadsForUserAggregatedData(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
+			return UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
 		}
 
 
@@ -135,9 +137,9 @@ namespace SD.HnD.BL
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static List<AggregatedThreadRow> GetLastThreadsForUserAggregatedData(List<int> accessableForums, int participantUserID, 
-																					List<int> forumsWithThreadsFromOthers, int callingUserID, 
-																					int pageSize, int pageNumber)
+		public static async Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserID, 
+																									List<int> forumsWithThreadsFromOthers, int callingUserID, 
+																									int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -175,7 +177,8 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -189,7 +192,8 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="callingUserID">The calling user ID.</param>
 		/// <returns>the total number of threads the user participated in</returns>
-		public static int GetRowCountLastThreadsForUser(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, int callingUserID)
+		public static async Task<int> GetRowCountLastThreadsForUserAsync(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, 
+																		 int callingUserID)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -204,7 +208,8 @@ namespace SD.HnD.BL
 					  .Distinct();
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(qf.Create().Select(Functions.CountRow()).From(q));
+				var toReturn = await adapter.FetchScalarAsync<int>(qf.Create().Select(Functions.CountRow()).From(q)).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -273,7 +278,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">User ID.</param>
 		/// <returns></returns>
-		public static List<AggregatedThreadRow> GetBookmarksAggregatedData(int userID)
+		public static async Task<List<AggregatedThreadRow>> GetBookmarksAggregatedDataAsync(int userID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.Create()
@@ -284,7 +289,8 @@ namespace SD.HnD.BL
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -355,12 +361,31 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">The user ID.</param>
 		/// <returns>entity with data requested or null if not found.</returns>
-		public static UserEntity GetUser(int userID)
+		public static async Task<UserEntity> GetUserAsync(int userID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var user = new UserEntity(userID);
-				return adapter.FetchEntity(user) ? user : null;
+				var qf = new QueryFactory();
+				var q = qf.User.Where(UserFields.UserID.Equal(userID));
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
+			}
+		}
+
+
+		/// <summary>
+		/// Returns the user entity of the user with ID userID
+		/// </summary>
+		/// <param name="nickName">the nickname of the user to fetch</param>
+		/// <returns>entity with data requested or null if not found.</returns>
+		public static async Task<UserEntity> GetUserAsync(string nickName)
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				var qf = new QueryFactory();
+				var q = qf.User.Where(UserFields.NickName.Equal(nickName));
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -386,7 +411,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="tokenID"></param>
 		/// <returns></returns>
-		public static PasswordResetTokenEntity GetPasswordResetToken(string tokenID)
+		public static async Task<PasswordResetTokenEntity> GetPasswordResetTokenAsync(string tokenID)
 		{
 			if(!Guid.TryParse(tokenID, out Guid tokenIDAsGuid))
 			{
@@ -395,7 +420,9 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchFirst(new QueryFactory().PasswordResetToken.Where(PasswordResetTokenFields.PasswordResetToken.Equal(tokenIDAsGuid)));
+				var toReturn = await adapter.FetchFirstAsync(new QueryFactory().PasswordResetToken.Where(PasswordResetTokenFields.PasswordResetToken.Equal(tokenIDAsGuid)))
+											.ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 		

@@ -35,6 +35,7 @@ using SD.HnD.DTOs.DtoClasses;
 using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SD.HnD.BL
 {
@@ -311,7 +312,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user ID.</param>
 		/// <param name="actionRights">The action rights to be returned.</param>
 		/// <returns>filled collection</returns>
-		public static EntityCollection<ActionRightEntity> GetSystemActionRightsForUser(int userID)
+		public static async Task<EntityCollection<ActionRightEntity>> GetSystemActionRightsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
 			// the subquery in the filter requires joins as the filter's subquery has to filter on fields in related entities:
@@ -326,7 +327,8 @@ namespace SD.HnD.BL
 											  .And(ActionRightFields.AppliesToSystem.Equal(true)));
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<ActionRightEntity>());
+				var toReturn = await adapter.FetchQueryAsync(q, new EntityCollection<ActionRightEntity>()).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -336,7 +338,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">The user ID.</param>
 		/// <returns>fetched collection</returns>
-		public static EntityCollection<ForumRoleForumActionRightEntity> GetForumsActionRightsForUser(int userID)
+		public static async Task<EntityCollection<ForumRoleForumActionRightEntity>> GetForumsActionRightsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
 			// the subquery in the filter requires joins as the filter's subquery has to filter on fields in related entities:
@@ -348,7 +350,8 @@ namespace SD.HnD.BL
 																		 .Where(RoleUserFields.UserID.Equal(userID))));
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<ForumRoleForumActionRightEntity>());
+				var toReturn = await adapter.FetchQueryAsync(q, new EntityCollection<ForumRoleForumActionRightEntity>()).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -358,7 +361,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">The user ID.</param>
 		/// <returns>fetched collection</returns>
-		public static EntityCollection<AuditActionEntity> GetAuditActionsForUser(int userID)
+		public static async Task<EntityCollection<AuditActionEntity>> GetAuditActionsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.AuditAction
@@ -370,7 +373,8 @@ namespace SD.HnD.BL
 																  .Where(RoleUserFields.UserID == userID)));
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<AuditActionEntity>());
+				var toReturn = await adapter.FetchQueryAsync(q, new EntityCollection<AuditActionEntity>()).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 

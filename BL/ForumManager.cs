@@ -125,21 +125,23 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="forumID">Forum ID.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool DeleteForum(int forumID)
+		public static async Task<bool> DeleteForumAsync(int forumID)
 		{
 			// first all threads in this forum have to be removed, then this forum should be removed. Do this in one transaction.
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteForum");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteForum").ConfigureAwait(false);
 				try
 				{
-					ThreadManager.DeleteAllThreadsInForum(forumID, adapter);
+					await ThreadManager.DeleteAllThreadsInForumAsync(forumID, adapter);
 
 					// remove all ForumRoleForumActionRight entities for this forum
-					adapter.DeleteEntitiesDirectly(typeof(ForumRoleForumActionRightEntity), new RelationPredicateBucket(ForumRoleForumActionRightFields.ForumID == forumID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+															  new RelationPredicateBucket(ForumRoleForumActionRightFields.ForumID == forumID))
+								 .ConfigureAwait(false);
 
 					// remove the forum entity. do this by executing a direct delete statement on the database
-					adapter.DeleteEntitiesDirectly(typeof(ForumEntity), new RelationPredicateBucket(ForumFields.ForumID == forumID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumEntity), new RelationPredicateBucket(ForumFields.ForumID == forumID)).ConfigureAwait(false);
 					adapter.Commit();
 					return true;
 				}

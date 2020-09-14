@@ -44,14 +44,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageID">The ID of the message to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool DeleteMessage(int messageID)
+		public static async Task<bool> DeleteMessageAsync(int messageID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteMessage");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteMessage").ConfigureAwait(false);
 				try
 				{
-					DeleteMessages(MessageFields.MessageID == messageID, adapter);
+					await DeleteMessagesAsync(MessageFields.MessageID == messageID, adapter);
 					adapter.Commit();
 					return true;
 				}
@@ -69,14 +69,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadFilter">The thread filter.</param>
 		/// <param name="adapter">The adapter to use for persistence activity.</param>
-		internal static void DeleteAllMessagesInThreads(PredicateExpression threadFilter, IDataAccessAdapter adapter)
+		internal static Task DeleteAllMessagesInThreadsAsync(PredicateExpression threadFilter, IDataAccessAdapter adapter)
 		{
 			// fabricate the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
 			// WHERE Message.ThreadID IN (SELECT ThreadID FROM Thread WHERE threadFilter)
 			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create()
 																.Select(ThreadFields.ThreadID)
 																.Where(threadFilter));
-			DeleteMessages(messageFilter, adapter);
+			return DeleteMessagesAsync(messageFilter, adapter);
 		}
 
 
@@ -85,24 +85,24 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageFilter">The message filter.</param>
 		/// <param name="adapter">The adapter to use for persistence activity.</param>
-		private static void DeleteMessages(IPredicate messageFilter, IDataAccessAdapter adapter)
+		/// <remarks>The caller has to have started a transaction on the passed in adapter</remarks>
+		private static async Task DeleteMessagesAsync(IPredicate messageFilter, IDataAccessAdapter adapter)
 		{
 			// first delete all audit info for these message. This isn't done by a batch call directly on the db, as this is a targetperentity hierarchy
 			// which can't be deleted directly into the database in all cases, so we first fetch the entities to delete. 
 			var qf = new QueryFactory();
-			var q = qf.AuditDataMessageRelated
-							.Where(AuditDataMessageRelatedFields.MessageID.In(qf.Create()
-																					.Select(MessageFields.MessageID)
-																					.Where(messageFilter)));
-			var messageAudits = adapter.FetchQuery(q);
-			adapter.DeleteEntityCollection(messageAudits);
+			var q = qf.AuditDataMessageRelated.Where(AuditDataMessageRelatedFields.MessageID.In(qf.Create()
+																								  .Select(MessageFields.MessageID)
+																								  .Where(messageFilter)));
+			var messageAudits = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+			await adapter.DeleteEntityCollectionAsync(messageAudits).ConfigureAwait(false);
 
 			// delete all attachments for this message. This can be done directly onto the db.
-			adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity),
-										   new RelationPredicateBucket(AttachmentFields.MessageID.In(qf.Create()
-																									   .Select(MessageFields.MessageID)
-																									   .Where(messageFilter))));
-			adapter.DeleteEntitiesDirectly(typeof(MessageEntity), new RelationPredicateBucket(messageFilter));
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity),
+													  new RelationPredicateBucket(AttachmentFields.MessageID.In(qf.Create()
+																												  .Select(MessageFields.MessageID)
+																												  .Where(messageFilter)))).ConfigureAwait(false);
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(MessageEntity), new RelationPredicateBucket(messageFilter)).ConfigureAwait(false);
 			// don't commit the transaction, leave that to the caller.
 		}
 
@@ -118,7 +118,8 @@ namespace SD.HnD.BL
 		/// change to keep evidence who made which change from which IP address</param>
 		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-        public static bool UpdateEditedMessage(int editorUserID, int editedMessageID, string messageText, string messageAsHTML, string editorUserIDIPAddress, string messageAsXML)
+        public static async Task<bool> UpdateEditedMessage(int editorUserID, int editedMessageID, string messageText, string messageAsHTML, 
+														   string editorUserIDIPAddress, string messageAsXML)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -133,7 +134,7 @@ namespace SD.HnD.BL
 				//update the fields with the new passed values
 				message.MessageText = messageText;
 				message.MessageTextAsHTML = messageAsHTML;
-				return adapter.SaveEntity(message);
+				return await adapter.SaveEntityAsync(message).ConfigureAwait(false);
 			}
 		}
 
@@ -216,12 +217,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageID">the messageid of the message the attachment belongs to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
-		public static void DeleteAttachment(int messageID, int attachmentID)
+		public static async Task DeleteAttachmentAsync(int messageID, int attachmentID)
 		{
 			// delete the attachment directly from the db, without loading it first into memory
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.DeleteEntitiesDirectly(typeof(AttachmentEntity), new RelationPredicateBucket((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID==messageID)));
+				await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity), 
+														  new RelationPredicateBucket(AttachmentFields.AttachmentID.Equal(attachmentID)
+																					  .And(AttachmentFields.MessageID==messageID))).ConfigureAwait(false);
 			}
 		}
 
@@ -232,30 +235,30 @@ namespace SD.HnD.BL
 		/// <param name="messageId">the id of the message the attachment is assigned to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
 		/// <param name="userIdForAuditing">THe user id for the auditing action if the change was successful. If 0 or lower, it's ignored and no auditing will take place</param>
-		/// <param name="newState">the new state of the approved flag for the attachment, if operation was successful</param>
-		/// <returns>true if operation was successful, false otherwise. If false, newState is undefined.</returns>
-		public static bool ToggleAttachmentApproval(int messageId, int attachmentID, int userIdForAuditing, out bool newState)
+		/// <returns>tuple with two flags: toggleResult and newState. toggleResult can be true if operation was successful, false otherwise. If false, newState is undefined.</returns>
+		public static async Task<(bool toggleResult, bool newState)> ToggleAttachmentApprovalAsync(int messageId, int attachmentID, int userIdForAuditing)
 		{
-			newState = false;
 			using(var adapter = new DataAccessAdapter())
 			{
 				// fetch the attachment, but exclude the file contents, as we don't need that and it can be quite big
-				var attachment = adapter.FetchNewEntity<AttachmentEntity>(new RelationPredicateBucket((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID == messageId)), 
-																		null, null, new ExcludeFieldsList(AttachmentFields.Filecontents));
+				var qf = new QueryFactory();
+				var q = qf.Attachment.Where((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID == messageId))
+						  .Exclude(AttachmentFields.Filecontents);
+				var attachment = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				if(attachment.IsNew)
 				{
 					// not found
-					return false;
+					return (false, false);
 				}
 				if(userIdForAuditing > 0)
 				{
-					SecurityManager.AuditApproveAttachment(userIdForAuditing, attachmentID);
+					await SecurityManager.AuditApproveAttachmentAsync(userIdForAuditing, attachmentID);
 				}
 				attachment.Approved = !attachment.Approved;
-				newState = attachment.Approved;
-				adapter.SaveEntity(attachment);
+				var newState = attachment.Approved;
+				await adapter.SaveEntityAsync(attachment).ConfigureAwait(false);
+				return (true, newState);
 			}
-			return true;
 		}
 
 
@@ -332,7 +335,7 @@ namespace SD.HnD.BL
 					if(containingQueue == null)
 					{
 						// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
-						SupportQueueManager.AddThreadToQueue(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
+						SupportQueueManager.AddThreadToQueueAsync(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
 					}
 				}
 			}

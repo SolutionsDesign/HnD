@@ -38,6 +38,7 @@ using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.Linq;
 using SD.HnD.DTOs.DtoClasses;
 using SD.HnD.DTOs.Persistence;
+using SD.LLBLGen.Pro.LinqSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
@@ -73,7 +74,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">User ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static bool AuditLogin(int userID)
+		public static async Task<bool> AuditLoginAsync(int userID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -83,7 +84,8 @@ namespace SD.HnD.BL
 								UserID = userID,
 								AuditedOn = DateTime.Now
 							};
-				return adapter.SaveEntity(toLog);
+				var toReturn = await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -137,14 +139,16 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">The user ID.</param>
 		/// <param name="attachmentID">The attachment ID.</param>
-		public static bool AuditApproveAttachment(int userID, int attachmentID)
+		public static async Task<bool> AuditApproveAttachmentAsync(int userID, int attachmentID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				// use a scalar query to obtain the message id so we don't have to pull it completely in memory. An attachment can be big in size so we don't want to 
 				// read the entity to just read the messageid. We could use excluding fields to avoid the actual attachment data, but this query is really simple.
 				// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
-				int messageID = adapter.FetchScalar<int>(new QueryFactory().Create().Select(AttachmentFields.MessageID).Where(AttachmentFields.AttachmentID == attachmentID));
+				var qf = new QueryFactory();
+				var q = qf.Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentID)).Select(AttachmentFields.MessageID);
+				int messageID = await adapter.FetchScalarAsync<int>(q);
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditApproveAttachment,
@@ -152,7 +156,8 @@ namespace SD.HnD.BL
 								MessageID = messageID,
 								AuditedOn = DateTime.Now
 							};
-				return adapter.SaveEntity(toLog);
+				var toReturn = await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -163,7 +168,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">User ID.</param>
 		/// <param name="messageID">Message ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static bool AuditNewMessage(int userID, int messageID)
+		public static async Task<bool> AuditNewMessageAsync(int userID, int messageID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -174,7 +179,7 @@ namespace SD.HnD.BL
 								AuditedOn = DateTime.Now,
 								MessageID = messageID
 							};
-				return adapter.SaveEntity(toLog);
+				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
 		}
 
@@ -185,7 +190,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">User ID.</param>
 		/// <param name="messageID">Message ID.</param>
 		/// <returns></returns>
-		public static bool AuditAlteredMessage(int userID, int messageID)
+		public static async Task<bool> AuditAlteredMessageAsync(int userID, int messageID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -196,7 +201,7 @@ namespace SD.HnD.BL
 								AuditedOn = DateTime.Now,
 								MessageID = messageID
 							};
-				return adapter.SaveEntity(toLog);
+				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
 		}
 		
@@ -514,11 +519,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
 		/// <returns>true if user exists, false otherwise.</returns>
-		public static bool DoesUserExist(string nickName)
+		public static async Task<bool> DoesUserExistAsync(string nickName)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return new LinqMetaData(adapter).User.Any(u=>u.NickName == nickName);
+				var toReturn = await new LinqMetaData(adapter).User.AnyAsync(u=>u.NickName == nickName).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -536,35 +542,17 @@ namespace SD.HnD.BL
 			}
 		}
 
-
-		/// <summary>
-		/// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
-		/// forms authentication is still available in the database.
-		/// </summary>
-		/// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
-		/// <param name="user">The user object is returned</param>
-		/// <returns>true if user exists, false otherwise.</returns>
-		public static bool DoesUserExist(string nickName, out UserEntity user)
-		{
-			var qf = new QueryFactory();
-			var q = qf.User.Where(UserFields.NickName.Equal(nickName));
-			using(var adapter = new DataAccessAdapter())
-			{
-				user = adapter.FetchFirst(q) ?? new UserEntity();
-				return user.Fields.State==EntityState.Fetched;
-			}
-		}
-
 		
 		/// <summary>
 		/// Authenticates the user with the given Nickname and the given Password.
 		/// </summary>
 		/// <param name="nickName">Nickname of the user</param>
 		/// <param name="password">Password of the user</param>
-		/// <returns>AuthenticateResult.AllOk if the user could be authenticated, 
+		/// <returns>tuple with the authentication result and the user entity if authentication was successful.
+		/// authentication result can be: AuthenticateResult.AllOk if the user could be authenticated, 
 		///	AuthenticateResult.WrongUsernamePassword if user couldn't be authenticated given the current credentials,
 		/// AuthenticateResult.IsBanned if the user is banned. </returns>
-		public static AuthenticateResult AuthenticateUser(string nickName, string password, out UserEntity user)
+		public static async Task<(AuthenticateResult authenticateResult, UserEntity user)> AuthenticateUserAsync(string nickName, string password)
 		{
 			var qf = new QueryFactory();
 			// fetch the Roles related to the user when fetching the user, using a prefetchPath object.
@@ -572,19 +560,20 @@ namespace SD.HnD.BL
 						   .WithPath(UserEntity.PrefetchPathRoles);
 			using(var adapter = new DataAccessAdapter())
 			{
-				user = adapter.FetchFirst(q) ?? new UserEntity();
+				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				user = user ?? new UserEntity();
 				bool fetchResult = user.Fields.State == EntityState.Fetched;
 
 				if(!fetchResult)
 				{
 					// not found. Simply return that the user has specified a wrong username/password combination. 
-					return AuthenticateResult.WrongUsernamePassword;
+					return (AuthenticateResult.WrongUsernamePassword, user);
 				}
 
 				// user was found. If the user is banned we're done here
 				if(user.IsBanned)
 				{
-					return AuthenticateResult.IsBanned;
+					return (AuthenticateResult.IsBanned, user);
 				}
 
 				// check password and UserID. We disallow the user with id 0 to login as that's the anonymous coward ID for a user not logged in.
@@ -592,12 +581,13 @@ namespace SD.HnD.BL
 				{
 					// correct username/password combination
 					// delete any password reset tokens
-					adapter.DeleteEntitiesDirectly(typeof(PasswordResetTokenEntity), new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(PasswordResetTokenEntity), new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)))
+								 .ConfigureAwait(false);
 					// all ok
-					return AuthenticateResult.AllOk;
+					return (AuthenticateResult.AllOk, user);
 				}
 				// something was wrong, report wrong authentication combination
-				return AuthenticateResult.WrongUsernamePassword;
+				return (AuthenticateResult.WrongUsernamePassword, user);
 			}
 		}
 

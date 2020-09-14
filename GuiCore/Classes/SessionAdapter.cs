@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -42,7 +43,7 @@ namespace SD.HnD.Gui
 		/// </summary>
 		/// <param name="session"></param>
 		/// <param name="context"></param>
-		public static void Initialize(this ISession session, HttpContext context)
+		public static async Task InitializeAsync(this ISession session, HttpContext context)
 		{
 			if(session.GetInt32(SessionKeys.SessionInitialized) == 1)
 			{
@@ -52,13 +53,14 @@ namespace SD.HnD.Gui
 			
 			// Use static methods in SessionAdapter to fill the Session object with the data which is user specific
 			// and thus cacheable in the session object.
-			UserEntity user = null;
 			bool useEntityBasedLastVisitDateTracking = false;
+			UserEntity user = null;
 			if(context.User.Identity.IsAuthenticated)
 			{
-				if(!SecurityManager.DoesUserExist(context.User.Identity.Name, out user))
+				user = await UserGuiHelper.GetUserAsync(context.User.Identity.Name);
+				if(user == null)
 				{
-					user = UserGuiHelper.GetUser(0);	// 0 is UserID of Anonymous Coward;
+					user = await UserGuiHelper.GetUserAsync(0); // 0 is UserID of Anonymous Coward;
 				}
 				else
 				{
@@ -68,23 +70,23 @@ namespace SD.HnD.Gui
 			}
 			else
 			{
-				user = UserGuiHelper.GetUser(0);	// 0 is UserID of Anonymous Coward
+				user = await UserGuiHelper.GetUserAsync(0);	// 0 is UserID of Anonymous Coward
 			}
 
-			if((user != null) && user.IsBanned)
+			if(user == null || user.IsBanned)
 			{
 				// banned user, revert to AC
-				user = UserGuiHelper.GetUser(0);
+				user = await UserGuiHelper.GetUserAsync(0);
 				useEntityBasedLastVisitDateTracking = false;
 			}
 
-			if(user == null)
+			if(user == null || user.UserID<=0)
 			{
-				session.LoadAnonymousSessionData();
+				await session.LoadAnonymousSessionDataAsync();
 			}
 			else
 			{
-				session.LoadUserSessionData(user);
+				await session.LoadUserSessionDataAsync(user);
 			}
 
 			bool isLastVisitDateValid = false;
@@ -119,7 +121,6 @@ namespace SD.HnD.Gui
 				else
 				{
 					lastVisitDate = DateTime.Now;
-					isLastVisitDateValid = false;
 				}
 			}
 
@@ -130,9 +131,9 @@ namespace SD.HnD.Gui
 			}
 
 			// update date
-			if(useEntityBasedLastVisitDateTracking || ((user.UserID != 0) && !user.LastVisitedDate.HasValue))
+			if(useEntityBasedLastVisitDateTracking || (user!=null && user.UserID != 0 && !user.LastVisitedDate.HasValue))
 			{
-				UserManager.UpdateLastVisitDateForUser(user.UserID);
+				await UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
 			}
 
 			// always write new cookie
@@ -148,7 +149,7 @@ namespace SD.HnD.Gui
 
 			if(session.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 			{
-				SecurityManager.AuditLogin(session.GetUserID());
+				await SecurityManager.AuditLoginAsync(session.GetUserID());
 			}
 			
 			// mark the session as initialized.
@@ -161,12 +162,12 @@ namespace SD.HnD.Gui
         /// </summary>
 		/// <param name="session">The session the method works on</param>
         /// <param name="user">The user to be added to the session.</param>
-        public static void LoadUserSessionData(this ISession session, UserEntity user)
+        public static async Task LoadUserSessionDataAsync(this ISession session, UserEntity user)
         {
 	        session.AddUserObject(user);
-			session.AddSystemActionRights(SecurityGuiHelper.GetSystemActionRightsForUser(user.UserID));
-			session.AddAuditActions(SecurityGuiHelper.GetAuditActionsForUser(user.UserID));
-			session.AddForumsActionRights(SecurityGuiHelper.GetForumsActionRightsForUser(user.UserID));
+			session.AddSystemActionRights(await SecurityGuiHelper.GetSystemActionRightsForUserAsync(user.UserID));
+			session.AddAuditActions(await SecurityGuiHelper.GetAuditActionsForUserAsync(user.UserID));
+			session.AddForumsActionRights(await SecurityGuiHelper.GetForumsActionRightsForUserAsync(user.UserID));
 			if((user.UserID > 0) && (user.LastVisitedDate.HasValue))
 			{
 				session.AddLastVisitDate(user.LastVisitedDate.Value);
@@ -182,9 +183,9 @@ namespace SD.HnD.Gui
         /// Loads the anonymous user session data.
         /// </summary>
 		/// <param name="session">The session the method works on</param>
-        public static void LoadAnonymousSessionData(this ISession session)
+        public static async Task LoadAnonymousSessionDataAsync(this ISession session)
         {
-			session.AddForumsActionRights(SecurityGuiHelper.GetForumsActionRightsForUser(0));
+			session.AddForumsActionRights(await SecurityGuiHelper.GetForumsActionRightsForUserAsync(0));
         }
 
 

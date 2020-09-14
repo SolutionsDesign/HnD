@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -26,22 +27,22 @@ namespace SD.HnD.Gui.Controllers
 		
 		
 		[HttpGet]
-		public ActionResult Index()
+		public async Task<ActionResult> Index()
 		{
-			var accessableForums = HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);
-			var forumsWithThreadsFromOthers = HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers);
+			var accessableForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);
+			var forumsWithThreadsFromOthers = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers);
 			var allSections = _cache.GetAllSections();
 			var model = new HomeData();
-			model.ForumDataPerDisplayedSection = ForumGuiHelper.GetAllAvailableForumsAggregatedData(allSections, accessableForums, 
-																									forumsWithThreadsFromOthers, HttpContext.Session.GetUserID());
+			model.ForumDataPerDisplayedSection = await ForumGuiHelper.GetAllAvailableForumsAggregatedData(allSections, accessableForums, forumsWithThreadsFromOthers, 
+																										  this.HttpContext.Session.GetUserID());
 
 			// create a view on the sections to display and filter the view with a filter on sectionid: a sectionid must be part of the list of ids in the hashtable with per sectionid 
 			// aggregate forum data. 
 			model.SectionsFiltered = new EntityView2<SectionEntity>(allSections, SectionFields.SectionID.In(model.ForumDataPerDisplayedSection.Keys.ToList()));
 
-			model.NickName = HttpContext.Session.GetUserNickName();
-			model.UserLastVisitDate = HttpContext.Session.GetLastVisitDate();
-			model.IsAnonymousUser = HttpContext.Session.IsAnonymousUser();
+			model.NickName = this.HttpContext.Session.GetUserNickName();
+			model.UserLastVisitDate = this.HttpContext.Session.GetLastVisitDate();
+			model.IsAnonymousUser = this.HttpContext.Session.IsAnonymousUser();
 			return View(model);
 		}
 

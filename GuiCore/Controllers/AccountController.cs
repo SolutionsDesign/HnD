@@ -13,7 +13,7 @@ using SD.HnD.BL;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Classes;
 using SD.HnD.Gui.Models;
-using SD.LLBLGen.Pro.ORMSupportClasses;
+
 
 namespace SD.HnD.Gui.Controllers
 {
@@ -29,9 +29,9 @@ namespace SD.HnD.Gui.Controllers
 		
 	    [Authorize]
 	    [HttpGet]
-	    public ActionResult Bookmarks()
+	    public async Task<ActionResult> BookmarksAsync()
 	    {
-		    var bookmarkData = UserGuiHelper.GetBookmarksAggregatedData(this.HttpContext.Session.GetUserID());
+		    var bookmarkData = await UserGuiHelper.GetBookmarksAggregatedDataAsync(this.HttpContext.Session.GetUserID());
 		    var viewData = new ThreadsData() {ThreadRows = bookmarkData};
 		    return View(viewData);
 	    }
@@ -40,12 +40,12 @@ namespace SD.HnD.Gui.Controllers
 	    [Authorize]
 	    [HttpPost]
 		[ValidateAntiForgeryToken]
-	    public ActionResult UpdateBookmarks(int[] threadIdsToUnbookmark)
+	    public async Task<ActionResult> UpdateBookmarksAsync(int[] threadIdsToUnbookmark)
 	    {
 			// the user manager will take care of threads which are passed to this method and which don't exist. We'll only do a limit
 		    if(threadIdsToUnbookmark != null && threadIdsToUnbookmark.Length < 100 && threadIdsToUnbookmark.Length > 0)
 		    {
-			    UserManager.RemoveBookmarks(threadIdsToUnbookmark, this.HttpContext.Session.GetUserID());
+			    await UserManager.RemoveBookmarksAsync(threadIdsToUnbookmark, this.HttpContext.Session.GetUserID());
 		    }
 		    return RedirectToAction("Bookmarks");
 	    }
@@ -53,7 +53,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public ActionResult Threads(int pageNo = 1)
+		public async Task<ActionResult> ThreadsAsync(int pageNo = 1)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
 			if(userID <= 0 )
@@ -65,9 +65,9 @@ namespace SD.HnD.Gui.Controllers
 			int rowCount = this.HttpContext.Session.GetInt32(SessionKeys.MyThreadsRowCount) ?? 0;
 			if(rowCount <= 0)
 			{
-				rowCount = UserGuiHelper.GetRowCountLastThreadsForUser(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
-																	   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
-																	   userID);
+				rowCount = await UserGuiHelper.GetRowCountLastThreadsForUserAsync(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
+																				  this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+																				  userID);
 				this.HttpContext.Session.SetInt32(SessionKeys.MyThreadsRowCount, rowCount);
 			}
 
@@ -88,7 +88,7 @@ namespace SD.HnD.Gui.Controllers
 				numberOfPages++;
 			}
 			var data = new MyThreadsData() {RowCount = rowCount, NumberOfPages = numberOfPages, PageNo = pageNo};
-			data.ThreadRows = UserGuiHelper.GetLastThreadsForUserAggregatedData(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
+			data.ThreadRows = await UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
 																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
 																				userID, pageSize, pageNo);
 			return View(data);
@@ -97,9 +97,9 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public ActionResult EditProfile()
+		public async Task<ActionResult> EditProfileAsync()
 		{
-			var user = UserGuiHelper.GetUser(this.HttpContext.Session.GetUserID());
+			var user = await UserGuiHelper.GetUserAsync(this.HttpContext.Session.GetUserID());
 			if(user == null)
 			{
 				// not found
@@ -144,8 +144,8 @@ namespace SD.HnD.Gui.Controllers
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
 			var result = await UserManager.UpdateUserProfileAsync(userID, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL, data.Location,
-																   data.Occupation, data.NewPassword, data.Signature, data.Website, this.HttpContext.Session.GetUserTitleID(), 
-																   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage, null, null);
+																  data.Occupation, data.NewPassword, data.Signature, data.Website, this.HttpContext.Session.GetUserTitleID(),
+																  data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage, null, null);
 			if(result)
 			{
 				this.HttpContext.Session.UpdateUserSettings(data);
@@ -159,7 +159,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleBanFlagForUser(int userid=0)
+		public async Task<ActionResult> ToggleBanFlagForUserAsync(int userid=0)
 		{
 			if(userid < 2 || userid==this.HttpContext.Session.GetUserID())
 			{
@@ -172,7 +172,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			UserManager.ToggleBanFlagValue(userid, out bool _);
+			var result = await UserManager.ToggleBanFlagValueAsync(userid);
 			return RedirectToAction("ViewProfile", "User", new {id = userid});
 		}
 
@@ -197,10 +197,10 @@ namespace SD.HnD.Gui.Controllers
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
 			var result = await UserManager.RegisterNewUserAsync(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
-														   this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
-														   data.Occupation, data.Signature, data.Website,
-														   ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.RegistrationReply),
-														   data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);
+																this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
+																data.Occupation, data.Signature, data.Website,
+																ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.RegistrationReply),
+																data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);
 			if(result > 0)
 			{
 				this.HttpContext.Session.UpdateUserSettings(data);
@@ -209,7 +209,6 @@ namespace SD.HnD.Gui.Controllers
 
 			return View(data);
 		}
-		
 		
 
 		[AllowAnonymous]
@@ -235,11 +234,11 @@ namespace SD.HnD.Gui.Controllers
 
 		[AllowAnonymous]
 		[HttpGet]
-		public ActionResult SpecifyNewPassword(string tokenID)
+		public async Task<ActionResult> SpecifyNewPasswordAsync(string tokenID)
 		{
 			// the token might be invalid or non existent.
-			bool tokenIsValid = UserGuiHelper.GetPasswordResetToken(tokenID)!=null;
-			if(!tokenIsValid)
+			var resetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenID);
+			if(resetToken == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -249,10 +248,10 @@ namespace SD.HnD.Gui.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
-		public ActionResult SpecifyNewPassword(NewPasswordData data,string tokenID)
+		public async Task<ActionResult> SpecifyNewPasswordAsync(NewPasswordData data,string tokenID)
 		{
 			// the token might be invalid or non existent.
-			var passwordResetToken = UserGuiHelper.GetPasswordResetToken(tokenID);
+			var passwordResetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenID);
 			if(passwordResetToken==null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -268,7 +267,9 @@ namespace SD.HnD.Gui.Controllers
 				data.ConfirmNewPassword = string.Empty;
 				return View(data);
 			}
-			if(!UserManager.ResetPassword(data.NewPassword, passwordResetToken))
+
+			var result = await UserManager.ResetPasswordAsync(data.NewPassword, passwordResetToken);
+			if(!result)
 			{
 				return View(data);
 			}
@@ -317,17 +318,16 @@ namespace SD.HnD.Gui.Controllers
 
 		private async Task<SecurityManager.AuthenticateResult> PerformLoginAsync(LoginData data)
 	    {
-			UserEntity user = null;
-			SecurityManager.AuthenticateResult result = SecurityManager.AuthenticateUser(data.NickName, data.Password, out user);
+			var (authenticateResult, user) = await SecurityManager.AuthenticateUserAsync(data.NickName, data.Password);
 
-			switch(result)
+			switch(authenticateResult)
 			{
 				case SecurityManager.AuthenticateResult.AllOk:
 					// authenticated
 					// Save session cacheable data
-					this.HttpContext.Session.LoadUserSessionData(user);
+					this.HttpContext.Session.LoadUserSessionDataAsync(user);
 					// update last visit date in db
-					UserManager.UpdateLastVisitDateForUser(user.UserID);
+					UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
 					// done
 					var claims = new List<Claim> {new Claim(ClaimTypes.Name, user.NickName)};
 					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -337,7 +337,7 @@ namespace SD.HnD.Gui.Controllers
 					// Audit the login action, if it was defined to be logged for this role.
 					if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 					{
-						SecurityManager.AuditLogin(this.HttpContext.Session.GetUserID());
+						await SecurityManager.AuditLoginAsync(this.HttpContext.Session.GetUserID());
 					}
 					break;
 				case SecurityManager.AuthenticateResult.IsBanned:

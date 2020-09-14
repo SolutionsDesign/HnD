@@ -21,10 +21,10 @@ namespace SD.HnD.Gui.Controllers
 		}
 		
 		[HttpGet]
-		public ActionResult Get(int messageId = 0, int attachmentId = 0)
+		public async Task<ActionResult> GetAsync(int messageId = 0, int attachmentId = 0)
 		{
 			// loads Message and related thread based on the attachmentId
-			var relatedMessage = MessageGuiHelper.GetMessageWithAttachmentLogic(attachmentId);
+			var relatedMessage = await MessageGuiHelper.GetMessageWithAttachmentLogicAsync(attachmentId);
 			if(relatedMessage == null || relatedMessage.MessageID!=messageId)
 			{
 				return RedirectToAction("Index", "Home");
@@ -45,7 +45,7 @@ namespace SD.HnD.Gui.Controllers
 				// - the thread isn't posted by the calling user and the user doesn't have the right to view normal threads started by others
 				return RedirectToAction("Index", "Home");
 			}
-			var attachmentToStream = MessageGuiHelper.GetAttachment(messageId, attachmentId);
+			var attachmentToStream = await MessageGuiHelper.GetAttachmentAsync(messageId, attachmentId);
 			if(attachmentToStream == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -63,23 +63,20 @@ namespace SD.HnD.Gui.Controllers
 
 		[Authorize]
 		[HttpGet]
-		public ActionResult Unapproved()
+		public async Task<ActionResult> UnapprovedAsync()
 		{
 			var forumsWithApprovalRight = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ApproveAttachment);
 			var accessableForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);
-			if(((forumsWithApprovalRight == null) || (forumsWithApprovalRight.Count <= 0)) ||
-			   ((accessableForums == null) || (accessableForums.Count <= 0)))
+			if(forumsWithApprovalRight == null || forumsWithApprovalRight.Count <= 0 || accessableForums == null || accessableForums.Count <= 0)
 			{
 				// no, this user doesn't have the right to approve attachments or doesn't have access to any forums.
 				return RedirectToAction("Index", "Home");
 			}
 
-			var messageIDsWithUnaprovedAttachments = MessageGuiHelper
-														.GetAllMessagesIDsWithUnapprovedAttachments(accessableForums, forumsWithApprovalRight,
-																									this.HttpContext.Session.GetForumsWithActionRight(
-																												ActionRights.ViewNormalThreadsStartedByOthers), 
-																									this.HttpContext.Session.GetUserID());
-			return View(new UnapprovedAttachmentsData() {MessageIdsWithUnapprovedAttachments = messageIDsWithUnaprovedAttachments});
+			var messageIDsWithUnaprovedAttachments = await MessageGuiHelper.GetAllMessagesIDsWithUnapprovedAttachments(accessableForums, forumsWithApprovalRight,
+																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
+																				this.HttpContext.Session.GetUserID());
+			return View(new UnapprovedAttachmentsData() { MessageIdsWithUnapprovedAttachments = messageIDsWithUnaprovedAttachments});
 		}
 
 
@@ -88,8 +85,8 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> AddAsync(int messageId = 0)
 		{
-			MessageEntity message = null;
-			if(!GetMessageAndThread(messageId, out message))
+			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
+			if(!messageGetResult)
 			{
 				return Json(new { success = false, responseMessage = "Upload failed." });
 			}
@@ -110,10 +107,12 @@ namespace SD.HnD.Gui.Controllers
 				// - the thread isn't posted by the calling user and the user doesn't have the right to view normal threads started by others
 				return Json(new { success = false, responseMessage = "Upload failed." });
 			}
+
+			var totalNumberOfAttachmentsOfMessage = await MessageGuiHelper.GetTotalNumberOfAttachmentsOfMessageAsync(messageId);
 			bool userMayAddAttachment = forum.MaxNoOfAttachmentsPerMessage > 0 && 
 										this.HttpContext.Session.CanPerformForumActionRight(forum.ForumID, ActionRights.AddAttachment) && 
 										this.HttpContext.Session.GetUserID() == message.PostedByUserID &&
-										MessageGuiHelper.GetTotalNumberOfAttachmentsOfMessage(messageId) < forum.MaxNoOfAttachmentsPerMessage;
+										totalNumberOfAttachmentsOfMessage < forum.MaxNoOfAttachmentsPerMessage;
 			if(!userMayAddAttachment)
 			{
 				return Json(new { success = false, responseMessage = "Upload failed." });
@@ -157,10 +156,10 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int messageId=0, int attachmentId=0)
+		public async Task<ActionResult> DeleteAsync(int messageId=0, int attachmentId=0)
 		{
-			MessageEntity message = null;
-			if(!GetMessageAndThread(messageId, out message))
+			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
+			if(!messageGetResult)
 			{
 				return RedirectToAction("Index", "Home");
 			}
@@ -176,7 +175,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			MessageManager.DeleteAttachment(messageId, attachmentId);
+			await MessageManager.DeleteAttachmentAsync(messageId, attachmentId);
 			ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 			// redirect to the message, using the message controller
 			return RedirectToAction("Goto", "Message", new {id = messageId});
@@ -186,10 +185,10 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleApproval(int messageId = 0, int attachmentId = 0)
+		public async Task<ActionResult> ToggleApprovalAsync(int messageId = 0, int attachmentId = 0)
 		{
-			MessageEntity message = null;
-			if(!GetMessageAndThread(messageId, out message))
+			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
+			if(!messageGetResult)
 			{
 				return Json(new { success = false });
 			}
@@ -205,26 +204,24 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			int userIdForAuditing = this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditApproveAttachment) ? this.HttpContext.Session.GetUserID() : -1;
-			bool newState = false;
-			bool result = MessageManager.ToggleAttachmentApproval(messageId, attachmentId, userIdForAuditing, out newState);
-			if(result)
+			var (toggleResult, newState) = await MessageManager.ToggleAttachmentApprovalAsync(messageId, attachmentId, userIdForAuditing);
+			if(toggleResult)
 			{
 				ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 			}
-			return Json(new { success = result, newstate = newState });
+			return Json(new { success = toggleResult, newstate = newState });
 		}
 		
 
-		private bool GetMessageAndThread(int id, out MessageEntity message)
+		private async Task<(bool fetchResult, MessageEntity message)> GetMessageAndThreadAsync(int id)
 		{
-			message = null;
 			if(id <= 0)
 			{
-				return false;
+				return (false, null);
 			}
 
-			message = MessageGuiHelper.GetMessage(id, prefetchThread: true);
-			return message != null && message.Thread != null;
+			var message = await MessageGuiHelper.GetMessageAsync(id, prefetchThread: true);
+			return (message?.Thread != null, message);
 		}
 	}
 }

@@ -126,7 +126,7 @@ namespace SD.HnD.Gui.Controllers
 				// Set the queue. if the new queue is 0, remove from queue.
 				if(queueId > 0)
 				{
-					SupportQueueManager.AddThreadToQueue(id, queueId, this.HttpContext.Session.GetUserID(), null);
+					SupportQueueManager.AddThreadToQueueAsync(id, queueId, this.HttpContext.Session.GetUserID(), null);
 				}
 				else
 				{

@@ -44,7 +44,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditUserInfo_UserSelected(ActionWithUserSearchData data, string submitAction)
+		public async Task<ActionResult> EditUserInfo_UserSelectedAsync(ActionWithUserSearchData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -66,7 +66,7 @@ namespace SD.HnD.Gui.Controllers
 				return EditUserInfo_Find(data);
 			}
 
-			var user = UserGuiHelper.GetUser(data.FindUserData.SelectedUserIDs.FirstOrDefault());
+			var user = await UserGuiHelper.GetUserAsync(data.FindUserData.SelectedUserIDs.FirstOrDefault());
 			if(user == null)
 			{
 				// not found
@@ -337,7 +337,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult BanUnbanUser_Perform(ActionWithUserSearchData data, string submitAction)
+		public async Task<ActionResult> BanUnbanUser_PerformAsync(ActionWithUserSearchData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
@@ -355,15 +355,15 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			int userIdToToggleBanFlagOf = data.FindUserData.SelectedUserIDs.FirstOrDefault();
-			bool result = UserManager.ToggleBanFlagValue(userIdToToggleBanFlagOf, out bool newBanFlagValue);
+			var (toggleResult, newBanFlagValue) = await UserManager.ToggleBanFlagValueAsync(userIdToToggleBanFlagOf);
 			if(newBanFlagValue)
 			{
-				var user = UserGuiHelper.GetUser(userIdToToggleBanFlagOf);
+				var user = await UserGuiHelper.GetUserAsync(userIdToToggleBanFlagOf);
 				ApplicationAdapter.AddUserToListToBeLoggedOutByForce(user.NickName);
 			}
 			FillUserDataForState(data.FindUserData, AdminFindUserState.PostAction, string.Empty, string.Empty);
 			var viewData = new ActionWithUserSearchData(data.FindUserData);
-			if(result)
+			if(toggleResult)
 			{
 				viewData.FinalActionResult = newBanFlagValue ? "The user is now banned" : "The user has been unbanned";
 			}

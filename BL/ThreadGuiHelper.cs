@@ -21,6 +21,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -48,12 +49,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadId">Thread ID.</param>
 		/// <returns>Thread object or null if not found</returns>
-		public static ThreadEntity	GetThread(int threadId)
+		public static async Task<ThreadEntity> GetThreadAsync(int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var thread = new ThreadEntity(threadId);
-				return adapter.FetchEntity(thread) ? thread : null;
+				var qf = new QueryFactory();
+				var q = qf.Thread.Where(ThreadFields.ThreadID.Equal(threadId));
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -212,7 +215,7 @@ namespace SD.HnD.BL
 		/// <param name="messageID"></param>
 		/// <param name="maxAmountMessagesPerPage">The max amount of messages per page to show. </param>
 		/// <returns></returns>
-		public static int GetStartAtMessageForGivenMessageAndThread(int threadID, int messageID, int maxAmountMessagesPerPage)
+		public static async Task<int> GetStartAtMessageForGivenMessageAndThreadAsync(int threadID, int messageID, int maxAmountMessagesPerPage)
         {
 			var qf = new QueryFactory();
 			var q = qf.Create()
@@ -222,7 +225,7 @@ namespace SD.HnD.BL
 						.Distinct();
 	        using(var adapter = new DataAccessAdapter())
 	        {
-		        var messageIDs = adapter.FetchQuery(q);
+		        var messageIDs = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 		        int startAtMessage = 0;
 		        int rowIndex = 0;
 		        if(messageIDs.Count > 0)
@@ -249,7 +252,7 @@ namespace SD.HnD.BL
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="messageID">The message ID.</param>
 		/// <returns>true if message is first message in thread, false otherwise</returns>
-		public static bool CheckIfMessageIsFirstInThread(int threadID, int messageID)
+		public static async Task<bool> CheckIfMessageIsFirstInThreadAsync(int threadID, int messageID)
 		{
 			// use a scalar query, which obtains the first MessageID in a given thread. We sort on posting date ascending, and simply read
 			// the first messageid. If that's not available or not equal to messageID, the messageID isn't the first post in the thread, otherwise it is.
@@ -261,7 +264,7 @@ namespace SD.HnD.BL
 						.Limit(1);
 			using(var adapter = new DataAccessAdapter())
 			{
-				var firstMessageId = adapter.FetchScalar<int?>(q);
+				var firstMessageId = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
 				return firstMessageId.HasValue && firstMessageId.Value == messageID;
 			}
 		}

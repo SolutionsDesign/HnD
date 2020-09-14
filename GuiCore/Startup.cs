@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -109,7 +110,7 @@ namespace SD.HnD.Gui
 			// own middleware function to initialize session if required. 
 			app.Use(async (context, next) =>
 					{
-						Startup.InitializeSessionIfRequired(context);
+						await Startup.InitializeSessionIfRequiredAsync(context);
 
 						// call next in pipeline
 						await next();
@@ -123,20 +124,20 @@ namespace SD.HnD.Gui
 		}
 
 
-		private static void InitializeSessionIfRequired(HttpContext context)
+		private static Task InitializeSessionIfRequiredAsync(HttpContext context)
 		{
 			if(context?.Session == null)
 			{
-				return;
+				return Task.CompletedTask;
 			}
 
 			if(context.Session.GetInt32(SessionKeys.SessionInitialized)==1)
 			{
 				// initialized
-				return;
+				return Task.CompletedTask;
 			}
 
-			context.Session.Initialize(context);
+			return context.Session.InitializeAsync(context);
 		}
 
 

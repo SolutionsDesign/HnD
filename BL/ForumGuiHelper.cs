@@ -19,6 +19,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
@@ -67,7 +68,8 @@ namespace SD.HnD.BL
 		/// Otherwise only the threads started by the user calling the method are returned.</param>
 		/// <param name="userID">The userid of the user calling the method.</param>
 		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted to the top.</returns>
-		public static List<AggregatedThreadRow> GetAllThreadsInForumAggregatedData(int forumID, int pageNumber, int pageSize, bool canViewNormalThreadsStartedByOthers, int userID)
+		public static async Task<List<AggregatedThreadRow>> GetAllThreadsInForumAggregatedDataAsync(int forumID, int pageNumber, int pageSize, 
+																									bool canViewNormalThreadsStartedByOthers, int userID)
 		{
 			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
 			// then sort the sticky threads at the top and page through the resultset.
@@ -91,7 +93,8 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -155,8 +158,9 @@ namespace SD.HnD.BL
 		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums displayable to the
 		/// user it's not present in the returned hashtable.
 		/// </returns>
-        public static MultiValueHashtable<int, AggregatedForumRow> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections, List<int> accessableForums,
-																			   List<int> forumsWithThreadsFromOthers, int userID)
+        public static async Task<MultiValueHashtable<int, AggregatedForumRow>> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections, 
+																												   List<int> accessableForums, 
+																												   List<int> forumsWithThreadsFromOthers, int userID)
         {
 			var toReturn = new MultiValueHashtable<int, AggregatedForumRow>();
 
@@ -215,7 +219,7 @@ namespace SD.HnD.BL
 						.CacheResultset(30);
 			using(var adapter = new DataAccessAdapter())
 			{
-				var results = adapter.FetchQuery(q);
+				var results = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 				foreach(var forum in results)
 				{
 					toReturn.Add(forum.SectionID, forum);

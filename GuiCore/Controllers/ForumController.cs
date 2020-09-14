@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
@@ -18,7 +19,7 @@ namespace SD.HnD.Gui.Controllers
 
 		
 		[HttpGet]
-        public ActionResult Index(int id=0, int pageNo=1)
+        public async Task<ActionResult> Index(int id=0, int pageNo=1)
         {
 			// do forum security checks on authorized user.
 			bool userHasAccess = this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AccessForum);
@@ -36,6 +37,10 @@ namespace SD.HnD.Gui.Controllers
 
 	        var pageNoToUse = pageNo >= 0 ? pageNo : 1;
 	        var pageSize = _cache.GetSystemData().MinNumberOfThreadsToFetch;
+			var threadRows = await ForumGuiHelper.GetAllThreadsInForumAggregatedDataAsync(id, pageNoToUse, pageSize,
+																					 this.HttpContext.Session.CanPerformForumActionRight(id, 
+																									ActionRights.ViewNormalThreadsStartedByOthers),
+																					 this.HttpContext.Session.GetUserID());
 	        var data = new ForumData
 					   {
 						   ForumDescription = forum.ForumDescription, 
@@ -48,9 +53,7 @@ namespace SD.HnD.Gui.Controllers
 						   UserCanCreateThreads = (this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AddNormalThread) ||
 												   this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AddStickyThread)),
 						   UserLastVisitDate = this.HttpContext.Session.GetLastVisitDate(),
-						   ThreadRows = ForumGuiHelper.GetAllThreadsInForumAggregatedData(id, pageNoToUse, pageSize,
-																						  this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.ViewNormalThreadsStartedByOthers),
-																						  this.HttpContext.Session.GetUserID())
+						   ThreadRows = threadRows,
 					   };
 	        return View(data);
         }

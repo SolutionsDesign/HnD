@@ -26,8 +26,8 @@ using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
-using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
@@ -44,11 +44,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageId"></param>
 		/// <returns></returns>
-		public static int GetTotalNumberOfAttachmentsOfMessage(int messageId) 
+		public static async Task<int> GetTotalNumberOfAttachmentsOfMessageAsync(int messageId) 
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(new QueryFactory().Attachment.Where(AttachmentFields.MessageID == messageId).Select(Functions.CountRow()));
+				var qf = new QueryFactory();
+				var q = qf.Attachment.Where(AttachmentFields.MessageID == messageId).Select(Functions.CountRow());
+				var toReturn = await adapter.FetchScalarAsync<int>(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -127,13 +130,19 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// Filled messageentity if found, otherwise null
 		/// </returns>
-		public static MessageEntity GetMessage(int messageID, bool prefetchThread = false)
+		public static async Task<MessageEntity> GetMessageAsync(int messageID, bool prefetchThread = false)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var message = new MessageEntity(messageID);
-				IPrefetchPath2 path = prefetchThread ? new PrefetchPath2(EntityType.MessageEntity) {MessageEntity.PrefetchPathThread} : null;
-				return adapter.FetchEntity(message, path) ? message : null;
+				var qf = new QueryFactory();
+				var q = qf.Message.Where(MessageFields.MessageID.Equal(messageID));
+				if(prefetchThread)
+				{
+					q.WithPath(MessageEntity.PrefetchPathThread);
+				}
+
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -167,22 +176,13 @@ namespace SD.HnD.BL
 		/// <param name="messageID">The messageid of the message the attachment is related to</param>
 		/// <param name="attachmentID">The attachment ID.</param>
 		/// <returns>the attachment entity or null if not found</returns>
-		public static AttachmentEntity GetAttachment(int messageID, int attachmentID)
+		public static async Task<AttachmentEntity> GetAttachmentAsync(int messageID, int attachmentID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var attachment = new AttachmentEntity(attachmentID);
-				if(adapter.FetchEntity(attachment))
-				{
-					if(attachment.MessageID != messageID)
-					{
-						attachment = null;
-					}
-				}
-				else
-				{
-					attachment = null;
-				}
+				var qf = new QueryFactory();
+				var q = qf.Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentID).And(AttachmentFields.MessageID.Equal(messageID)));
+				var attachment = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				return attachment;
 			}
 		}
@@ -193,7 +193,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="attachmentID">The attachment ID.</param>
 		/// <returns>MessageEntity if found, otherwise null. MessageEntity has its Thread entity prefetched</returns>
-		public static MessageEntity GetMessageWithAttachmentLogic(int attachmentID)
+		public static async Task<MessageEntity> GetMessageWithAttachmentLogicAsync(int attachmentID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.Message
@@ -203,7 +203,8 @@ namespace SD.HnD.BL
 						.WithPath(MessageEntity.PrefetchPathThread);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchFirst(q);
+				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 
@@ -216,8 +217,9 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums the calling user can view normal threads from others.</param>
 		/// <param name="userID">The user ID of the calling user.</param>
 		/// <returns>List with objects with the data requested.</returns>
-		public static List<AggregatedUnapprovedAttachmentRow> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums, List<int> forumsWithApprovalRight, 
-																										List<int> forumsWithThreadsFromOthers, int userID)
+		public static async Task<List<AggregatedUnapprovedAttachmentRow>> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums, 
+																													 List<int> forumsWithApprovalRight, 
+																													 List<int> forumsWithThreadsFromOthers, int userID)
 		{
 			if((accessableForums == null) || (accessableForums.Count <= 0))
 			{
@@ -249,7 +251,8 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+				return toReturn;
 			}
 		}
 

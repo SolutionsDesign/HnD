@@ -23,6 +23,7 @@ using System.Text;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using System.Data;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DTOs.DtoClasses;
@@ -156,14 +157,16 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="adapter">The adapter with a live transaction. Can be null, in which case a local adapter is used.</param>
-		public static void RemoveThreadFromQueue(int threadID, IDataAccessAdapter adapter)
+		public static async Task RemoveThreadFromQueueAsync(int threadID, IDataAccessAdapter adapter)
 		{
 			bool localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
 				// delete the SupportQueueThread entity for this thread directly from the db
-				adapterToUse.DeleteEntitiesDirectly(typeof(SupportQueueThreadEntity), new RelationPredicateBucket(SupportQueueThreadFields.ThreadID == threadID));
+				await adapterToUse.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+															   new RelationPredicateBucket(SupportQueueThreadFields.ThreadID == threadID))
+								  .ConfigureAwait(false);
 				// don't commit the current transaction if specified, simply return to caller.
 			}
 			finally
@@ -184,7 +187,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user ID of the user causing this thread to be placed in the queue specified.</param>
 		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local transaction is used.</param>
 		/// <remarks>first removes the thread from a queue if it's in a queue</remarks>
-		public static void AddThreadToQueue(int threadID, int queueID, int userID, IDataAccessAdapter adapter)
+		public static async Task AddThreadToQueueAsync(int threadID, int queueID, int userID, IDataAccessAdapter adapter)
 		{
 			bool localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
@@ -192,11 +195,11 @@ namespace SD.HnD.BL
 			{
 				if(localAdapter)
 				{
-					adapterToUse.StartTransaction(IsolationLevel.ReadCommitted, "AddThreadToQueue");
+					await adapterToUse.StartTransactionAsync(IsolationLevel.ReadCommitted, "AddThreadToQueue").ConfigureAwait(false);
 				}
 
 				// first remove the thread from any queue it's in. 
-				RemoveThreadFromQueue(threadID, adapterToUse);
+				await RemoveThreadFromQueueAsync(threadID, adapterToUse);
 
 				// then add it to the queue specified.
 				var supportQueueThread = new SupportQueueThreadEntity
@@ -206,7 +209,7 @@ namespace SD.HnD.BL
 											 PlacedInQueueByUserID = userID,
 											 PlacedInQueueOn = DateTime.Now
 										 };
-				adapterToUse.SaveEntity(supportQueueThread);
+				await adapterToUse.SaveEntityAsync(supportQueueThread).ConfigureAwait(false);
 				if(localAdapter)
 				{
 					adapterToUse.Commit();
