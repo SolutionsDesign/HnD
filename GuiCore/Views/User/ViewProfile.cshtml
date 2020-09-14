@@ -45,7 +45,7 @@
 							{
 								@Model.ProfileDataFromDatabase.EmailAddress
 								;
-							}
+							}	
 							else
 							{
 								<span>Email address is hidden</span>
@@ -64,10 +64,29 @@
 							<i class="fas fa-user-plus w25" title="Join date"></i> @Model.ProfileDataFromDatabase.JoinDate?.ToString("dd-MMM-yyyy") <br/>
 							<i class="fas fa-key w25" title="Last visit date"></i> @Model.ProfileDataFromDatabase.LastVisitedDate?.ToString("dd-MMM-yyyy hh:mm:ss") <br/>
 							<i class="fas fa-pencil-alt w25" title="Number of postings"></i> @Model.ProfileDataFromDatabase.AmountOfPostings <br/>
+							<i class="fas fa-hammer w25" title="Is banned"></i> @if(Model.ProfileDataFromDatabase.IsBanned)
+							                                                        {
+								                                                        <span>Banned</span>
+							                                                        } 
+							                                                        else
+								                                                    {
+									                                                    <span>&nbsp;</span>  
+								                                                    }
+							<br/>
 							@if(Model.AdminSectionIsVisible)
 							{
 								<i class="fas fa-network-wired w25" title="IP Address"></i>
 								@Model.ProfileDataFromDatabase.IPNumber<br/>
+								@if(Model.UserHasSystemManagementRight && Model.ProfileDataFromDatabase.UserID!=Model.CurrentlyLoggedInUserID)
+								{
+									@using(Html.BeginForm("ToggleBanFlagForUser", "Account", new {userid = Model.ProfileDataFromDatabase.UserID}, FormMethod.Post, true, new {role = "form"}))
+									{
+										<div class="caption"><span class="light-caption">Administrative actions</span></div>
+										<div class="mt20">
+											<button type="submit" name="submitAction" value="ToggleBanFlag" class="btn btn-default"> Toggle Ban Flag </button>
+										</div>
+									}
+								}
 							}
 							<br/>
 						</p>

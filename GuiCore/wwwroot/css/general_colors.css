@@ -72,6 +72,9 @@ mark {
 .caption span {
   background: #f1f1f1;
 }
+.caption span.light-caption {
+  background: #fff !important;
+}
 .footer-links > li > a:hover,
 .footer-links > li > a:focus,
 .footer-links > li > a:active {

@@ -123,7 +123,7 @@ namespace SD.HnD.Gui.Controllers
 			data.Sanitize();
 			return View(data);
 		}
-
+		
 
 		[HttpPost]
 		[Authorize]
@@ -153,6 +153,27 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			return View(data);
+		}		
+
+		
+		[HttpPost]
+		[Authorize]
+		[ValidateAntiForgeryToken]
+		public ActionResult ToggleBanFlagForUser(int userid=0)
+		{
+			if(userid < 2 || userid==this.HttpContext.Session.GetUserID())
+			{
+				// not allowed
+				return RedirectToAction("Index", "Home");
+			}
+			
+			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			UserManager.ToggleBanFlagValue(userid, out bool _);
+			return RedirectToAction("ViewProfile", "User", new {id = userid});
 		}
 
 

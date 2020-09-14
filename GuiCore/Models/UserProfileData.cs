@@ -25,5 +25,9 @@ namespace SD.HnD.Gui.Models
 		/// Flag to signal whether the current user has the system management right or not. 
 		/// </summary>
 		public bool UserHasSystemManagementRight { get; set; }
+		/// <summary>
+		/// The id of the currently logged in user
+		/// </summary>
+		public int CurrentlyLoggedInUserID { get; set; }
 	}
 }

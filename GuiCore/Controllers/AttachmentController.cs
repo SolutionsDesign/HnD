@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -85,7 +86,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Add(int messageId = 0)
+		public async Task<ActionResult> AddAsync(int messageId = 0)
 		{
 			MessageEntity message = null;
 			if(!GetMessageAndThread(messageId, out message))
@@ -131,17 +132,17 @@ namespace SD.HnD.Gui.Controllers
 				var fileLengthInKB = fileContent.Length / 1024;
 				if(fileLengthInKB > forum.MaxAttachmentSize)
 				{
-					return Json(new {success = false, responseMessage = $"The file uploaded is too large ({fileLengthInKB}KB). The max. file size is {forum.MaxAttachmentSize}KB"});
+					return Json(new { success = false, responseMessage = $"The file uploaded is too large ({fileLengthInKB}KB). The max. file size is {forum.MaxAttachmentSize}KB"});
 				}
 
 				// all is well, save the attachment!
 				var fileData = new byte[fileContent.Length];
-				using(var reader = fileContent.OpenReadStream())
+				await using(var reader = fileContent.OpenReadStream())
 				{
-					reader.Read(fileData, 0, (int)fileContent.Length);
+					await reader.ReadAsync(fileData, 0, (int)fileContent.Length);
 				}
-				MessageManager.AddAttachment(messageId, fileContent.FileName, fileData,
-											 this.HttpContext.Session.CanPerformForumActionRight(forum.ForumID, ActionRights.GetsAttachmentsApprovedAutomatically));
+				await MessageManager.AddAttachmentAsync(messageId, fileContent.FileName, fileData,
+														this.HttpContext.Session.CanPerformForumActionRight(forum.ForumID, ActionRights.GetsAttachmentsApprovedAutomatically));
 				ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 				return Json(new {success = true, responseMessage = string.Empty});
 			}

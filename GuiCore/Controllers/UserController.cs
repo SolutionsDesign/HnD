@@ -46,6 +46,7 @@ namespace SD.HnD.Gui.Controllers
 															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
 															 id, this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
 															 this.HttpContext.Session.GetUserID(), 25);
+			viewData.CurrentlyLoggedInUserID = this.HttpContext.Session.GetUserID(); 
 			return View(viewData);
 		}
 	}

@@ -266,11 +266,11 @@ namespace SD.HnD.BL
 		/// <param name="fileName">Name of the file.</param>
 		/// <param name="fileContents">The file contents.</param>
 		/// <param name="approveValue">the value for the approved flag</param>
-		public static void AddAttachment(int messageID, string fileName, byte[] fileContents, bool approveValue)
+		public static async Task AddAttachmentAsync(int messageID, string fileName, byte[] fileContents, bool approveValue)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.SaveEntity(new AttachmentEntity
+				await adapter.SaveEntityAsync(new AttachmentEntity
 								   {
 									   MessageID = messageID,
 									   Filename = fileName,
@@ -278,7 +278,7 @@ namespace SD.HnD.BL
 									   Filesize = fileContents.Length,
 									   Approved = approveValue,
 									   AddedOn = DateTime.Now
-								   });
+								   }).ConfigureAwait(false);
 			}
 		}
 
