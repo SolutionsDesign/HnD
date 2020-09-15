@@ -77,7 +77,7 @@ namespace SD.HnD.BL
 				// not found
 				return false;
 			}
-			var containingSupportQueue = SupportQueueGuiHelper.GetQueueOfThread(threadID);
+			var containingSupportQueue = SupportQueueGuiHelper.GetQueueOfThreadAsync(threadID);
 			thread.MarkedAsDone = true;
 			using(var adapter = new DataAccessAdapter())
 			{ 
@@ -250,10 +250,10 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{ 
 				// we'll use the delete threads feature as deleting a thread requires updating more data than just deleting a single thread object. 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteThread");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteThread").ConfigureAwait(false);
 				try
 				{
-					ThreadManager.DeleteThreadsAsync(new PredicateExpression(ThreadFields.ThreadID == threadID), adapter);
+					await ThreadManager.DeleteThreadsAsync(new PredicateExpression(ThreadFields.ThreadID == threadID), adapter);
 					adapter.Commit();
 					return true;
 				}
@@ -423,7 +423,7 @@ namespace SD.HnD.BL
 					messageID = await adapter.SaveEntityAsync(message).ConfigureAwait(false) ? message.MessageID : 0;
 					if(messageID > 0)
 					{
-						MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, postingDate, true, subscribeToThread);
+						await MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, postingDate, true, subscribeToThread);
 					}
 					adapter.Commit();
 				}

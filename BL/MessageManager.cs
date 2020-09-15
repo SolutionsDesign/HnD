@@ -301,19 +301,20 @@ namespace SD.HnD.BL
 		/// Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
 		/// passed in transaction.
 		/// </remarks>
-		internal static void UpdateStatisticsAfterMessageInsert(int threadID, int userID, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, bool subscribeToThread)
+		internal static async Task UpdateStatisticsAfterMessageInsert(int threadID, int userID, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, 
+																	  bool subscribeToThread)
 		{
 			// user statistics
 			var userUpdater = new UserEntity();
 			// set the amountofpostings field to an expression so it will be increased with 1. Update the entity directly in the DB
 			userUpdater.Fields[(int)UserFieldIndex.AmountOfPostings].ExpressionToApply = (UserFields.AmountOfPostings + 1);
-			adapter.UpdateEntitiesDirectly(userUpdater, new RelationPredicateBucket(UserFields.UserID == userID));
+			await adapter.UpdateEntitiesDirectlyAsync(userUpdater, new RelationPredicateBucket(UserFields.UserID == userID)).ConfigureAwait(false);
 
 			// thread statistics
 			var threadUpdater = new ThreadEntity();
 			threadUpdater.ThreadLastPostingDate = postingDate;
 			threadUpdater.MarkedAsDone = false;
-			adapter.UpdateEntitiesDirectly(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID));
+			await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID)).ConfigureAwait(false);
 
 			// forum statistics. Load the forum from the DB, as we need it later on. Use a nested query to fetch the forum as we don't know the 
 			// forumID as we haven't fetched the thread
@@ -322,20 +323,20 @@ namespace SD.HnD.BL
 					  .Where(ForumFields.ForumID.In(qf.Create()
 													  .Select(ThreadFields.ForumID)
 													  .Where(ThreadFields.ThreadID.Equal(threadID))));
-			var containingForum = adapter.FetchFirst(q);
+			var containingForum = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			if(containingForum!=null)
 			{
 				containingForum.ForumLastPostingDate = postingDate;
 				// save the forum.
-				adapter.SaveEntity(containingForum, true);
+				await adapter.SaveEntityAsync(containingForum, true).ConfigureAwait(false);
 				if(addToQueueIfRequired && containingForum.DefaultSupportQueueID.HasValue)
 				{
 					// If the thread involved isn't in a queue, place it in the default queue of the forum (if applicable)
-					var containingQueue = SupportQueueGuiHelper.GetQueueOfThread(threadID, adapter);
+					var containingQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(threadID, adapter);
 					if(containingQueue == null)
 					{
 						// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
-						SupportQueueManager.AddThreadToQueueAsync(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
+						await SupportQueueManager.AddThreadToQueueAsync(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
 					}
 				}
 			}
@@ -343,7 +344,7 @@ namespace SD.HnD.BL
 			//subscribe to thread if indicated
 			if(subscribeToThread)
             {
-				UserManager.AddThreadToSubscriptions(threadID, userID, adapter);
+				await UserManager.AddThreadToSubscriptionsAsync(threadID, userID, adapter);
             }
 		}
 	}

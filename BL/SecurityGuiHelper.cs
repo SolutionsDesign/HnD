@@ -36,6 +36,7 @@ using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 using System.Linq;
 using System.Threading.Tasks;
+using SD.LLBLGen.Pro.LinqSupportClasses;
 
 namespace SD.HnD.BL
 {
@@ -48,13 +49,13 @@ namespace SD.HnD.BL
 		/// Gets all role objects.
 		/// </summary>
 		/// <returns></returns>
-		public static List<RoleDto> GetAllRoleDTOs()
+		public static async Task<List<RoleDto>> GetAllRoleDtosAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var metaData = new LinqMetaData(adapter);
 				var q = metaData.Role.OrderBy(r => r.RoleDescription).ProjectToRoleDto();
-				return q.ToList();
+				return await q.ToListAsync().ConfigureAwait(false);
 			}
 		}
 
@@ -63,11 +64,12 @@ namespace SD.HnD.BL
 		/// Gets all role objects.
 		/// </summary>
 		/// <returns></returns>
-		public static EntityCollection<RoleEntity> GetAllRoles()
+		public static async Task<EntityCollection<RoleEntity>> GetAllRolesAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().Role.OrderBy(RoleFields.RoleDescription.Ascending()), new EntityCollection<RoleEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().Role.OrderBy(RoleFields.RoleDescription.Ascending()), new EntityCollection<RoleEntity>())
+									.ConfigureAwait(false);
 			}
 		}
 
@@ -76,11 +78,13 @@ namespace SD.HnD.BL
 		/// Gets all audit actions.
 		/// </summary>
 		/// <returns></returns>
-		public static EntityCollection<AuditActionEntity> GetAllAuditActions()
+		public static async Task<EntityCollection<AuditActionEntity>> GetAllAuditActionsAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().AuditAction.OrderBy(AuditActionFields.AuditActionDescription.Ascending()), new EntityCollection<AuditActionEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().AuditAction.OrderBy(AuditActionFields.AuditActionDescription.Ascending()), 
+													 new EntityCollection<AuditActionEntity>())
+									.ConfigureAwait(false);
 			}
 		}
 
@@ -109,7 +113,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">User ID.</param>
 		/// <returns>All audit data objects (polymorphic)</returns>
-		public static EntityCollection<AuditDataCoreEntity> GetAllAuditsForUser(int userID)
+		public static async Task<EntityCollection<AuditDataCoreEntity>> GetAllAuditsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.AuditDataCore
@@ -120,7 +124,7 @@ namespace SD.HnD.BL
 								  AuditDataThreadRelatedEntity.PrefetchPathThread);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<AuditDataCoreEntity>());
+				return await adapter.FetchQueryAsync(q, new EntityCollection<AuditDataCoreEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -131,21 +135,16 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// the collection of ipban DTOs requested
 		/// </returns>
-		public static List<IPBanDto> GetAllIPBanDTOs()
+		public static async Task<List<IPBanDto>> GetAllIPBanDtosAsync()
 		{
-			var qf = new QueryFactory();
-			var q2 = qf.IPBan
-					  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), IPBanFields.IPSegment4.Ascending())
-					  .ProjectToIPBanDto(qf);
 			using(var adapter = new DataAccessAdapter())
 			{
-				//return adapter.FetchQuery(q);
 				var metaData = new LinqMetaData(adapter);
 				var q = (from i in metaData.IPBan
 						 orderby i.IPSegment1, i.IPSegment2, i.IPSegment3, i.IPSegment4
 						 select i)
 					.ProjectToIPBanDto();
-				return q.ToList();
+				return await q.ToListAsync().ConfigureAwait(false);
 			}
 		}
 
@@ -173,57 +172,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="ipBanId"></param>
 		/// <returns></returns>
-		public static IPBanEntity GetIPBan(int ipBanId)
+		public static async Task<IPBanEntity> GetIPBanAsync(int ipBanId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toFetch = new IPBanEntity(ipBanId);
-				return adapter.FetchEntity(toFetch) ? toFetch : null;
+				var q = new QueryFactory().IPBan.Where(IPBanFields.IPBanID.Equal(ipBanId));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
-		}
-
-#warning REMOVE		
-		/// <summary>
-		/// Constructs a dataview with all the roles available, complete with statistics (#users, if the role is used as anonymous role or default user role)
-		/// </summary>
-		/// <returns>DataView with all the Roles available, directly bindable to webcontrols</returns>
-		public static DataView GetAllRolesWithStatisticsAsDataView()
-		{
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(RoleFields.RoleID,
-								RoleFields.RoleDescription,
-								// now add the # of users subquery to the resultset. This will result in the query:
-								// (
-								//    SELECT 	COUNT(UserID)
-								//    FROM	RoleUser
-								//    WHERE RoleUser.RoleID = Role.RoleID
-								// ) AS AmountUsersInRole
-								qf.Create()
-									.Select(RoleUserFields.UserID.Count())
-									.CorrelatedOver(RoleUserFields.RoleID == RoleFields.RoleID)
-									.ToScalar()
-									.As("AmountUsersInRole"))
-						.OrderBy(RoleFields.RoleDescription.Ascending());
-			DataTable results;
-			using(var adapter = new DataAccessAdapter())
-			{
-				results = adapter.FetchAsDataTable(q);
-			}
-			// we now fetch the system data which contains the two role id's we've to check with in the results to return.
-			var systemData = SystemGuiHelper.GetSystemSettings();
-			// now add 2 columns to the datatable, booleans, which are used to store the flags for IsDefaultNewUserRole and IsAnonymousRole, so the complete
-			// set of data can be processed in a list form.
-			results.Columns.Add(new DataColumn("IsDefaultNewUserRole", typeof(bool)));
-			results.Columns.Add(new DataColumn("IsAnonymousRole", typeof(bool)));
-			foreach(DataRow row in results.Rows)
-			{
-				row["IsDefaultNewUserRole"] = ((int)row["RoleID"] == systemData.DefaultRoleNewUser);
-				row["IsAnonymousRole"] = ((int)row["RoleID"] == systemData.AnonymousRole);
-			}
-
-			// done, return the dataview of this datatable
-			return results.DefaultView;
 		}
 
 
@@ -232,12 +187,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="roleID">Role to retrieve</param>
 		/// <returns>Entity with the role data or null if not found</returns>
-		public static RoleEntity GetRole(int roleID)
+		public static async Task<RoleEntity> GetRoleAsync(int roleID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var role = new RoleEntity(roleID);
-				return adapter.FetchEntity(role) ? role : null;
+				var q = new QueryFactory().Role.Where(RoleFields.RoleID.Equal(roleID));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -267,13 +222,15 @@ namespace SD.HnD.BL
 		/// <param name="forumID">The forum ID.</param>
 		/// <returns>filled entity collection
 		/// </returns>
-		public static EntityCollection<ForumRoleForumActionRightEntity> GetForumActionRightRolesForForumRole(int roleID, int forumID)
+		public static async Task<EntityCollection<ForumRoleForumActionRightEntity>> GetForumActionRightRolesForForumRoleAsync(int roleID, int forumID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().ForumRoleForumActionRight
-																	.Where((ForumRoleForumActionRightFields.RoleID == roleID).And(ForumRoleForumActionRightFields.ForumID == forumID)),
-										  new EntityCollection<ForumRoleForumActionRightEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().ForumRoleForumActionRight
+																	.Where(ForumRoleForumActionRightFields.RoleID.Equal(roleID)
+																		  .And(ForumRoleForumActionRightFields.ForumID.Equal(forumID))),
+										  new EntityCollection<ForumRoleForumActionRightEntity>())
+									.ConfigureAwait(false);
 			}
 		}
 
@@ -282,12 +239,13 @@ namespace SD.HnD.BL
 		/// Retrieves all ActionRight entities which are applyable to a forum.
 		/// </summary>
 		/// <returns>entitycollection with all the action rights requested</returns>
-		public static EntityCollection<ActionRightEntity> GetAllActionRightsApplybleToAForum()
+		public static async Task<EntityCollection<ActionRightEntity>> GetAllActionRightsApplybleToAForumAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().ActionRight.Where(ActionRightFields.AppliesToForum == true).OrderBy(ActionRightFields.ActionRightID.Ascending()), 
-										  new EntityCollection<ActionRightEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().ActionRight.Where(ActionRightFields.AppliesToForum.Equal(true))
+																	   .OrderBy(ActionRightFields.ActionRightID.Ascending()),
+													 new EntityCollection<ActionRightEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -296,12 +254,13 @@ namespace SD.HnD.BL
 		/// Retrieves all action rights which are system action rights and which aren't applyable to a forum
 		/// </summary>
 		/// <returns>entitycollection with all the system action rights</returns>
-		public static EntityCollection<ActionRightEntity> GetAllSystemActionRights()
+		public static async Task<EntityCollection<ActionRightEntity>> GetAllSystemActionRightsAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().ActionRight.Where(ActionRightFields.AppliesToSystem == true).OrderBy(ActionRightFields.ActionRightID | SortOperator.Ascending),
-										  new EntityCollection<ActionRightEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().ActionRight.Where(ActionRightFields.AppliesToSystem.Equal(true))
+																	   .OrderBy(ActionRightFields.ActionRightID.Ascending()),
+													 new EntityCollection<ActionRightEntity>()).ConfigureAwait(false);
 			}
 		}
 		
@@ -429,13 +388,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userId"></param>
 		/// <returns></returns>
-		public static List<int> GetAllRoleIDsForUser(int userId)
+		public static async Task<List<int>> GetAllRoleIDsForUserAsync(int userId)
 		{
-			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = qf.RoleUser.Where(RoleUserFields.UserID.Equal(userId)).Select(()=>RoleUserFields.RoleID.ToValue<int>());
-				return adapter.FetchQuery(q);
+				var q = new QueryFactory().RoleUser.Where(RoleUserFields.UserID.Equal(userId)).Select(()=>RoleUserFields.RoleID.ToValue<int>());
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 	}

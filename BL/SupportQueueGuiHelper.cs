@@ -23,6 +23,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Data;
 using SD.LLBLGen.Pro.QuerySpec;
 using System.Text;
+using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -45,12 +46,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="queueID">The queue ID.</param>
 		/// <returns>the supportqueue entity requested or null if not found.</returns>
-		public static SupportQueueEntity GetSupportQueue(int queueID)
+		public static async Task<SupportQueueEntity> GetSupportQueueAsync(int queueID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var supportQueue = new SupportQueueEntity(queueID);
-				return adapter.FetchEntity(supportQueue) ? supportQueue : null;
+				var q = new QueryFactory().SupportQueue.Where(SupportQueueFields.QueueID.Equal(queueID));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -59,14 +60,14 @@ namespace SD.HnD.BL
 		/// Gets the support queue entities projected to DTOs from the derived model 'DTOs'. 
 		/// </summary>
 		/// <returns></returns>
-		public static List<SupportQueueDto> GetAllSupportQueueDTOs()
+		public static async Task<List<SupportQueueDto>> GetAllSupportQueueDTOsAsync()
 		{
 			var qf = new QueryFactory();
 			var q = qf.SupportQueue.ProjectToSupportQueueDto(qf)
 					  .OrderBy(SupportQueueFields.OrderNo.Source("__BQ").Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 		
@@ -91,9 +92,9 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <returns>The requested supportqueue entity, or null if the thread isn't in a support queue.</returns>
-		public static SupportQueueEntity GetQueueOfThread(int threadID)
+		public static Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadID)
 		{
-			return GetQueueOfThread(threadID, null);
+			return GetQueueOfThreadAsync(threadID, null);
 		}
 
 
@@ -105,7 +106,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// The requested supportqueue entity, or null if the thread isn't in a support queue.
 		/// </returns>
-		public static SupportQueueEntity GetQueueOfThread(int threadID, IDataAccessAdapter adapter)
+		public static async Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadID, IDataAccessAdapter adapter)
 		{
 			// the relation supportqueue - thread is stored in a SupportQueueThread entity. Use that entity as a filter for the support queue. If
 			// that entity doesn't exist, the thread isn't in a supportqueue.
@@ -118,7 +119,7 @@ namespace SD.HnD.BL
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
-				var toReturn = adapterToUse.FetchFirst(q);
+				var toReturn = await adapterToUse.FetchFirstAsync(q).ConfigureAwait(false);
 				return toReturn;
 			}
 			finally
@@ -137,7 +138,7 @@ namespace SD.HnD.BL
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="prefetchClaimUser">if set to true it will </param>
 		/// <returns>fetched entity if found, otherwise null</returns>
-		public static SupportQueueThreadEntity GetSupportQueueThreadInfo(int threadID, bool prefetchClaimUser)
+		public static async Task<SupportQueueThreadEntity> GetSupportQueueThreadInfoAsync(int threadID, bool prefetchClaimUser)
 		{
 			var qf = new QueryFactory();
 			var q = qf.SupportQueueThread.Where(SupportQueueThreadFields.ThreadID.Equal(threadID));
@@ -147,7 +148,7 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchFirst(q);
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -161,7 +162,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// a list of aggregated support queue contents rows, one per thread, or an empty list if no forums were accessible. 
 		/// </returns>
-		public static List<AggregatedSupportQueueContentsRow> GetAllThreadsInSpecifiedSupportQueues(List<int> accessableForums, int[] supportQueueIDs)
+		public static async Task<List<AggregatedSupportQueueContentsRow>> GetAllThreadsInSpecifiedSupportQueuesAsync(List<int> accessableForums, int[] supportQueueIDs)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -185,13 +186,15 @@ namespace SD.HnD.BL
 					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
 										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID)
 										   .InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID == SupportQueueThreadFields.ThreadID)
-										   .InnerJoin(qf.User.As("PlacedInQueueUser")).On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
-										   .LeftJoin(qf.User.As("ClaimedThreadUser")).On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")))
+										   .InnerJoin(qf.User.As("PlacedInQueueUser"))
+												.On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
+										   .LeftJoin(qf.User.As("ClaimedThreadUser"))
+												.On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")))
 					  .Where(ThreadFields.ForumID.In(accessableForums.ToArray()).And(SupportQueueThreadFields.QueueID.In(supportQueueIDs)))
 					  .OrderBy(SupportQueueThreadFields.QueueID.Ascending(), ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 

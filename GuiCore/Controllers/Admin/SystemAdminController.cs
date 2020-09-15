@@ -8,6 +8,10 @@ using SD.HnD.Gui.Models.Admin;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for general system related administration actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class SystemAdminController : Controller
 	{
 		private IMemoryCache _cache;
@@ -20,7 +24,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult SystemParameters()
+		public async Task<ActionResult> SystemParameters()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -29,9 +33,9 @@ namespace SD.HnD.Gui.Controllers
 
 			var data = new SystemParametersData()
 					   {
-						   AllRoles = SecurityGuiHelper.GetAllRoles(),
-						   AllUserTitles = UserGuiHelper.GetAllUserTitles(),
-						   SystemData = _cache.GetSystemData()
+						   AllRoles = await SecurityGuiHelper.GetAllRolesAsync(),
+						   AllUserTitles = await UserGuiHelper.GetAllUserTitlesAsync(),
+						   SystemData = await _cache.GetSystemDataAsync()
 					   };
 			return View("~/Views/Admin/SystemParameters.cshtml", data);
 		}
@@ -40,7 +44,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult SystemParameters(SystemParametersData data, string submitAction)
+		public async Task<ActionResult> SystemParameters(SystemParametersData data, string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -57,10 +61,12 @@ namespace SD.HnD.Gui.Controllers
 				return View("~/Views/Admin/SystemParameters.cshtml", data);
 			}
 
-			if(SystemManager.StoreNewSystemSettings(_cache.GetSystemData().ID, data.SystemData.DefaultRoleNewUser, data.SystemData.AnonymousRole,
-													data.SystemData.DefaultUserTitleNewUser, data.SystemData.HoursThresholdForActiveThreads,
-													data.SystemData.PageSizeSearchResults, data.SystemData.MinNumberOfThreadsToFetch,
-													data.SystemData.MinNumberOfNonStickyVisibleThreads, data.SystemData.SendReplyNotifications))
+			var systemData = await _cache.GetSystemDataAsync();
+			var storeResult = await SystemManager.StoreNewSystemSettings(systemData.ID, data.SystemData.DefaultRoleNewUser, data.SystemData.AnonymousRole,
+																		 data.SystemData.DefaultUserTitleNewUser, data.SystemData.HoursThresholdForActiveThreads,
+																		 data.SystemData.PageSizeSearchResults, data.SystemData.MinNumberOfThreadsToFetch,
+																		 data.SystemData.MinNumberOfNonStickyVisibleThreads, data.SystemData.SendReplyNotifications);
+			if(storeResult)
 			{
 				_cache.Remove(CacheKeys.SystemData);
 				data.Persisted = true;
@@ -88,7 +94,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ReparseMessagesAsync(string submitAction)
+		public async Task<ActionResult> ReparseMessages(string submitAction)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{

@@ -3,7 +3,8 @@
 @model SD.HnD.BL.TypedDataClasses.AggregatedThreadRow
 @inject IMemoryCache _cache
 @{
-    var pageSize = _cache.GetSystemData().MinNumberOfThreadsToFetch;
+	var systemData = await _cache.GetSystemDataAsync();
+    var pageSize = systemData.MinNumberOfThreadsToFetch;
 }
 
 @if((pageSize>0) && (Model.NumberOfMessages > pageSize))

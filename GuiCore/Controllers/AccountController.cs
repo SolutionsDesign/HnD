@@ -10,13 +10,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
-using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.Gui.Classes;
 using SD.HnD.Gui.Models;
 
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Account related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
     public class AccountController : Controller
     {
 		private IMemoryCache _cache;
@@ -29,7 +32,7 @@ namespace SD.HnD.Gui.Controllers
 		
 	    [Authorize]
 	    [HttpGet]
-	    public async Task<ActionResult> BookmarksAsync()
+	    public async Task<ActionResult> Bookmarks()
 	    {
 		    var bookmarkData = await UserGuiHelper.GetBookmarksAggregatedDataAsync(this.HttpContext.Session.GetUserID());
 		    var viewData = new ThreadsData() {ThreadRows = bookmarkData};
@@ -40,7 +43,7 @@ namespace SD.HnD.Gui.Controllers
 	    [Authorize]
 	    [HttpPost]
 		[ValidateAntiForgeryToken]
-	    public async Task<ActionResult> UpdateBookmarksAsync(int[] threadIdsToUnbookmark)
+	    public async Task<ActionResult> UpdateBookmarks(int[] threadIdsToUnbookmark)
 	    {
 			// the user manager will take care of threads which are passed to this method and which don't exist. We'll only do a limit
 		    if(threadIdsToUnbookmark != null && threadIdsToUnbookmark.Length < 100 && threadIdsToUnbookmark.Length > 0)
@@ -53,7 +56,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public async Task<ActionResult> ThreadsAsync(int pageNo = 1)
+		public async Task<ActionResult> Threads(int pageNo = 1)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
 			if(userID <= 0 )
@@ -71,7 +74,8 @@ namespace SD.HnD.Gui.Controllers
 				this.HttpContext.Session.SetInt32(SessionKeys.MyThreadsRowCount, rowCount);
 			}
 
-			int pageSize = _cache.GetSystemData().PageSizeSearchResults;
+			var systemSettings = await _cache.GetSystemDataAsync();
+			int pageSize = systemSettings.PageSizeSearchResults;
 			if(pageSize <= 0)
 			{
 				pageSize = 50;
@@ -97,7 +101,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public async Task<ActionResult> EditProfileAsync()
+		public async Task<ActionResult> EditProfile()
 		{
 			var user = await UserGuiHelper.GetUserAsync(this.HttpContext.Session.GetUserID());
 			if(user == null)
@@ -128,7 +132,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> EditProfileAsync(EditProfileData data)
+		public async Task<ActionResult> EditProfile(EditProfileData data)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
 			if(userID <= 0 )
@@ -149,7 +153,7 @@ namespace SD.HnD.Gui.Controllers
 			if(result)
 			{
 				this.HttpContext.Session.UpdateUserSettings(data);
-				return RedirectToAction("ViewProfile", "User", new {id = userID});
+				return RedirectToAction("ViewProfile", "User", new {userId = userID});
 			}
 
 			return View(data);
@@ -159,9 +163,9 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ToggleBanFlagForUserAsync(int userid=0)
+		public async Task<ActionResult> ToggleBanFlagForUser(int id=0)
 		{
-			if(userid < 2 || userid==this.HttpContext.Session.GetUserID())
+			if(id < 2 || id==this.HttpContext.Session.GetUserID())
 			{
 				// not allowed
 				return RedirectToAction("Index", "Home");
@@ -172,8 +176,8 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var result = await UserManager.ToggleBanFlagValueAsync(userid);
-			return RedirectToAction("ViewProfile", "User", new {id = userid});
+			var result = await UserManager.ToggleBanFlagValueAsync(id);
+			return RedirectToAction("ViewProfile", "User", new {userId = id});
 		}
 
 
@@ -187,7 +191,7 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> RegisterAsync(NewProfileData data)
+		public async Task<ActionResult> Register(NewProfileData data)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -221,7 +225,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> ResetPasswordAsync(ResetPasswordData data)
+		public async Task<IActionResult> ResetPassword(ResetPasswordData data)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -234,10 +238,10 @@ namespace SD.HnD.Gui.Controllers
 
 		[AllowAnonymous]
 		[HttpGet]
-		public async Task<ActionResult> SpecifyNewPasswordAsync(string tokenID)
+		public async Task<ActionResult> SpecifyNewPassword(string tokenId)
 		{
 			// the token might be invalid or non existent.
-			var resetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenID);
+			var resetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenId);
 			if(resetToken == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -248,10 +252,10 @@ namespace SD.HnD.Gui.Controllers
 
 		[AllowAnonymous]
 		[HttpPost]
-		public async Task<ActionResult> SpecifyNewPasswordAsync(NewPasswordData data,string tokenID)
+		public async Task<ActionResult> SpecifyNewPassword(NewPasswordData data, string tokenId)
 		{
 			// the token might be invalid or non existent.
-			var passwordResetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenID);
+			var passwordResetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenId);
 			if(passwordResetToken==null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -289,7 +293,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpPost]
 	    [Authorize]
-	    public async Task<IActionResult> LogoutAsync()
+	    public async Task<IActionResult> Logout()
 	    {
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			this.HttpContext.Session.Clear();
@@ -299,7 +303,7 @@ namespace SD.HnD.Gui.Controllers
 		
         [HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> LoginAsync(LoginData data, string returnUrl)
+		public async Task<IActionResult> Login(LoginData data, string returnUrl)
         {
 	        if(!ModelState.IsValid)
 	        {
@@ -325,9 +329,9 @@ namespace SD.HnD.Gui.Controllers
 				case SecurityManager.AuthenticateResult.AllOk:
 					// authenticated
 					// Save session cacheable data
-					this.HttpContext.Session.LoadUserSessionDataAsync(user);
+					await this.HttpContext.Session.LoadUserSessionDataAsync(user);
 					// update last visit date in db
-					UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
+					await UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
 					// done
 					var claims = new List<Claim> {new Claim(ClaimTypes.Name, user.NickName)};
 					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -347,7 +351,7 @@ namespace SD.HnD.Gui.Controllers
 					ModelState.AddModelError(string.Empty, "You specified a wrong User name - Password combination. Please try again.");
 					break;
 			}
-			return result;
+			return authenticateResult;
 	    }
 		
 

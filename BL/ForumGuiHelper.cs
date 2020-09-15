@@ -44,7 +44,7 @@ namespace SD.HnD.BL
 		/// <param name="amount">limit of amount of messages to return</param>
 		/// <param name="forumID">ID of forum to pull the messages for</param>
 		/// <returns>typed list with data requested</returns>
-		public static List<ForumMessagesRow> GetLastPostedMessagesInForum(int amount, int forumID)
+		public static async Task<List<ForumMessagesRow>> GetLastPostedMessagesInForumAsync(int amount, int forumID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.GetForumMessagesTypedList()
@@ -53,7 +53,7 @@ namespace SD.HnD.BL
 						  .Limit(amount);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -103,14 +103,15 @@ namespace SD.HnD.BL
 		/// Gets all forum data with section name in a typedlist. Sorted on Section.OrderNo, Section.SectionName, Forum.OrderNo, Forum.ForumName.
 		/// </summary>
 		/// <returns>Filled typedlist with all forum names / forumIDs and their containing section's name, sorted on Sectionname, and then forumname</returns>
-		public static List<ForumsWithSectionNameRow> GetAllForumsWithSectionNames()
+		public static async Task<List<ForumsWithSectionNameRow>> GetAllForumsWithSectionNamesAsync()
 		{
 			var qf = new QueryFactory();
 			var q = qf.GetForumsWithSectionNameTypedList()
-							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
+							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), 
+									 ForumFields.ForumName.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -119,12 +120,12 @@ namespace SD.HnD.BL
 		/// Gets all forum IDs of all forums in the system, unordered.
 		/// </summary>
 		/// <returns></returns>
-	    public static List<int> GetAllForumIds()
+	    public static async Task<List<int>> GetAllForumIdsAsync()
 	    {
 		    var q = new QueryFactory().Forum.Select(() => ForumFields.ForumID.ToValue<int>());
 		    using(var adapter = new DataAccessAdapter())
 		    {
-			    return adapter.FetchQuery(q);
+			    return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 		    }
 	    }
 
@@ -134,14 +135,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="sectionID">The section ID from which forums should be retrieved</param>
 		/// <returns>Entity collection with entities for all forums in this section sorted alphabitacally</returns>
-		public static EntityCollection<ForumEntity> GetAllForumsInSection(int sectionID)
+		public static async Task<EntityCollection<ForumEntity>> GetAllForumsInSectionAsync(int sectionID)
 		{
 			var q = new QueryFactory().Forum
 						.Where(ForumFields.SectionID == sectionID)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<ForumEntity>());
+				return await adapter.FetchQueryAsync(q, new EntityCollection<ForumEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -215,8 +216,7 @@ namespace SD.HnD.BL
 									})
 						.Where(ForumFields.ForumID == accessableForums)
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending())
-#warning MAKE DURATION CONFIGURABLE
-						.CacheResultset(30);
+						.CacheResultset(Globals.DefaultCacheDurationOfResultsets);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var results = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -234,12 +234,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="forumID">ForumID of forum which data should be read</param>
 		/// <returns>forum entity with the data requested, or null if not found</returns>
-		public static ForumEntity GetForum(int forumID)
+		public static async Task<ForumEntity> GetForumAsync(int forumID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var forum = new ForumEntity(forumID);
-				return adapter.FetchEntity(forum) ? forum : null;
+				var qf = new QueryFactory();
+				var q = qf.Forum.Where(ForumFields.ForumID.Equal(forumID));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 	}

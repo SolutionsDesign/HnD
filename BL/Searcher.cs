@@ -27,6 +27,7 @@ using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
@@ -51,8 +52,9 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// TypedList filled with threads matching the query.
 		/// </returns>
-		public static List<SearchResultRow> DoSearch(string searchString, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, SearchResultsOrderSetting orderSecondElement, 
-													 List<int> forumsWithThreadsFromOthers, int userID, SearchTarget targetToSearch)
+		public static async Task<List<SearchResultRow>> DoSearchAsync(string searchString, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, 
+																	 SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userID, 
+																	 SearchTarget targetToSearch)
 		{
 			// the search utilizes full text search. It performs a CONTAINS upon the MessageText field of the Message entity. 
 			string searchTerms = PrepareSearchTerms(searchString);
@@ -104,7 +106,7 @@ namespace SD.HnD.BL
 				// get the data from the db. 
 				using(var adapter = new DataAccessAdapter())
 				{
-					toReturn = adapter.FetchQuery(q);
+					toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 				}
 			}
 			catch

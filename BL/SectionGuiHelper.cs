@@ -21,6 +21,7 @@ using System;
 using System.Data;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -38,13 +39,13 @@ namespace SD.HnD.BL
 	/// </summary>
 	public static class SectionGuiHelper
 	{
-		public static List<SectionDto> GetAllSectionDtos()
+		public static async Task<List<SectionDto>> GetAllSectionDtosAsync()
 		{
 			var qf = new QueryFactory();
 			var q = qf.Section.OrderBy(SectionFields.OrderNo.Ascending()).ProjectToSectionDto(qf);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 		
@@ -108,12 +109,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="sectionID">The section ID.</param>
 		/// <returns>loaded sectionentity or null if not found</returns>
-		public static SectionEntity GetSection(int sectionID)
+		public static async Task<SectionEntity> GetSectionAsync(int sectionID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var section = new SectionEntity(sectionID);
-				return adapter.FetchEntity(section) ? section : null;
+				var qf = new QueryFactory();
+				var q = qf.Section.Where(SectionFields.SectionID.Equal(sectionID));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 	}

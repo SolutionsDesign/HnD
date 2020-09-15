@@ -8,6 +8,10 @@ using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Forum related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
     public class ForumController : Controller
     {
 		private IMemoryCache _cache;
@@ -19,39 +23,40 @@ namespace SD.HnD.Gui.Controllers
 
 		
 		[HttpGet]
-        public async Task<ActionResult> Index(int id=0, int pageNo=1)
+        public async Task<ActionResult> Index(int forumId=0, int pageNo=1)
         {
 			// do forum security checks on authorized user.
-			bool userHasAccess = this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AccessForum);
+			bool userHasAccess = this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AccessForum);
 			if(!userHasAccess)
 			{
 				// doesn't have access to this forum. redirect
 				return RedirectToAction("Index", "Home");
 			}
 
-	        var forum = _cache.GetForum(id);
+	        var forum = await _cache.GetForumAsync(forumId);
 	        if(forum == null)
 	        {
 				return RedirectToAction("Index", "Home");
 	        }
 
 	        var pageNoToUse = pageNo >= 0 ? pageNo : 1;
-	        var pageSize = _cache.GetSystemData().MinNumberOfThreadsToFetch;
-			var threadRows = await ForumGuiHelper.GetAllThreadsInForumAggregatedDataAsync(id, pageNoToUse, pageSize,
-																					 this.HttpContext.Session.CanPerformForumActionRight(id, 
-																									ActionRights.ViewNormalThreadsStartedByOthers),
-																					 this.HttpContext.Session.GetUserID());
+			var systemData = await _cache.GetSystemDataAsync();
+			var pageSize = systemData.MinNumberOfThreadsToFetch;
+			var threadRows = await ForumGuiHelper.GetAllThreadsInForumAggregatedDataAsync(forumId, pageNoToUse, pageSize,
+																						  this.HttpContext.Session.CanPerformForumActionRight(forumId,
+																												  ActionRights.ViewNormalThreadsStartedByOthers),
+																						  this.HttpContext.Session.GetUserID());
 	        var data = new ForumData
 					   {
 						   ForumDescription = forum.ForumDescription, 
-						   ForumID = id, 
+						   ForumID = forumId, 
 						   ForumName = forum.ForumName, 
 						   HasRSSFeed = forum.HasRSSFeed,
 						   PageNo = pageNoToUse,
 						   SectionName = _cache.GetSectionName(forum.SectionID),
 						   PageSize = pageSize, 
-						   UserCanCreateThreads = (this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AddNormalThread) ||
-												   this.HttpContext.Session.CanPerformForumActionRight(id, ActionRights.AddStickyThread)),
+						   UserCanCreateThreads = this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread) ||
+												  this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread),
 						   UserLastVisitDate = this.HttpContext.Session.GetLastVisitDate(),
 						   ThreadRows = threadRows,
 					   };

@@ -19,8 +19,13 @@
 */
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -46,16 +51,16 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// true if save was succeeded, false otherwise
 		/// </returns>
-		public static bool StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers, 
-													short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch, 
-													short minimalNumberOfNonStickyVisibleThreads, bool sendReplyNotifications)
+		public static async Task<bool> StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers, 
+															  short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch, 
+															  short minimalNumberOfNonStickyVisibleThreads, bool sendReplyNotifications)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				// fetch the existing system data entity. 
-				var systemData = new SystemDataEntity(id);
-				var result = adapter.FetchEntity(systemData);
-				if(!result)
+				// fetch the existing system data entity.
+				var q = new QueryFactory().SystemData.Where(SystemDataFields.ID.Equal(id));
+				var systemData = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				if(systemData==null)
 				{
 					throw new InvalidOperationException("No system settings object found!");
 				}
@@ -69,7 +74,7 @@ namespace SD.HnD.BL
 				systemData.MinNumberOfNonStickyVisibleThreads = minimalNumberOfNonStickyVisibleThreads;
 				systemData.MinNumberOfThreadsToFetch = minimalNumberOfThreadsToFetch;
 				systemData.SendReplyNotifications = sendReplyNotifications;
-				return adapter.SaveEntity(systemData);
+				return await adapter.SaveEntityAsync(systemData).ConfigureAwait(false);
 			}
 		}
 	}

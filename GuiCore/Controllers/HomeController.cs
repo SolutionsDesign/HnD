@@ -15,6 +15,10 @@ using SD.LLBLGen.Pro.QuerySpec;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for the default action 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class HomeController : Controller
 	{
 		private IMemoryCache _cache;

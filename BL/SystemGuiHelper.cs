@@ -19,6 +19,7 @@
 */
 using System;
 using System.Data;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -35,12 +36,12 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Retrieves the current system settings, which is 1 row. 
 		/// </summary>
-		/// <returns>DataTable with 1 row with the system settings. See TF_SystemData.</returns>
-		public static SystemDataEntity GetSystemSettings()
+		/// <returns>The entity with the system data</returns>
+		public static async Task<SystemDataEntity> GetSystemSettingsAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchFirst(new QueryFactory().SystemData);
+				return await adapter.FetchFirstAsync(new QueryFactory().SystemData).ConfigureAwait(false);
 			}
 		}
 	}

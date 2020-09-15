@@ -22,7 +22,7 @@ using System;
 namespace SD.HnD.BL
 {
 	/// <summary>
-	/// Global values for Tiny forum.
+	/// Global values for HnD
 	/// </summary>
 	public static class Globals
 	{
@@ -33,7 +33,7 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "11-Jun-2020";
+		public static readonly string Build = "15-sep-2020";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
@@ -51,6 +51,10 @@ namespace SD.HnD.BL
 		/// The default max number of messages per page if it's not configured for a forum.
 		/// </summary>
 		public static readonly int DefaultMaxNumberOfMessagesPerPage = 25;
+		/// <summary>
+		/// Used in fetches of resultsets which can be cached. 
+		/// </summary>
+		public static readonly int DefaultCacheDurationOfResultsets = 30;
 	}
 
 
@@ -121,19 +125,7 @@ namespace SD.HnD.BL
 		AuditApproveAttachment=6
 	}
 
-			
-	/// <summary>
-	/// ThreadListInterval constants. 
-	/// </summary>
-	public enum ThreadListInterval:byte
-	{
-		Last24Hours = 1,
-		Last48Hours,
-		LastWeek,
-		LastMonth,
-		LastYear
-	}
-
+	
 	/// <summary>
 	/// ActionRights constants. The Application object will hold a cached hashtable with
 	/// the actionrights definitions from the database. These are defined system wide, and

@@ -11,6 +11,10 @@ using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Message Attachment related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class AttachmentController : Controller
 	{
 		private IMemoryCache _cache;
@@ -20,8 +24,9 @@ namespace SD.HnD.Gui.Controllers
 			_cache = cache;
 		}
 		
+		
 		[HttpGet]
-		public async Task<ActionResult> GetAsync(int messageId = 0, int attachmentId = 0)
+		public async Task<ActionResult> Get(int messageId = 0, int attachmentId = 0)
 		{
 			// loads Message and related thread based on the attachmentId
 			var relatedMessage = await MessageGuiHelper.GetMessageWithAttachmentLogicAsync(attachmentId);
@@ -63,7 +68,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[Authorize]
 		[HttpGet]
-		public async Task<ActionResult> UnapprovedAsync()
+		public async Task<ActionResult> Unapproved()
 		{
 			var forumsWithApprovalRight = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ApproveAttachment);
 			var accessableForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);
@@ -83,14 +88,14 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> AddAsync(int messageId = 0)
+		public async Task<ActionResult> Add(int messageId = 0)
 		{
 			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
 			if(!messageGetResult)
 			{
 				return Json(new { success = false, responseMessage = "Upload failed." });
 			}
-			var forum = _cache.GetForum(message.Thread.ForumID);
+			var forum = await _cache.GetForumAsync(message.Thread.ForumID);
 			if(forum == null)
 			{
 				return Json(new { success = false, responseMessage = "Upload failed." });
@@ -156,14 +161,14 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> DeleteAsync(int messageId=0, int attachmentId=0)
+		public async Task<ActionResult> Delete(int messageId=0, int attachmentId=0)
 		{
 			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
 			if(!messageGetResult)
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			var forum = _cache.GetForum(message.Thread.ForumID);
+			var forum = await _cache.GetForumAsync(message.Thread.ForumID);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -178,21 +183,21 @@ namespace SD.HnD.Gui.Controllers
 			await MessageManager.DeleteAttachmentAsync(messageId, attachmentId);
 			ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 			// redirect to the message, using the message controller
-			return RedirectToAction("Goto", "Message", new {id = messageId});
+			return RedirectToAction("Goto", "Message", new {messageId = messageId});
 		}
 
 
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ToggleApprovalAsync(int messageId = 0, int attachmentId = 0)
+		public async Task<ActionResult> ToggleApproval(int messageId = 0, int attachmentId = 0)
 		{
 			var (messageGetResult, message) = await GetMessageAndThreadAsync(messageId);
 			if(!messageGetResult)
 			{
 				return Json(new { success = false });
 			}
-			var forum = _cache.GetForum(message.Thread.ForumID);
+			var forum = await _cache.GetForumAsync(message.Thread.ForumID);
 			if(forum == null)
 			{
 				return Json(new { success = false });

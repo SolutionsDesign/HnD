@@ -87,7 +87,7 @@
                         });
                     },
                     deleteItem: function(item) {
-                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/RemoveUserFromRole", {roleID: parseInt($("#RoleID").val()), userID: item.userID});
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/RemoveUserFromRole", {roleId: parseInt($("#RoleID").val()), userId: item.userID});
                     }
                 },
                 fields: [

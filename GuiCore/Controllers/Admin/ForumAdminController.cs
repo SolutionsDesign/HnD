@@ -12,6 +12,10 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for forum related administration actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class ForumAdminController : Controller
 	{
 		private IMemoryCache _cache;
@@ -36,21 +40,21 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public ActionResult<IEnumerable<ForumsWithSectionNameRow>> GetForums()
+		public async Task<ActionResult<IEnumerable<ForumsWithSectionNameRow>>> GetForums()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var forums = ForumGuiHelper.GetAllForumsWithSectionNames();
+			var forums = await ForumGuiHelper.GetAllForumsWithSectionNamesAsync();
 			return Ok(forums);
 		}
 
 
 		[HttpGet]
 		[Authorize]
-		public ActionResult AddForum()
+		public async Task<ActionResult> AddForum()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -58,7 +62,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var data = new AddEditForumData();
-			FillDataSetsInModelObject(data);
+			await FillDataSetsInModelObjectAsync(data);
 			return View("~/Views/Admin/AddForum.cshtml", data);
 		}
 
@@ -78,7 +82,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 			if(!ModelState.IsValid)
 			{
-				FillDataSetsInModelObject(data);
+				await ForumAdminController.FillDataSetsInModelObjectAsync(data);
 				return View("~/Views/Admin/AddForum.cshtml", data);
 			}
 			data.Sanitize();
@@ -95,7 +99,7 @@ namespace SD.HnD.Gui.Controllers
 			catch(ORMQueryExecutionException ex)
 			{
 				ModelState.AddModelError("ForumName", "Save failed, likely due to the forum name not being unique. Please specify a unique forum name." + ex.Message);
-				FillDataSetsInModelObject(data);
+				await ForumAdminController.FillDataSetsInModelObjectAsync(data);
 				return View("~/Views/Admin/AddForum.cshtml", data);
 			}
 			return View("~/Views/Admin/Forums.cshtml", data);
@@ -105,7 +109,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteForum(int id)
+		public async Task<ActionResult> DeleteForum(int forumId)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -113,9 +117,9 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(id>0)
+			if(forumId>0)
 			{
-				result = ForumManager.DeleteForum(id);
+				result = await ForumManager.DeleteForumAsync(forumId);
 			}
 			if(result)
 			{
@@ -128,20 +132,20 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public ActionResult EditForum(int id)
+		public async Task<ActionResult> EditForum(int forumId)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var toEdit = ForumGuiHelper.GetForum(id);
+			var toEdit = await ForumGuiHelper.GetForumAsync(forumId);
 			if(toEdit == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
 			var data = new AddEditForumData(toEdit);
-			FillDataSetsInModelObject(data);
+			await ForumAdminController.FillDataSetsInModelObjectAsync(data);
 			return View("~/Views/Admin/EditForum.cshtml", data);
 		}
 		
@@ -149,7 +153,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> EditForum(AddEditForumData data, string submitAction, int id=0)
+		public async Task<ActionResult> EditForum(AddEditForumData data, string submitAction, int forumId=0)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -161,7 +165,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 			if(!ModelState.IsValid)
 			{
-				FillDataSetsInModelObject(data);
+				await ForumAdminController.FillDataSetsInModelObjectAsync(data);
 				return View("~/Views/Admin/EditForum.cshtml", data);
 			}
 			data.Sanitize();
@@ -170,24 +174,25 @@ namespace SD.HnD.Gui.Controllers
 																			   ApplicationAdapter.GetSmileyMappings());
 			try
 			{
-				await ForumManager.ModifyForum(id, data.ForumEdited.SectionID, data.ForumEdited.ForumName, data.ForumEdited.ForumDescription, 
-											   data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, 1, data.ForumEdited.OrderNo, 
-											   data.ForumEdited.MaxAttachmentSize, data.ForumEdited.MaxNoOfAttachmentsPerMessage,
-											   data.ForumEdited.NewThreadWelcomeText, welcomeMessageAsHtml);
+				await ForumManager.ModifyForumAsync(forumId, data.ForumEdited.SectionID, data.ForumEdited.ForumName, data.ForumEdited.ForumDescription,
+													data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, 1, data.ForumEdited.OrderNo,
+													data.ForumEdited.MaxAttachmentSize, data.ForumEdited.MaxNoOfAttachmentsPerMessage,
+													data.ForumEdited.NewThreadWelcomeText, welcomeMessageAsHtml);
 			}
 			catch(ORMQueryExecutionException ex)
 			{
 				ModelState.AddModelError("ForumName", "Save failed, likely due to the forum name not being unique. Please specify a unique forum name." + ex.Message);
-				FillDataSetsInModelObject(data);
+				await ForumAdminController.FillDataSetsInModelObjectAsync(data);
 				return View("~/Views/Admin/AddForum.cshtml", data);
 			}
 			return View("~/Views/Admin/Forums.cshtml", data);
 		}
 
-		private static void FillDataSetsInModelObject(AddEditForumData data)
+		
+		private static async Task FillDataSetsInModelObjectAsync(AddEditForumData data)
 		{
-			data.AllExistingSupportQueues = SupportQueueGuiHelper.GetAllSupportQueueDTOs();
-			data.AllExistingSections = SectionGuiHelper.GetAllSectionDtos();
+			data.AllExistingSupportQueues = await SupportQueueGuiHelper.GetAllSupportQueueDTOsAsync();
+			data.AllExistingSections = await SectionGuiHelper.GetAllSectionDtosAsync();
 		}
 	}
 }

@@ -12,9 +12,10 @@ using SD.HnD.Gui.Models.Admin;
 namespace SD.HnD.Gui.Controllers
 {
 	/// <summary>
-	/// Controller which exposes a WebAPI to be used with the jsGrid using views for support queues.
+	/// Controller for support queue related administration actions. The controller exposes a WebAPI to be used with the jsGrid using views for support queues.
 	/// The methods in this controller therefore use the Http action as prefix.
 	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class SupportQueueAdminController : Controller
 	{	
 		private IMemoryCache _cache;
@@ -39,14 +40,14 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult<IEnumerable<SupportQueueDto>> GetSupportQueues()
+		public async Task<ActionResult<IEnumerable<SupportQueueDto>>> GetSupportQueues()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var supportQueueDtos = SupportQueueGuiHelper.GetAllSupportQueueDTOs();
+			var supportQueueDtos = await SupportQueueGuiHelper.GetAllSupportQueueDTOsAsync();
 			return Ok(supportQueueDtos);
 		}
 
@@ -54,14 +55,14 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateSupportQueue([FromBody] SupportQueueDto toUpdate)
+		public async Task<ActionResult> UpdateSupportQueue([FromBody] SupportQueueDto toUpdate)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var result = SupportQueueManager.ModifySupportQueue(toUpdate);
+			var result = await SupportQueueManager.ModifySupportQueueAsync(toUpdate);
 			if(result)
 			{
 				_cache.Remove(CacheKeys.AllSupportQueues);
@@ -74,14 +75,14 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult InsertSupportQueue([FromBody] SupportQueueDto toInsert)
+		public async Task<ActionResult> InsertSupportQueue([FromBody] SupportQueueDto toInsert)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var queueId = SupportQueueManager.CreateNewSupportQueue(toInsert);
+			var queueId = await SupportQueueManager.CreateNewSupportQueueAsync(toInsert);
 			if(queueId>0)
 			{
 				_cache.Remove(CacheKeys.AllSupportQueues);
@@ -95,7 +96,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteSupportQueue(int id)
+		public async Task<ActionResult> DeleteSupportQueue(int queueId)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -103,9 +104,9 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(id>0)
+			if(queueId>0)
 			{
-				result = SupportQueueManager.DeleteSupportQueue(id);
+				result = await SupportQueueManager.DeleteSupportQueueAsync(queueId);
 				if(result)
 				{
 					_cache.Remove(CacheKeys.AllSupportQueues);

@@ -18,6 +18,7 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
+using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -42,7 +43,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// the SectionID of the new section. Or Zero if failed
 		/// </returns>
-		public static int AddNewSection(SectionDto toInsert)
+		public static async Task<int> AddNewSectionAsync(SectionDto toInsert)
 		{
 			if(toInsert == null)
 			{
@@ -55,7 +56,8 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(section) ? section.SectionID : 0;
+				var result = await adapter.SaveEntityAsync(section).ConfigureAwait(false);
+				return result ? section.SectionID : 0;
 			}
 		}
 		
@@ -65,14 +67,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="toUpdate">the dto containing the values to update the associated entity with</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool ModifySection(SectionDto toUpdate)
+		public static async Task<bool> ModifySectionAsync(SectionDto toUpdate)
 		{
 			if(toUpdate == null)
 			{
 				return false;
 			}
             // load the entity from the database
-			var section = SectionGuiHelper.GetSection(toUpdate.SectionID);
+			var section = await SectionGuiHelper.GetSectionAsync(toUpdate.SectionID);
 			if(section == null)
 			{
 				return false;
@@ -80,7 +82,7 @@ namespace SD.HnD.BL
 			section.UpdateFromSection(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(section);
+				return await adapter.SaveEntityAsync(section).ConfigureAwait(false);
 			}
 		}
 		
@@ -88,16 +90,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Removes the given section from the database. Returns true if succeeded. Only allows deletion if the section is empty
 		/// </summary>
-        /// <param name="ID">ID of section to delete</param>
+        /// <param name="sectionId">ID of section to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool DeleteSection(int ID)
+		public static async Task<bool> DeleteSectionAsync(int sectionId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				// first check if the section has any forums
 				var qf = new QueryFactory();
-				var q = qf.Forum.Where(ForumFields.SectionID == ID).Select(Functions.CountRow());
-				var numberOfForums = adapter.FetchScalar<int?>(q);
+				var q = qf.Forum.Where(ForumFields.SectionID == sectionId).Select(Functions.CountRow());
+				var numberOfForums = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
 				if(numberOfForums.HasValue && numberOfForums > 0)
 				{
 					// has forums, can't delete this section.
@@ -105,10 +107,12 @@ namespace SD.HnD.BL
 				}
 				
 				// trying to delete the entity directly from the database without first loading it.
-				var numberOfDeletedRows = adapter.DeleteEntitiesDirectly(typeof(SectionEntity), new RelationPredicateBucket(SectionFields.SectionID.Equal(ID)));
+				var numberOfDeletedRows = await adapter.DeleteEntitiesDirectlyAsync(typeof(SectionEntity), 
+																					new RelationPredicateBucket(SectionFields.SectionID.Equal(sectionId)))
+													   .ConfigureAwait(false);
 
 				// there should only be one deleted row, since we are filtering by the PK.
-				return (numberOfDeletedRows == 1);
+				return numberOfDeletedRows == 1;
 			}
 		}
 	}

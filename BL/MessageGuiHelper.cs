@@ -59,11 +59,11 @@ namespace SD.HnD.BL
 		/// Gets the number of postings in all threads of all forums on this system. 
 		/// </summary>
 		/// <returns>the total of all posts on the entire forum system</returns>
-		public static int GetTotalNumberOfMessages()
+		public static async Task<int> GetTotalNumberOfMessagesAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(new QueryFactory().Message.Select(Functions.CountRow()));
+				return await adapter.FetchScalarAsync<int>(new QueryFactory().Message.Select(Functions.CountRow())).ConfigureAwait(false);
 			}
 		}
 

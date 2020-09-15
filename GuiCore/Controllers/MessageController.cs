@@ -11,6 +11,10 @@ using SD.HnD.Utility;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Message related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class MessageController : Controller
 	{
 		private IMemoryCache _cache;
@@ -24,12 +28,12 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult GotoOldVersion(int messageID)
 		{
 			// We expect the messageID as argument in the querystring. Typical URL is /Message/OldGoto/?MessageID=10000
-			return RedirectToAction("Goto", "Message", new {id = messageID});
+			return RedirectToAction("Goto", "Message", new {messageId = messageID});
 		}
 
 		
 		[HttpGet]
-		public async Task<ActionResult> GotoAsync(int id = 0)
+		public async Task<ActionResult> Goto(int id = 0)
 		{
 			var message = await MessageGuiHelper.GetMessageAsync(id);
 			return message == null ? RedirectToAction("Index", "Home") : await CalculateRedirectToMessageAsync(message.ThreadID, message.MessageID);
@@ -39,7 +43,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> DeleteAsync(int id = 0)
+		public async Task<ActionResult> Delete(int id = 0)
 		{
 			if(this.HttpContext.Session.IsAnonymousUser())
 			{
@@ -62,7 +66,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				await MessageManager.DeleteMessageAsync(id);
 			}
-			return RedirectToAction("Index", "Thread", new {id = thread.ThreadID, pageNo = 1});
+			return RedirectToAction("Index", "Thread", new {threadId = thread.ThreadID, pageNo = 1});
 		}
 
 
@@ -85,13 +89,12 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 			var thread = message.Thread;
-			var forum = _cache.GetForum(thread.ForumID);
+			var forum = await _cache.GetForumAsync(thread.ForumID);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			// user has access, let's edit!
 			var messageData = new MessageData()
 							  {
 								  MessageText = message.MessageText,
@@ -109,7 +112,7 @@ namespace SD.HnD.Gui.Controllers
 
 		[Authorize]
 		[HttpGet]
-		public async Task<ActionResult> AddAsync(int threadId = 0, int messageIdToQuote=0)
+		public async Task<ActionResult> Add(int threadId = 0, int messageIdToQuote=0)
 		{
 			if(this.HttpContext.Session.IsAnonymousUser())
 			{
@@ -136,7 +139,7 @@ namespace SD.HnD.Gui.Controllers
 					return RedirectToAction("Index", "Home");
 				}
 			}
-			var forum = _cache.GetForum(thread.ForumID);
+			var forum = await _cache.GetForumAsync(thread.ForumID);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
@@ -144,7 +147,6 @@ namespace SD.HnD.Gui.Controllers
 			string messageTextForEditor = messageToQuote == null ? string.Empty
 																 : string.Format("@quote {0}{1}{2}{1}@end{1}", userOfMessageToQuote.NickName, Environment.NewLine, 
 																				 messageToQuote.MessageText);
-			// user has access, let's edit!
 			var messageData = new MessageData()
 			{
 				MessageText = messageTextForEditor,
@@ -163,17 +165,12 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> Add([Bind(nameof(MessageData.MessageText), nameof(MessageData.Subscribe))] MessageData messageData, 
-											string submitButton, int threadId = 0)
+		public async Task<ActionResult> Add([Bind(nameof(MessageData.MessageText), nameof(MessageData.Subscribe))] MessageData messageData, string submitButton, 
+											int threadId = 0)
 		{
 			if(submitButton != "Post")
 			{
-				// apparently canceled
-				if(threadId <= 0)
-				{
-					return RedirectToAction("Index", "Home");
-				}
-				return RedirectToAction("Index", "Thread", new { id = threadId });
+				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new { id = threadId });
 			}
 
 			if(!ModelState.IsValid)
@@ -190,11 +187,14 @@ namespace SD.HnD.Gui.Controllers
 			{
 				// allowed, proceed
 				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), ApplicationAdapter.GetSmileyMappings());
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
+																			ApplicationAdapter.GetSmileyMappings());
+				var systemData = await _cache.GetSystemDataAsync();
 				newMessageId = await ThreadManager.CreateNewMessageInThreadAsync(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml,
-																				this.HttpContext.Connection.RemoteIpAddress.ToString(), messageData.Subscribe, 
-																				ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.ThreadUpdatedNotification),
-																				_cache.GetSystemData().SendReplyNotifications);
+																				 this.HttpContext.Connection.RemoteIpAddress.ToString(), messageData.Subscribe, 
+																				 ApplicationAdapter.GetEmailData(this.Request.Host.Host, 
+																												 EmailTemplate.ThreadUpdatedNotification),
+																				 systemData.SendReplyNotifications);
 				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
 				{
@@ -208,7 +208,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> EditAsync([Bind(nameof(MessageData.MessageText))] MessageData messageData, string submitButton, int id = 0)
+		public async Task<ActionResult> Edit([Bind(nameof(MessageData.MessageText))] MessageData messageData, string submitButton, int id = 0)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -222,11 +222,10 @@ namespace SD.HnD.Gui.Controllers
 
 			if(submitButton == "Post")
 			{
-				// allowed, proceed
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
 																			ApplicationAdapter.GetSmileyMappings());
-				var result = await MessageManager.UpdateEditedMessage(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
+				await MessageManager.UpdateEditedMessage(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
 																	  this.Request.Host.Host, string.Empty);
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
 				{
@@ -278,7 +277,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			// check if the user can view the thread the message is in. If not, don't continue.
-			if((thread.StartedByUserID != this.HttpContext.Session.GetUserID()) &&
+			if(thread.StartedByUserID != this.HttpContext.Session.GetUserID() &&
 			   !this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers))
 			{
 				// can't edit this message, it's in a thread which isn't visible to the user
@@ -334,7 +333,7 @@ namespace SD.HnD.Gui.Controllers
 			var idOfStartMessage = await ThreadGuiHelper.GetStartAtMessageForGivenMessageAndThreadAsync(threadId, messageId, maxAmountMessagesPerPage);
 			int startAtMessageNo = messageId > 0 ? idOfStartMessage : 0;
 			int currentPageNo = (startAtMessageNo / maxAmountMessagesPerPage) + 1;
-			return Redirect(this.Url.Action("Index", "Thread", new { id = threadId, pageNo = currentPageNo }) + "#" + messageId);
+			return Redirect(this.Url.Action("Index", "Thread", new { threadId = threadId, pageNo = currentPageNo }) + "#" + messageId);
 		}
 	}
 }

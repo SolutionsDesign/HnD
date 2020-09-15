@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,10 +11,13 @@ using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Support Queue related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
     public class SupportQueueController : Controller
 	{
 		private IMemoryCache _cache;
-
 
 		public SupportQueueController(IMemoryCache cache)
 		{
@@ -24,44 +28,43 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult ClaimThread(int id, int pageNo)
+		public async Task<ActionResult> ClaimThread(int threadId, int pageNo)
 	    {
-			var result = PerformSecurityCheck(id, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 			if(result != null)
 			{
 				return result;
 			}
-			SupportQueueManager.ClaimThread(this.HttpContext.Session.GetUserID(), id);
-			return RedirectToAction("Index", "Thread", new {id = id, pageNo=pageNo});
+			await SupportQueueManager.ClaimThreadAsync(this.HttpContext.Session.GetUserID(), threadId);
+			return RedirectToAction("Index", "Thread", new {threadId = threadId, pageNo=pageNo});
 		}
 
 
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult ReleaseThread(int id, int pageNo)
+		public async Task<ActionResult> ReleaseThread(int threadId, int pageNo)
 		{
-			var result = PerformSecurityCheck(id, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 			if(result != null)
 			{
 				return result;
 			}
-			SupportQueueManager.ReleaseClaimOnThread(id);
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			await SupportQueueManager.ReleaseClaimOnThreadAsync(threadId);
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = pageNo });
 		}
 
 
 	    [Authorize]
 		[HttpGet]
-		public ActionResult EditMemo(int id = 0, int pageNo = 1)
+		public async Task<ActionResult> EditMemo(int threadId = 0, int pageNo = 1)
 	    {
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 			if(result != null)
 		    {
 			    return result;
 		    }
-		    var forum = _cache.GetForum(thread.ForumID);
+		    var forum = await _cache.GetForumAsync(thread.ForumID);
 		    if(forum == null)
 		    {
 				// orphaned thread
@@ -82,42 +85,42 @@ namespace SD.HnD.Gui.Controllers
 			return View(messageData);
 	    }
 
+		
 	    [Authorize]
 	    [ValidateAntiForgeryToken]
 	    [HttpPost]
-	    public ActionResult EditMemo([Bind("MessageText")] MessageData messageData, string submitButton, int id = 0, int pageNo=1)
+	    public async Task<ActionResult> EditMemo([Bind("MessageText")] MessageData messageData, string submitButton, int threadId = 0, int pageNo=1)
 	    {
 		    if(!ModelState.IsValid)
 		    {
 			    return RedirectToAction("Index", "Home");
 		    }
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, out thread);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 			if(result != null)
 			{
 				return result;
 			}
 
-			ThreadManager.UpdateMemo(thread.ThreadID, messageData.MessageText);
+			await ThreadManager.UpdateMemoAsync(thread.ThreadID, messageData.MessageText);
 			if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditEditMemo))
 			{
 				SecurityManager.AuditEditMemo(this.HttpContext.Session.GetUserID(), thread.ThreadID);
 			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = pageNo });
 		}
 
 
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult MoveToQueue(int id = 0, int pageNo = 1, int queueId = 0)
+		public async Task<ActionResult> MoveToQueue(int threadId = 0, int pageNo = 1, int queueId = 0)
 	    {
-			var result = PerformSecurityCheck(id, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 			if(result != null)
 			{
 				return result;
 			}
-			var containingQueue = SupportQueueGuiHelper.GetQueueOfThread(id);
+			var containingQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(threadId);
 			// now set the queue if: 
 			// a) the thread isn't in a queue and the selected queueID > 0 (so not None)
 			// b) the thread is in a queue and the selected queueuID isn't the id of the queue containing the thread
@@ -126,20 +129,20 @@ namespace SD.HnD.Gui.Controllers
 				// Set the queue. if the new queue is 0, remove from queue.
 				if(queueId > 0)
 				{
-					SupportQueueManager.AddThreadToQueueAsync(id, queueId, this.HttpContext.Session.GetUserID(), null);
+					await SupportQueueManager.AddThreadToQueueAsync(threadId, queueId, this.HttpContext.Session.GetUserID(), null);
 				}
 				else
 				{
-					SupportQueueManager.RemoveThreadFromQueue(id, null);
+					await SupportQueueManager.RemoveThreadFromQueueAsync(threadId, null);
 				}
 			}
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = pageNo });
 		}
 
 
 	    [Authorize]
 	    [HttpGet]
-	    public ActionResult ListQueues()
+	    public async Task<ActionResult> ListQueues()
 	    {
 		    if(!this.HttpContext.Session.HasSystemActionRight(ActionRights.QueueContentManagement))
 		    {
@@ -148,8 +151,9 @@ namespace SD.HnD.Gui.Controllers
 
 			// these queues are pre-sorted, so no need to sort them again.
 		    var supportQueues = _cache.GetAllSupportQueues().ToList();
-		    var supportQueueContents = SupportQueueGuiHelper.GetAllThreadsInSpecifiedSupportQueues(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
-																								   supportQueues.Select(e => e.QueueID).ToArray());
+		    var supportQueueContents = await SupportQueueGuiHelper.GetAllThreadsInSpecifiedSupportQueuesAsync(
+																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
+																				supportQueues.Select(e => e.QueueID).ToArray());
 		    if(supportQueueContents == null)
 		    {
 				return RedirectToAction("Index", "Home");
@@ -167,7 +171,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateQueues(string threadClaimButton)
+		public async Task<ActionResult> UpdateQueues(string threadClaimButton)
 	    {
 		    if(!this.HttpContext.Session.HasSystemActionRight(ActionRights.QueueContentManagement))
 		    {
@@ -192,7 +196,7 @@ namespace SD.HnD.Gui.Controllers
 			    return RedirectToAction("Index", "Home");
 		    }
 
-		    var result = PerformSecurityCheck(threadId, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId);
 		    if(result != null)
 		    {
 			    return result;
@@ -200,10 +204,10 @@ namespace SD.HnD.Gui.Controllers
 		    switch(idFragments[0])
 		    {
 			    case "releaseButton":
-				    SupportQueueManager.ReleaseClaimOnThread(threadId);
+				    await SupportQueueManager.ReleaseClaimOnThreadAsync(threadId);
 					break;
 			    case "claimButton":
-				    SupportQueueManager.ClaimThread(this.HttpContext.Session.GetUserID(), threadId);
+				    await SupportQueueManager.ClaimThreadAsync(this.HttpContext.Session.GetUserID(), threadId);
 					break;
 				default:
 					return RedirectToAction("Index", "Home");
@@ -214,25 +218,25 @@ namespace SD.HnD.Gui.Controllers
 
 
 		/// <summary>
-		/// Returns an action result if security check failed, otherwise it will return null.
+		/// Returns a tuple with an action result and the thread with the id specified if valid.
+		/// if security check failed the action result will be set to the action to redirect to, otherwise it will return null.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <param name="thread"></param>
+		/// <param name="threadId">the threadid to check security for</param>
 		/// <returns></returns>
-		private ActionResult PerformSecurityCheck(int id, out ThreadEntity thread)
+		private async Task<(ActionResult redirectResult, ThreadEntity thread)> PerformSecurityCheckAsync(int threadId)
 	    {
-			thread = ThreadGuiHelper.GetThread(id);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread == null)
 			{
 				// not found, return to start page
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
 			// Check credentials
 			bool userHasAccess = this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum);
 			if(!userHasAccess)
 			{
 				// doesn't have access to this forum. redirect
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
 			// check if the user can view this thread. If not, don't continue.
 			if(thread.StartedByUserID != this.HttpContext.Session.GetUserID() &&
@@ -240,13 +244,15 @@ namespace SD.HnD.Gui.Controllers
 			   !thread.IsSticky)
 			{
 				// can't view this thread, it isn't visible to the user
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
 			if(!this.HttpContext.Session.HasSystemActionRight(ActionRights.QueueContentManagement))
 			{
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
-		    return null;
+			
+			// All ok
+		    return (null, thread);
 	    }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,6 +11,10 @@ using SD.HnD.Utility;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Forum Thread related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class ThreadController : Controller
 	{
 		private IMemoryCache _cache;
@@ -29,21 +34,20 @@ namespace SD.HnD.Gui.Controllers
 		
 		
 		[HttpGet]
-		public ActionResult Index(int id = 0, int pageNo = 1)
+		public async Task<ActionResult> Index(int threadId = 0, int pageNo = 1)
 		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, true, out thread);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId, allowAnonymous:true);
 			if(result != null)
 			{
 				return result;
 			}
-			var forum = _cache.GetForum(thread.ForumID);
+			var forum = await _cache.GetForumAsync(thread.ForumID);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
 			int pageNoToFetch = pageNo < 1 ? 1 : pageNo;
-			var numberOfMessages = ThreadGuiHelper.GetTotalNumberOfMessagesInThread(id);
+			var numberOfMessages = await ThreadGuiHelper.GetTotalNumberOfMessagesInThreadAsync(threadId);
 			var numberOfMessagesPerPage = this.HttpContext.Session.GetUserDefaultNumberOfMessagesPerPage();
 			var userID = this.HttpContext.Session.GetUserID();
 			var threadData = new ThreadData()
@@ -70,9 +74,9 @@ namespace SD.HnD.Gui.Controllers
 				UserMayManageSupportQueueContents = this.HttpContext.Session.HasSystemActionRight(ActionRights.QueueContentManagement),
 				UserMayManageOtherUsersAttachments = this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.ManageOtherUsersAttachments),
 				UserMayDoBasicThreadOperations = !this.HttpContext.Session.IsAnonymousUser(),
-				ThreadIsBookmarked = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id),
-				ThreadIsSubscribed = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id),
-				ThreadMessages = ThreadGuiHelper.GetAllMessagesInThreadAsDTOs(id, pageNoToFetch, numberOfMessagesPerPage),
+				ThreadIsBookmarked = await UserGuiHelper.CheckIfThreadIsAlreadyBookmarkedAsync(userID, threadId),
+				ThreadIsSubscribed = await UserGuiHelper.CheckIfThreadIsAlreadySubscribedAsync(userID, threadId),
+				ThreadMessages = await ThreadGuiHelper.GetAllMessagesInThreadAsDTOsAsync(threadId, pageNoToFetch, numberOfMessagesPerPage),
 			};
 			if(!thread.IsClosed)
 			{
@@ -81,19 +85,21 @@ namespace SD.HnD.Gui.Controllers
 																										   : ActionRights.AddAndEditMessage);
 				threadData.ShowEditMessageLink = this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.EditDeleteOtherUsersMessages);
 			}
-			FillSupportQueueInformation(threadData);
+			await FillSupportQueueInformationAsync(threadData);
 			FillMemoInformation(threadData);
 			return View(threadData);
 		}
 
 
 		[HttpGet]
-		public ActionResult Active()
+		public async Task<ActionResult> Active()
 		{
-			var aggregatedActiveThreadsData = ThreadGuiHelper.GetActiveThreadsAggregatedData(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
-																							 _cache.GetSystemData().HoursThresholdForActiveThreads,
-																							 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
-																							 this.HttpContext.Session.GetUserID());
+			var systemData = await _cache.GetSystemDataAsync();
+			var aggregatedActiveThreadsData = await ThreadGuiHelper.GetActiveThreadsAggregatedData(
+																		   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
+																		   systemData.HoursThresholdForActiveThreads,
+																		   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
+																		   this.HttpContext.Session.GetUserID());
 			var viewData = new ThreadsData() {ThreadRows = aggregatedActiveThreadsData};
 			return View(viewData);
 		}
@@ -102,13 +108,13 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult EditProperties(ThreadPropertiesModel properties, int id = 0)
+		public async Task<ActionResult> EditProperties(ThreadPropertiesModel properties, int threadId = 0)
 		{
 			if(!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			var result = PerformSecurityCheck(id, false, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId, allowAnonymous:false);
 			if(result != null)
 			{
 				return result;
@@ -117,17 +123,17 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			ThreadManager.ModifyThreadProperties(id, properties.Subject, properties.IsSticky, properties.IsClosed);
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
+			await ThreadManager.ModifyThreadPropertiesAsync(threadId, properties.Subject, properties.IsSticky, properties.IsClosed);
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = 1 });
 		}
 
 
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Move(int id = 0, int newSectionId = 0, int newForumId = 0)
+		public async Task<ActionResult> Move(int threadId = 0, int newSectionId = 0, int newForumId = 0)
 		{
-			var result = PerformSecurityCheck(id, false, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId, allowAnonymous:false);
 			if(result != null)
 			{
 				return result;
@@ -140,18 +146,17 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			ThreadManager.MoveThread(id, newForumId);
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = 1 });
+			await ThreadManager.MoveThreadAsync(threadId, newForumId);
+			return RedirectToAction("Index", "Thread", new { id = threadId, pageNo = 1 });
 		}
 
 
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id = 0)
+		public async Task<ActionResult> Delete(int id = 0)
 		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, false, out thread);
+			var (result, thread) = await PerformSecurityCheckAsync(id, allowAnonymous:false);
 			if(result != null)
 			{
 				return result;
@@ -161,7 +166,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 			int forumId = thread.ForumID;
-			ThreadManager.DeleteThread(id);
+			await ThreadManager.DeleteThreadAsync(id);
 			return RedirectToAction("Index", "Forum", new { id = forumId });
 		}
 
@@ -169,9 +174,9 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleBookmark(int id = 0)
+		public async Task<ActionResult> ToggleBookmark(int id = 0)
 		{
-			var result = PerformSecurityCheck(id, false, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(id, allowAnonymous:false);
 			if(result != null)
 			{
 				return Json(new { success = false });
@@ -181,14 +186,14 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return Json(new { success = false });
 			}
-			bool currentState = UserGuiHelper.CheckIfThreadIsAlreadyBookmarked(userID, id);
+			bool currentState = await UserGuiHelper.CheckIfThreadIsAlreadyBookmarkedAsync(userID, id);
 			if(currentState)
 			{
-				UserManager.RemoveSingleBookmark(id, userID);
+				await UserManager.RemoveSingleBookmarkAsync(id, userID);
 			}
 			else
 			{
-				UserManager.AddThreadToBookmarks(id, userID);
+				await UserManager.AddThreadToBookmarksAsync(id, userID);
 			}
 			return Json(new {success = true, newstate = !currentState});
 		}
@@ -197,9 +202,9 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleSubscribe(int id = 0)
+		public async Task<ActionResult> ToggleSubscribe(int id = 0)
 		{
-			var result = PerformSecurityCheck(id, false, out _);
+			var (result, thread) = await PerformSecurityCheckAsync(id, allowAnonymous:false);
 			if(result != null)
 			{
 				return Json(new {success = false});
@@ -209,14 +214,14 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return Json(new { success = false });
 			}
-			var currentState = UserGuiHelper.CheckIfThreadIsAlreadySubscribed(userID, id);
+			var currentState = await UserGuiHelper.CheckIfThreadIsAlreadySubscribedAsync(userID, id);
 			if(currentState)
 			{
-				UserManager.RemoveSingleSubscription(id, userID);
+				await UserManager.RemoveSingleSubscriptionAsync(id, userID);
 			}
 			else
 			{
-				UserManager.AddThreadToSubscriptions(id, userID, null);
+				await UserManager.AddThreadToSubscriptionsAsync(id, userID, null);
 			}
 			return Json(new { success = true, newstate = !currentState });
 		}
@@ -225,10 +230,9 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult ToggleMarkAsDone(int id = 0, int pageNo = 1)
+		public async Task<ActionResult> ToggleMarkAsDone(int threadId = 0, int pageNo = 1)
 		{
-			ThreadEntity thread;
-			var result = PerformSecurityCheck(id, false, out thread);
+			var (result, thread) = await PerformSecurityCheckAsync(threadId, allowAnonymous:false);
 			if(result != null)
 			{
 				return result;
@@ -241,24 +245,22 @@ namespace SD.HnD.Gui.Controllers
 
 			if(thread.MarkedAsDone)
 			{
-				ThreadManager.UnMarkThreadAsDone(thread.ThreadID, userID);
+				await ThreadManager.UnMarkThreadAsDoneAsync(thread.ThreadID, userID);
 			}
 			else
 			{
-				ThreadManager.MarkThreadAsDone(thread.ThreadID);
+				await ThreadManager.MarkThreadAsDoneAsync(thread.ThreadID);
 			}
 			ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
-			return RedirectToAction("Index", "Thread", new { id = id, pageNo = pageNo });
+			return RedirectToAction("Index", "Thread", new { id = threadId, pageNo = pageNo });
 		}
 
 		
 		[Authorize]
 		[HttpGet]
-		public ActionResult Add(int forumId = 0)
+		public async Task<ActionResult> Add(int forumId = 0)
 		{
-			bool userMayAddStickThread = false;
-			ForumEntity forum;
-			var userMayAddThread = PerformAddThreadSecurityChecks(forumId, out forum, out userMayAddStickThread);
+			var (userMayAddThread, forum, userMayAddStickyThread)  = await PerformAddThreadSecurityChecksAsync(forumId);
 			if(!userMayAddThread)
 			{
 				return RedirectToAction("Index", "Home");
@@ -271,7 +273,7 @@ namespace SD.HnD.Gui.Controllers
 				SectionName = _cache.GetSectionName(forum.SectionID),
 				ThreadSubject = string.Empty,
 				MessageText = string.Empty,
-				UserCanAddStickyThread = userMayAddStickThread,
+				UserCanAddStickyThread = userMayAddStickyThread,
 				NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
 			};
 			return View(newThreadData);
@@ -281,9 +283,8 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Add([Bind(nameof(NewThreadData.MessageText), nameof(NewThreadData.ThreadSubject), nameof(NewThreadData.IsSticky), 
-				 					  nameof(NewThreadData.Subscribe))] NewThreadData newThreadData, 
-								string submitButton, int forumId = 0)
+		public async Task<ActionResult> Add([Bind(nameof(NewThreadData.MessageText), nameof(NewThreadData.ThreadSubject), nameof(NewThreadData.IsSticky), 
+				 							nameof(NewThreadData.Subscribe))] NewThreadData newThreadData, string submitButton, int forumId = 0)
 		{
 			if(submitButton != "Post")
 			{
@@ -298,9 +299,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			bool userMayAddStickThread = false;
-			ForumEntity forum;
-			var userMayAddThread = PerformAddThreadSecurityChecks(forumId, out forum, out userMayAddStickThread);
+			var (userMayAddThread, forum, userMayAddStickThread) = await PerformAddThreadSecurityChecksAsync(forumId);
 			if(!userMayAddThread)
 			{
 				return RedirectToAction("Index", "Home");
@@ -312,65 +311,69 @@ namespace SD.HnD.Gui.Controllers
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
 																			ApplicationAdapter.GetSmileyMappings());
-				newThreadId = ForumManager.CreateNewThreadInForum(forumId, this.HttpContext.Session.GetUserID(), newThreadData.ThreadSubject, newThreadData.MessageText, 
-																  messageAsHtml, (userMayAddStickThread && newThreadData.IsSticky), this.Request.Host.Host, 
-																  forum.DefaultSupportQueueID, newThreadData.Subscribe, out newThreadId);
+				var (newThreadIdFromCall, newMessageId) = await ForumManager.CreateNewThreadInForumAsync(forumId, this.HttpContext.Session.GetUserID(), 
+																										 newThreadData.ThreadSubject, newThreadData.MessageText,
+																										 messageAsHtml, userMayAddStickThread && newThreadData.IsSticky, 
+																										 this.Request.Host.Host, forum.DefaultSupportQueueID, 
+																										 newThreadData.Subscribe);
+				newThreadId = newThreadIdFromCall;
 				ApplicationAdapter.InvalidateCachedForumRSS(forumId);
 				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
 				{
-					SecurityManager.AuditNewThread(this.HttpContext.Session.GetUserID(), newThreadId);
+					await SecurityManager.AuditNewThreadAsync(this.HttpContext.Session.GetUserID(), newThreadId);
 				}
 				_cache.Remove(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
 			}
-			return Redirect(this.Url.Action("Index", "Thread", new { id = newThreadId, pageNo = 1 }));
+			return Redirect(this.Url.Action("Index", "Thread", new { threadId = newThreadId, pageNo = 1 }));
 		}
 
 
-		private bool PerformAddThreadSecurityChecks(int forumId, out ForumEntity forum, out bool userMayAddStickThread)
+		private async Task<(bool userMayAddThread, ForumEntity forum, bool userMayAddStickyThread)> PerformAddThreadSecurityChecksAsync(int forumId)
 		{
-			userMayAddStickThread = false;
-			forum = _cache.GetForum(forumId);
+			var forum = await _cache.GetForumAsync(forumId);
 			if(forum == null)
 			{
-				return false;
+				return (false, null, false);
 			}
 			if(!this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AccessForum))
 			{
-				return false;
+				return (false, null, false);
 			}
-			userMayAddStickThread = this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread);
+			var userMayAddStickThread = this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread);
 			if(!(userMayAddStickThread || this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread)))
 			{
-				return false;
+				return (false, null, false);
 			}
-			return true;
+			return (true, forum, userMayAddStickThread);
 		}
 
 
 		/// <summary>
 		/// Performs the basic security check for the logged in user if that user has any access rights to this thread at all. It doesn't check specific thread actions. 
 		/// </summary>
-		/// <param name="id">the thread id</param>
+		/// <param name="threadId">the thread id</param>
 		/// <param name="allowAnonymous">if set to true, anonymous users are allowed, otherwise they're denied access</param>
-		/// <param name="thread">the thread object related to id</param>
-		/// <returns>An action result to redirect to if the current user shouldn't be here, otherwise null</returns>
-		private ActionResult PerformSecurityCheck(int id, bool allowAnonymous, out ThreadEntity thread)
+		/// <returns>A tuple with a redirectaction and the thread of the threadId specified.
+		/// The redirectaction is set to an action result to redirect to if the current user shouldn't be here, otherwise null</returns>
+		private async Task<(ActionResult redirectResult, ThreadEntity thread)> PerformSecurityCheckAsync(int threadId, bool allowAnonymous)
 		{
-			thread = ThreadGuiHelper.GetThread(id);
-			if((thread == null) || (!allowAnonymous && this.HttpContext.Session.IsAnonymousUser()) || 
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
+			if(thread == null || !allowAnonymous && this.HttpContext.Session.IsAnonymousUser() || 
 			   !this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
 			{
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
 			// check if the user can view this thread. If not, don't continue.
 			if((thread.StartedByUserID != this.HttpContext.Session.GetUserID()) &&
 				!this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.ViewNormalThreadsStartedByOthers) &&
 				!thread.IsSticky)
 			{
-				return RedirectToAction("Index", "Home");
+				return (RedirectToAction("Index", "Home"), null);
 			}
-			return null;
+			
+			// All OK
+			return (null, thread);
 		}
 
 
@@ -385,7 +388,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-		private void FillSupportQueueInformation(ThreadData container)
+		private async Task FillSupportQueueInformationAsync(ThreadData container)
 		{
 			if(!container.UserMayManageSupportQueueContents)
 			{
@@ -393,11 +396,11 @@ namespace SD.HnD.Gui.Controllers
 			}
 			// fill support queue management area with data.
 			container.AllSupportQueues = _cache.GetAllSupportQueues().ToList();
-			container.ContainingSupportQueue = SupportQueueGuiHelper.GetQueueOfThread(container.Thread.ThreadID);
+			container.ContainingSupportQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(container.Thread.ThreadID);
 			if(container.ContainingSupportQueue != null)
 			{
 				// get claim info
-				container.SupportQueueThreadInfo = SupportQueueGuiHelper.GetSupportQueueThreadInfo(container.Thread.ThreadID, true);
+				container.SupportQueueThreadInfo = await SupportQueueGuiHelper.GetSupportQueueThreadInfoAsync(container.Thread.ThreadID, true);
 			}
 		}
 	}

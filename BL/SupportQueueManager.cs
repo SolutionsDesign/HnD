@@ -44,13 +44,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="newDataDto">the dto with the data for the new queue</param>
 		/// <returns>the id of the new queue or 0 if failed</returns>
-		public static int CreateNewSupportQueue(SupportQueueDto newDataDto)
+		public static async Task<int> CreateNewSupportQueueAsync(SupportQueueDto newDataDto)
 		{
 			var newSupportQueue = new SupportQueueEntity();
 			newSupportQueue.UpdateFromSupportQueue(newDataDto);
 			using(var adapter = new DataAccessAdapter())
 			{
-				var result = adapter.SaveEntity(newSupportQueue);
+				var result = await adapter.SaveEntityAsync(newSupportQueue).ConfigureAwait(false);
 				return result ? newSupportQueue.QueueID : 0;
 			}
 		}
@@ -61,13 +61,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="toUpdate">the dto containing the data of the support queue to update</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool ModifySupportQueue(SupportQueueDto toUpdate)
+		public static async Task<bool> ModifySupportQueueAsync(SupportQueueDto toUpdate)
 		{
 			if(toUpdate == null)
 			{
 				return false;
 			}
-			var toModify = SupportQueueGuiHelper.GetSupportQueue(toUpdate.QueueID);
+			var toModify = await SupportQueueGuiHelper.GetSupportQueueAsync(toUpdate.QueueID);
 			if(toModify == null)
 			{
 				// not found
@@ -76,7 +76,7 @@ namespace SD.HnD.BL
 			toModify.UpdateFromSupportQueue(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(toModify);
+				return await adapter.SaveEntityAsync(toModify).ConfigureAwait(false);
 			}
 		}
 
@@ -88,20 +88,23 @@ namespace SD.HnD.BL
 		/// <returns>true if succeeded, false otherwise</returns>
 		/// <remarks>All threads in the queue are automatically de-queued and not in a queue anymore. The Default support queue
 		/// for forums which have this queue as the default support queue is reset to null.</remarks>
-		public static bool DeleteSupportQueue(int queueID)
+		public static async Task<bool> DeleteSupportQueueAsync(int queueID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{ 
 				// we'll do several actions in one atomic transaction, so start a transaction first. 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteSupportQ");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteSupportQ").ConfigureAwait(false);
 				try
 				{
 					// first reset all the FKs in Forum to NULL if they point to this queue.
-					adapter.UpdateEntitiesDirectly(new ForumEntity() { DefaultSupportQueueID = null }, new RelationPredicateBucket(ForumFields.DefaultSupportQueueID == queueID));
+					await adapter.UpdateEntitiesDirectlyAsync(new ForumEntity() { DefaultSupportQueueID = null }, 
+															  new RelationPredicateBucket(ForumFields.DefaultSupportQueueID.Equal(queueID))).ConfigureAwait(false);;
 					// delete all SupportQueueThread entities which refer to this queue. This will make all threads which are in this queue become queue-less.
-					adapter.DeleteEntitiesDirectly(typeof(SupportQueueThreadEntity), new RelationPredicateBucket(SupportQueueThreadFields.QueueID == queueID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+															  new RelationPredicateBucket(SupportQueueThreadFields.QueueID.Equal(queueID))).ConfigureAwait(false);;
 					// it's now time to delete the actual supportqueue entity.
-					var result = adapter.DeleteEntitiesDirectly(typeof(SupportQueueEntity), new RelationPredicateBucket(SupportQueueFields.QueueID == queueID));
+					var result = await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueEntity), 
+																		   new RelationPredicateBucket(SupportQueueFields.QueueID.Equal(queueID))).ConfigureAwait(false);;
 					// done so commit the transaction.
 					adapter.Commit();
 					return (result > 0);
@@ -120,9 +123,9 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userID">The user ID.</param>
 		/// <param name="threadID">The thread ID.</param>
-		public static void ClaimThread(int userID, int threadID)
+		public static Task ClaimThreadAsync(int userID, int threadID)
 		{
-			UpdateClaimOnThread(userID, threadID, claim: true);
+			return UpdateClaimOnThreadAsync(userID, threadID, claim: true);
 		}
 
 
@@ -130,9 +133,9 @@ namespace SD.HnD.BL
 		/// Releases the claim on the thread specified. As the thread can be in one queue at a time, it simply has to update the SupportQueueThread entity.
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
-		public static void ReleaseClaimOnThread(int threadID)
+		public static Task ReleaseClaimOnThreadAsync(int threadID)
 		{
-			UpdateClaimOnThread(-1, threadID, claim: false);
+			return UpdateClaimOnThreadAsync(-1, threadID, claim: false);
 		}
 		
 
@@ -239,7 +242,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user identifier.</param>
 		/// <param name="threadID">The thread identifier.</param>
 		/// <param name="claim">if set to <c>true</c> a claim by userID is set on the thread, otherwise an existing claim is released.</param>
-		private static void UpdateClaimOnThread(int userID, int threadID, bool claim)
+		private static async Task UpdateClaimOnThreadAsync(int userID, int threadID, bool claim)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -264,7 +267,7 @@ namespace SD.HnD.BL
 				}
 
 				// done, save it
-				adapter.SaveEntity(supportQueueThread);
+				await adapter.SaveEntityAsync(supportQueueThread).ConfigureAwait(false);
 			}
 		}
 	}

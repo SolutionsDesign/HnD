@@ -79,7 +79,7 @@
 								@Model.ProfileDataFromDatabase.IPNumber<br/>
 								@if(Model.UserHasSystemManagementRight && Model.ProfileDataFromDatabase.UserID!=Model.CurrentlyLoggedInUserID)
 								{
-									@using(Html.BeginForm("ToggleBanFlagForUser", "Account", new {userid = Model.ProfileDataFromDatabase.UserID}, FormMethod.Post, true, new {role = "form"}))
+									@using(Html.BeginForm("ToggleBanFlagForUser", "Account", new {id = Model.ProfileDataFromDatabase.UserID}, FormMethod.Post, true, new {role = "form"}))
 									{
 										<div class="caption"><span class="light-caption">Administrative actions</span></div>
 										<div class="mt20">

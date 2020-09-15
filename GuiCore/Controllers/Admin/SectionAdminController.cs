@@ -12,9 +12,10 @@ using SD.HnD.Gui.Models.Admin;
 namespace SD.HnD.Gui.Controllers
 {
 	/// <summary>
-	/// Controller which exposes a WebAPI to be used with the jsGrid using views for sections.
+	/// Controller for section related administration actions. This controller exposes a WebAPI to be used with the jsGrid using views for sections.
 	/// The methods in this controller therefore use the Http action as prefix.
 	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class SectionAdminController : Controller
 	{	
 		private IMemoryCache _cache;
@@ -39,14 +40,14 @@ namespace SD.HnD.Gui.Controllers
 		
 		[HttpGet]
 		[Authorize]
-		public ActionResult<IEnumerable<SectionDto>> GetSections()
+		public async Task<ActionResult<IEnumerable<SectionDto>>> GetSections()
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var supportQueueDtos = SectionGuiHelper.GetAllSectionDtos();
+			var supportQueueDtos = await SectionGuiHelper.GetAllSectionDtosAsync();
 			return Ok(supportQueueDtos);
 		}
 
@@ -54,13 +55,13 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult UpdateSection([FromBody] SectionDto toUpdate)
+		public async Task<ActionResult> UpdateSection([FromBody] SectionDto toUpdate)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			var result = SectionManager.ModifySection(toUpdate);
+			var result = await SectionManager.ModifySectionAsync(toUpdate);
 			if(result)
 			{
 				_cache.Remove(CacheKeys.AllSections);
@@ -73,14 +74,14 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult InsertSection([FromBody] SectionDto toInsert)
+		public async Task<ActionResult> InsertSection([FromBody] SectionDto toInsert)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
-			var sectionId = SectionManager.AddNewSection(toInsert);
+			var sectionId = await SectionManager.AddNewSectionAsync(toInsert);
 			if(sectionId>0)
 			{
 				_cache.Remove(CacheKeys.AllSections);
@@ -94,7 +95,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public ActionResult DeleteSection(int id)
+		public async Task<ActionResult> DeleteSection(int sectionId)
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement))
 			{
@@ -102,9 +103,9 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(id>0)
+			if(sectionId>0)
 			{
-				result = SectionManager.DeleteSection(id);
+				result = await SectionManager.DeleteSectionAsync(sectionId);
 				if(result)
 				{
 					_cache.Remove(CacheKeys.AllSections);

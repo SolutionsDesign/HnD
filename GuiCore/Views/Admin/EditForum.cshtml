@@ -33,7 +33,7 @@
 	</div>
 	<div class="row mb40">
 		<div class="col-sm-8">
-			@using(Html.BeginForm("EditForum", "ForumAdmin", new {id = Model.ForumEdited.ForumID}, FormMethod.Post, true, new {role = "form"}))
+			@using(Html.BeginForm("EditForum", "ForumAdmin", new {forumId = Model.ForumEdited.ForumID}, FormMethod.Post, true, new {role = "form"}))
 			{
 				var supportQueuesSelectItems = Model.AllExistingSupportQueues.Select(q => new SelectListItem(q.QueueName, q.QueueID.ToString())).ToList();
 				supportQueuesSelectItems.Insert(0, new SelectListItem("None", "-1"));

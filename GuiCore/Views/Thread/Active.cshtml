@@ -4,6 +4,7 @@
 @inject IMemoryCache _cache
 @{
     ViewBag.Title = "HnD | Active Threads";
+	var systemData = await _cache.GetSystemDataAsync();
 }}
 
 <div class="container">
@@ -18,7 +19,7 @@
         <div class="col-sm-12 pt0 mt0">
             <h2 class="br-bottom pt0 mt0">Active Threads</h2>
             <p>
-	            The list of all active threads of the past @_cache.GetSystemData().HoursThresholdForActiveThreads hours.
+	            The list of all active threads of the past @systemData.HoursThresholdForActiveThreads hours.
             </p>
         </div>
     </div>

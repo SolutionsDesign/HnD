@@ -225,8 +225,8 @@ namespace SD.HnD.BL
 		/// <param name="emailAddress">Email address.</param>
 		/// <param name="roleIDWhichUsersToExclude">The role id which users to exclude. </param>
 		/// <returns>User objects matching the query</returns>
-		public static EntityCollection<UserEntity> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
-															 string emailAddress, int roleIDWhichUsersToExclude=0)
+		public static async Task<EntityCollection<UserEntity>> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
+																		 string emailAddress, int roleIDWhichUsersToExclude=0)
 		{
 			var qf = new QueryFactory();
 			var q = qf.User
@@ -249,7 +249,7 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<UserEntity>());
+				return await adapter.FetchQueryAsync(q, new EntityCollection<UserEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -260,7 +260,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">User ID.</param>
 		/// <param name="threadID">Thread ID.</param>
 		/// <returns>true if the thread is bookmarked</returns>
-		public static bool CheckIfThreadIsAlreadyBookmarked(int userID, int threadID)
+		public static async Task<bool> CheckIfThreadIsAlreadyBookmarkedAsync(int userID, int threadID)
 		{
 			var qf = new QueryFactory();
 			var q = qf.Create()
@@ -268,7 +268,7 @@ namespace SD.HnD.BL
 						.Where((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int?>(q) != null;
+				return await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false) != null;
 			}
 		}
 
@@ -289,8 +289,7 @@ namespace SD.HnD.BL
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-				return toReturn;
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -299,11 +298,11 @@ namespace SD.HnD.BL
 		/// Retrieves all available usertitles.
 		/// </summary>
 		/// <returns>entitycollection with all the usertitles</returns>
-		public static EntityCollection<UserTitleEntity> GetAllUserTitles()
+		public static async Task<EntityCollection<UserTitleEntity>> GetAllUserTitlesAsync()
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().UserTitle, new EntityCollection<UserTitleEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().UserTitle, new EntityCollection<UserTitleEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -328,7 +327,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="roleID"></param>
 		/// <returns></returns>
-		public static List<UserInRoleDto> GetAllUserInRoleDtosForRole(int roleID)
+		public static async Task<List<UserInRoleDto>> GetAllUserInRoleDtosForRoleAsync(int roleID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -337,7 +336,7 @@ namespace SD.HnD.BL
 						  .Where(UserFields.UserID
 										   .In(qf.RoleUser.Where(RoleUserFields.RoleID.Equal(roleID)).Select(RoleUserFields.UserID)))
 						  .ProjectToUserInRoleDto(qf);
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 		
@@ -347,11 +346,11 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="range">Range with userids</param>
 		/// <returns></returns>
-		public static EntityCollection<UserEntity> GetAllUsersInRange(List<int> range)
+		public static async Task<EntityCollection<UserEntity>> GetAllUsersInRangeAsync(List<int> range)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(new QueryFactory().User.Where(UserFields.UserID.In(range)), new EntityCollection<UserEntity>());
+				return await adapter.FetchQueryAsync(new QueryFactory().User.Where(UserFields.UserID.In(range)), new EntityCollection<UserEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -395,13 +394,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="userIDsOfUsersToLoad"></param>
 		/// <returns></returns>
-		public static EntityCollection<UserEntity> GetUsers(List<int> userIDsOfUsersToLoad)
+		public static async Task<EntityCollection<UserEntity>> GetUsersAsync(List<int> userIDsOfUsersToLoad)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var users = new EntityCollection<UserEntity>();
-				adapter.FetchEntityCollection(users, new RelationPredicateBucket(UserFields.UserID.In(userIDsOfUsersToLoad)));
-				return users;
+				var q = new QueryFactory().User.Where(UserFields.UserID.In(userIDsOfUsersToLoad));
+				return await adapter.FetchQueryAsync(q, new EntityCollection<UserEntity>()).ConfigureAwait(false);
 			}
 		}
 		
@@ -451,9 +449,9 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user ID.</param>
 		/// <param name="threadID">The thread ID.</param>
 		/// <returns>true if the user is already subscribed to this thread otherwise false</returns>
-		public static bool CheckIfThreadIsAlreadySubscribed(int userID, int threadID)
+		public static async Task<bool> CheckIfThreadIsAlreadySubscribedAsync(int userID, int threadID)
 		{
-			return (ThreadGuiHelper.GetThreadSubscription(threadID, userID) != null);
+			return await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID) != null;
 		}
 
 

@@ -25,7 +25,7 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
-                @using(Html.BeginForm("EditMemo", "SupportQueue", FormMethod.Post, new { role = "form", id=@Model.ThreadID, pageNo=@Model.PageNo }))
+                @using(Html.BeginForm("EditMemo", "SupportQueue", FormMethod.Post, new { role = "form", threadId=@Model.ThreadID, pageNo=@Model.PageNo }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })

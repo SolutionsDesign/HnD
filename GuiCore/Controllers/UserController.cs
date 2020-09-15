@@ -13,24 +13,28 @@ using SD.HnD.Gui.Models;
 
 namespace SD.HnD.Gui.Controllers
 {
+	/// <summary>
+	/// Controller for Read / only user related actions. 
+	/// </summary>
+	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class UserController :Controller
 	{
 		/// <summary>
 		/// Views the user profile for the user with id specified
 		/// </summary>
-		/// <param name="id">the user id for which the profile data has to be shown</param>
+		/// <param name="userId">the user id for which the profile data has to be shown</param>
 		/// <returns></returns>
 		[HttpGet]
 		[Authorize]
-		public async Task<ActionResult> ViewProfileAsync(int id = 0)
+		public async Task<ActionResult> ViewProfile(int userId = 0)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
-			if(userID <= 0 || id == 0)
+			if(userID <= 0 || userId == 0)
 			{
 				// not useful
 				return RedirectToAction("Index", "Home");
 			}
-			var userProfileData = await UserGuiHelper.GetUserProfileInfoAsync(id);
+			var userProfileData = await UserGuiHelper.GetUserProfileInfoAsync(userId);
 			if(userProfileData == null)
 			{
 				// not found
@@ -43,7 +47,7 @@ namespace SD.HnD.Gui.Controllers
 											 this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement);
 			viewData.UserHasSystemManagementRight = this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemManagement);
 			viewData.LastThreads = await UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(
-															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), id, 
+															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userId, 
 															 this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
 															 this.HttpContext.Session.GetUserID(), 25);
 			viewData.CurrentlyLoggedInUserID = this.HttpContext.Session.GetUserID(); 

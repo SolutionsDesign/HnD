@@ -22,6 +22,7 @@ using SD.HnD.BL;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -81,13 +82,13 @@ namespace SD.HnD.Gui
 		/// <remarks>If forumID isn't found, null is returned. ForumEntity instances are cached indefinitely, until the forum is changed or when a message
 		/// is added to a thread in the forum. The forum entities are cached per entity to make the per-entity requests for a forum faster. Bulk fetches
 		/// for forum data isn't using this cache, it's fetching the data directly from the DB. This is ok, forumentity data isn't very volatile</remarks>
-		public static ForumEntity GetForum(this IMemoryCache cache, int forumID)
+		public static async Task<ForumEntity> GetForumAsync(this IMemoryCache cache, int forumID)
 		{
 			var keyToUse = ProduceCacheKey(CacheKeys.SingleForum, forumID);
 			var toReturn = cache.Get<ForumEntity>(keyToUse);
 			if(toReturn == null)
 			{
-				toReturn = ForumGuiHelper.GetForum(forumID);
+				toReturn = await ForumGuiHelper.GetForumAsync(forumID);
 				if(toReturn != null)
 				{
 					// found, cache it
@@ -103,12 +104,12 @@ namespace SD.HnD.Gui
 		/// </summary>
 		/// <param name="cache">The cache object this methods works on</param>
 		/// <returns>entity with system data, or null if not found.</returns>
-		public static SystemDataEntity GetSystemData(this IMemoryCache cache)
+		public static async Task<SystemDataEntity> GetSystemDataAsync(this IMemoryCache cache)
 		{
 			var toReturn = cache.Get<SystemDataEntity>(CacheKeys.SystemData);
 			if(toReturn == null)
 			{
-				toReturn = SystemGuiHelper.GetSystemSettings();
+				toReturn = await SystemGuiHelper.GetSystemSettingsAsync();
 				if(toReturn != null)
 				{
 					// found, cache it

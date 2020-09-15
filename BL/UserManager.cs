@@ -47,15 +47,11 @@ namespace SD.HnD.BL
 		/// <param name="threadID">Thread ID.</param>
 		/// <param name="userID">User ID.</param>
 		/// <returns>true if save succeeded, false otherwise</returns>
-		public static bool AddThreadToBookmarks(int threadID, int userID)
+		public static async Task<bool> AddThreadToBookmarksAsync(int threadID, int userID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(new BookmarkEntity
-										  {
-											  UserID = userID,
-											  ThreadID = threadID
-										  });
+				return await adapter.SaveEntityAsync(new BookmarkEntity { UserID = userID, ThreadID = threadID}).ConfigureAwait(false);
 			}
 		}
 
@@ -66,15 +62,15 @@ namespace SD.HnD.BL
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="userID">The user ID.</param>
 		/// <returns>true if delete succeeded, false otherwise</returns>
-		public static bool RemoveSingleSubscription(int threadID, int userID)
+		public static async Task<bool> RemoveSingleSubscriptionAsync(int threadID, int userID)
 		{
-			var subscription = ThreadGuiHelper.GetThreadSubscription(threadID, userID);
+			var subscription = await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID);
 			if(subscription != null)
 			{
 				// there's a subscription, delete it
 				using(var adapter = new DataAccessAdapter())
 				{
-					return adapter.DeleteEntity(subscription);
+					return await adapter.DeleteEntityAsync(subscription).ConfigureAwait(false);
 				}
 			}
 			return true;
@@ -89,23 +85,18 @@ namespace SD.HnD.BL
 		/// <param name="userID">The user ID.</param>
 		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local adapter is used.</param>
 		/// <returns></returns>
-		public static bool AddThreadToSubscriptions(int threadID, int userID, IDataAccessAdapter adapter)
+		public static async Task<bool> AddThreadToSubscriptionsAsync(int threadID, int userID, IDataAccessAdapter adapter)
 		{
 			bool localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
 				// check if this user is already subscribed to this thread. If not, add a new subscription.
-				if(ThreadGuiHelper.GetThreadSubscription(threadID, userID, adapterToUse) == null)
+				if(await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID, adapterToUse) == null)
 				{
 					// user isn't yet subscribed, add the subscription
-					return adapterToUse.SaveEntity(new ThreadSubscriptionEntity
-												   {
-													   UserID = userID,
-													   ThreadID = threadID
-												   });
+					return await adapterToUse.SaveEntityAsync(new ThreadSubscriptionEntity {UserID = userID, ThreadID = threadID }).ConfigureAwait(false);
 				}
-
 				// already subscribed, no-op.
 				return true;
 			}
@@ -269,11 +260,12 @@ namespace SD.HnD.BL
 		/// <param name="threadID">Thread ID.</param>
 		/// <param name="userID">User ID.</param>
 		/// <returns></returns>
-		public static void RemoveSingleBookmark(int threadID, int userID)
+		public static async Task RemoveSingleBookmarkAsync(int threadID, int userID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.DeleteEntitiesDirectly(typeof(BookmarkEntity), new RelationPredicateBucket((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID)));
+				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), new RelationPredicateBucket((BookmarkFields.ThreadID == threadID)
+																											  .And(BookmarkFields.UserID == userID))).ConfigureAwait(false);
 			}
 		}
 
@@ -488,7 +480,7 @@ namespace SD.HnD.BL
             newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
 
             //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly created RoleUserEntity.
-            var systemData = SystemGuiHelper.GetSystemSettings();
+            var systemData = await SystemGuiHelper.GetSystemSettingsAsync();
             newUser.UserTitleID = systemData.DefaultUserTitleNewUser;
 			newUser.RoleUser.Add(new RoleUserEntity { RoleID = systemData.DefaultRoleNewUser});
 

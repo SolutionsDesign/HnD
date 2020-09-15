@@ -96,7 +96,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">User ID.</param>
 		/// <param name="threadID">Thread ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static bool AuditNewThread(int userID, int threadID)
+		public static async Task<bool> AuditNewThreadAsync(int userID, int threadID)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -107,7 +107,7 @@ namespace SD.HnD.BL
 								AuditedOn = DateTime.Now,
 								ThreadID = threadID
 							};
-				return adapter.SaveEntity(toLog);
+				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="toAdd">the dto containing the values to add as a new entity</param>
 		/// <returns>the ID of the new IPBan, or 0 if it failed</returns>
-		public static int AddNewIPBan(IPBanDto toAdd)
+		public static async Task<int> AddNewIPBanAsync(IPBanDto toAdd)
 		{
 			if(toAdd == null)
 			{
@@ -229,7 +229,8 @@ namespace SD.HnD.BL
 						   };
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(toInsert) ? toInsert.IPBanID : 0;
+				var result = await adapter.SaveEntityAsync(toInsert).ConfigureAwait(false);
+				return result ? toInsert.IPBanID : 0;
 			}
 		}
 		
@@ -239,14 +240,14 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="toUpdate">the dto containing the values to update the associated entity with</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool ModifyIPBan(IPBanDto toUpdate)
+		public static async Task<bool> ModifyIPBanAsync(IPBanDto toUpdate)
 		{
 			if(toUpdate == null)
 			{
 				return false;
 			}
 			// load the entity from the database
-			var ipBan = SecurityGuiHelper.GetIPBan(toUpdate.IPBanID);
+			var ipBan = await SecurityGuiHelper.GetIPBanAsync(toUpdate.IPBanID);
 			if(ipBan == null)
 			{
 				return false;
@@ -254,7 +255,7 @@ namespace SD.HnD.BL
 			ipBan.UpdateFromIPBan(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(ipBan);
+				return await adapter.SaveEntityAsync(ipBan).ConfigureAwait(false);
 			}
 		}
 
@@ -264,11 +265,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="idToDelete">the id of the ip ban to delete</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool DeleteIPBan(int idToDelete)
+		public static async Task<bool> DeleteIPBanAsync(int idToDelete)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.DeleteEntitiesDirectly(typeof(IPBanEntity), new RelationPredicateBucket(IPBanFields.IPBanID.Equal(idToDelete))) > 0;
+				return await adapter.DeleteEntitiesDirectlyAsync(typeof(IPBanEntity), new RelationPredicateBucket(IPBanFields.IPBanID.Equal(idToDelete)))
+									.ConfigureAwait(false)> 0;
 			}
 		}
 
@@ -381,7 +383,7 @@ namespace SD.HnD.BL
 		/// <param name="roleID">Role to use</param>
 		/// <param name="forumID">Forum to use</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool SaveForumActionRightsForForumRole(List<int> actionRightIDs, int roleID, int forumID)
+		public static async Task<bool> SaveForumActionRightsForForumRoleAsync(List<int> actionRightIDs, int roleID, int forumID)
 		{
 			var forumRightsPerRole = new EntityCollection<ForumRoleForumActionRightEntity>();
 			foreach(int actionRightID in actionRightIDs)
@@ -396,14 +398,17 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{ 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "SaveForumActionRights");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "SaveForumActionRights").ConfigureAwait(false);
 				try
 				{
 					// first remove the existing rows for the role. Do this by a query directly on the database.
-					adapter.DeleteEntitiesDirectly(typeof(ForumRoleForumActionRightEntity), 
-													new RelationPredicateBucket((ForumRoleForumActionRightFields.RoleID == roleID).And(ForumRoleForumActionRightFields.ForumID == forumID)));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+															  new RelationPredicateBucket((ForumRoleForumActionRightFields.RoleID == roleID)
+																						  .And(ForumRoleForumActionRightFields.ForumID == forumID)))
+								 .ConfigureAwait(false);
+					
 					// then save the new entities
-					adapter.SaveEntityCollection(forumRightsPerRole);
+					await adapter.SaveEntityCollectionAsync(forumRightsPerRole).ConfigureAwait(false);
 					// all done, commit transaction
 					adapter.Commit();
 					return true;
@@ -424,7 +429,7 @@ namespace SD.HnD.BL
 		/// <param name="userIDsToAdd">List with UserIDs of the users to add</param>
 		/// <param name="roleID">ID of role the users will be added to</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool AddUsersToRole(List<int> userIDsToAdd, int roleID)
+		public static async Task<bool> AddUsersToRoleAsync(List<int> userIDsToAdd, int roleID)
 		{
 			if(userIDsToAdd.Count<=0)
 			{
@@ -435,16 +440,11 @@ namespace SD.HnD.BL
 			// for each userid in the list, add a new entity to the collection
 			foreach(int userID in userIDsToAdd)
 			{
-				var newRoleUser = new RoleUserEntity
-								  {
-									  UserID = userID,
-									  RoleID = roleID
-								  };
-				roleUsers.Add(newRoleUser);
+				roleUsers.Add(new RoleUserEntity { UserID = userID, RoleID = roleID });
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntityCollection(roleUsers) > 0;
+				return await adapter.SaveEntityCollectionAsync(roleUsers).ConfigureAwait(false) > 0;
 			}
 		}
 
@@ -455,7 +455,7 @@ namespace SD.HnD.BL
 		/// <param name="userID">userid of user to remove from the role with roleid specified</param>
 		/// <param name="roleID">ID of role the users will be removed from</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool RemoveUserFromRole(int roleID, int userID)
+		public static async Task<bool> RemoveUserFromRoleAsync(int roleID, int userID)
 		{
 			if(userID <= 0)
 			{
@@ -465,8 +465,10 @@ namespace SD.HnD.BL
 			// we'll delete the role-user combination for the user plus for the given role with a query directly onto the DB.
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.DeleteEntitiesDirectly(typeof(RoleUserEntity), 
-													  new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID).And(RoleUserFields.RoleID.Equal(roleID)))) > 0;
+				return await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
+																 new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID)
+																										   .And(RoleUserFields.RoleID.Equal(roleID))))
+									.ConfigureAwait(false) > 0;
 			}
 		}
 
@@ -476,9 +478,9 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="roleID">ID of role to delete</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool DeleteRole(int roleID)
+		public static async Task<bool> DeleteRoleAsync(int roleID)
 		{
-			var toDelete = SecurityGuiHelper.GetRole(roleID);
+			var toDelete = await SecurityGuiHelper.GetRoleAsync(roleID);
 			if(toDelete == null)
 			{
 				// not found
@@ -487,19 +489,23 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{ 
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "DeleteRole");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteRole").ConfigureAwait(false);
 				try
 				{
 					// remove the role - forum - action right entities
-					adapter.DeleteEntitiesDirectly(typeof(ForumRoleForumActionRightEntity), new RelationPredicateBucket(ForumRoleForumActionRightFields.RoleID == roleID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+															  new RelationPredicateBucket(ForumRoleForumActionRightFields.RoleID.Equal(roleID))).ConfigureAwait(false);
 					// Remove role-audit action entities
-					adapter.DeleteEntitiesDirectly(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID == roleID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), 
+															  new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
 					// remove Role - systemright entities
-					adapter.DeleteEntitiesDirectly(typeof(RoleSystemActionRightEntity), new RelationPredicateBucket(RoleSystemActionRightFields.RoleID == roleID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), 
+															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
 					// remove Role - user entities
-					adapter.DeleteEntitiesDirectly(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.RoleID == roleID));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
+															  new RelationPredicateBucket(RoleUserFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
 					// delete the actual role
-					adapter.DeleteEntity(toDelete);
+					await adapter.DeleteEntityAsync(toDelete).ConfigureAwait(false);;
 					adapter.Commit();
 					return true;
 				}

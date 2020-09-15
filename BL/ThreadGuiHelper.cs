@@ -67,9 +67,9 @@ namespace SD.HnD.BL
 		/// <param name="threadID">The thread ID.</param>
 		/// <param name="userID">The user ID.</param>
 		/// <returns>requested Threadsubscription entity or null if not found</returns>
-		public static ThreadSubscriptionEntity GetThreadSubscription(int threadID, int userID)
+		public static Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadID, int userID)
 		{
-			return GetThreadSubscription(threadID, userID, null);
+			return GetThreadSubscriptionAsync(threadID, userID, null);
 		}
 
 
@@ -82,14 +82,15 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// requested Threadsubscription entity or null if not found
 		/// </returns>
-		public static ThreadSubscriptionEntity GetThreadSubscription(int threadID, int userID, IDataAccessAdapter adapter)
+		public static async Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadID, int userID, IDataAccessAdapter adapter)
 		{
 			bool localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
-				var threadSubscription = new ThreadSubscriptionEntity(userID, threadID);
-				return adapterToUse.FetchEntity(threadSubscription) ? threadSubscription : null;
+				var qf = new QueryFactory();
+				var q = qf.ThreadSubscription.Where(ThreadSubscriptionFields.ThreadID.Equal(threadID).And(ThreadSubscriptionFields.UserID.Equal(userID)));
+				return await adapterToUse.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 			finally
 			{
@@ -106,12 +107,12 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadID">The thread ID.</param>
 		/// <returns></returns>
-		public static int GetTotalNumberOfMessagesInThread(int threadID)
+		public static async Task<int> GetTotalNumberOfMessagesInThreadAsync(int threadID)
 		{
 			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int>(qf.Message.Select(Functions.CountRow()).Where(MessageFields.ThreadID.Equal(threadID)));
+				return await adapter.FetchScalarAsync<int>(qf.Message.Select(Functions.CountRow()).Where(MessageFields.ThreadID.Equal(threadID))).ConfigureAwait(false);
 			}
 		}
 
@@ -125,7 +126,8 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userID">The userid of the calling user.</param>
 		/// <returns>a list with objects representing the Active threads</returns>
-		public static List<AggregatedThreadRow> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, List<int> forumsWithThreadsFromOthers, int userID)
+		public static async Task<List<AggregatedThreadRow>> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, 
+																						   List<int> forumsWithThreadsFromOthers, int userID)
 		{
             if (accessableForums == null || accessableForums.Count <= 0)
             {
@@ -145,7 +147,7 @@ namespace SD.HnD.BL
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q);
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -184,7 +186,7 @@ namespace SD.HnD.BL
 		/// <param name="pageNo">The page no.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <returns>List with all messages in the thread for the page specified</returns>
-		public static List<MessageInThreadDto> GetAllMessagesInThreadAsDTOs(int threadID, int pageNo, int pageSize)
+		public static async Task<List<MessageInThreadDto>> GetAllMessagesInThreadAsDTOsAsync(int threadID, int pageNo, int pageSize)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -193,14 +195,14 @@ namespace SD.HnD.BL
 								.Where(m => m.ThreadID == threadID)
 								.OrderBy(m => m.PostingDate)
 								.TakePage(pageNo, pageSize);
-				var messages = q.ProjectToMessageInThreadDto().ToList();
+				var messages = await q.ProjectToMessageInThreadDto().ToListAsync().ConfigureAwait(false);
 
 				// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
 				var updater = new ThreadEntity();
 
 				// set the NumberOfViews field to an expression which increases it by 1
 				updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
-				adapter.UpdateEntitiesDirectly(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID));
+				await adapter.UpdateEntitiesDirectlyAsync(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID)).ConfigureAwait(false);
 				return messages;
 			}
 		}

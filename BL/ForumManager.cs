@@ -91,11 +91,11 @@ namespace SD.HnD.BL
 		/// <param name="newThreadWelcomeText">The new thread welcome text, as shown when a new thread is created. Can be null.</param>
 		/// <param name="newThreadWelcomeTextAsHTML">The new thread welcome text as HTML, is null when newThreadWelcomeText is null or empty.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static async Task<bool> ModifyForum(int forumID, int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID,
-										int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
-										string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
+		public static async Task<bool> ModifyForumAsync(int forumID, int sectionID, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID,
+														int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
+														string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
-			var forum = ForumGuiHelper.GetForum(forumID);
+			var forum = await ForumGuiHelper.GetForumAsync(forumID);
 			if(forum==null)
 			{
 				// not found
@@ -168,10 +168,12 @@ namespace SD.HnD.BL
 		/// <param name="userIDIPAddress">IP address of user calling this method</param>
 		/// <param name="defaultSupportQueueID">The ID of the default support queue for this forum. If not null, the thread created will be
 		/// added to the support queue with the ID specified.</param>
-		/// <param name="messageID">The message ID of the new message, which is the start message in the thread.</param>
-		/// <returns>ThreadID if succeeded, 0 if not.</returns>
-		public static int CreateNewThreadInForum(int forumID, int userID, string subject, string messageText, string messageAsHTML, bool isSticky, 
-												string userIDIPAddress, int? defaultSupportQueueID, bool subscribeToThread, out int messageID)
+		/// <param name="subscribeToThread">If true, the user with userid is automatically subscribed to the new thread created</param>
+		/// <returns>tuple with ThreadID and messageid. ThreadId, if succeeded, is set to the threadid of the new thread, or 0 if failed.
+		/// The message ID is the id of the new message, which is the start message in the thread.</returns>
+		public static async Task<(int threadId, int messageId)> CreateNewThreadInForumAsync(int forumID, int userID, string subject, string messageText, string messageAsHTML, 
+																						   bool isSticky, string userIDIPAddress, int? defaultSupportQueueID, 
+																						   bool subscribeToThread)
 		{
 			var newThread = new ThreadEntity
 							{
@@ -207,20 +209,20 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "NewThread");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "NewThread").ConfigureAwait(false);
 				try
 				{
 					// save the complete graph
-					adapter.SaveEntity(newMessage, true);
-					messageID = newMessage.MessageID;
-					int threadID = newMessage.ThreadID;
+					await adapter.SaveEntityAsync(newMessage, true).ConfigureAwait(false);
+					var messageId = newMessage.MessageID;
+					int threadId = newMessage.ThreadID;
 
 					// update thread statistics, this is the task for the message manager, and we pass the adapter so the actions will run in
 					// the same transaction.
-					MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, DateTime.Now, false, subscribeToThread);
+					await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userID, adapter, DateTime.Now, false, subscribeToThread);
 
 					adapter.Commit();
-					return newThread.ThreadID;
+					return (newThread.ThreadID, messageId);
 				}
 				catch
 				{
