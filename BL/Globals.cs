@@ -33,7 +33,7 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "15-sep-2020";
+		public static readonly string Build = "16-sep-2020";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
@@ -127,9 +127,8 @@ namespace SD.HnD.BL
 
 	
 	/// <summary>
-	/// ActionRights constants. The Application object will hold a cached hashtable with
-	/// the actionrights definitions from the database. These are defined system wide, and
-	/// are not mutated at runtime. 
+	/// ActionRights constants. The Application object will hold a cached hashtable with the actionrights definitions from the database. These are
+	/// defined system wide, and are not mutated at runtime. 
 	/// </summary>
 	public enum ActionRights
 	{

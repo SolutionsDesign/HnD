@@ -87,7 +87,7 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static async Task<bool> AddThreadToSubscriptionsAsync(int threadID, int userID, IDataAccessAdapter adapter)
 		{
-			bool localAdapter = adapter == null;
+			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
@@ -297,7 +297,7 @@ namespace SD.HnD.BL
 				user.PasswordResetToken.PasswordResetRequestedOn = DateTime.Now;
 				
 				// first persist the token
-				bool result = await adapter.SaveEntityAsync(user, refetchAfterSave: true).ConfigureAwait(false);
+				var result = await adapter.SaveEntityAsync(user, refetchAfterSave: true).ConfigureAwait(false);
 				if(!result)
 				{
 					return false;
@@ -305,11 +305,11 @@ namespace SD.HnD.BL
 
 				// then email an email to the user with the link to reset the password.
 				// use template to construct message to send. 
-				string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
-				var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
+				var emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
+				var mailBody = SD.HnD.Utility.StringBuilderCache.Acquire(emailTemplate.Length + 256);
 				mailBody.Append(emailTemplate);
 				var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
-				string siteName = emailData.GetValue("siteName") ?? string.Empty;
+				var siteName = emailData.GetValue("siteName") ?? string.Empty;
 				if (!string.IsNullOrEmpty(emailTemplate))
 				{
 					// Use the existing template to format the body
@@ -319,14 +319,15 @@ namespace SD.HnD.BL
 				}
 
 				// format the subject
-				string subject =  (emailData.GetValue("passwordResetRequestSubject") ?? string.Empty) + siteName;
-				string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
+				var subject =  (emailData.GetValue("passwordResetRequestSubject") ?? string.Empty) + siteName;
+				var fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 				try
 				{
 					//send message
-					result = await HnDGeneralUtils.SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new [] {user.EmailAddress}, 
-															 emailData).ConfigureAwait(false);
+					result = await HnDGeneralUtils.SendEmail(subject, SD.HnD.Utility.StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, 
+															 new [] {user.EmailAddress}, emailData)
+												  .ConfigureAwait(false);
 				}
 				catch(SmtpFailedRecipientsException)
 				{
@@ -419,7 +420,7 @@ namespace SD.HnD.BL
 					}
 
 					// then save everything in one go.
-					bool toReturn = await adapter.SaveEntityAsync(user).ConfigureAwait(false);
+					var toReturn = await adapter.SaveEntityAsync(user).ConfigureAwait(false);
 					adapter.Commit();
 					return toReturn;
 				}
@@ -472,7 +473,7 @@ namespace SD.HnD.BL
 							  Website = website
 						  };
 
-			string password = HnDGeneralUtils.GenerateRandomPassword();
+			var password = HnDGeneralUtils.GenerateRandomPassword();
 			newUser.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
 
             //Preferences

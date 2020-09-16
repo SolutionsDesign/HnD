@@ -346,7 +346,7 @@ namespace SD.HnD.BL
 		/// <returns>null if the user doesn't match any IP ban, or the first IPBan entity it matches</returns>
 		public static IPBanEntity GetIPBanMatchingUserIPAddress(Dictionary<int, Dictionary<string, IPBanEntity>> allCachedIPBans, string ipAddressUser)
 		{
-			string[] ipAddressSegments = ipAddressUser.Split('.');
+			var ipAddressSegments = ipAddressUser.Split('.');
 			if(ipAddressSegments.Length != 4)
 			{
 				// can't do matching as the ip address has less or more segments
@@ -354,11 +354,11 @@ namespace SD.HnD.BL
 			}
 			
 			Dictionary<string, IPBanEntity> rangeBans = null;
-			StringBuilder ipTemp = new StringBuilder();
+			var ipTemp = new StringBuilder();
 			IPBanEntity toReturn = null;
 
 			// for each segment we'll check if it, combined with the previous segments, results in a match. If not, the next segment will be tried.
-			for(int i=0;i<4;i++)
+			for(var i=0;i<4;i++)
 			{
 				// check range ban. Build ip address segments from ip address passed in and check that with the segments in the range ban dictionary
 				if(i > 0)

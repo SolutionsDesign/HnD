@@ -42,16 +42,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the given message from the database and the complete logged history.
 		/// </summary>
-		/// <param name="messageID">The ID of the message to delete</param>
+		/// <param name="messageId">The ID of the message to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static async Task<bool> DeleteMessageAsync(int messageID)
+		public static async Task<bool> DeleteMessageAsync(int messageId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteMessage").ConfigureAwait(false);
 				try
 				{
-					await DeleteMessagesAsync(MessageFields.MessageID == messageID, adapter);
+					await DeleteMessagesAsync(MessageFields.MessageID.Equal(messageId), adapter);
 					adapter.Commit();
 					return true;
 				}
@@ -71,11 +71,9 @@ namespace SD.HnD.BL
 		/// <param name="adapter">The adapter to use for persistence activity.</param>
 		internal static Task DeleteAllMessagesInThreadsAsync(PredicateExpression threadFilter, IDataAccessAdapter adapter)
 		{
-			// fabricate the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
+			// Create the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
 			// WHERE Message.ThreadID IN (SELECT ThreadID FROM Thread WHERE threadFilter)
-			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create()
-																.Select(ThreadFields.ThreadID)
-																.Where(threadFilter));
+			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create().Select(ThreadFields.ThreadID).Where(threadFilter));
 			return DeleteMessagesAsync(messageFilter, adapter);
 		}
 
@@ -101,7 +99,8 @@ namespace SD.HnD.BL
 			await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity),
 													  new RelationPredicateBucket(AttachmentFields.MessageID.In(qf.Create()
 																												  .Select(MessageFields.MessageID)
-																												  .Where(messageFilter)))).ConfigureAwait(false);
+																												  .Where(messageFilter))))
+						 .ConfigureAwait(false);
 			await adapter.DeleteEntitiesDirectlyAsync(typeof(MessageEntity), new RelationPredicateBucket(messageFilter)).ConfigureAwait(false);
 			// don't commit the transaction, leave that to the caller.
 		}
@@ -110,23 +109,23 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Updates the given message with the message passed, and logs the user passed as the changer of this message.
 		/// </summary>
-		/// <param name="editorUserID">ID of user who changed the message</param>
-		/// <param name="editedMessageID">ID of message which was changed</param>
+		/// <param name="editorUserId">ID of user who changed the message</param>
+		/// <param name="editedMessageId">ID of message which was changed</param>
 		/// <param name="messageText">Changed message text</param>
 		/// <param name="messageAsHTML">Changed message text in HTML</param>
 		/// <param name="editorUserIDIPAddress">IP address used to make the modification. This IP address is logged with the
 		/// change to keep evidence who made which change from which IP address</param>
 		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-        public static async Task<bool> UpdateEditedMessage(int editorUserID, int editedMessageID, string messageText, string messageAsHTML, 
-														   string editorUserIDIPAddress, string messageAsXML)
+        public static async Task<bool> UpdateEditedMessageAsync(int editorUserId, int editedMessageId, string messageText, string messageAsHTML, 
+																string editorUserIDIPAddress, string messageAsXML)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				// now save the message. First pull it from the db
-				var message = new MessageEntity(editedMessageID);
-				var result = adapter.FetchEntity(message);
-				if(!result)
+				var q = new QueryFactory().Message.Where(MessageFields.MessageID.Equal(editedMessageId));
+				var message = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				if(message==null)
 				{
 					return false;
 				}
@@ -155,14 +154,12 @@ namespace SD.HnD.BL
 														   Action<string> consoleLogger)
 		{
 			// index is blocks of 100 messages.
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(MessageFields.MessageID, MessageFields.MessageText);
+			var q = new QueryFactory().Create().Select(MessageFields.MessageID, MessageFields.MessageText);
 
-			bool parsingFinished = false;
-			int amountProcessed = 0;
-			int pageSize = 200;
-			int pageNo = 1;
+			var parsingFinished = false;
+			var amountProcessed = 0;
+			var pageSize = 200;
+			var pageNo = 1;
 			using(var adapter = new DataAccessAdapter())
 			{
 				adapter.BatchSize = pageSize;
@@ -174,7 +171,7 @@ namespace SD.HnD.BL
 
 					if(!parsingFinished)
 					{
-						foreach(object[] row in messagesToParse)
+						foreach(var row in messagesToParse)
 						{
 							var directUpdater = new MessageEntity();
 							directUpdater.IsNew = false;
@@ -215,16 +212,17 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the attachment with the id specified.
 		/// </summary>
-		/// <param name="messageID">the messageid of the message the attachment belongs to</param>
-		/// <param name="attachmentID">The attachment ID.</param>
-		public static async Task DeleteAttachmentAsync(int messageID, int attachmentID)
+		/// <param name="messageId">the messageid of the message the attachment belongs to</param>
+		/// <param name="attachmentId">The attachment ID.</param>
+		public static async Task DeleteAttachmentAsync(int messageId, int attachmentId)
 		{
 			// delete the attachment directly from the db, without loading it first into memory
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity), 
-														  new RelationPredicateBucket(AttachmentFields.AttachmentID.Equal(attachmentID)
-																					  .And(AttachmentFields.MessageID==messageID))).ConfigureAwait(false);
+														  new RelationPredicateBucket(AttachmentFields.AttachmentID.Equal(attachmentId)
+																					  .And(AttachmentFields.MessageID.Equal(messageId))))
+							 .ConfigureAwait(false);
 			}
 		}
 
@@ -233,26 +231,25 @@ namespace SD.HnD.BL
 		/// Toggles the approval of the attachment with ID passed in. Optionally audits the change if userIdForAuditing is set to a value of 1 or higher
 		/// </summary>
 		/// <param name="messageId">the id of the message the attachment is assigned to</param>
-		/// <param name="attachmentID">The attachment ID.</param>
+		/// <param name="attachmentId">The attachment ID.</param>
 		/// <param name="userIdForAuditing">THe user id for the auditing action if the change was successful. If 0 or lower, it's ignored and no auditing will take place</param>
 		/// <returns>tuple with two flags: toggleResult and newState. toggleResult can be true if operation was successful, false otherwise. If false, newState is undefined.</returns>
-		public static async Task<(bool toggleResult, bool newState)> ToggleAttachmentApprovalAsync(int messageId, int attachmentID, int userIdForAuditing)
+		public static async Task<(bool toggleResult, bool newState)> ToggleAttachmentApprovalAsync(int messageId, int attachmentId, int userIdForAuditing)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				// fetch the attachment, but exclude the file contents, as we don't need that and it can be quite big
-				var qf = new QueryFactory();
-				var q = qf.Attachment.Where((AttachmentFields.AttachmentID == attachmentID).And(AttachmentFields.MessageID == messageId))
-						  .Exclude(AttachmentFields.Filecontents);
+				var q = new QueryFactory().Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentId).And(AttachmentFields.MessageID.Equal(messageId)))
+										  .Exclude(AttachmentFields.Filecontents);
 				var attachment = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				if(attachment.IsNew)
+				if(attachment==null)
 				{
 					// not found
 					return (false, false);
 				}
 				if(userIdForAuditing > 0)
 				{
-					await SecurityManager.AuditApproveAttachmentAsync(userIdForAuditing, attachmentID);
+					await SecurityManager.AuditApproveAttachmentAsync(userIdForAuditing, attachmentId);
 				}
 				attachment.Approved = !attachment.Approved;
 				var newState = attachment.Approved;
@@ -274,14 +271,14 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.SaveEntityAsync(new AttachmentEntity
-								   {
-									   MessageID = messageID,
-									   Filename = fileName,
-									   Filecontents = fileContents,
-									   Filesize = fileContents.Length,
-									   Approved = approveValue,
-									   AddedOn = DateTime.Now
-								   }).ConfigureAwait(false);
+											  {
+												  MessageID = messageID,
+												  Filename = fileName,
+												  Filecontents = fileContents,
+												  Filesize = fileContents.Length,
+												  Approved = approveValue,
+												  AddedOn = DateTime.Now
+											  }).ConfigureAwait(false);
 			}
 		}
 
@@ -290,8 +287,8 @@ namespace SD.HnD.BL
 		/// Updates the user/forum/thread statistics after a message insert. Also makes sure if the thread isn't in a queue and the forum has a default support
 		/// queue that the thread is added to that queue
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <param name="adapter">The adapter to use, which is assumed to have a live transaction active</param>
 		/// <param name="postingDate">The posting date.</param>
 		/// <param name="addToQueueIfRequired">if set to true, the thread will be added to the default queue of the forum the thread is in, if the forum
@@ -301,20 +298,20 @@ namespace SD.HnD.BL
 		/// Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
 		/// passed in transaction.
 		/// </remarks>
-		internal static async Task UpdateStatisticsAfterMessageInsert(int threadID, int userID, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, 
+		internal static async Task UpdateStatisticsAfterMessageInsert(int threadId, int userId, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, 
 																	  bool subscribeToThread)
 		{
 			// user statistics
 			var userUpdater = new UserEntity();
 			// set the amountofpostings field to an expression so it will be increased with 1. Update the entity directly in the DB
 			userUpdater.Fields[(int)UserFieldIndex.AmountOfPostings].ExpressionToApply = (UserFields.AmountOfPostings + 1);
-			await adapter.UpdateEntitiesDirectlyAsync(userUpdater, new RelationPredicateBucket(UserFields.UserID == userID)).ConfigureAwait(false);
+			await adapter.UpdateEntitiesDirectlyAsync(userUpdater, new RelationPredicateBucket(UserFields.UserID.Equal(userId)))
+						 .ConfigureAwait(false);
 
 			// thread statistics
-			var threadUpdater = new ThreadEntity();
-			threadUpdater.ThreadLastPostingDate = postingDate;
-			threadUpdater.MarkedAsDone = false;
-			await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID)).ConfigureAwait(false);
+			var threadUpdater = new ThreadEntity { ThreadLastPostingDate = postingDate, MarkedAsDone = false};
+			await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID.Equal(threadId)))
+						 .ConfigureAwait(false);
 
 			// forum statistics. Load the forum from the DB, as we need it later on. Use a nested query to fetch the forum as we don't know the 
 			// forumID as we haven't fetched the thread
@@ -322,7 +319,7 @@ namespace SD.HnD.BL
 			var q = qf.Forum
 					  .Where(ForumFields.ForumID.In(qf.Create()
 													  .Select(ThreadFields.ForumID)
-													  .Where(ThreadFields.ThreadID.Equal(threadID))));
+													  .Where(ThreadFields.ThreadID.Equal(threadId))));
 			var containingForum = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			if(containingForum!=null)
 			{
@@ -332,11 +329,11 @@ namespace SD.HnD.BL
 				if(addToQueueIfRequired && containingForum.DefaultSupportQueueID.HasValue)
 				{
 					// If the thread involved isn't in a queue, place it in the default queue of the forum (if applicable)
-					var containingQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(threadID, adapter);
+					var containingQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(threadId, adapter);
 					if(containingQueue == null)
 					{
 						// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
-						await SupportQueueManager.AddThreadToQueueAsync(threadID, containingForum.DefaultSupportQueueID.Value, userID, adapter);
+						await SupportQueueManager.AddThreadToQueueAsync(threadId, containingForum.DefaultSupportQueueID.Value, userId, adapter);
 					}
 				}
 			}
@@ -344,7 +341,7 @@ namespace SD.HnD.BL
 			//subscribe to thread if indicated
 			if(subscribeToThread)
             {
-				await UserManager.AddThreadToSubscriptionsAsync(threadID, userID, adapter);
+				await UserManager.AddThreadToSubscriptionsAsync(threadId, userId, adapter);
             }
 		}
 	}

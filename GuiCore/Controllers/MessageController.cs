@@ -225,8 +225,8 @@ namespace SD.HnD.Gui.Controllers
 				// parse message text to html
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
 																			ApplicationAdapter.GetSmileyMappings());
-				await MessageManager.UpdateEditedMessage(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
-																	  this.Request.Host.Host, string.Empty);
+				await MessageManager.UpdateEditedMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
+															  this.Request.Host.Host, string.Empty);
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
 				{
 					await SecurityManager.AuditAlteredMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID);

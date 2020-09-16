@@ -84,7 +84,7 @@ namespace SD.HnD.BL
 		/// </returns>
 		public static async Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadID, int userID, IDataAccessAdapter adapter)
 		{
-			bool localAdapter = adapter == null;
+			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
@@ -228,11 +228,11 @@ namespace SD.HnD.BL
 	        using(var adapter = new DataAccessAdapter())
 	        {
 		        var messageIDs = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-		        int startAtMessage = 0;
-		        int rowIndex = 0;
+		        var startAtMessage = 0;
+		        var rowIndex = 0;
 		        if(messageIDs.Count > 0)
 		        {
-			        for(int i = 0; i < messageIDs.Count; i++)
+			        for(var i = 0; i < messageIDs.Count; i++)
 			        {
 				        if(messageIDs[i] == messageID)
 				        {

@@ -151,6 +151,7 @@ namespace SD.HnD.Gui.Classes
 		/// Invalidates the number of unapproved attachments by fetching the total number of unapproved attachments from the database.   
 		/// </summary>
 		/// <returns></returns>
+		/// <remarks>Not using async as it relies on locks to work so we need predictability.</remarks>
 	    public int InvalidateCachedNumberOfUnapprovedAttachments()
 	    {
 			_volatileDataLock.EnterWriteLock();
@@ -376,7 +377,7 @@ namespace SD.HnD.Gui.Classes
 		public string EmojiFilesPath { get; set; } = "/pics/emojis";
 		public string DataFilesPath { get; set; } = "/DataFiles";
 		public string FullDataFilesPath { get; set; } = string.Empty;
-		public int MaxAmountMessagesPerPage { get; set; } = 25;
+		public int MaxAmountMessagesPerPage { get; set; } = Globals.DefaultMaxNumberOfMessagesPerPage;
 		public HashSet<string> NoiseWords { get; set; } = new HashSet<string>();
 		public Dictionary<string, string> EmojiFilenamesPerName { get; set; } = new Dictionary<string, string>();
 		public string RegistrationReplyMailTemplate { get; set; }

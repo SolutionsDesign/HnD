@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace SD.HnD.BL
 {
@@ -40,25 +41,33 @@ namespace SD.HnD.BL
 		/// <returns>A hashset with all the noisewords found in the file Datafiles/Noise.txt</returns>
 		public static HashSet<string> LoadNoiseWordsIntoHashSet(string dataFilesPath)
 		{
-			string fullPath = Path.Combine(dataFilesPath, "Noise.txt");
-			StreamReader reader = new StreamReader(fullPath);
-			bool eofReached = false;
-			var noiseWords = new HashSet<string>();
-			while(!eofReached)
+			var fullPath = Path.Combine(dataFilesPath, "Noise.txt");
+			using(var reader = new StreamReader(fullPath))
 			{
-				string noiseWord = reader.ReadLine();
-				eofReached=(noiseWord==null);
-				if(!eofReached)
+				var noiseWords = new HashSet<string>();
+				var eofReached = false;
+				while(!eofReached)
 				{
-					noiseWords.Add(noiseWord);
+					var noiseWord = reader.ReadLine();
+					eofReached = (noiseWord == null);
+					if(!eofReached)
+					{
+						noiseWords.Add(noiseWord);
+					}
 				}
+
+				return noiseWords;
 			}
-			return noiseWords;
 		}
 		
+		/// <summary>
+		/// Strips the protocol specification like http:// and https:// from the url specified
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
 		public static string StripProtocolsFromUrl(string url)
 		{
-			string toReturn = url;
+			var toReturn = url;
 			if(!string.IsNullOrEmpty(toReturn))
 			{
 				var urlAsUri = new Uri(url);
@@ -68,13 +77,17 @@ namespace SD.HnD.BL
 		}
 
 
+		/// <summary>
+		/// Sanitizes the string specified, which means it will prefix the string with https:// if there's no http:// or https:// at the start.
+		/// </summary>
+		/// <param name="toSanitize"></param>
+		/// <returns></returns>
 		public static string SanitizeUrl(string toSanitize)
 		{
-			string toReturn = toSanitize;
+			var toReturn = toSanitize;
 			if(!string.IsNullOrEmpty(toReturn))
 			{
-				if(!(toReturn.StartsWith("http://", true, CultureInfo.InvariantCulture) ||
-					 toReturn.StartsWith("https://", true, CultureInfo.InvariantCulture)))
+				if(!(toReturn.StartsWith("http://", true, CultureInfo.InvariantCulture) || toReturn.StartsWith("https://", true, CultureInfo.InvariantCulture)))
 				{
 					toReturn = "https://" + toReturn;
 				}

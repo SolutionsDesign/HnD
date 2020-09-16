@@ -93,7 +93,7 @@ namespace SD.HnD.BL
 				try
 				{
 					// save the thread
-					bool result = await adapter.SaveEntityAsync(thread).ConfigureAwait(false);
+					var result = await adapter.SaveEntityAsync(thread).ConfigureAwait(false);
 					if(result)
 					{
 						// save succeeded, so remove from queue, pass the current adapter to the method so the action takes place inside this transaction.
@@ -336,20 +336,20 @@ namespace SD.HnD.BL
 
 			// now collect all email addresses into an array so we can pass that to the email routine. 
 			var toAddresses = new string[subscriptions.Count];
-			for(int i=0;i<subscriptions.Count;i++)
+			for(var i=0;i<subscriptions.Count;i++)
 			{
 				toAddresses[i] = subscriptions[i].User.EmailAddress;
 			}
 
 			// use template to construct message to send. 
-			string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
-			var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
+			var emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
+			var mailBody = SD.HnD.Utility.StringBuilderCache.Acquire(emailTemplate.Length + 256);
 			mailBody.Append(emailTemplate);
 			var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
 			if (!string.IsNullOrEmpty(emailTemplate))
 			{
 				// Use the existing template to format the body
-				string siteName = emailData.GetValue("siteName") ?? string.Empty;
+				var siteName = emailData.GetValue("siteName") ?? string.Empty;
 				var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
 				if(thread == null)
 				{
@@ -365,13 +365,14 @@ namespace SD.HnD.BL
 			}
 
 			// format the subject
-			string subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty);
-			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
+			var subject = (emailData.GetValue("emailThreadNotificationSubject") ?? string.Empty);
+			var fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 			try
 			{
 				//send message
-				await HnDGeneralUtils.SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, toAddresses, emailData).ConfigureAwait(false);
+				await HnDGeneralUtils.SendEmail(subject, SD.HnD.Utility.StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, toAddresses, emailData)
+									 .ConfigureAwait(false);
 			}
 			catch(SmtpFailedRecipientsException)
 			{
@@ -404,7 +405,7 @@ namespace SD.HnD.BL
 																						 string userIDIPAddress, bool subscribeToThread, 
 																						 Dictionary<string, string> emailData, bool sendReplyNotifications)
 		{
-			int messageID = 0;
+			var messageID = 0;
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "InsertNewMessage").ConfigureAwait(false);

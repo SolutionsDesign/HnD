@@ -162,7 +162,7 @@ namespace SD.HnD.BL
 		/// <param name="adapter">The adapter with a live transaction. Can be null, in which case a local adapter is used.</param>
 		public static async Task RemoveThreadFromQueueAsync(int threadID, IDataAccessAdapter adapter)
 		{
-			bool localAdapter = adapter == null;
+			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
@@ -192,7 +192,7 @@ namespace SD.HnD.BL
 		/// <remarks>first removes the thread from a queue if it's in a queue</remarks>
 		public static async Task AddThreadToQueueAsync(int threadID, int queueID, int userID, IDataAccessAdapter adapter)
 		{
-			bool localAdapter = adapter == null;
+			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{

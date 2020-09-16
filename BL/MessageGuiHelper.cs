@@ -48,10 +48,8 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Attachment.Where(AttachmentFields.MessageID == messageId).Select(Functions.CountRow());
-				var toReturn = await adapter.FetchScalarAsync<int>(q).ConfigureAwait(false);
-				return toReturn;
+				var q = new QueryFactory().Attachment.Where(AttachmentFields.MessageID.Equal(messageId)).Select(Functions.CountRow());
+				return await adapter.FetchScalarAsync<int>(q).ConfigureAwait(false);
 			}
 		}
 
@@ -74,49 +72,9 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static int GetTotalNumberOfAttachmentsToApprove()
 		{
-			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = qf.Attachment
-						  .Select(Functions.CountRow())
-						  .Where(AttachmentFields.Approved.Equal(false));
-				return adapter.FetchScalar<int>(q);
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the total number of attachments to approve based on what the passed in user can see.
-		/// </summary>
-		/// <param name="accessableForums">The accessable forums by the user calling.</param>
-		/// <param name="forumsWithApprovalRight">The forums the calling user has attachment approval rights.</param>
-		/// <param name="forumsWithThreadsFromOthers">The forums the calling user can view normal threads from others.</param>
-		/// <param name="userID">The user ID of the calling user.</param>
-		/// <returns>the # of attachments with the approval state which are approvable by the calling user</returns>
-		public static int GetTotalNumberOfAttachmentsToApprove(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers, int userID)
-		{
-			if((accessableForums == null) || (accessableForums.Count <= 0))
-			{
-				// doesn't have access to any forum, return
-				return 0;
-			}
-			if((forumsWithApprovalRight == null) || (forumsWithApprovalRight.Count <= 0))
-			{
-				// doesn't have a forum with attachment approval right
-				return 0;
-			}
-
-			var qf = new QueryFactory();
-			using(var adapter = new DataAccessAdapter())
-			{
-				// we've to filter the list of attachments based on the forums accessable by the calling user, the list of forums the calling user has approval rights
-				// on and by the forums on which the user can see other user's threads. We'll create a predicate expression for this, and will add for each of these
-				// filters a separate predicate to this predicate expression and specify AND, so they all have to be true 
-				var q = qf.Create()
-						  .Select(Functions.CountRow())
-						  .From(qf.Attachment.InnerJoin(qf.Message).On(AttachmentFields.MessageID.Equal(MessageFields.MessageID))
-											 .InnerJoin(qf.Thread).On(MessageFields.ThreadID.Equal(ThreadFields.ThreadID)))
-						  .Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID));
+				var q = new QueryFactory().Attachment.Where(AttachmentFields.Approved.Equal(false)).Select(Functions.CountRow());
 				return adapter.FetchScalar<int>(q);
 			}
 		}
@@ -125,47 +83,22 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the message entity with the ID passed in.
 		/// </summary>
-		/// <param name="messageID">The message ID.</param>
+		/// <param name="messageId">The message ID.</param>
 		/// <param name="prefetchThread">if set to <c>true</c> it will also prefetch the related thread entity.</param>
 		/// <returns>
 		/// Filled messageentity if found, otherwise null
 		/// </returns>
-		public static async Task<MessageEntity> GetMessageAsync(int messageID, bool prefetchThread = false)
+		public static async Task<MessageEntity> GetMessageAsync(int messageId, bool prefetchThread = false)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Message.Where(MessageFields.MessageID.Equal(messageID));
+				var q = new QueryFactory().Message.Where(MessageFields.MessageID.Equal(messageId));
 				if(prefetchThread)
 				{
 					q.WithPath(MessageEntity.PrefetchPathThread);
 				}
 
-				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the attachments for the message with the messageid passed in. Attachments are sorted by AddedOn ascending.
-		/// The result is returned as a dynamic list, because we don't want the actual attachment data. 
-		/// </summary>
-		/// <param name="messageID">The message ID.</param>
-		/// <returns>Dataview with 0 or more attachments related to the message with the id passed in. The rows don't contain the actual attachment data</returns>
-		public static DataView GetAttachmentsAsDataView(int messageID)
-		{
-			var q = new QueryFactory().Create()
-						.Select(AttachmentFields.AttachmentID,
-								AttachmentFields.Filename,
-								AttachmentFields.Approved,
-								AttachmentFields.Filesize,
-								AttachmentFields.AddedOn)
-						.Where(AttachmentFields.MessageID == messageID)
-						.OrderBy(AttachmentFields.AddedOn.Ascending());
-			using(var adapter = new DataAccessAdapter())
-			{
-				return adapter.FetchAsDataTable(q).DefaultView;
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -173,17 +106,15 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the attachment with the attachmentid passed in
 		/// </summary>
-		/// <param name="messageID">The messageid of the message the attachment is related to</param>
-		/// <param name="attachmentID">The attachment ID.</param>
+		/// <param name="messageId">The messageid of the message the attachment is related to</param>
+		/// <param name="attachmentId">The attachment ID.</param>
 		/// <returns>the attachment entity or null if not found</returns>
-		public static async Task<AttachmentEntity> GetAttachmentAsync(int messageID, int attachmentID)
+		public static async Task<AttachmentEntity> GetAttachmentAsync(int messageId, int attachmentId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentID).And(AttachmentFields.MessageID.Equal(messageID)));
-				var attachment = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return attachment;
+				var q = new QueryFactory().Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentId).And(AttachmentFields.MessageID.Equal(messageId)));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -191,20 +122,19 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the message of the attachment with the attachmentid passed in.
 		/// </summary>
-		/// <param name="attachmentID">The attachment ID.</param>
+		/// <param name="attachmentId">The attachment ID.</param>
 		/// <returns>MessageEntity if found, otherwise null. MessageEntity has its Thread entity prefetched</returns>
-		public static async Task<MessageEntity> GetMessageWithAttachmentLogicAsync(int attachmentID)
+		public static async Task<MessageEntity> GetMessageWithAttachmentLogicAsync(int attachmentId)
 		{
 			var qf = new QueryFactory();
 			var q = qf.Message
-						.From(QueryTarget.InnerJoin(qf.Attachment).On(MessageFields.MessageID == AttachmentFields.MessageID))
-						.Where(AttachmentFields.AttachmentID == attachmentID)
+						.From(QueryTarget.InnerJoin(qf.Attachment).On(MessageFields.MessageID.Equal(AttachmentFields.MessageID)))
+						.Where(AttachmentFields.AttachmentID.Equal(attachmentId))
 						.Limit(1)
 						.WithPath(MessageEntity.PrefetchPathThread);
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -215,11 +145,11 @@ namespace SD.HnD.BL
 		/// <param name="accessableForums">The accessable forums by the user calling.</param>
 		/// <param name="forumsWithApprovalRight">The forums the calling user has attachment approval rights.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums the calling user can view normal threads from others.</param>
-		/// <param name="userID">The user ID of the calling user.</param>
+		/// <param name="userId">The user ID of the calling user.</param>
 		/// <returns>List with objects with the data requested.</returns>
 		public static async Task<List<AggregatedUnapprovedAttachmentRow>> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums, 
 																													 List<int> forumsWithApprovalRight, 
-																													 List<int> forumsWithThreadsFromOthers, int userID)
+																													 List<int> forumsWithThreadsFromOthers, int userId)
 		{
 			if((accessableForums == null) || (accessableForums.Count <= 0))
 			{
@@ -242,17 +172,16 @@ namespace SD.HnD.BL
 																 MessageFields.MessageID,
 																 AttachmentFields.AddedOn)
 					  .From(qf.Attachment
-							  .InnerJoin(qf.Message).On(AttachmentFields.MessageID == MessageFields.MessageID)
-							  .InnerJoin(qf.Thread).On(MessageFields.ThreadID == ThreadFields.ThreadID)
-							  .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
-					  .Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userID))
+							  .InnerJoin(qf.Message).On(AttachmentFields.MessageID.Equal(MessageFields.MessageID))
+							  .InnerJoin(qf.Thread).On(MessageFields.ThreadID.Equal(ThreadFields.ThreadID))
+							  .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+					  .Where(MessageGuiHelper.CreateAttachmentFilter(accessableForums, forumsWithApprovalRight, forumsWithThreadsFromOthers, userId))
 					  .OrderBy(ForumFields.ForumName.Ascending(), AttachmentFields.AddedOn.Ascending())
 					  .Distinct();
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-				return toReturn;
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -263,10 +192,11 @@ namespace SD.HnD.BL
 		/// <param name="accessableForums">The accessable forums.</param>
 		/// <param name="forumsWithApprovalRight">The forums with approval right.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <returns>ready to use predicate expression for fetch actions on attachments with the approval state specified in the threads
 		/// matching the forumID's.</returns>
-		private static PredicateExpression CreateAttachmentFilter(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers, int userID)
+		private static PredicateExpression CreateAttachmentFilter(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers, 
+																  int userId)
 		{
 			var filter = new PredicateExpression();
 
@@ -276,28 +206,28 @@ namespace SD.HnD.BL
 			{
 				// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
 				// databases, but we'll get a WHERE Field == @param
-				filter.Add(ThreadFields.ForumID == accessableForums[0]);
+				filter.Add(ThreadFields.ForumID.Equal(accessableForums[0]));
 			}
 			else
 			{
-				filter.Add(ThreadFields.ForumID == accessableForums);
+				filter.Add(ThreadFields.ForumID.In(accessableForums));
 			}
 			// specify the filter for the forums with approval rights:
 			if(forumsWithApprovalRight.Count == 1)
 			{
 				// optimization, specify the only value instead of the range, so we won't get a WHERE Field IN (@param) query which is slow on some
 				// databases, but we'll get a WHERE Field == @param
-				filter.Add(ThreadFields.ForumID == forumsWithApprovalRight[0]);
+				filter.Add(ThreadFields.ForumID.Equal(forumsWithApprovalRight[0]));
 			}
 			else
 			{
-				filter.Add(ThreadFields.ForumID == forumsWithApprovalRight);
+				filter.Add(ThreadFields.ForumID.In(forumsWithApprovalRight));
 			}
 			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
 			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
-			filter.AddWithAnd(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID));
+			filter.AddWithAnd(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId));
 			// as last filter, we'll add a filter to only get the data for attachments which aren't approved yet.
-			filter.AddWithAnd(AttachmentFields.Approved == false);
+			filter.AddWithAnd(AttachmentFields.Approved.Equal(false));
 			return filter;
 		}
 	}

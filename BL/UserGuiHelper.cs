@@ -147,7 +147,7 @@ namespace SD.HnD.BL
 				return null;
 			}
 
-			int numberOfThreadsToFetch = pageSize;
+			var numberOfThreadsToFetch = pageSize;
 			if(numberOfThreadsToFetch <= 0)
 			{
 				numberOfThreadsToFetch = 25;
@@ -411,7 +411,7 @@ namespace SD.HnD.BL
 		/// <returns></returns>
 		public static async Task<PasswordResetTokenEntity> GetPasswordResetTokenAsync(string tokenID)
 		{
-			if(!Guid.TryParse(tokenID, out Guid tokenIDAsGuid))
+			if(!Guid.TryParse(tokenID, out var tokenIDAsGuid))
 			{
 				return null;
 			}

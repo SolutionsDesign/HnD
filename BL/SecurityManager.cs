@@ -148,7 +148,7 @@ namespace SD.HnD.BL
 				// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
 				var qf = new QueryFactory();
 				var q = qf.Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentID)).Select(AttachmentFields.MessageID);
-				int messageID = await adapter.FetchScalarAsync<int>(q);
+				var messageID = await adapter.FetchScalarAsync<int>(q);
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditApproveAttachment,
@@ -294,12 +294,12 @@ namespace SD.HnD.BL
 			{
 				var newRole = new RoleEntity { RoleDescription = roleDescription };
 				// we'll now create the intermediate entities for several m:n relationships. 
-				foreach(int actionRightID in systemActionRightsSet)
+				foreach(var actionRightID in systemActionRightsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
 					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
 				}
-				foreach(int auditActionID in auditActionsSet)
+				foreach(var auditActionID in auditActionsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
 					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
@@ -344,11 +344,11 @@ namespace SD.HnD.BL
 						return false;
 					}
 				}
-				foreach(int actionRightID in systemActionRightsSet)
+				foreach(var actionRightID in systemActionRightsSet)
 				{
 					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
 				}
-				foreach(int auditActionID in auditActionsSet)
+				foreach(var auditActionID in auditActionsSet)
 				{
 					role.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
 				}
@@ -386,7 +386,7 @@ namespace SD.HnD.BL
 		public static async Task<bool> SaveForumActionRightsForForumRoleAsync(List<int> actionRightIDs, int roleID, int forumID)
 		{
 			var forumRightsPerRole = new EntityCollection<ForumRoleForumActionRightEntity>();
-			foreach(int actionRightID in actionRightIDs)
+			foreach(var actionRightID in actionRightIDs)
 			{
 				var newForumRightPerRole = new ForumRoleForumActionRightEntity
 										   {
@@ -438,7 +438,7 @@ namespace SD.HnD.BL
 
 			var roleUsers = new EntityCollection<RoleUserEntity>();
 			// for each userid in the list, add a new entity to the collection
-			foreach(int userID in userIDsToAdd)
+			foreach(var userID in userIDsToAdd)
 			{
 				roleUsers.Add(new RoleUserEntity { UserID = userID, RoleID = roleID });
 			}
@@ -568,7 +568,7 @@ namespace SD.HnD.BL
 			{
 				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				user = user ?? new UserEntity();
-				bool fetchResult = user.Fields.State == EntityState.Fetched;
+				var fetchResult = user.Fields.State == EntityState.Fetched;
 
 				if(!fetchResult)
 				{

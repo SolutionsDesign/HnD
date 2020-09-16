@@ -38,19 +38,17 @@ namespace SD.HnD.BL
 	public class ForumGuiHelper
     {
 		/// <summary>
-		/// Returns a TypedList which contains the last (amount) posted messages in
-		/// the forum given. For RSS production.
+		/// Returns a TypedList which contains the last (amount) posted messages in the forum given. For RSS production.
 		/// </summary>
 		/// <param name="amount">limit of amount of messages to return</param>
-		/// <param name="forumID">ID of forum to pull the messages for</param>
+		/// <param name="forumId">ID of forum to pull the messages for</param>
 		/// <returns>typed list with data requested</returns>
-		public static async Task<List<ForumMessagesRow>> GetLastPostedMessagesInForumAsync(int amount, int forumID)
+		public static async Task<List<ForumMessagesRow>> GetLastPostedMessagesInForumAsync(int amount, int forumId)
 		{
-			var qf = new QueryFactory();
-			var q = qf.GetForumMessagesTypedList()
-						  .Where((ForumFields.ForumID == forumID).And(ForumFields.HasRSSFeed == true))
-						  .OrderBy(MessageFields.PostingDate.Descending())
-						  .Limit(amount);
+			var q = new QueryFactory().GetForumMessagesTypedList()
+									  .Where(ForumFields.ForumID.Equal(forumId).And(ForumFields.HasRSSFeed.Equal(true)))
+									  .OrderBy(MessageFields.PostingDate.Descending())
+									  .Limit(amount);
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -61,22 +59,22 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Returns a list with aggregated data objects, one per thread, for the requested forum and page
 		/// </summary>
-		/// <param name="forumID">ID of Forum for which the Threadlist is required</param>
+		/// <param name="forumId">ID of Forum for which the Threadlist is required</param>
 		/// <param name="pageNumber">The page number to fetch, which is used to fetch non-sticky posts</param>
 		/// <param name="pageSize">The number of rows to fetch for the page. </param>
 		/// <param name="canViewNormalThreadsStartedByOthers">If set to true, the user calling the method has the right to view threads started by others.
 		/// Otherwise only the threads started by the user calling the method are returned.</param>
-		/// <param name="userID">The userid of the user calling the method.</param>
+		/// <param name="userId">The userid of the user calling the method.</param>
 		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted to the top.</returns>
-		public static async Task<List<AggregatedThreadRow>> GetAllThreadsInForumAggregatedDataAsync(int forumID, int pageNumber, int pageSize, 
-																									bool canViewNormalThreadsStartedByOthers, int userID)
+		public static async Task<List<AggregatedThreadRow>> GetAllThreadsInForumAggregatedDataAsync(int forumId, int pageNumber, int pageSize, 
+																									bool canViewNormalThreadsStartedByOthers, int userId)
 		{
 			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
 			// then sort the sticky threads at the top and page through the resultset.
 			var qf = new QueryFactory();
 			var q = qf.Create()
 						  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
-						  .Where(ThreadFields.ForumID == forumID)
+						  .Where(ThreadFields.ForumID.Equal(forumId))
 						  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
 						  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
 						  .Offset(pageSize * (pageNumber-1))		// skip the pages we don't need.
@@ -89,7 +87,7 @@ namespace SD.HnD.BL
 				// however sticky threads are always returned so the filter contains a check so the limit is only applied on threads which aren't sticky
 				// add a filter for sticky threads, add it with 'OR', so sticky threads are always accepted. The whole expression is and-ed to the already existing
 				// expression
-				q.AndWhere((ThreadFields.StartedByUserID == userID).Or(ThreadFields.IsSticky == true));
+				q.AndWhere((ThreadFields.StartedByUserID.Equal(userId)).Or(ThreadFields.IsSticky.Equal(true)));
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -105,10 +103,9 @@ namespace SD.HnD.BL
 		/// <returns>Filled typedlist with all forum names / forumIDs and their containing section's name, sorted on Sectionname, and then forumname</returns>
 		public static async Task<List<ForumsWithSectionNameRow>> GetAllForumsWithSectionNamesAsync()
 		{
-			var qf = new QueryFactory();
-			var q = qf.GetForumsWithSectionNameTypedList()
-							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), 
-									 ForumFields.ForumName.Ascending());
+			var q = new QueryFactory().GetForumsWithSectionNameTypedList()
+									  .OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), 
+											   ForumFields.ForumName.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -133,13 +130,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets all forum entities which belong to a given section. 
 		/// </summary>
-		/// <param name="sectionID">The section ID from which forums should be retrieved</param>
+		/// <param name="sectionId">The section ID from which forums should be retrieved</param>
 		/// <returns>Entity collection with entities for all forums in this section sorted alphabitacally</returns>
-		public static async Task<EntityCollection<ForumEntity>> GetAllForumsInSectionAsync(int sectionID)
+		public static async Task<EntityCollection<ForumEntity>> GetAllForumsInSectionAsync(int sectionId)
 		{
 			var q = new QueryFactory().Forum
-						.Where(ForumFields.SectionID == sectionID)
-						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
+									  .Where(ForumFields.SectionID.Equal(sectionId))
+									  .OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q, new EntityCollection<ForumEntity>()).ConfigureAwait(false);
@@ -154,14 +151,14 @@ namespace SD.HnD.BL
 		/// <param name="availableSections">SectionCollection with all available sections</param>
 		/// <param name="accessableForums">List of accessable forums IDs.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
-		/// <param name="userID">The userid of the calling user.</param>
+		/// <param name="userId">The userid of the calling user.</param>
 		/// <returns>
-		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums displayable to the
-		/// user it's not present in the returned hashtable.
+		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums
+		/// displayable to the user it's not present in the returned hashtable.
 		/// </returns>
         public static async Task<MultiValueHashtable<int, AggregatedForumRow>> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections, 
 																												   List<int> accessableForums, 
-																												   List<int> forumsWithThreadsFromOthers, int userID)
+																												   List<int> forumsWithThreadsFromOthers, int userId)
         {
 			var toReturn = new MultiValueHashtable<int, AggregatedForumRow>();
 
@@ -173,7 +170,7 @@ namespace SD.HnD.BL
 
 			// fetch all forums with statistics in a dynamic list, while filtering on the list of accessable forums for this user. 
 			// Create the filter separate of the query itself, as it's re-used multiple times. 
-			IPredicateExpression threadFilter = ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID);
+			var threadFilter = ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId);
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
@@ -191,7 +188,7 @@ namespace SD.HnD.BL
 										// ) As AmountThreads
 										AmountThreads = qf.Create()
 															.Select(ThreadFields.ThreadID.Count())
-															.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+															.CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
 															.Where(threadFilter)
 															.ToScalar().As("AmountThreads").ToValue<int>(),
 										// add a scalar query which retrieves the # of messages in the threads of this forum. 
@@ -208,13 +205,13 @@ namespace SD.HnD.BL
 												.Where(MessageFields.ThreadID.In(
 														qf.Create()
 															.Select(ThreadFields.ThreadID)
-															.CorrelatedOver(ThreadFields.ForumID == ForumFields.ForumID)
+															.CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
 															.Where(threadFilter)))
 												.ToScalar().As("AmountMessages").ToValue<int>(),
 										HasRSSFeed = ForumFields.HasRSSFeed.ToValue<bool>(), 
 										SectionID = ForumFields.SectionID.ToValue<int>()
 									})
-						.Where(ForumFields.ForumID == accessableForums)
+						.Where(ForumFields.ForumID.In(accessableForums))
 						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending())
 						.CacheResultset(Globals.DefaultCacheDurationOfResultsets);
 			using(var adapter = new DataAccessAdapter())
@@ -232,15 +229,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Returns a ForumEntity of the given forum
 		/// </summary>
-		/// <param name="forumID">ForumID of forum which data should be read</param>
+		/// <param name="forumId">ForumID of forum which data should be read</param>
 		/// <returns>forum entity with the data requested, or null if not found</returns>
-		public static async Task<ForumEntity> GetForumAsync(int forumID)
+		public static async Task<ForumEntity> GetForumAsync(int forumId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Forum.Where(ForumFields.ForumID.Equal(forumID));
-				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				return await adapter.FetchFirstAsync(new QueryFactory().Forum.Where(ForumFields.ForumID.Equal(forumId))).ConfigureAwait(false);
 			}
 		}
 	}

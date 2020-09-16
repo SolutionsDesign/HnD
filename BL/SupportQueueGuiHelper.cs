@@ -115,7 +115,7 @@ namespace SD.HnD.BL
 						.From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID == SupportQueueFields.QueueID))
 						.Where(SupportQueueThreadFields.ThreadID == threadID);
 
-			bool localAdapter = adapter == null;
+			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{

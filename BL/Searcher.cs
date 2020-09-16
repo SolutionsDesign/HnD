@@ -57,9 +57,9 @@ namespace SD.HnD.BL
 																	 SearchTarget targetToSearch)
 		{
 			// the search utilizes full text search. It performs a CONTAINS upon the MessageText field of the Message entity. 
-			string searchTerms = PrepareSearchTerms(searchString);
-			bool searchMessageText = (targetToSearch == SearchTarget.MessageText) || (targetToSearch == SearchTarget.MessageTextAndThreadSubject);
-			bool searchSubject = (targetToSearch == SearchTarget.ThreadSubject) || (targetToSearch == SearchTarget.MessageTextAndThreadSubject);
+			var searchTerms = PrepareSearchTerms(searchString);
+			var searchMessageText = (targetToSearch == SearchTarget.MessageText) || (targetToSearch == SearchTarget.MessageTextAndThreadSubject);
+			var searchSubject = (targetToSearch == SearchTarget.ThreadSubject) || (targetToSearch == SearchTarget.MessageTextAndThreadSubject);
 			if(!(searchSubject || searchMessageText))
 			{
 				// no target specified, select message
@@ -126,11 +126,11 @@ namespace SD.HnD.BL
 		private static string PrepareSearchTerms(string searchTerms)
 		{
 			var termsToProcess = new List<string>();
-			string[] terms = searchTerms.Split(' ');
+			var terms = searchTerms.Split(' ');
 			// now traverse from front to back. Collide any sequence of terms where the start term starts with a '"' and the end term ends with a '"'.
-			for(int i=0;i<terms.Length;i++)
+			for(var i=0;i<terms.Length;i++)
 			{
-				string term = terms[i];
+				var term = terms[i];
 				if(term.Length<=0)
 				{
 					// dangling space
@@ -140,17 +140,17 @@ namespace SD.HnD.BL
 				if(term.StartsWith("\""))
 				{
 					// start of sequence, find end of sequence.
-					bool endOfSequenceFound = false;
-					StringBuilder tmpTerm = new StringBuilder(256);
-					int endIndexOfSequence = i;
-					for (int j = i; j < terms.Length; j++)
+					var endOfSequenceFound = false;
+					var tmpTerm = new StringBuilder(256);
+					var endIndexOfSequence = i;
+					for (var j = i; j < terms.Length; j++)
 					{
 						if(terms[j].EndsWith("\""))
 						{
 							// end of sequence found, collide
 							endOfSequenceFound=true;
-							bool firstTermSeen = false;
-							for(int k=i;k<=j;k++)
+							var firstTermSeen = false;
+							for(var k=i;k<=j;k++)
 							{
 								if(firstTermSeen)
 								{
@@ -185,12 +185,12 @@ namespace SD.HnD.BL
 
 			// now rebuild the searchTerms. We insert 'AND' if no operator is present and we surround wildcard searches with '"' if no
 			// '"' is present.
-			StringBuilder toReturn = new StringBuilder(searchTerms.Length+(5*termsToProcess.Count));
-			bool operatorSeenLastIteration = false;
-			for (int i = 0; i < termsToProcess.Count; i++)
+			var toReturn = new StringBuilder(searchTerms.Length+(5*termsToProcess.Count));
+			var operatorSeenLastIteration = false;
+			for (var i = 0; i < termsToProcess.Count; i++)
 			{
-				string term = (string)termsToProcess[i];
-				string termLowerCase = term.ToLowerInvariant();
+				var term = (string)termsToProcess[i];
+				var termLowerCase = term.ToLowerInvariant();
 				// check if this is an operator.
 				switch(termLowerCase)
 				{
