@@ -35,7 +35,7 @@ namespace SD.HnD.Gui.Controllers
 		{
 			var accessableForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum);
 			var forumsWithThreadsFromOthers = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers);
-			var allSections = _cache.GetAllSections();
+			var allSections = await _cache.GetAllSectionsAsync();
 			var model = new HomeData();
 			model.ForumDataPerDisplayedSection = await ForumGuiHelper.GetAllAvailableForumsAggregatedData(allSections, accessableForums, forumsWithThreadsFromOthers, 
 																										  this.HttpContext.Session.GetUserID());

@@ -72,16 +72,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the login of the user with the id specified.
 		/// </summary>
-		/// <param name="userID">User ID.</param>
+		/// <param name="userId">User ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static async Task<bool> AuditLoginAsync(int userID)
+		public static async Task<bool> AuditLoginAsync(int userId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toLog = new AuditDataCoreEntity
 							{
 								AuditActionID = (int)AuditActions.AuditLogin,
-								UserID = userID,
+								UserID = userId,
 								AuditedOn = DateTime.Now
 							};
 				var toReturn = await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
@@ -93,19 +93,19 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the creation of a new thread by the specified user
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="userId">User ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static async Task<bool> AuditNewThreadAsync(int userID, int threadID)
+		public static async Task<bool> AuditNewThreadAsync(int userId, int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toLog = new AuditDataThreadRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditNewThread,
-								UserID = userID,
+								UserID = userId,
 								AuditedOn = DateTime.Now,
-								ThreadID = threadID
+								ThreadID = threadId
 							};
 				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
@@ -115,21 +115,21 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the edit of the memo field for a thread by the specified user
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="userId">User ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static bool AuditEditMemo(int userID, int threadID)
+		public static async Task<bool> AuditEditMemoAsync(int userId, int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toLog = new AuditDataThreadRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditEditMemo,
-								UserID = userID,
+								UserID = userId,
 								AuditedOn = DateTime.Now,
-								ThreadID = threadID
+								ThreadID = threadId
 							};
-				return adapter.SaveEntity(toLog);
+				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
 		}
 
@@ -137,22 +137,21 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the approval of an attachment. We'll log the approval of an attachment with the messageid, as attachments are stored related to a message.
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
-		/// <param name="attachmentID">The attachment ID.</param>
-		public static async Task<bool> AuditApproveAttachmentAsync(int userID, int attachmentID)
+		/// <param name="userId">The user ID.</param>
+		/// <param name="attachmentId">The attachment ID.</param>
+		public static async Task<bool> AuditApproveAttachmentAsync(int userId, int attachmentId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				// use a scalar query to obtain the message id so we don't have to pull it completely in memory. An attachment can be big in size so we don't want to 
 				// read the entity to just read the messageid. We could use excluding fields to avoid the actual attachment data, but this query is really simple.
 				// this query will return 1 value directly from the DB, so it won't read all attachments first into memory.
-				var qf = new QueryFactory();
-				var q = qf.Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentID)).Select(AttachmentFields.MessageID);
+				var q = new QueryFactory().Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentId)).Select(AttachmentFields.MessageID);
 				var messageID = await adapter.FetchScalarAsync<int>(q);
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditApproveAttachment,
-								UserID = userID,
+								UserID = userId,
 								MessageID = messageID,
 								AuditedOn = DateTime.Now
 							};
@@ -165,19 +164,19 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the creation of a new message by the specified user
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <param name="messageID">Message ID.</param>
+		/// <param name="userId">User ID.</param>
+		/// <param name="messageId">Message ID.</param>
 		/// <returns>true if the save was successful, false otherwise</returns>
-		public static async Task<bool> AuditNewMessageAsync(int userID, int messageID)
+		public static async Task<bool> AuditNewMessageAsync(int userId, int messageId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditNewMessage,
-								UserID = userID,
+								UserID = userId,
 								AuditedOn = DateTime.Now,
-								MessageID = messageID
+								MessageID = messageId
 							};
 				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
@@ -187,19 +186,19 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Audits the alternation of a message by the specified user
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <param name="messageID">Message ID.</param>
+		/// <param name="userId">User ID.</param>
+		/// <param name="messageId">Message ID.</param>
 		/// <returns></returns>
-		public static async Task<bool> AuditAlteredMessageAsync(int userID, int messageID)
+		public static async Task<bool> AuditAlteredMessageAsync(int userId, int messageId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toLog = new AuditDataMessageRelatedEntity
 							{
 								AuditActionID = (int)AuditActions.AuditAlteredMessage,
-								UserID = userID,
+								UserID = userId,
 								AuditedOn = DateTime.Now,
-								MessageID = messageID
+								MessageID = messageId
 							};
 				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
@@ -246,7 +245,6 @@ namespace SD.HnD.BL
 			{
 				return false;
 			}
-			// load the entity from the database
 			var ipBan = await SecurityGuiHelper.GetIPBanAsync(toUpdate.IPBanID);
 			if(ipBan == null)
 			{
@@ -285,7 +283,7 @@ namespace SD.HnD.BL
 		/// <returns>new RoleID if succeeded. If the description was already available, 0 is returned</returns>
 		public static async Task<int> CreateNewRoleAsync(string roleDescription, List<int> systemActionRightsSet, List<int> auditActionsSet)
 		{
-			if(CheckIfRoleDescriptionIsPresent(roleDescription))
+			if(await CheckIfRoleDescriptionIsPresentAsync(roleDescription))
 			{
 				// is already present
 				return 0;
@@ -294,15 +292,15 @@ namespace SD.HnD.BL
 			{
 				var newRole = new RoleEntity { RoleDescription = roleDescription };
 				// we'll now create the intermediate entities for several m:n relationships. 
-				foreach(var actionRightID in systemActionRightsSet)
+				foreach(var actionRightId in systemActionRightsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
-					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
+					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightId});
 				}
-				foreach(var auditActionID in auditActionsSet)
+				foreach(var auditActionId in auditActionsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
-					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
+					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionId});
 				}
 				
 				var toReturn = await adapter.SaveEntityAsync(newRole).ConfigureAwait(false);
@@ -317,17 +315,16 @@ namespace SD.HnD.BL
 		/// the role description for the given role. If the user specified a role description that is already available, false will be returned to signal
 		/// that the save failed.
 		/// </summary>
-		/// <param name="roleID">the id of the role</param>
+		/// <param name="roleId">the id of the role</param>
 		/// <param name="roleDescription">the new description of the role</param>
 		/// <param name="systemActionRightsSet">the system action rights to assign to the role</param>
 		/// <param name="auditActionsSet">the ids of the audit actions set for the role</param>
 		/// <returns></returns>
-		public static async Task<bool> ModifyRoleAsync(int roleID, string roleDescription, List<int> systemActionRightsSet, List<int> auditActionsSet)
+		public static async Task<bool> ModifyRoleAsync(int roleId, string roleDescription, List<int> systemActionRightsSet, List<int> auditActionsSet)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Role.Where(RoleFields.RoleID.Equal(roleID));
+				var q = new QueryFactory().Role.Where(RoleFields.RoleID.Equal(roleId));
 				var role = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				if(role == null)
 				{
@@ -338,19 +335,19 @@ namespace SD.HnD.BL
 				role.RoleDescription = roleDescription;
 				if(role.Fields.GetIsChanged((int)RoleFieldIndex.RoleID))
 				{
-					if(CheckIfRoleDescriptionIsPresent(roleDescription))
+					if(await CheckIfRoleDescriptionIsPresentAsync(roleDescription))
 					{
 						// new description, is already present, fail
 						return false;
 					}
 				}
-				foreach(var actionRightID in systemActionRightsSet)
+				foreach(var actionRightId in systemActionRightsSet)
 				{
-					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightID});
+					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightId});
 				}
-				foreach(var auditActionID in auditActionsSet)
+				foreach(var auditActionId in auditActionsSet)
 				{
-					role.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionID});
+					role.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionId});
 				}
 				
 				// all set. We're going to delete all Role - SystemAction Rights combinations first, as we're going to re-insert them later on. 
@@ -358,8 +355,9 @@ namespace SD.HnD.BL
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "ModifyRole").ConfigureAwait(false);
 				try
 				{
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleID)));
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleID)));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), 
+															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleId)));
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleId)));
 					await adapter.SaveEntityAsync(role).ConfigureAwait(false);
 					// all done, commit the transaction
 					adapter.Commit();
@@ -380,19 +378,19 @@ namespace SD.HnD.BL
 		/// It first removes all current action rights for that combination.
 		/// </summary>
 		/// <param name="actionRightIDs">List of actionrights to set of this role</param>
-		/// <param name="roleID">Role to use</param>
-		/// <param name="forumID">Forum to use</param>
+		/// <param name="roleId">Role to use</param>
+		/// <param name="forumId">Forum to use</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> SaveForumActionRightsForForumRoleAsync(List<int> actionRightIDs, int roleID, int forumID)
+		public static async Task<bool> SaveForumActionRightsForForumRoleAsync(List<int> actionRightIDs, int roleId, int forumId)
 		{
 			var forumRightsPerRole = new EntityCollection<ForumRoleForumActionRightEntity>();
-			foreach(var actionRightID in actionRightIDs)
+			foreach(var actionRightId in actionRightIDs)
 			{
 				var newForumRightPerRole = new ForumRoleForumActionRightEntity
 										   {
-											   ActionRightID = actionRightID,
-											   ForumID = forumID,
-											   RoleID = roleID
+											   ActionRightID = actionRightId,
+											   ForumID = forumId,
+											   RoleID = roleId
 										   };
 				forumRightsPerRole.Add(newForumRightPerRole);
 			}
@@ -403,8 +401,8 @@ namespace SD.HnD.BL
 				{
 					// first remove the existing rows for the role. Do this by a query directly on the database.
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
-															  new RelationPredicateBucket((ForumRoleForumActionRightFields.RoleID == roleID)
-																						  .And(ForumRoleForumActionRightFields.ForumID == forumID)))
+															  new RelationPredicateBucket((ForumRoleForumActionRightFields.RoleID.Equal(roleId))
+																						  .And(ForumRoleForumActionRightFields.ForumID.Equal(forumId))))
 								 .ConfigureAwait(false);
 					
 					// then save the new entities
@@ -427,9 +425,9 @@ namespace SD.HnD.BL
 		/// Adds all users which ID's are stored in UsersToAdd, to the role with ID RoleID.
 		/// </summary>
 		/// <param name="userIDsToAdd">List with UserIDs of the users to add</param>
-		/// <param name="roleID">ID of role the users will be added to</param>
+		/// <param name="roleId">ID of role the users will be added to</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> AddUsersToRoleAsync(List<int> userIDsToAdd, int roleID)
+		public static async Task<bool> AddUsersToRoleAsync(List<int> userIDsToAdd, int roleId)
 		{
 			if(userIDsToAdd.Count<=0)
 			{
@@ -438,9 +436,9 @@ namespace SD.HnD.BL
 
 			var roleUsers = new EntityCollection<RoleUserEntity>();
 			// for each userid in the list, add a new entity to the collection
-			foreach(var userID in userIDsToAdd)
+			foreach(var userId in userIDsToAdd)
 			{
-				roleUsers.Add(new RoleUserEntity { UserID = userID, RoleID = roleID });
+				roleUsers.Add(new RoleUserEntity { UserID = userId, RoleID = roleId });
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -452,12 +450,12 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Removes the user with the userid specified from the role with ID RoleID.
 		/// </summary>
-		/// <param name="userID">userid of user to remove from the role with roleid specified</param>
-		/// <param name="roleID">ID of role the users will be removed from</param>
+		/// <param name="userId">userid of user to remove from the role with roleid specified</param>
+		/// <param name="roleId">ID of role the users will be removed from</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> RemoveUserFromRoleAsync(int roleID, int userID)
+		public static async Task<bool> RemoveUserFromRoleAsync(int roleId, int userId)
 		{
-			if(userID <= 0)
+			if(userId <= 0)
 			{
 				return false;
 			}
@@ -466,8 +464,8 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
-																 new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID)
-																										   .And(RoleUserFields.RoleID.Equal(roleID))))
+																 new RelationPredicateBucket(RoleUserFields.UserID.Equal(userId)
+																										   .And(RoleUserFields.RoleID.Equal(roleId))))
 									.ConfigureAwait(false) > 0;
 			}
 		}
@@ -476,11 +474,11 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the given role from the system.
 		/// </summary>
-		/// <param name="roleID">ID of role to delete</param>
+		/// <param name="roleId">ID of role to delete</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> DeleteRoleAsync(int roleID)
+		public static async Task<bool> DeleteRoleAsync(int roleId)
 		{
-			var toDelete = await SecurityGuiHelper.GetRoleAsync(roleID);
+			var toDelete = await SecurityGuiHelper.GetRoleAsync(roleId);
 			if(toDelete == null)
 			{
 				// not found
@@ -494,16 +492,16 @@ namespace SD.HnD.BL
 				{
 					// remove the role - forum - action right entities
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
-															  new RelationPredicateBucket(ForumRoleForumActionRightFields.RoleID.Equal(roleID))).ConfigureAwait(false);
+															  new RelationPredicateBucket(ForumRoleForumActionRightFields.RoleID.Equal(roleId))).ConfigureAwait(false);
 					// Remove role-audit action entities
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), 
-															  new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
+															  new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
 					// remove Role - systemright entities
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), 
-															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
+															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
 					// remove Role - user entities
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
-															  new RelationPredicateBucket(RoleUserFields.RoleID.Equal(roleID))).ConfigureAwait(false);;
+															  new RelationPredicateBucket(RoleUserFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
 					// delete the actual role
 					await adapter.DeleteEntityAsync(toDelete).ConfigureAwait(false);;
 					adapter.Commit();
@@ -534,20 +532,6 @@ namespace SD.HnD.BL
 			}
 		}
 
-
-		/// <summary>
-		/// Checks if the user with the given UserID exists in the database.
-		/// </summary>
-		/// <param name="userID">The UserID of the user to check if he/she exists in the database</param>
-		/// <returns>true if user exists, false otherwise. </returns>
-		public static bool DoesUserExist(int userID)
-		{
-			using(var adapter = new DataAccessAdapter())
-			{
-				return new LinqMetaData(adapter).User.Any(u => u.UserID == userID);
-			}
-		}
-
 		
 		/// <summary>
 		/// Authenticates the user with the given Nickname and the given Password.
@@ -560,10 +544,9 @@ namespace SD.HnD.BL
 		/// AuthenticateResult.IsBanned if the user is banned. </returns>
 		public static async Task<(AuthenticateResult authenticateResult, UserEntity user)> AuthenticateUserAsync(string nickName, string password)
 		{
-			var qf = new QueryFactory();
 			// fetch the Roles related to the user when fetching the user, using a prefetchPath object.
-			var q = qf.User.Where(UserFields.NickName.Equal(nickName))
-						   .WithPath(UserEntity.PrefetchPathRoles);
+			var q = new QueryFactory().User.Where(UserFields.NickName.Equal(nickName))
+									  .WithPath(UserEntity.PrefetchPathRoles);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
@@ -587,7 +570,8 @@ namespace SD.HnD.BL
 				{
 					// correct username/password combination
 					// delete any password reset tokens
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(PasswordResetTokenEntity), new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)))
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(PasswordResetTokenEntity), 
+															  new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)))
 								 .ConfigureAwait(false);
 					// all ok
 					return (AuthenticateResult.AllOk, user);
@@ -603,11 +587,11 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="roleDescription">The role description.</param>
 		/// <returns>true if the role description is already present, otherwise false.</returns>
-		private static bool CheckIfRoleDescriptionIsPresent(string roleDescription)
+		private static async Task<bool> CheckIfRoleDescriptionIsPresentAsync(string roleDescription)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return new LinqMetaData(adapter).Role.Any(r=>r.RoleDescription == roleDescription);
+				return await new LinqMetaData(adapter).Role.AnyAsync(r=>r.RoleDescription == roleDescription).ConfigureAwait(false);
 			}
 		}
 	}

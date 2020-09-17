@@ -93,16 +93,15 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets all auditaction ids associated to the role with the id specified.
 		/// </summary>
-		/// <param name="roleID"></param>
+		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public static List<int> GetAllAuditActionIDsForRole(int roleID)
+		public static List<int> GetAllAuditActionIDsForRole(int roleId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.RoleAuditAction
-						  .Where(RoleAuditActionFields.RoleID.Equal(roleID))
-						  .Select(()=>RoleAuditActionFields.AuditActionID.ToValue<int>());
+				var q = new QueryFactory().RoleAuditAction
+										  .Where(RoleAuditActionFields.RoleID.Equal(roleId))
+										  .Select(()=>RoleAuditActionFields.AuditActionID.ToValue<int>());
 				return adapter.FetchQuery(q);
 			}
 		}
@@ -111,17 +110,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets all audits for user.
 		/// </summary>
-		/// <param name="userID">User ID.</param>
+		/// <param name="userId">User ID.</param>
 		/// <returns>All audit data objects (polymorphic)</returns>
-		public static async Task<EntityCollection<AuditDataCoreEntity>> GetAllAuditsForUserAsync(int userID)
+		public static async Task<EntityCollection<AuditDataCoreEntity>> GetAllAuditsForUserAsync(int userId)
 		{
-			var qf = new QueryFactory();
-			var q = qf.AuditDataCore
-						.Where(AuditDataCoreFields.UserID==userID)
-						.OrderBy(AuditDataCoreFields.AuditedOn.Descending())
-						.Limit(50)
-						.WithPath(AuditDataMessageRelatedEntity.PrefetchPathMessage.WithSubPath(MessageEntity.PrefetchPathThread),
-								  AuditDataThreadRelatedEntity.PrefetchPathThread);
+			var q = new QueryFactory().AuditDataCore
+									  .Where(AuditDataCoreFields.UserID.Equal(userId))
+									  .OrderBy(AuditDataCoreFields.AuditedOn.Descending())
+									  .Limit(50)
+									  .WithPath(AuditDataMessageRelatedEntity.PrefetchPathMessage.WithSubPath(MessageEntity.PrefetchPathThread),
+												AuditDataThreadRelatedEntity.PrefetchPathThread);
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q, new EntityCollection<AuditDataCoreEntity>()).ConfigureAwait(false);
@@ -143,7 +141,7 @@ namespace SD.HnD.BL
 				var q = (from i in metaData.IPBan
 						 orderby i.IPSegment1, i.IPSegment2, i.IPSegment3, i.IPSegment4
 						 select i)
-					.ProjectToIPBanDto();
+						.ProjectToIPBanDto();
 				return await q.ToListAsync().ConfigureAwait(false);
 			}
 		}
@@ -155,14 +153,14 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// the collection of ipban entities requested
 		/// </returns>
-		public static EntityCollection<IPBanEntity> GetAllIPBans()
+		public static async Task<EntityCollection<IPBanEntity>> GetAllIPBansAsync()
 		{
-			var qf = new QueryFactory();
-			var q = qf.IPBan
-					  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), IPBanFields.IPSegment4.Ascending());
+			var q = new QueryFactory().IPBan
+									  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), 
+											   IPBanFields.IPSegment4.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<IPBanEntity>());
+				return await adapter.FetchQueryAsync(q, new EntityCollection<IPBanEntity>()).ConfigureAwait(false);
 			}
 		}
 

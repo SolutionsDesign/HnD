@@ -44,13 +44,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the support queue entity with the queue id passed in
 		/// </summary>
-		/// <param name="queueID">The queue ID.</param>
+		/// <param name="queueId">The queue ID.</param>
 		/// <returns>the supportqueue entity requested or null if not found.</returns>
-		public static async Task<SupportQueueEntity> GetSupportQueueAsync(int queueID)
+		public static async Task<SupportQueueEntity> GetSupportQueueAsync(int queueId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = new QueryFactory().SupportQueue.Where(SupportQueueFields.QueueID.Equal(queueID));
+				var q = new QueryFactory().SupportQueue.Where(SupportQueueFields.QueueID.Equal(queueId));
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
@@ -76,13 +76,12 @@ namespace SD.HnD.BL
 		/// Gets all support queues known in the system, sorted by orderno, ascending.
 		/// </summary>
 		/// <returns>filled collection with entities requested.</returns>
-		public static EntityCollection<SupportQueueEntity> GetAllSupportQueues()
+		public static async Task<EntityCollection<SupportQueueEntity>> GetAllSupportQueuesAsync()
 		{
-			var qf = new QueryFactory();
-			var q = qf.SupportQueue.OrderBy(SupportQueueFields.OrderNo.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchQuery(q, new EntityCollection<SupportQueueEntity>());
+				var q = new QueryFactory().SupportQueue.OrderBy(SupportQueueFields.OrderNo.Ascending());
+				return await adapter.FetchQueryAsync(q, new EntityCollection<SupportQueueEntity>()).ConfigureAwait(false);
 			}
 		}
 
@@ -90,37 +89,36 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the support queue of the thread with the threadID specified.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
+		/// <param name="threadId">The thread ID.</param>
 		/// <returns>The requested supportqueue entity, or null if the thread isn't in a support queue.</returns>
-		public static Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadID)
+		public static Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadId)
 		{
-			return GetQueueOfThreadAsync(threadID, null);
+			return GetQueueOfThreadAsync(threadId, null);
 		}
 
 
 		/// <summary>
 		/// Gets the support queue of the thread with the threadID specified.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
+		/// <param name="threadId">The thread ID.</param>
 		/// <param name="adapter">The live adapter with a transaction currently in progress. Can be null if no transaction is in progress.</param>
 		/// <returns>
 		/// The requested supportqueue entity, or null if the thread isn't in a support queue.
 		/// </returns>
-		public static async Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadID, IDataAccessAdapter adapter)
+		public static async Task<SupportQueueEntity> GetQueueOfThreadAsync(int threadId, IDataAccessAdapter adapter)
 		{
 			// the relation supportqueue - thread is stored in a SupportQueueThread entity. Use that entity as a filter for the support queue. If
 			// that entity doesn't exist, the thread isn't in a supportqueue.
 			var qf = new QueryFactory();
 			var q = qf.SupportQueue
-						.From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID == SupportQueueFields.QueueID))
-						.Where(SupportQueueThreadFields.ThreadID == threadID);
+						.From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID.Equal(SupportQueueFields.QueueID)))
+						.Where(SupportQueueThreadFields.ThreadID.Equal(threadId));
 
 			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
-				var toReturn = await adapterToUse.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
+				return await adapterToUse.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 			finally
 			{
@@ -135,13 +133,12 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the support queue thread info entity and if specified, prefetches the user entity which claimed the related thread. 
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
+		/// <param name="threadId">The thread ID.</param>
 		/// <param name="prefetchClaimUser">if set to true it will </param>
 		/// <returns>fetched entity if found, otherwise null</returns>
-		public static async Task<SupportQueueThreadEntity> GetSupportQueueThreadInfoAsync(int threadID, bool prefetchClaimUser)
+		public static async Task<SupportQueueThreadEntity> GetSupportQueueThreadInfoAsync(int threadId, bool prefetchClaimUser)
 		{
-			var qf = new QueryFactory();
-			var q = qf.SupportQueueThread.Where(SupportQueueThreadFields.ThreadID.Equal(threadID));
+			var q = new QueryFactory().SupportQueueThread.Where(SupportQueueThreadFields.ThreadID.Equal(threadId));
 			if(prefetchClaimUser)
 			{
 				q.WithPath(SupportQueueThreadEntity.PrefetchPathClaimedByUser);
@@ -158,11 +155,11 @@ namespace SD.HnD.BL
 		/// accessable forums are returned.
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
-		/// <param name="supportQueueIDs">The support queue IDs to obtain the threads info for.</param>
+		/// <param name="supportQueueIds">The support queue IDs to obtain the threads info for.</param>
 		/// <returns>
 		/// a list of aggregated support queue contents rows, one per thread, or an empty list if no forums were accessible. 
 		/// </returns>
-		public static async Task<List<AggregatedSupportQueueContentsRow>> GetAllThreadsInSpecifiedSupportQueuesAsync(List<int> accessableForums, int[] supportQueueIDs)
+		public static async Task<List<AggregatedSupportQueueContentsRow>> GetAllThreadsInSpecifiedSupportQueuesAsync(List<int> accessableForums, int[] supportQueueIds)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -184,13 +181,13 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 					  .Select<AggregatedSupportQueueContentsRow>(projectionFields.ToArray())
 					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID)
-										   .InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID == SupportQueueThreadFields.ThreadID)
+										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID))
+										   .InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID.Equal(SupportQueueThreadFields.ThreadID))
 										   .InnerJoin(qf.User.As("PlacedInQueueUser"))
-												.On(SupportQueueThreadFields.PlacedInQueueByUserID == UserFields.UserID.Source("PlacedInQueueUser"))
+												.On(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(UserFields.UserID.Source("PlacedInQueueUser")))
 										   .LeftJoin(qf.User.As("ClaimedThreadUser"))
-												.On(SupportQueueThreadFields.ClaimedByUserID == UserFields.UserID.Source("ClaimedThreadUser")))
-					  .Where(ThreadFields.ForumID.In(accessableForums.ToArray()).And(SupportQueueThreadFields.QueueID.In(supportQueueIDs)))
+												.On(SupportQueueThreadFields.ClaimedByUserID.Equal(UserFields.UserID.Source("ClaimedThreadUser"))))
+					  .Where(ThreadFields.ForumID.In(accessableForums.ToArray()).And(SupportQueueThreadFields.QueueID.In(supportQueueIds)))
 					  .OrderBy(SupportQueueThreadFields.QueueID.Ascending(), ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -205,35 +202,8 @@ namespace SD.HnD.BL
 		/// <returns>total number of threads in support queues</returns>
 		public static int GetTotalNumberOfThreadsInSupportQueues()
 		{
-			var qf = new QueryFactory();
-			var q = qf.SupportQueueThread
-					  .Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"));
-			using(var adapter = new DataAccessAdapter())
-			{
-				return adapter.FetchScalar<int>(q);
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the total number of threads in support queues. Only the count of threads which are in the forums in the list of
-		/// accessable forums are returned.
-		/// </summary>
-		/// <param name="accessableForums">A list of accessable forums IDs, which the user has permission to access.</param>
-		/// <returns>total number of threads in support queues</returns>
-		public static int GetTotalNumberOfThreadsInSupportQueues(List<int> accessableForums)
-		{
-			// return 0, if the user does not have a valid list of forums to access
-			if(accessableForums == null || accessableForums.Count <= 0)
-			{
-				return 0;
-			}
-
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"))
-						.From(qf.SupportQueueThread.InnerJoin(qf.Thread).On(SupportQueueThreadFields.ThreadID == ThreadFields.ThreadID))
-						.Where(ThreadFields.ForumID.In(accessableForums));
+			var q = new QueryFactory().SupportQueueThread
+									  .Select(SupportQueueThreadFields.ThreadID.Count().As("NumberOfThreadsInQueues"));
 			using(var adapter = new DataAccessAdapter())
 			{
 				return adapter.FetchScalar<int>(q);

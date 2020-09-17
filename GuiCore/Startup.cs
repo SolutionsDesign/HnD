@@ -106,6 +106,9 @@ namespace SD.HnD.Gui
 			app.UseResponseCaching();
 			app.UseAuthentication();
 			app.UseAuthorization();
+			
+			app.UseIPFilter();
+			
 			app.UseSession();
 			// own middleware function to initialize session if required. 
 			app.Use(async (context, next) =>

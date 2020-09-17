@@ -49,10 +49,13 @@ namespace SD.HnD.BL
 			{
 				return 0;
 			}
-            var section = new SectionEntity();
-            section.SectionName = toInsert.SectionName;
-            section.SectionDescription = toInsert.SectionDescription;
-			section.OrderNo = toInsert.OrderNo;
+
+			var section = new SectionEntity
+						  {
+							  SectionName = toInsert.SectionName, 
+							  SectionDescription = toInsert.SectionDescription, 
+							  OrderNo = toInsert.OrderNo
+						  };
 
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -73,7 +76,6 @@ namespace SD.HnD.BL
 			{
 				return false;
 			}
-            // load the entity from the database
 			var section = await SectionGuiHelper.GetSectionAsync(toUpdate.SectionID);
 			if(section == null)
 			{
@@ -97,8 +99,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				// first check if the section has any forums
-				var qf = new QueryFactory();
-				var q = qf.Forum.Where(ForumFields.SectionID == sectionId).Select(Functions.CountRow());
+				var q = new QueryFactory().Forum.Where(ForumFields.SectionID.Equal(sectionId)).Select(Functions.CountRow());
 				var numberOfForums = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
 				if(numberOfForums.HasValue && numberOfForums > 0)
 				{

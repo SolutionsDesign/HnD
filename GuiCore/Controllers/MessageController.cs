@@ -102,7 +102,7 @@ namespace SD.HnD.Gui.Controllers
 								  ForumID = forum.ForumID,
 								  ThreadID = thread.ThreadID,
 								  ForumName = forum.ForumName,
-								  SectionName = _cache.GetSectionName(forum.SectionID),
+								  SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 								  ThreadSubject = thread.Subject,
 								  PageNo = 1,
 							  };
@@ -154,7 +154,7 @@ namespace SD.HnD.Gui.Controllers
 				ForumID = forum.ForumID,
 				ThreadID = thread.ThreadID,
 				ForumName = forum.ForumName,
-				SectionName = _cache.GetSectionName(forum.SectionID),
+				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 				ThreadSubject = thread.Subject,
 				PageNo = 1,
 			};

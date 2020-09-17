@@ -171,7 +171,7 @@
 									{
 										string subscribedDimmedClass = Model.ThreadIsSubscribed ? string.Empty : "dimmed";
 										string bookmarkedDimmedClass = Model.ThreadIsBookmarked ? string.Empty : "dimmed";
-										<a href="#" id="subscribeButton" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope-o"></i></a>@Html.Raw("&nbsp; &nbsp;")
+										<a href="#" id="subscribeButton" class="fs-tooltip @subscribedDimmedClass" title="Notify me of thread replies"><i class="fa fa-envelope"></i></a>@Html.Raw("&nbsp; &nbsp;")
 										<a href="#" id="bookmarkButton" class="fs-tooltip @bookmarkedDimmedClass" title="Bookmark thread"><i class="fa fa-bookmark"></i></a>@Html.Raw("&nbsp; &nbsp;")
 									}
 									@if(Model.UserMayAddNewMessages)
@@ -433,7 +433,7 @@
 								<div class="col-sm-9 plr0">
 									<select id="moveThreadSectionComboBox" class="form-control no-roundcorners" name="newSectionId">
 										<option value="0" selected>Please select a section...</option>
-										@foreach(SectionEntity s in _cache.GetAllSections())
+										@foreach(SectionEntity s in await _cache.GetAllSectionsAsync())
 										{
 											<option value="@s.SectionID">@s.SectionName</option>
 										}

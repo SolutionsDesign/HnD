@@ -78,7 +78,7 @@ namespace SD.HnD.Gui.Controllers
 				ForumID = forum.ForumID,
 				ThreadID = thread.ThreadID,
 				ForumName = forum.ForumName,
-				SectionName = _cache.GetSectionName(forum.SectionID),
+				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 				ThreadSubject = thread.Subject,
 				PageNo = pageNo,
 			};
@@ -104,7 +104,7 @@ namespace SD.HnD.Gui.Controllers
 			await ThreadManager.UpdateMemoAsync(thread.ThreadID, messageData.MessageText);
 			if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditEditMemo))
 			{
-				SecurityManager.AuditEditMemo(this.HttpContext.Session.GetUserID(), thread.ThreadID);
+				await SecurityManager.AuditEditMemoAsync(this.HttpContext.Session.GetUserID(), thread.ThreadID);
 			}
 			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = pageNo });
 		}
@@ -150,7 +150,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			// these queues are pre-sorted, so no need to sort them again.
-		    var supportQueues = _cache.GetAllSupportQueues().ToList();
+		    var supportQueues = (await _cache.GetAllSupportQueuesAsync()).ToList();
 		    var supportQueueContents = await SupportQueueGuiHelper.GetAllThreadsInSpecifiedSupportQueuesAsync(
 																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
 																				supportQueues.Select(e => e.QueueID).ToArray());

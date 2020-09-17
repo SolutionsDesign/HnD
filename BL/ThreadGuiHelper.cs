@@ -53,8 +53,7 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.Thread.Where(ThreadFields.ThreadID.Equal(threadId));
+				var q = new QueryFactory().Thread.Where(ThreadFields.ThreadID.Equal(threadId));
 				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				return toReturn;
 			}
@@ -64,32 +63,32 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the thread subscription object for the thread - user combination passed in. If there's no subscription, null is returned.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <returns>requested Threadsubscription entity or null if not found</returns>
-		public static Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadID, int userID)
+		public static Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadId, int userId)
 		{
-			return GetThreadSubscriptionAsync(threadID, userID, null);
+			return GetThreadSubscriptionAsync(threadId, userId, null);
 		}
 
 
 		/// <summary>
 		/// Gets the thread subscription object for the thread - user combination passed in. If there's no subscription, null is returned.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local adapter is used.</param>
 		/// <returns>
 		/// requested Threadsubscription entity or null if not found
 		/// </returns>
-		public static async Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadID, int userID, IDataAccessAdapter adapter)
+		public static async Task<ThreadSubscriptionEntity> GetThreadSubscriptionAsync(int threadId, int userId, IDataAccessAdapter adapter)
 		{
 			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
-				var qf = new QueryFactory();
-				var q = qf.ThreadSubscription.Where(ThreadSubscriptionFields.ThreadID.Equal(threadID).And(ThreadSubscriptionFields.UserID.Equal(userID)));
+				var q = new QueryFactory().ThreadSubscription.Where(ThreadSubscriptionFields.ThreadID.Equal(threadId)
+																							.And(ThreadSubscriptionFields.UserID.Equal(userId)));
 				return await adapterToUse.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 			finally
@@ -105,14 +104,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the total number of messages in thread.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
+		/// <param name="threadId">The thread ID.</param>
 		/// <returns></returns>
-		public static async Task<int> GetTotalNumberOfMessagesInThreadAsync(int threadID)
+		public static async Task<int> GetTotalNumberOfMessagesInThreadAsync(int threadId)
 		{
-			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await adapter.FetchScalarAsync<int>(qf.Message.Select(Functions.CountRow()).Where(MessageFields.ThreadID.Equal(threadID))).ConfigureAwait(false);
+				return await adapter.FetchScalarAsync<int>(new QueryFactory().Message
+																			 .Where(MessageFields.ThreadID.Equal(threadId))
+																			 .Select(Functions.CountRow()))
+									.ConfigureAwait(false);
 			}
 		}
 
@@ -124,10 +125,10 @@ namespace SD.HnD.BL
 		/// <param name="hoursThreshold">The hours threshold for the query to fetch the active threads. All threads within this threshold's period of time (in hours)
 		/// are fetched.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
-		/// <param name="userID">The userid of the calling user.</param>
+		/// <param name="userId">The userid of the calling user.</param>
 		/// <returns>a list with objects representing the Active threads</returns>
 		public static async Task<List<AggregatedThreadRow>> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, 
-																						   List<int> forumsWithThreadsFromOthers, int userID)
+																						   List<int> forumsWithThreadsFromOthers, int userId)
 		{
             if (accessableForums == null || accessableForums.Count <= 0)
             {
@@ -138,12 +139,12 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
 						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-								.InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
-						.Where((ThreadFields.ForumID == accessableForums)
-									.And(ThreadFields.IsClosed == false)
-									.And(ThreadFields.MarkedAsDone == false)
-									.And(ThreadFields.ThreadLastPostingDate >= DateTime.Now.AddHours((double)0 - hoursThreshold))
-									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
+								.InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+						.Where(ThreadFields.ForumID.In(accessableForums)
+									.And(ThreadFields.IsClosed.Equal(false))
+									.And(ThreadFields.MarkedAsDone.Equal(false))
+									.And(ThreadFields.ThreadLastPostingDate.GreaterEqual(DateTime.Now.AddHours((double)0 - hoursThreshold)))
+									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -151,7 +152,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-
+#error IMPLEMENT
 		/// <summary>
 		/// Gets the last message in thread, and prefetches the user + usertitle entities. 
 		/// </summary>

@@ -43,17 +43,17 @@ namespace SD.HnD.BL
 		/// Does the search using MS Full text search
 		/// </summary>
 		/// <param name="searchString">Search string.</param>
-		/// <param name="forumIDs">Forum Ids of forums to search into.</param>
+		/// <param name="forumIds">Forum Ids of forums to search into.</param>
 		/// <param name="orderFirstElement">Order first element setting.</param>
 		/// <param name="orderSecondElement">Order second element setting.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="userID">The userid of the calling user.</param>
+		/// <param name="userId">The userid of the calling user.</param>
 		/// <param name="targetToSearch">The target to search.</param>
 		/// <returns>
 		/// TypedList filled with threads matching the query.
 		/// </returns>
-		public static async Task<List<SearchResultRow>> DoSearchAsync(string searchString, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, 
-																	 SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userID, 
+		public static async Task<List<SearchResultRow>> DoSearchAsync(string searchString, List<int> forumIds, SearchResultsOrderSetting orderFirstElement, 
+																	 SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userId, 
 																	 SearchTarget targetToSearch)
 		{
 			// the search utilizes full text search. It performs a CONTAINS upon the MessageText field of the Message entity. 
@@ -73,7 +73,8 @@ namespace SD.HnD.BL
 				// Message contents filter
 				searchTermFilter.Add(ThreadFields.ThreadID.In(qf.Create()
 																.Select(MessageFields.ThreadID)
-																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, null, FullTextSearchOperator.Contains, searchTerms))));
+																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, null, FullTextSearchOperator.Contains, 
+																										searchTerms))));
 			}
 			if(searchSubject)
 			{
@@ -89,8 +90,8 @@ namespace SD.HnD.BL
 			}
 			var q = qf.GetSearchResultTypedList()
 					  .Where(searchTermFilter
-								  .And(ForumFields.ForumID.In(forumIDs))
-								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userID)))
+								  .And(ForumFields.ForumID.In(forumIds))
+								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
 					  .Limit(500)
 					  .OrderBy(CreateSearchSortClause(orderFirstElement))
 					  .Distinct();

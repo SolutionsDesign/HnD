@@ -53,7 +53,7 @@ namespace SD.HnD.Gui.Controllers
 						   ForumName = forum.ForumName, 
 						   HasRSSFeed = forum.HasRSSFeed,
 						   PageNo = pageNoToUse,
-						   SectionName = _cache.GetSectionName(forum.SectionID),
+						   SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 						   PageSize = pageSize, 
 						   UserCanCreateThreads = this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddNormalThread) ||
 												  this.HttpContext.Session.CanPerformForumActionRight(forumId, ActionRights.AddStickyThread),

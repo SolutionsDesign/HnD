@@ -54,7 +54,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				Thread = thread,
 				ForumName = forum.ForumName,
-				SectionName = _cache.GetSectionName(forum.SectionID),
+				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 				PageNo = pageNo,
 				PageSize = numberOfMessagesPerPage,
 				NumberOfPages = ((numberOfMessages - 1) / numberOfMessagesPerPage) + 1,
@@ -252,7 +252,7 @@ namespace SD.HnD.Gui.Controllers
 				await ThreadManager.MarkThreadAsDoneAsync(thread.ThreadID);
 			}
 			ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
-			return RedirectToAction("Index", "Thread", new { id = threadId, pageNo = pageNo });
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = pageNo });
 		}
 
 		
@@ -270,7 +270,7 @@ namespace SD.HnD.Gui.Controllers
 				CurrentUserID = this.HttpContext.Session.GetUserID(),
 				ForumID = forumId,
 				ForumName = forum.ForumName,
-				SectionName = _cache.GetSectionName(forum.SectionID),
+				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 				ThreadSubject = string.Empty,
 				MessageText = string.Empty,
 				UserCanAddStickyThread = userMayAddStickyThread,
@@ -395,7 +395,7 @@ namespace SD.HnD.Gui.Controllers
 				return;
 			}
 			// fill support queue management area with data.
-			container.AllSupportQueues = _cache.GetAllSupportQueues().ToList();
+			container.AllSupportQueues = (await _cache.GetAllSupportQueuesAsync()).ToList();
 			container.ContainingSupportQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(container.Thread.ThreadID);
 			if(container.ContainingSupportQueue != null)
 			{

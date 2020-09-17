@@ -200,6 +200,14 @@ namespace SD.HnD.Gui.Controllers
 		
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
+
+			var nickNameExists = await SecurityManager.DoesUserExistAsync(data.NickName);
+			if(nickNameExists)
+			{
+				ModelState.AddModelError("NickName", "NickName already exists");
+				return View(data);
+			}
+			
 			var result = await UserManager.RegisterNewUserAsync(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
 																this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
 																data.Occupation, data.Signature, data.Website,

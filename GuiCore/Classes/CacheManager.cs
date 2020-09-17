@@ -43,13 +43,13 @@ namespace SD.HnD.Gui
 		/// <param name="cache">The cache object this methods works on</param>
 		/// <returns>A SectionCollection with all SectionEntity instances of the sections of the forum system. This collection has to be threated as
 		/// a readonly collection with readonly objects</returns>
-		public static EntityCollection<SectionEntity> GetAllSections(this IMemoryCache cache)
+		public static async Task<EntityCollection<SectionEntity>> GetAllSectionsAsync(this IMemoryCache cache)
 		{
 			var toReturn = cache.Get<EntityCollection<SectionEntity>>(CacheKeys.AllSections);
 			if(toReturn == null)
 			{
 				// not there, store it.
-				toReturn = SectionGuiHelper.GetAllSections();
+				toReturn = await SectionGuiHelper.GetAllSectionsAsync();
 
 				// just store it in the cache without any dependency, as it's not changing often. 
 				cache.Set(CacheKeys.AllSections, toReturn);
@@ -65,9 +65,9 @@ namespace SD.HnD.Gui
 		/// <param name="cache">The cache object this methods works on</param>
 		/// <param name="sectionID">The section ID.</param>
 		/// <returns>name of the section passed in.</returns>
-		public static string GetSectionName(this IMemoryCache cache, int sectionID)
+		public static async Task<string> GetSectionNameAsync(this IMemoryCache cache, int sectionID)
 		{
-			var cachedSections = cache.GetAllSections();
+			var cachedSections = await cache.GetAllSectionsAsync();
 			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionID);
 			return matchingSection == null ? string.Empty : matchingSection.SectionName;
 		}
@@ -127,13 +127,13 @@ namespace SD.HnD.Gui
 		/// <param name="cache">The cache object this methods works on</param>
 		/// <returns>A SupportQueueCollection with all supportqueue Entity instances of the support queues of the forum system. This collection has to be threated as
 		/// a readonly collection with readonly objects</returns>
-		public static EntityCollection<SupportQueueEntity> GetAllSupportQueues(this IMemoryCache cache)
+		public static async Task<EntityCollection<SupportQueueEntity>> GetAllSupportQueuesAsync(this IMemoryCache cache)
 		{
 			var toReturn = cache.Get<EntityCollection<SupportQueueEntity>>(CacheKeys.AllSupportQueues);
 			if(toReturn == null)
 			{
 				// not there, store it.
-				toReturn = SupportQueueGuiHelper.GetAllSupportQueues();
+				toReturn = await SupportQueueGuiHelper.GetAllSupportQueuesAsync();
 
 				// just store it in the cache without any dependency, as it's not changing often. 
 				cache.Set(CacheKeys.AllSupportQueues, toReturn);
@@ -166,13 +166,13 @@ namespace SD.HnD.Gui
 		/// <param name="cache">The cache object this methods works on</param>
 		/// <returns>Dictionary with per range (key) a dictionary with all IP addresses as keys, with the segments falling into the range concatenated
 		/// to eachother with a '.'</returns>
-		public static Dictionary<int, Dictionary<string, IPBanEntity>> GetAllIPBans(this IMemoryCache cache)
+		public static async Task<Dictionary<int, Dictionary<string, IPBanEntity>>> GetAllIPBansAsync(this IMemoryCache cache)
 		{
 			var toReturn = cache.Get<Dictionary<int, Dictionary<string, IPBanEntity>>>(CacheKeys.AllIPBans);
 			if(toReturn == null)
 			{
 				// not there, store it.
-				var allIPBans = SecurityGuiHelper.GetAllIPBans();
+				var allIPBans = await SecurityGuiHelper.GetAllIPBansAsync();
 				toReturn = new Dictionary<int, Dictionary<string, IPBanEntity>>();
 				foreach(var currentIPBan in allIPBans)
 				{
