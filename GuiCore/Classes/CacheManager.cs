@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -32,8 +32,7 @@ namespace SD.HnD.Gui
 	/// <summary>
 	/// Simple Cache manager which forms a central point to obtain / invalidate / store data into the ASP.NET cache object of this CacheManager.
 	/// </summary>
-	/// <remarks>This cache is for caching data only, not page output.
-	/// It's a set of extension methods on the IMemoryCache interface</remarks>
+	/// <remarks>This cache is for caching data only, not page output. It's a set of extension methods on the IMemoryCache interface</remarks>
 	public static class CacheManager
 	{
 		/// <summary>
@@ -63,12 +62,12 @@ namespace SD.HnD.Gui
 		/// If the sections aren't available, it will load them into the cache first. 
 		/// </summary>
 		/// <param name="cache">The cache object this methods works on</param>
-		/// <param name="sectionID">The section ID.</param>
+		/// <param name="sectionId">The section ID.</param>
 		/// <returns>name of the section passed in.</returns>
-		public static async Task<string> GetSectionNameAsync(this IMemoryCache cache, int sectionID)
+		public static async Task<string> GetSectionNameAsync(this IMemoryCache cache, int sectionId)
 		{
 			var cachedSections = await cache.GetAllSectionsAsync();
-			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionID);
+			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionId);
 			return matchingSection == null ? string.Empty : matchingSection.SectionName;
 		}
 
@@ -77,18 +76,18 @@ namespace SD.HnD.Gui
 		/// Gets the forum entity with the passed in forumid from the cache. If it's not there, it will be loaded from the db and stored in the cache. 
 		/// </summary>
 		/// <param name="cache">The cache object this methods works on</param>
-		/// <param name="forumID">The forum ID.</param>
+		/// <param name="forumId">The forum ID.</param>
 		/// <returns>ForumEntity instance of the forum with id forumID</returns>
 		/// <remarks>If forumID isn't found, null is returned. ForumEntity instances are cached indefinitely, until the forum is changed or when a message
 		/// is added to a thread in the forum. The forum entities are cached per entity to make the per-entity requests for a forum faster. Bulk fetches
 		/// for forum data isn't using this cache, it's fetching the data directly from the DB. This is ok, forumentity data isn't very volatile</remarks>
-		public static async Task<ForumEntity> GetForumAsync(this IMemoryCache cache, int forumID)
+		public static async Task<ForumEntity> GetForumAsync(this IMemoryCache cache, int forumId)
 		{
-			var keyToUse = ProduceCacheKey(CacheKeys.SingleForum, forumID);
+			var keyToUse = ProduceCacheKey(CacheKeys.SingleForum, forumId);
 			var toReturn = cache.Get<ForumEntity>(keyToUse);
 			if(toReturn == null)
 			{
-				toReturn = await ForumGuiHelper.GetForumAsync(forumID);
+				toReturn = await ForumGuiHelper.GetForumAsync(forumId);
 				if(toReturn != null)
 				{
 					// found, cache it

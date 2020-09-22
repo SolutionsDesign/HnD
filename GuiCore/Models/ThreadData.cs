@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using SD.HnD.DALAdapter.EntityClasses;
-using SD.HnD.DALAdapter.TypedListClasses;
 using SD.HnD.DTOs.DtoClasses;
 
 namespace SD.HnD.Gui.Models
@@ -12,7 +11,6 @@ namespace SD.HnD.Gui.Models
 	/// </summary>
 	public class ThreadData
 	{
-		public int CurrentUserID { get; set; }
 		public string ForumName { get; set; }
 		public string SectionName { get; set; }
 		public int PageNo { get; set; }

@@ -1,5 +1,8 @@
 namespace SD.HnD.Gui.Classes
 {
+	/// <summary>
+	/// Key definitions for elements stored in the ISession object 
+	/// </summary>
 	public static class SessionKeys
 	{
 		public static readonly string UserId = "User:UserId";
@@ -17,6 +20,10 @@ namespace SD.HnD.Gui.Classes
 		public static readonly string MyThreadsRowCount = "User:MyThreadsRowCount";
 	}
 
+	
+	/// <summary>
+	/// State enum for the find user wizard code used in various admin screens. This enum specifies which step the wizard is in
+	/// </summary>
 	public enum AdminFindUserState
 	{
 		Start,

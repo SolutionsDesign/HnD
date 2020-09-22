@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using SD.HnD.BL;
+using SD.Tools.BCLExtensions.CollectionsRelated;
 
 namespace SD.HnD.Gui.Classes
 {
@@ -17,7 +18,6 @@ namespace SD.HnD.Gui.Classes
 		#region Members
 		private ReaderWriterLockSlim _volatileDataLock;
 		private HashSet<string> _usersToLogoutByForce;
-		private Dictionary<int, bool> _cacheFlags;
 		private int? _cachedNumberOfUnapprovedAttachments, _cachedNumberOfThreadsInSupportQueues;
 
 		/// <summary>
@@ -55,7 +55,6 @@ namespace SD.HnD.Gui.Classes
 		{
 			Current = this;
 			_usersToLogoutByForce = new HashSet<string>();
-			_cacheFlags = new Dictionary<int, bool>();
 			_volatileDataLock = new ReaderWriterLockSlim();
 			_cachedNumberOfUnapprovedAttachments = null;
 			_cachedNumberOfThreadsInSupportQueues = null;
@@ -75,6 +74,7 @@ namespace SD.HnD.Gui.Classes
 			{
 				this.SmileyMappingsLookup[mapping.From] = mapping.To ?? string.Empty;
 			}
+			
 			if(string.IsNullOrWhiteSpace(this.VirtualRoot))
 			{
 				this.VirtualRoot = "/";
@@ -91,36 +91,6 @@ namespace SD.HnD.Gui.Classes
 			this.DataFilesPath = this.DataFilesPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 			// clamp search result caching timeout between 1 and 60 minutes.
 			this.MaxNumberOfMinutesToCacheSearchResults = Math.Max(1, Math.Min(60, this.MaxNumberOfMinutesToCacheSearchResults));
-		}
-		
-
-		/// <summary>
-		/// sets the flag for the cached RSS feed for the given forum to false, so the cache will be invalidated for that forum rss feed
-		/// </summary>
-		/// <param name="forumID">ID of forum which rss feed to invalidate</param>
-		public void InvalidateCachedForumRSS(int forumID)
-		{
-			_volatileDataLock.EnterUpgradeableReadLock();
-			try
-			{
-				if(_cacheFlags.Count <= 0)
-				{
-					return;
-				}
-				_volatileDataLock.EnterWriteLock();
-				try
-				{
-					_cacheFlags[forumID] = false;
-				}
-				finally
-				{
-					_volatileDataLock.ExitWriteLock();
-				}
-			}
-			finally
-			{
-				_volatileDataLock.ExitUpgradeableReadLock();
-			}
 		}
 
 
@@ -286,24 +256,6 @@ namespace SD.HnD.Gui.Classes
 				_volatileDataLock.ExitUpgradeableReadLock();
 			}
 		}
-		
-
-		/// <summary>
-		/// Gets the cache flags as known by this object or null if no cache flags are valid. Returned dictionary is a copy.
-		/// </summary>
-		/// <returns></returns>
-		public Dictionary<int, bool> GetCacheFlags()
-		{
-			_volatileDataLock.EnterReadLock();
-			try
-			{
-				return _cacheFlags.Count <= 0 ? null : new Dictionary<int, bool>(_cacheFlags);
-			}
-			finally
-			{
-				_volatileDataLock.ExitReadLock();
-			}
-		}
 
 
 		/// <summary>
@@ -325,14 +277,11 @@ namespace SD.HnD.Gui.Classes
 			var emojiFilesPath = Path.Combine(webRootPath ?? string.Empty, emojiUrlPathForFilename);
 	        this.EmojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
 			// load nicks of banned users
-			var bannedNicknames = UserGuiHelper.GetAllBannedUserNicknamesAsDataView();
+			var bannedNicknames = UserGuiHelper.GetAllBannedUserNicknames();
 			_volatileDataLock.EnterWriteLock();
 			try
 			{
-				foreach(DataRowView row in bannedNicknames)
-				{
-					_usersToLogoutByForce.Add(row["Nickname"].ToString());
-				}
+				_usersToLogoutByForce.AddRange(bannedNicknames);
 			}
 			finally
 			{
@@ -369,7 +318,6 @@ namespace SD.HnD.Gui.Classes
 		public string VirtualRoot { get; set; } = "/";
 		public string DefaultFromEmailAddress { get; set; } = string.Empty;
 		public string DefaultToEmailAddress { get; set; } = string.Empty;
-		public string IPBanComplainEmailAddress { get; set; } = string.Empty;
 		public string SiteName { get; set; } = string.Empty;
 		public string EmailPasswordSubject { get; set; } = string.Empty;
 		public string PasswordResetRequestSubject { get; set; } = string.Empty;

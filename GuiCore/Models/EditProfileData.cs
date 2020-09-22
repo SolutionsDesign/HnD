@@ -1,13 +1,43 @@
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using SD.HnD.BL;
 
 namespace SD.HnD.Gui.Models
 {
 	public class EditProfileData
 	{
+		public void Sanitize()
+		{
+			this.IconURL = GuiHelper.SanitizeUrl(this.IconURL);
+			this.Website = GuiHelper.SanitizeUrl(this.Website);
+			if(this.DateOfBirth.HasValue)
+			{
+				if(this.DateOfBirth.Value < new DateTime(1900, 1, 1) || this.DateOfBirth.Value > DateTime.Now)
+				{
+					this.DateOfBirth = null;
+				}
+			}
+
+			if(this.DefaultNumberOfMessagesPerPage < 1 || this.DefaultNumberOfMessagesPerPage > 1000)
+			{
+				this.DefaultNumberOfMessagesPerPage = 25;
+			}
+
+			if(!string.IsNullOrWhiteSpace(this.NewPassword) && string.IsNullOrWhiteSpace(this.ConfirmNewPassword))
+			{
+				this.NewPassword = string.Empty;
+			}
+		}
+
+
+		public void StripProtocolsFromUrls()
+		{
+			this.IconURL = GuiHelper.StripProtocolsFromUrl(this.IconURL);
+			this.Website = GuiHelper.StripProtocolsFromUrl(this.Website);
+		}
+		
+
 		public virtual string NickName { get; set; }
 		[DataType(DataType.Password)]
 		[StringLength(100)]
@@ -47,36 +77,5 @@ namespace SD.HnD.Gui.Models
 		[DisplayName("Number of messages per page")]
 		[Range(2, 1000)]
 		public short DefaultNumberOfMessagesPerPage { get; set; }
-
-
-		public void Sanitize()
-		{
-			this.IconURL = GuiHelper.SanitizeUrl(this.IconURL);
-			this.Website = GuiHelper.SanitizeUrl(this.Website);
-			if(this.DateOfBirth.HasValue)
-			{
-				if(this.DateOfBirth.Value < new DateTime(1900, 1, 1) || this.DateOfBirth.Value > DateTime.Now)
-				{
-					this.DateOfBirth = null;
-				}
-			}
-
-			if(this.DefaultNumberOfMessagesPerPage < 1 || this.DefaultNumberOfMessagesPerPage > 1000)
-			{
-				this.DefaultNumberOfMessagesPerPage = 25;
-			}
-
-			if(!string.IsNullOrWhiteSpace(this.NewPassword) && string.IsNullOrWhiteSpace(this.ConfirmNewPassword))
-			{
-				this.NewPassword = string.Empty;
-			}
-		}
-
-
-		public void StripProtocolsFromUrls()
-		{
-			this.IconURL = GuiHelper.StripProtocolsFromUrl(this.IconURL);
-			this.Website = GuiHelper.StripProtocolsFromUrl(this.Website);
-		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -26,6 +26,7 @@ using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Xml;
 using MailKit.Security;
@@ -93,6 +94,17 @@ namespace SD.HnD.Utility
 				toReturn = 0;
 			}
 			return toReturn;
+		}
+		
+		
+		/// <summary>
+		/// Get the ip address passed in as string, which will remap the address to ip4 first. 
+		/// </summary>
+		/// <param name="remoteAddress"></param>
+		/// <returns></returns>
+		public static string GetRemoteIPAddressAsIP4String(IPAddress remoteAddress)
+		{
+			return remoteAddress == null ? "0.0.0.0" : remoteAddress.MapToIPv4().ToString();
 		}
 		
 		
@@ -225,7 +237,7 @@ namespace SD.HnD.Utility
 		/// <param name="emailAddress">The recipient's emailaddress.</param>
 		/// <param name="emailData">The email data.</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static Task<bool> EmailPassword(string password, string emailAddress, Dictionary<string, string> emailData)
+		public static async Task<bool> EmailPassword(string password, string emailAddress, Dictionary<string, string> emailData)
 		{
 			string emailTemplate = emailData.GetValue("emailTemplate") ?? string.Empty;
 			var mailBody = StringBuilderCache.Acquire(emailTemplate.Length + 256);
@@ -243,7 +255,7 @@ namespace SD.HnD.Utility
 			// format the subject
 			string subject = (emailData.GetValue("emailPasswordSubject") ?? String.Empty) + siteName;
 			string fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? String.Empty;
-			return SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new[] {emailAddress}, emailData);
+			return await SendEmail(subject, StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, new[] {emailAddress}, emailData).ConfigureAwait(false);
 		}
 
 

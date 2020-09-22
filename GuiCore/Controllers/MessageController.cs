@@ -157,6 +157,7 @@ namespace SD.HnD.Gui.Controllers
 				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 				ThreadSubject = thread.Subject,
 				PageNo = 1,
+				LastMessageInThread = await ThreadGuiHelper.GetLastMessageInThreadDtoAsync(threadId),
 			};
 			return View(messageData);
 		}
@@ -190,10 +191,10 @@ namespace SD.HnD.Gui.Controllers
 				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
 																			ApplicationAdapter.GetSmileyMappings());
 				var systemData = await _cache.GetSystemDataAsync();
+				var remoteIPAddress = HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress);
 				newMessageId = await ThreadManager.CreateNewMessageInThreadAsync(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml,
-																				 this.HttpContext.Connection.RemoteIpAddress.ToString(), messageData.Subscribe, 
-																				 ApplicationAdapter.GetEmailData(this.Request.Host.Host, 
-																												 EmailTemplate.ThreadUpdatedNotification),
+																				 remoteIPAddress, messageData.Subscribe,
+																				 ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.ThreadUpdatedNotification),
 																				 systemData.SendReplyNotifications);
 				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))

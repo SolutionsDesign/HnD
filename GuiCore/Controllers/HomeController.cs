@@ -45,7 +45,7 @@ namespace SD.HnD.Gui.Controllers
 			model.SectionsFiltered = new EntityView2<SectionEntity>(allSections, SectionFields.SectionID.In(model.ForumDataPerDisplayedSection.Keys.ToList()));
 
 			model.NickName = this.HttpContext.Session.GetUserNickName();
-			model.UserLastVisitDate = this.HttpContext.Session.GetLastVisitDate();
+			model.UserLastVisitDate = this.HttpContext.Session.IsLastVisitDateValid() ? this.HttpContext.Session.GetLastVisitDate() : (DateTime?)null;
 			model.IsAnonymousUser = this.HttpContext.Session.IsAnonymousUser();
 			return View(model);
 		}

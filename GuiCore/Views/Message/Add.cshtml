@@ -38,6 +38,86 @@
                 }
             </div>
         </div>
+		@if(Model.LastMessageInThread != null)
+		{
+			var currentMessage = Model.LastMessageInThread;
+			<div class="row ps ps-lastmessage-header">
+		        <div class="col-sm-12 fs-header fs-header-slim">
+                    Last post in thread
+                </div>
+				<div class="col-sm-12 plr0">
+					<div class="ps-poster" id="@Html.Raw("MessagePoster" + currentMessage.MessageID)">
+						@if(!string.IsNullOrWhiteSpace(currentMessage.PostedByUser.IconURL))
+						{
+							var fullURL = "https://" + currentMessage.PostedByUser.IconURL;
+							<img src="@fullURL" class="ps-poster-avatar" alt="@currentMessage.PostedByUser.NickName avatar"/>
+						}
+						<div class="ps-poster-name">
+							<a href="~/User/@currentMessage.PostedByUser.UserID">@currentMessage.PostedByUser.NickName</a><br/>
+							<span class="ps-poster-title">@currentMessage.PostedByUser.UserTitleDescription</span>
+						</div>
+						<div class="ps-poster-stats">
+							<span class="ps-poster-info"><b>Posts:</b> @currentMessage.PostedByUser.AmountOfPostings</span><br/>
+							@if(currentMessage.PostedByUser.JoinDate.HasValue)
+							{
+								<span class="ps-poster-info"><b>Joined:</b> @currentMessage.PostedByUser.JoinDate.Value.ToString("dd-MMM-yyyy")</span>
+								<br/>
+							}
+						</div>
+					</div>
+					<div class="ps-message">
+						<div class="ps-message-title">
+							<div class="pull-left">
+								<a href="~/Message/Goto/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
+							</div>
+						</div>
+						<div class="ps-message-content" id="@Html.Raw("MessageContents" + currentMessage.MessageID)">
+							@Html.Raw(currentMessage.MessageTextAsHTML)
+							@if(currentMessage.Attachments.Count > 0)
+							{
+								<div class="bottom_aligner"></div>
+								<table class="table mb0 mt0 table-condensed">
+									<caption class="attachments-caption"><span>Attachments</span></caption>
+									<thead>
+									<tr>
+										<th>Filename</th>
+										<th>File size</th>
+										<th>Added on</th>
+										<th>Approval</th>
+									</tr>
+									</thead>
+									<tbody>
+									@foreach(var attachment in currentMessage.Attachments)
+									{
+										<tr>
+											<td>
+												@if(attachment.Approved)
+												{
+													<a href="~/Attachment/Get/@currentMessage.MessageID/@attachment.AttachmentID" target="_blank" title="Download file '@attachment.Filename'">@attachment.Filename</a>
+												}
+												else
+												{
+													@attachment.Filename
+												}
+											</td>
+											<td>@attachment.Filesize.ToString("N0")</td>
+											<td>@attachment.AddedOn.ToString("dd-MMM-yyyy HH:mm.ss", DateTimeFormatInfo.InvariantInfo)</td>
+											<td>
+												@Html.Raw(attachment.Approved ? "Approved" : "Pending")
+											</td>
+										</tr>
+									}
+									</tbody>
+								</table>
+							}
+						</div>
+						<div class="ps-message-signature">
+							@Html.Encode(currentMessage.PostedByUser.Signature)
+						</div>
+					</div>
+				</div>
+			</div>
+		}
     </div>
 </section>
 

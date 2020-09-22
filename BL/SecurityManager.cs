@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
 	http://www.llblgen.com
 	http://www.sd.nl
 
@@ -513,22 +513,6 @@ namespace SD.HnD.BL
 					adapter.Rollback();
 					throw;
 				}
-			}
-		}
-
-		
-		/// <summary>
-		/// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
-		/// forms authentication is still available in the database. 
-		/// </summary>
-		/// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
-		/// <returns>true if user exists, false otherwise.</returns>
-		public static async Task<bool> DoesUserExistAsync(string nickName)
-		{
-			using(var adapter = new DataAccessAdapter())
-			{
-				var toReturn = await new LinqMetaData(adapter).User.AnyAsync(u=>u.NickName == nickName).ConfigureAwait(false);
-				return toReturn;
 			}
 		}
 

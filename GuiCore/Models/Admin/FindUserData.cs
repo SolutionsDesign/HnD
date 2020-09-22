@@ -4,7 +4,6 @@ using System.Text;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.Gui.Classes;
-using SD.Tools.Algorithmia.GeneralDataStructures;
 
 namespace SD.HnD.Gui.Models.Admin
 {
@@ -23,33 +22,6 @@ namespace SD.HnD.Gui.Models.Admin
 		{
 			this.FindUserState = state;
 			this.SingleSelect = false;
-		}
-		
-		public AdminFindUserState FindUserState { get; set; }
-		public EntityCollection<RoleEntity> Roles { get; set; }
-		public bool SingleSelect { get; set; }
-		public string ActionToPostTo { get; set; }
-		public string ActionButtonText { get; set; }
-		public EntityCollection<UserEntity> FoundUsers { get; set; }
-		public List<int> SelectedUserIDs { get; set; }
-		public EntityCollection<UserEntity> SelectedUsers { get; set; }
-		
-		public bool FilterOnRole { get; set; }
-		public bool FilterOnNickName { get; set; }
-		public bool FilterOnEmailAddress { get; set; }
-		public int SelectedRoleID { get; set; }
-		public string SpecifiedNickName { get; set; }
-		public string SpecifiedEmailAddress { get; set; }
-
-
-		public void OverrideFilterAsString(string toUse)
-		{
-			_filterAsString = toUse;
-		}
-
-		public bool IsAnythingChecked
-		{
-			get { return this.FilterOnRole || this.FilterOnEmailAddress || this.FilterOnNickName;  }
 		}
 
 
@@ -80,6 +52,34 @@ namespace SD.HnD.Gui.Models.Admin
 				fragments.Add(string.Format("Email-address: {0}", this.SpecifiedEmailAddress));
 			}
 			return string.Join(", ", fragments);
+		}
+		
+		
+		public AdminFindUserState FindUserState { get; set; }
+		public EntityCollection<RoleEntity> Roles { get; set; }
+		public bool SingleSelect { get; set; }
+		public string ActionToPostTo { get; set; }
+		public string ActionButtonText { get; set; }
+		public EntityCollection<UserEntity> FoundUsers { get; set; }
+		public List<int> SelectedUserIDs { get; set; }
+		public EntityCollection<UserEntity> SelectedUsers { get; set; }
+		
+		public bool FilterOnRole { get; set; }
+		public bool FilterOnNickName { get; set; }
+		public bool FilterOnEmailAddress { get; set; }
+		public int SelectedRoleID { get; set; }
+		public string SpecifiedNickName { get; set; }
+		public string SpecifiedEmailAddress { get; set; }
+
+
+		public void OverrideFilterAsString(string toUse)
+		{
+			_filterAsString = toUse;
+		}
+
+		public bool IsAnythingChecked
+		{
+			get { return this.FilterOnRole || this.FilterOnEmailAddress || this.FilterOnNickName;  }
 		}
 	}
 }

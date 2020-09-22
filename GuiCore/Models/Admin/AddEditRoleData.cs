@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
-using SD.HnD.DTOs.DtoClasses;
 
 namespace SD.HnD.Gui.Models.Admin
 {

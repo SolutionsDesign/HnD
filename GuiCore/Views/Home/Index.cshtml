@@ -39,9 +39,9 @@
 				Welcome <strong>@Model.NickName</strong>!<br/>
 				Below you'll find several sections with forums where you can ask your question. Please use the search to see whether your question has already
 				been asked before.<br/>
-				@if(!Model.IsAnonymousUser)
+				@if(!Model.IsAnonymousUser && Model.UserLastVisitDate.HasValue)
 				{
-					<span>Your last session here started on: <strong>@Model.UserLastVisitDate.ToString("dd-MMM-yyyy HH:mm")</strong></span>
+					<span>Your last session here started on: <strong>@Model.UserLastVisitDate.Value.ToString("dd-MMM-yyyy HH:mm")</strong></span>
 				}
 			</p>
 		</div>

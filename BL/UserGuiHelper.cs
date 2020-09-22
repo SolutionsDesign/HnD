@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -37,6 +37,7 @@ using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.Linq;
 using SD.HnD.DTOs.DtoClasses;
 using SD.HnD.DTOs.Persistence;
+using SD.LLBLGen.Pro.LinqSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
@@ -48,46 +49,18 @@ namespace SD.HnD.BL
 	public static class UserGuiHelper
 	{
 		/// <summary>
-		/// Gets the bookmark statistics for the user with id passed in.
+		/// Gets a list of all the nicknames of banned users.
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <returns></returns>
-		public static DataTable GetBookmarkStatisticsAsDataTable(int userID)
+		/// <returns>List of the nicknames of the users which are banned on the useraccount: the IsBanned property is set for these users.</returns>
+		/// <remarks>Not async as it's called from Configure which is a sync method</remarks>
+		public static List<string> GetAllBannedUserNicknames()
 		{
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(BookmarkFields.ThreadID.CountDistinct().As("AmountThreads"),
-								MessageFields.MessageID.Count().As("AmountPostings"),
-								ThreadFields.ThreadLastPostingDate.Max().As("LastPostingDate"))
-						.From(qf.Bookmark
-								.InnerJoin(qf.Thread).On(BookmarkFields.ThreadID == ThreadFields.ThreadID)
-								.InnerJoin(qf.Message).On(ThreadFields.ThreadID == MessageFields.ThreadID))
-						.Where(BookmarkFields.UserID == userID);
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchAsDataTable(q);
-			}
-		}
-		
-		
-		//public static List<UserProfile
-
-
-		/// <summary>
-		/// Gets all the banned users as a dataview. This is returned as a dataview because only the nicknames are required, so a dynamic list is
-		/// used to avoid unnecessary data fetching.
-		/// </summary>
-		/// <returns>dataview with the nicknames of the users which are banned on the useraccount: the IsBanned property is set for these users.</returns>
-		/// <remarks>This list of nicknames is cached in the application object so these users can be logged off by force.</remarks>
-		public static DataView GetAllBannedUserNicknamesAsDataView()
-		{
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(UserFields.NickName)
-						.Where(UserFields.IsBanned == true);
-			using(var adapter = new DataAccessAdapter())
-			{
-				return adapter.FetchAsDataTable(q).DefaultView;
+				var q = new QueryFactory().User
+										  .Where(UserFields.IsBanned.Equal(true))
+										  .Select(()=>UserFields.NickName.ToValue<string>());
+				return adapter.FetchQuery(q);
 			}
 		}
 
@@ -99,12 +72,10 @@ namespace SD.HnD.BL
 		/// <returns>A single object from a typedlist with the profile data of the user specified </returns>
 		public static async Task<UserProfileInfoRow> GetUserProfileInfoAsync(int userId)
 		{
-			var qf = new QueryFactory();
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = qf.GetUserProfileInfoTypedList().Where(UserFields.UserID.Equal(userId));
-				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
+				var q = new QueryFactory().GetUserProfileInfoTypedList().Where(UserFields.UserID.Equal(userId));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -114,15 +85,15 @@ namespace SD.HnD.BL
 		/// calling user are filtered out.
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user calling the method has permission to access.</param>
-		/// <param name="participantUserID">The participant user ID of the user of which the threads have to be obtained.</param>
+		/// <param name="participantUserId">The participant user ID of the user of which the threads have to be obtained.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="callingUserID">The calling user ID.</param>
+		/// <param name="callingUserId">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserID, 
-																							   List<int> forumsWithThreadsFromOthers, int callingUserID, int amount)
+		public static Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId, 
+																							   List<int> forumsWithThreadsFromOthers, int callingUserId, int amount)
 		{
-			return UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(accessableForums, participantUserID, forumsWithThreadsFromOthers, callingUserID, amount, 0);
+			return UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(accessableForums, participantUserId, forumsWithThreadsFromOthers, callingUserId, amount, 0);
 		}
 
 
@@ -131,14 +102,14 @@ namespace SD.HnD.BL
 		/// Threads which aren't visible for the calling user are filtered out. If pageNumber is 0, pageSize is used to limit the list to the pageSize
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user calling the method has permission to access.</param>
-		/// <param name="participantUserID">The participant user ID of the user of which the threads have to be obtained.</param>
+		/// <param name="participantUserId">The participant user ID of the user of which the threads have to be obtained.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="callingUserID">The calling user ID.</param>
+		/// <param name="callingUserId">The calling user ID.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static async Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserID, 
-																									List<int> forumsWithThreadsFromOthers, int callingUserID, 
+		public static async Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId, 
+																									List<int> forumsWithThreadsFromOthers, int callingUserId, 
 																									int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
@@ -157,12 +128,12 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 							.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
 							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-									 .InnerJoin(qf.Forum).On(ThreadFields.ForumID == ForumFields.ForumID))
-							.Where((ThreadFields.ForumID == accessableForums)
+									 .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+							.Where(ThreadFields.ForumID.In(accessableForums)
 									.And(ThreadFields.ThreadID.In(qf.Create()
 																		.Select(MessageFields.ThreadID)
-																		.Where(MessageFields.PostedByUserID == participantUserID)))
-									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserID)))
+																		.Where(MessageFields.PostedByUserID.Equal(participantUserId))))
+									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserId)))
 							.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			if(pageNumber <= 0)
 			{
@@ -177,8 +148,7 @@ namespace SD.HnD.BL
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-				return toReturn;
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -188,12 +158,12 @@ namespace SD.HnD.BL
 		/// Threads which aren't visible for the calling user are filtered out.
 		/// </summary>
 		/// <param name="accessableForums">A list of accessable forums IDs, which the user calling the method has permission to access.</param>
-		/// <param name="participantUserID">The participant user ID of the user of which the threads have to be obtained.</param>
+		/// <param name="participantUserId">The participant user ID of the user of which the threads have to be obtained.</param>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="callingUserID">The calling user ID.</param>
+		/// <param name="callingUserId">The calling user ID.</param>
 		/// <returns>the total number of threads the user participated in</returns>
-		public static async Task<int> GetRowCountLastThreadsForUserAsync(List<int> accessableForums, int participantUserID, List<int> forumsWithThreadsFromOthers, 
-																		 int callingUserID)
+		public static async Task<int> GetRowCountLastThreadsForUserAsync(List<int> accessableForums, int participantUserId, List<int> forumsWithThreadsFromOthers, 
+																		 int callingUserId)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -202,14 +172,15 @@ namespace SD.HnD.BL
 			}
 			var qf = new QueryFactory();
 			var q = qf.Create()
-					  .Select(ThreadFields.ThreadID)
-					  .From(qf.Thread.InnerJoin(qf.Message).On(ThreadFields.ThreadID.Equal(MessageFields.ThreadID)))
-					  .Where((ThreadFields.ForumID == accessableForums).And(MessageFields.PostedByUserID == participantUserID))
-					  .Distinct();
+					  .Select(Functions.CountRow())
+					  .From(qf.Create()
+							  .Select(ThreadFields.ThreadID)
+							  .From(qf.Thread.InnerJoin(qf.Message).On(ThreadFields.ThreadID.Equal(MessageFields.ThreadID)))
+							  .Where(ThreadFields.ForumID.In(accessableForums).And(MessageFields.PostedByUserID.Equal(participantUserId)))
+							  .Distinct());
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchScalarAsync<int>(qf.Create().Select(Functions.CountRow()).From(q)).ConfigureAwait(false);
-				return toReturn;
+				return await adapter.FetchScalarAsync<int>(q).ConfigureAwait(false);
 			}
 		}
 
@@ -218,22 +189,21 @@ namespace SD.HnD.BL
 		/// Finds the users matching the filter criteria.
 		/// </summary>
 		/// <param name="filterOnRole"><see langword="true"/> if [filter on role]; otherwise, <see langword="false"/>.</param>
-		/// <param name="roleID">Role ID.</param>
+		/// <param name="roleId">Role ID.</param>
 		/// <param name="filterOnNickName"><see langword="true"/> if [filter on nick name]; otherwise, <see langword="false"/>.</param>
 		/// <param name="nickName">Name of the nick.</param>
 		/// <param name="filterOnEmailAddress"><see langword="true"/> if [filter on email address]; otherwise, <see langword="false"/>.</param>
 		/// <param name="emailAddress">Email address.</param>
 		/// <param name="roleIDWhichUsersToExclude">The role id which users to exclude. </param>
 		/// <returns>User objects matching the query</returns>
-		public static async Task<EntityCollection<UserEntity>> FindUsers(bool filterOnRole, int roleID, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
+		public static async Task<EntityCollection<UserEntity>> FindUsers(bool filterOnRole, int roleId, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
 																		 string emailAddress, int roleIDWhichUsersToExclude=0)
 		{
 			var qf = new QueryFactory();
-			var q = qf.User
-						.OrderBy(UserFields.NickName.Ascending());
+			var q = qf.User.OrderBy(UserFields.NickName.Ascending());
 			if(filterOnRole)
 			{
-				q.AndWhere(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)));
+				q.AndWhere(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID.Equal(roleId))));
 			}
 			if(filterOnNickName)
 			{
@@ -245,7 +215,7 @@ namespace SD.HnD.BL
 			}
 			if(roleIDWhichUsersToExclude > 0)
 			{
-				q.AndWhere(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleIDWhichUsersToExclude)));
+				q.AndWhere(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID.Equal(roleIDWhichUsersToExclude))));
 			}
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -257,15 +227,14 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Checks the if thread is already bookmarked.
 		/// </summary>
-		/// <param name="userID">User ID.</param>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="userId">User ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns>true if the thread is bookmarked</returns>
-		public static async Task<bool> CheckIfThreadIsAlreadyBookmarkedAsync(int userID, int threadID)
+		public static async Task<bool> CheckIfThreadIsAlreadyBookmarkedAsync(int userId, int threadId)
 		{
-			var qf = new QueryFactory();
-			var q = qf.Create()
-						.Select(BookmarkFields.ThreadID)
-						.Where((BookmarkFields.ThreadID == threadID).And(BookmarkFields.UserID == userID));
+			var q = new QueryFactory().Create()
+									  .Select(BookmarkFields.ThreadID)
+									  .Where((BookmarkFields.ThreadID.Equal(threadId)).And(BookmarkFields.UserID.Equal(userId)));
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false) != null;
@@ -284,8 +253,10 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
 						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-								.InnerJoin(qf.Forum).On(ThreadFields.ForumID==ForumFields.ForumID))
-						.Where(ThreadFields.ThreadID.In(qf.Create().Select(BookmarkFields.ThreadID).Where(BookmarkFields.UserID==userID)))
+												.InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+						.Where(ThreadFields.ThreadID.In(qf.Create()
+														  .Select(BookmarkFields.ThreadID)
+														  .Where(BookmarkFields.UserID.Equal(userID))))
 						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -305,18 +276,19 @@ namespace SD.HnD.BL
 				return await adapter.FetchQueryAsync(new QueryFactory().UserTitle, new EntityCollection<UserTitleEntity>()).ConfigureAwait(false);
 			}
 		}
-
+		
 		
 		/// <summary>
-		/// Checks if the given nickname is already taken. If so, true is returned, otherwise false.
+		/// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
+		/// forms authentication is still available in the database. 
 		/// </summary>
-		/// <param name="nickName">NickName to check</param>
-		/// <returns>true if nickname already exists in the database, false otherwise</returns>
-		public static bool CheckIfNickNameExists(string nickName)
+		/// <param name="nickName">The nickname of the user to check if he/she exists in the database</param>
+		/// <returns>true if user exists, false otherwise.</returns>
+		public static async Task<bool> CheckIfNickNameExistAsync(string nickName)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchScalar<int?>(new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)).Select(UserFields.UserID)) != null;
+				return await new LinqMetaData(adapter).User.AnyAsync(u=>u.NickName == nickName).ConfigureAwait(false);
 			}
 		}
 
@@ -325,16 +297,18 @@ namespace SD.HnD.BL
 		/// Gets all UserInRole dto's for the role with the id specified. UserInRole dto's are instances of the derived element UserInRole which is
 		/// a projection of a User entity.
 		/// </summary>
-		/// <param name="roleID"></param>
+		/// <param name="roleId"></param>
 		/// <returns></returns>
-		public static async Task<List<UserInRoleDto>> GetAllUserInRoleDtosForRoleAsync(int roleID)
+		public static async Task<List<UserInRoleDto>> GetAllUserInRoleDtosForRoleAsync(int roleId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var qf = new QueryFactory();
 				var q = qf.User
 						  .Where(UserFields.UserID
-										   .In(qf.RoleUser.Where(RoleUserFields.RoleID.Equal(roleID)).Select(RoleUserFields.UserID)))
+										   .In(qf.RoleUser
+												 .Where(RoleUserFields.RoleID.Equal(roleId))
+												 .Select(RoleUserFields.UserID)))
 						  .ProjectToUserInRoleDto(qf);
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
@@ -358,16 +332,14 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Returns the user entity of the user with ID userID
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <returns>entity with data requested or null if not found.</returns>
-		public static async Task<UserEntity> GetUserAsync(int userID)
+		public static async Task<UserEntity> GetUserAsync(int userId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.User.Where(UserFields.UserID.Equal(userID));
-				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
+				var q = new QueryFactory().User.Where(UserFields.UserID.Equal(userId));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -381,10 +353,8 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var q = qf.User.Where(UserFields.NickName.Equal(nickName));
-				var toReturn = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				return toReturn;
+				var q = new QueryFactory().User.Where(UserFields.NickName.Equal(nickName));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
 
@@ -392,13 +362,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Returns the set of user entities which IDs are in the list specified
 		/// </summary>
-		/// <param name="userIDsOfUsersToLoad"></param>
+		/// <param name="userIdsOfUsersToLoad"></param>
 		/// <returns></returns>
-		public static async Task<EntityCollection<UserEntity>> GetUsersAsync(List<int> userIDsOfUsersToLoad)
+		public static async Task<EntityCollection<UserEntity>> GetUsersAsync(List<int> userIdsOfUsersToLoad)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = new QueryFactory().User.Where(UserFields.UserID.In(userIDsOfUsersToLoad));
+				var q = new QueryFactory().User.Where(UserFields.UserID.In(userIdsOfUsersToLoad));
 				return await adapter.FetchQueryAsync(q, new EntityCollection<UserEntity>()).ConfigureAwait(false);
 			}
 		}
@@ -407,71 +377,32 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Gets the password token entity for the tokenid specified or null if not found.
 		/// </summary>
-		/// <param name="tokenID"></param>
+		/// <param name="tokenId"></param>
 		/// <returns></returns>
-		public static async Task<PasswordResetTokenEntity> GetPasswordResetTokenAsync(string tokenID)
+		public static async Task<PasswordResetTokenEntity> GetPasswordResetTokenAsync(string tokenId)
 		{
-			if(!Guid.TryParse(tokenID, out var tokenIDAsGuid))
+			if(!Guid.TryParse(tokenId, out var tokenIDAsGuid))
 			{
 				return null;
 			}
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				var toReturn = await adapter.FetchFirstAsync(new QueryFactory().PasswordResetToken.Where(PasswordResetTokenFields.PasswordResetToken.Equal(tokenIDAsGuid)))
-											.ConfigureAwait(false);
-				return toReturn;
+				var q = new QueryFactory().PasswordResetToken.Where(PasswordResetTokenFields.PasswordResetToken.Equal(tokenIDAsGuid));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
-		
-
-        /// <summary>
-        /// Returns the user entity of the user with ID userID, With A UserEntityTitle prefetched.
-        /// </summary>
-        /// <param name="userID">The user ID.</param>
-        /// <returns>entity with data requested, or null if not found</returns>
-        public static UserEntity GetUserWithTitleDescription(int userID)
-        {
-	        var qf = new QueryFactory();
-	        var q = qf.User
-					  .Where(UserFields.UserID.Equal(userID))
-					  .WithPath(UserEntity.PrefetchPathUserTitle);
-	        using(var adapter = new DataAccessAdapter())
-	        {
-		        return adapter.FetchFirst(q);
-	        }
-        }
 
 
 		/// <summary>
 		/// Checks if thread is already subscribed. If so, true is returned otherwise false.
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
-		/// <param name="threadID">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
 		/// <returns>true if the user is already subscribed to this thread otherwise false</returns>
-		public static async Task<bool> CheckIfThreadIsAlreadySubscribedAsync(int userID, int threadID)
+		public static async Task<bool> CheckIfThreadIsAlreadySubscribedAsync(int userId, int threadId)
 		{
-			return await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID) != null;
-		}
-
-
-		/// <summary>
-		/// Gets all users based on role logic.
-		/// </summary>
-		/// <param name="roleID">The role identifier.</param>
-		/// <param name="getUsersInRole">if set to <c>true</c> gets the users in the role specified. If false it will get the users not in the role specified</param>
-		/// <returns></returns>
-		private static EntityCollection<UserEntity> GetAllUsersBasedOnRoleLogic(int roleID, bool getUsersInRole)
-		{
-			var qf = new QueryFactory();
-			var q = qf.User
-						.OrderBy(UserFields.NickName.Ascending());
-			q.Where(getUsersInRole ? UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID))
-								   : UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID == roleID)));
-			using(var adapter = new DataAccessAdapter())
-			{
-				return adapter.FetchQuery(q, new EntityCollection<UserEntity>());
-			}
+			return await ThreadGuiHelper.GetThreadSubscriptionAsync(threadId, userId) != null;
 		}
 	}
 }

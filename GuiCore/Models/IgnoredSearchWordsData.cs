@@ -8,10 +8,9 @@ namespace SD.HnD.Gui.Models
 {
 	public class IgnoredSearchWordsData
 	{
-		#region Members
 		private StringBuilder[] _wordLists;
-		#endregion
 
+		
 		public IgnoredSearchWordsData(HashSet<string> noiseWords, int numberOfColumns=5)
 		{
 			_wordLists = new StringBuilder[numberOfColumns < 1 ? 5 : numberOfColumns];

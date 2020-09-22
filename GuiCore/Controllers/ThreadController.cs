@@ -275,6 +275,7 @@ namespace SD.HnD.Gui.Controllers
 				MessageText = string.Empty,
 				UserCanAddStickyThread = userMayAddStickyThread,
 				NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
+				Subscribe = this.HttpContext.Session.GetUserAutoSubscribeToThread(),
 			};
 			return View(newThreadData);
 		}
@@ -317,7 +318,6 @@ namespace SD.HnD.Gui.Controllers
 																										 this.Request.Host.Host, forum.DefaultSupportQueueID, 
 																										 newThreadData.Subscribe);
 				newThreadId = newThreadIdFromCall;
-				ApplicationAdapter.InvalidateCachedForumRSS(forumId);
 				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
 				{

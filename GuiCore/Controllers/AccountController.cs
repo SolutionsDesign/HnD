@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
 using SD.HnD.Gui.Classes;
 using SD.HnD.Gui.Models;
+using SD.HnD.Utility;
 
 
 namespace SD.HnD.Gui.Controllers
@@ -201,7 +202,7 @@ namespace SD.HnD.Gui.Controllers
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
 
-			var nickNameExists = await SecurityManager.DoesUserExistAsync(data.NickName);
+			var nickNameExists = await UserGuiHelper.CheckIfNickNameExistAsync(data.NickName);
 			if(nickNameExists)
 			{
 				ModelState.AddModelError("NickName", "NickName already exists");
@@ -209,7 +210,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 			
 			var result = await UserManager.RegisterNewUserAsync(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
-																this.HttpContext.Connection.RemoteIpAddress.ToString(), data.Location,
+																HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress), data.Location,
 																data.Occupation, data.Signature, data.Website,
 																ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.RegistrationReply),
 																data.AutoSubscribeToThread, data.DefaultNumberOfMessagesPerPage);

@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -23,6 +23,8 @@ using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -51,8 +53,6 @@ namespace SD.HnD.Gui
 				return;
 			}
 			
-			// Use static methods in SessionAdapter to fill the Session object with the data which is user specific
-			// and thus cacheable in the session object.
 			bool useEntityBasedLastVisitDateTracking = false;
 			UserEntity user = null;
 			if(context.User.Identity.IsAuthenticated)

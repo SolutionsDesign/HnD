@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
 	http://www.llblgen.com
 	http://www.sd.nl
 
@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using MailKit.Net.Smtp;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -44,13 +45,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Updates the memo field for the given thread
 		/// </summary>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <param name="memo">Memo.</param>
 		/// <returns></returns>
-		public static async Task<bool> UpdateMemoAsync(int threadID, string memo)
+		public static async Task<bool> UpdateMemoAsync(int threadId, string memo)
 		{
 			// load the entity from the database
-			var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread==null)
 			{
 				// not found
@@ -59,7 +60,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				thread.Memo = memo;
-				return adapter.SaveEntity(thread);
+				return await adapter.SaveEntityAsync(thread).ConfigureAwait(false);
 			}
 		}
 
@@ -67,17 +68,17 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Marks the thread as done.
 		/// </summary>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns></returns>
-		public static async Task<bool> MarkThreadAsDoneAsync(int threadID)
+		public static async Task<bool> MarkThreadAsDoneAsync(int threadId)
 		{
-			var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread == null)
 			{
 				// not found
 				return false;
 			}
-			var containingSupportQueue = SupportQueueGuiHelper.GetQueueOfThreadAsync(threadID);
+			var containingSupportQueue = await SupportQueueGuiHelper.GetQueueOfThreadAsync(threadId);
 			thread.MarkedAsDone = true;
 			using(var adapter = new DataAccessAdapter())
 			{ 
@@ -97,7 +98,7 @@ namespace SD.HnD.BL
 					if(result)
 					{
 						// save succeeded, so remove from queue, pass the current adapter to the method so the action takes place inside this transaction.
-						await SupportQueueManager.RemoveThreadFromQueueAsync(threadID, adapter);
+						await SupportQueueManager.RemoveThreadFromQueueAsync(threadId, adapter);
 					}
 					adapter.Commit();
 					return true;
@@ -115,12 +116,12 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Marks the thread as un-done, and add it to the default queue of the forum.
 		/// </summary>
-		/// <param name="threadID">Thread ID</param>
-		/// <param name="userID">the user adding the thread to a queue by unmarking it as done </param>
+		/// <param name="threadId">Thread ID</param>
+		/// <param name="userId">the user adding the thread to a queue by unmarking it as done </param>
 		/// <returns></returns>
-		public static async Task<bool> UnMarkThreadAsDoneAsync(int threadID, int userID)
+		public static async Task<bool> UnMarkThreadAsDoneAsync(int threadId, int userId)
 		{
-			var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if (thread == null)
 			{
 				// not found
@@ -134,13 +135,12 @@ namespace SD.HnD.BL
 				try
 				{
 					await adapter.SaveEntityAsync(thread, true).ConfigureAwait(false);
-					var qf = new QueryFactory();
-					var q = qf.Forum.Where(ForumFields.ForumID.Equal(thread.ForumID));
+					var q = new QueryFactory().Forum.Where(ForumFields.ForumID.Equal(thread.ForumID));
 					var forum = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-					if(forum!=null && forum.DefaultSupportQueueID.HasValue)
+					if(forum?.DefaultSupportQueueID != null)
 					{
 						// not in a queue, and the forum has a default queue. Add the thread to the queue of the forum
-						await SupportQueueManager.AddThreadToQueueAsync(threadID, forum.DefaultSupportQueueID.Value, userID, adapter);
+						await SupportQueueManager.AddThreadToQueueAsync(threadId, forum.DefaultSupportQueueID.Value, userId, adapter);
 					}
 					adapter.Commit();
 					return true;
@@ -158,20 +158,20 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Creates a new message in the given thread. Caller should validate input parameters.
 		/// </summary>
-		/// <param name="threadID">Thread wherein the new message will be placed</param>
-		/// <param name="userID">User who posted this message</param>
+		/// <param name="threadId">Thread wherein the new message will be placed</param>
+		/// <param name="userId">User who posted this message</param>
 		/// <param name="messageText">Message text</param>
 		/// <param name="messageAsHTML">Message text as HTML</param>
-		/// <param name="userIDIPAddress">IP address of user calling this method</param>
+		/// <param name="userIdIPAddress">IP address of user calling this method</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
 		/// otherwise a notification is mailed to all subscribers to the thread the new message is posted in</param>
 		/// <returns>MessageID if succeeded, 0 if not.</returns>
-		public static Task<int> CreateNewMessageInThreadAsync(int threadID, int userID, string messageText, string messageAsHTML, string userIDIPAddress, 
+		public static Task<int> CreateNewMessageInThreadAsync(int threadId, int userId, string messageText, string messageAsHTML, string userIdIPAddress, 
 															  bool subscribeToThread, Dictionary<string,string> emailData, bool sendReplyNotifications)
 		{
-			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadID, userID, messageText, messageAsHTML, userIDIPAddress, subscribeToThread, 
+			return CreateNewMessageInThreadAndPotentiallyCloseThread(threadId, userId, messageText, messageAsHTML, userIdIPAddress, subscribeToThread, 
 																	 emailData, sendReplyNotifications);
 		}
 
@@ -179,13 +179,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Modifies the given properties of the given thread.
 		/// </summary>
-		/// <param name="threadID">The threadID of the thread which properties should be changed</param>
+		/// <param name="threadId">The threadID of the thread which properties should be changed</param>
 		/// <param name="subject">The new subject for this thread</param>
 		/// <param name="isSticky">The new value for IsSticky</param>
 		/// <param name="isClosed">The new value for IsClosed</param>
-		public static async Task ModifyThreadPropertiesAsync(int threadID, string subject, bool isSticky, bool isClosed)
+		public static async Task ModifyThreadPropertiesAsync(int threadId, string subject, bool isSticky, bool isClosed)
 		{
-			var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread == null)
 			{
 				// not found
@@ -205,7 +205,7 @@ namespace SD.HnD.BL
 					if(result)
 					{
 						// save succeeded, so remove from queue, pass the current transaction to the method so the action takes place inside this transaction.
-						await SupportQueueManager.RemoveThreadFromQueueAsync(threadID, adapter);
+						await SupportQueueManager.RemoveThreadFromQueueAsync(threadId, adapter);
 					}
 					adapter.Commit();
 				}
@@ -221,21 +221,21 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Moves the given thread to the given forum.
 		/// </summary>
-		/// <param name="threadID">ID of thread to move</param>
-		/// <param name="newForumID">ID of forum to move the thread to</param>
+		/// <param name="threadId">ID of thread to move</param>
+		/// <param name="newForumId">ID of forum to move the thread to</param>
 		/// <returns></returns>
-		public static async Task<bool> MoveThreadAsync(int threadID, int newForumID)
+		public static async Task<bool> MoveThreadAsync(int threadId, int newForumId)
 		{
-			var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread == null)
 			{
 				// not found
 				return false;
 			}
-			thread.ForumID = newForumID;
+			thread.ForumID = newForumId;
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.SaveEntity(thread);
+				return await adapter.SaveEntityAsync(thread).ConfigureAwait(false);
 			}
 		}
 
@@ -243,9 +243,9 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the given Thread from the system, including <b>all</b> messages and related data in this Thread.
 		/// </summary>
-		/// <param name="threadID">Thread to delete.</param>
+		/// <param name="threadId">Thread to delete.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static async Task<bool> DeleteThreadAsync(int threadID)
+		public static async Task<bool> DeleteThreadAsync(int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{ 
@@ -253,13 +253,12 @@ namespace SD.HnD.BL
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteThread").ConfigureAwait(false);
 				try
 				{
-					await ThreadManager.DeleteThreadsAsync(new PredicateExpression(ThreadFields.ThreadID == threadID), adapter);
+					await ThreadManager.DeleteThreadsAsync(new PredicateExpression(ThreadFields.ThreadID.Equal(threadId)), adapter);
 					adapter.Commit();
 					return true;
 				}
 				catch
 				{
-					// error occured
 					adapter.Rollback();
 					throw;
 				}
@@ -270,11 +269,11 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes all threads in the specified forum.
 		/// </summary>
-		/// <param name="forumID">The forum identifier for which all threads have to be deleted.</param>
+		/// <param name="forumId">The forum identifier for which all threads have to be deleted.</param>
 		/// <param name="adapter">The adapter to use in this method, has a live transaction.</param>
-		internal static Task DeleteAllThreadsInForumAsync(int forumID, IDataAccessAdapter adapter)
+		internal static Task DeleteAllThreadsInForumAsync(int forumId, IDataAccessAdapter adapter)
 		{
-			return DeleteThreadsAsync(new PredicateExpression(ThreadFields.ForumID == forumID), adapter);
+			return DeleteThreadsAsync(new PredicateExpression(ThreadFields.ForumID.Equal(forumId)), adapter);
 		}
 
 
@@ -290,20 +289,27 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			// delete bookmarks (if exists) of the threads to be deleted
-			adapter.DeleteEntitiesDirectly(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.ThreadID.In(qf.Thread.Where(threadFilter).Select(ThreadFields.ThreadID))));
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), 
+													  new RelationPredicateBucket(BookmarkFields.ThreadID.In(qf.Thread.Where(threadFilter)
+																											   .Select(ThreadFields.ThreadID))))
+						 .ConfigureAwait(false);
 			// delete audit info related to this thread. Can't be done directly on the db due to the fact the entities are in a TargetPerEntity hierarchy, which
 			// can't be deleted directly on the db, so we've to fetch the entities first. 
 			var q = qf.AuditDataThreadRelated.Where(AuditDataThreadRelatedFields.ThreadID.In(qf.Thread.Where(threadFilter).Select(ThreadFields.ThreadID)));
-			var threadAuditData = adapter.FetchQuery(q);
-			adapter.DeleteEntityCollection(threadAuditData);
+			var threadAuditData = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+			await adapter.DeleteEntityCollectionAsync(threadAuditData).ConfigureAwait(false);
 			// delete support queue thread entity for this thread (if any)
-			adapter.DeleteEntitiesDirectly(typeof(SupportQueueThreadEntity), 
-											new RelationPredicateBucket(SupportQueueThreadFields.ThreadID.In(qf.Thread.Where(threadFilter).Select(ThreadFields.ThreadID))));
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+											new RelationPredicateBucket(SupportQueueThreadFields.ThreadID.In(qf.Thread.Where(threadFilter)
+																											   .Select(ThreadFields.ThreadID))))
+						 .ConfigureAwait(false);
 			// delete threadsubscription entities
-			adapter.DeleteEntitiesDirectly(typeof(ThreadSubscriptionEntity),
-											new RelationPredicateBucket(ThreadSubscriptionFields.ThreadID.In(qf.Thread.Where(threadFilter).Select(ThreadFields.ThreadID))));
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadSubscriptionEntity),
+													  new RelationPredicateBucket(ThreadSubscriptionFields.ThreadID.In(qf.Thread.Where(threadFilter)
+																														 .Select(ThreadFields.ThreadID))))
+						 .ConfigureAwait(false);
 			// delete the threads themselves, using the filter passed in
-			adapter.DeleteEntitiesDirectly(typeof(ThreadEntity), new RelationPredicateBucket(threadFilter));
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadEntity), new RelationPredicateBucket(threadFilter)).ConfigureAwait(false);
 
 			// don't commit the transaction, that's up to the caller.
 		}
@@ -312,21 +318,20 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Sends email to all users subscribed to a specified thread, except the user who initiated the thread update.
 		/// </summary>
-		/// <param name="threadID">The thread that was updated.</param>
-		/// <param name="initiatedByUserID">The user who initiated the update (who will not receive notification).</param>
+		/// <param name="threadId">The thread that was updated.</param>
+		/// <param name="initiatedByUserId">The user who initiated the update (who will not receive notification).</param>
 		/// <param name="emailData">The email data.</param>
-		private static async Task SendThreadReplyNotifications(int threadID, int initiatedByUserID, Dictionary<string, string> emailData)
+		private static async Task SendThreadReplyNotifications(int threadId, int initiatedByUserId, Dictionary<string, string> emailData)
 		{
 			// get list of subscribers to thread, minus the initiator. Do this by fetching the subscriptions plus the related user entity entity instances. 
 			// The related user entities are loaded using a prefetch path. 
-			var qf = new QueryFactory();
-			var q = qf.ThreadSubscription
-							.Where((ThreadSubscriptionFields.ThreadID == threadID).And(ThreadSubscriptionFields.UserID != initiatedByUserID))
-							.WithPath(ThreadSubscriptionEntity.PrefetchPathUser);
+			var q = new QueryFactory().ThreadSubscription
+									  .Where((ThreadSubscriptionFields.ThreadID.Equal(threadId)).And(ThreadSubscriptionFields.UserID.NotEqual(initiatedByUserId)))
+									  .WithPath(ThreadSubscriptionEntity.PrefetchPathUser);
 			var subscriptions = new EntityCollection<ThreadSubscriptionEntity>();
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.FetchQuery(q, subscriptions);
+				await adapter.FetchQueryAsync(q, subscriptions).ConfigureAwait(false);
 				if(subscriptions.Count <= 0)
 				{
 					// no subscriptions, nothing to do
@@ -350,7 +355,7 @@ namespace SD.HnD.BL
 			{
 				// Use the existing template to format the body
 				var siteName = emailData.GetValue("siteName") ?? string.Empty;
-				var thread = await ThreadGuiHelper.GetThreadAsync(threadID);
+				var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 				if(thread == null)
 				{
 					// thread doesn't exist, exit
@@ -382,6 +387,10 @@ namespace SD.HnD.BL
 			{
 				// swallow, as there's nothing we can do
 			}
+			catch(SmtpCommandException)
+			{
+				// recipient didn't exist, forget it. 
+			}
 			// rest: problematic, so bubble upwards.
 		}
 
@@ -389,11 +398,11 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Creates a new message in the given thread. Caller should validate input parameters. It potentially closes the thread if ordered to do so.
 		/// </summary>
-		/// <param name="threadID">Thread wherein the new message will be placed</param>
-		/// <param name="userID">User who posted this message</param>
+		/// <param name="threadId">Thread wherein the new message will be placed</param>
+		/// <param name="userId">User who posted this message</param>
 		/// <param name="messageText">Message text</param>
 		/// <param name="messageAsHTML">Message text as HTML</param>
-		/// <param name="userIDIPAddress">IP address of user calling this method</param>
+		/// <param name="userIdIPAddress">IP address of user calling this method</param>
 		/// <param name="subscribeToThread">if set to <c>true</c> [subscribe to thread].</param>
 		/// <param name="emailData">The email data.</param>
 		/// <param name="sendReplyNotifications">Flag to signal to send reply notifications. If set to false no notifications are mailed,
@@ -401,8 +410,8 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// MessageID if succeeded, 0 if not.
 		/// </returns>
-		private static async Task<int> CreateNewMessageInThreadAndPotentiallyCloseThread(int threadID, int userID, string messageText, string messageAsHTML, 
-																						 string userIDIPAddress, bool subscribeToThread, 
+		private static async Task<int> CreateNewMessageInThreadAndPotentiallyCloseThread(int threadId, int userId, string messageText, string messageAsHTML, 
+																						 string userIdIPAddress, bool subscribeToThread, 
 																						 Dictionary<string, string> emailData, bool sendReplyNotifications)
 		{
 			var messageID = 0;
@@ -416,15 +425,15 @@ namespace SD.HnD.BL
 								  {
 									  MessageText = messageText,
 									  MessageTextAsHTML = messageAsHTML,
-									  PostedByUserID = userID,
+									  PostedByUserID = userId,
 									  PostingDate = postingDate,
-									  ThreadID = threadID,
-									  PostedFromIP = userIDIPAddress,
+									  ThreadID = threadId,
+									  PostedFromIP = userIdIPAddress,
 								  };
 					messageID = await adapter.SaveEntityAsync(message).ConfigureAwait(false) ? message.MessageID : 0;
 					if(messageID > 0)
 					{
-						await MessageManager.UpdateStatisticsAfterMessageInsert(threadID, userID, adapter, postingDate, true, subscribeToThread);
+						await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userId, adapter, postingDate, true, subscribeToThread);
 					}
 					adapter.Commit();
 				}
@@ -438,7 +447,7 @@ namespace SD.HnD.BL
 			{
 				// send notification email to all subscribers. Do this outside the transaction so a failed email send action doesn't terminate the save process
 				// of the message.
-				await ThreadManager.SendThreadReplyNotifications(threadID, userID, emailData).ConfigureAwait(false);
+				await ThreadManager.SendThreadReplyNotifications(threadId, userId, emailData).ConfigureAwait(false);
 			}
 			return messageID;
 		}

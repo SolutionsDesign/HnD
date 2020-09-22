@@ -8,6 +8,9 @@ using SD.HnD.Gui.Classes;
 
 namespace SD.HnD.Gui
 {
+	/// <summary>
+	/// Set of extension methods on ISession related to auditing information
+	/// </summary>
 	public static class AuditingAdapter
 	{
 		/// <summary>

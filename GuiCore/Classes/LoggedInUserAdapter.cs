@@ -13,7 +13,7 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 namespace SD.HnD.Gui
 {
 	/// <summary>
-	/// Class which gives access to the data of the logged in user. 
+	/// Class which gives access to the data of the logged in user. This data is kept in the ISession object of the user
 	/// </summary>
 	public static class LoggedInUserAdapter
 	{
@@ -177,15 +177,15 @@ namespace SD.HnD.Gui
 		/// If this is correct, true is returned, otherwise false.
 		/// </summary>
 		/// <param name="session">The session the method works on</param>
-		/// <param name="actionRightID">Actionright to check. This is a system action right</param>
+		/// <param name="actionRightId">Actionright to check. This is a system action right</param>
 		/// <returns>True if the user of the current context is allowed to perform the action right on the 
 		/// system, false otherwise.</returns>
-		public static bool HasSystemActionRight(this ISession session, ActionRights actionRightID)
+		public static bool HasSystemActionRight(this ISession session, ActionRights actionRightId)
 		{
 			var actionRights = session.GetSystemActionRights();
 			if(actionRights != null && actionRights.Length > 0)
 			{
-				return actionRights.Contains((int)actionRightID);
+				return actionRights.Contains((int)actionRightId);
 			}
 			return false;
 		}
@@ -222,14 +222,14 @@ namespace SD.HnD.Gui
 		/// on the forum given. If this is correct, true is returned, otherwise false.
 		/// </summary>
 		/// <param name="session">The session the method works on</param>
-		/// <param name="forumID">Forum to check</param>
-		/// <param name="actionRightID">Actionright to check on forum</param>
+		/// <param name="forumId">Forum to check</param>
+		/// <param name="actionRightId">Actionright to check on forum</param>
 		/// <returns>True if the user of the current context is allowed to perform the action right on the 
 		/// forum given, false otherwise.</returns>
-		public static bool CanPerformForumActionRight(this ISession session, int forumID, ActionRights actionRightID)
+		public static bool CanPerformForumActionRight(this ISession session, int forumId, ActionRights actionRightId)
 		{
 			var forumActionRights = session.GetForumsActionRights();
-			return forumActionRights != null && forumActionRights.ContainsValue((int)actionRightID, forumID);
+			return forumActionRights != null && forumActionRights.ContainsValue((int)actionRightId, forumId);
 		}
 
 
@@ -237,16 +237,16 @@ namespace SD.HnD.Gui
 		/// Gets the forums to which the user has the specified action right.
 		/// </summary>
 		/// <param name="session">The session the method works on</param>
-		/// <param name="actionRightID">The action right ID.</param>
+		/// <param name="actionRightId">The action right ID.</param>
 		/// <returns>List of forums IDs</returns>
-		public static List<int> GetForumsWithActionRight(this ISession session, ActionRights actionRightID)
+		public static List<int> GetForumsWithActionRight(this ISession session, ActionRights actionRightId)
 		{
 			var forumActionRights = session.GetForumsActionRights();
 			if(forumActionRights == null)
 			{
 				return null;
 			}
-			var forumIDs = forumActionRights.GetValue((int)actionRightID);
+			var forumIDs = forumActionRights.GetValue((int)actionRightId);
 			return forumIDs == null ? null : forumIDs.ToList();
 		}
 

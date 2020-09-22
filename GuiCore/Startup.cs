@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -108,13 +109,13 @@ namespace SD.HnD.Gui
 			app.UseAuthorization();
 			
 			app.UseIPFilter();
-			
 			app.UseSession();
 			// own middleware function to initialize session if required. 
 			app.Use(async (context, next) =>
 					{
 						await Startup.InitializeSessionIfRequiredAsync(context);
 
+						await Startup.LogOutIfNeeded(context);
 						// call next in pipeline
 						await next();
 					});
@@ -124,6 +125,23 @@ namespace SD.HnD.Gui
 
 			// HnD one-time configuration now we now the environment.  
 			HnDConfiguration.Current.LoadStaticData(env.WebRootPath, env.ContentRootPath);
+		}
+
+
+		private static async Task LogOutIfNeeded(HttpContext context)
+		{
+			if(context.User.Identity.IsAuthenticated)
+			{
+				string nickName = context.User.Identity.Name;
+				// if the user has to be logged out by force, do that now
+				if(ApplicationAdapter.UserHasToBeLoggedOutByForce(nickName))
+				{
+					await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+					context.Session.Clear();
+					context.Response.Redirect(ApplicationAdapter.GetVirtualRoot());
+					ApplicationAdapter.RemoveUserFromListToBeLoggedOutByForce(nickName);
+				}
+			}
 		}
 
 

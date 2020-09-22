@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -44,14 +44,14 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Adds the thread to bookmarks.
 		/// </summary>
-		/// <param name="threadID">Thread ID.</param>
-		/// <param name="userID">User ID.</param>
+		/// <param name="threadId">Thread ID.</param>
+		/// <param name="userId">User ID.</param>
 		/// <returns>true if save succeeded, false otherwise</returns>
-		public static async Task<bool> AddThreadToBookmarksAsync(int threadID, int userID)
+		public static async Task<bool> AddThreadToBookmarksAsync(int threadId, int userId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await adapter.SaveEntityAsync(new BookmarkEntity { UserID = userID, ThreadID = threadID}).ConfigureAwait(false);
+				return await adapter.SaveEntityAsync(new BookmarkEntity { UserID = userId, ThreadID = threadId}).ConfigureAwait(false);
 			}
 		}
 
@@ -59,12 +59,12 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Unsubscribes the specified user from the specified thread. 
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <returns>true if delete succeeded, false otherwise</returns>
-		public static async Task<bool> RemoveSingleSubscriptionAsync(int threadID, int userID)
+		public static async Task<bool> RemoveSingleSubscriptionAsync(int threadId, int userId)
 		{
-			var subscription = await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID);
+			var subscription = await ThreadGuiHelper.GetThreadSubscriptionAsync(threadId, userId);
 			if(subscription != null)
 			{
 				// there's a subscription, delete it
@@ -81,21 +81,21 @@ namespace SD.HnD.BL
 		/// Subscribes the user specified to the thread specified for notifications. A transaction can be specified to save the information inside the
 		/// transaction specified. If the user is already subscribed to this thread, nothing is done
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local adapter is used.</param>
 		/// <returns></returns>
-		public static async Task<bool> AddThreadToSubscriptionsAsync(int threadID, int userID, IDataAccessAdapter adapter)
+		public static async Task<bool> AddThreadToSubscriptionsAsync(int threadId, int userId, IDataAccessAdapter adapter)
 		{
 			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
 			try
 			{
 				// check if this user is already subscribed to this thread. If not, add a new subscription.
-				if(await ThreadGuiHelper.GetThreadSubscriptionAsync(threadID, userID, adapterToUse) == null)
+				if(await ThreadGuiHelper.GetThreadSubscriptionAsync(threadId, userId, adapterToUse) == null)
 				{
 					// user isn't yet subscribed, add the subscription
-					return await adapterToUse.SaveEntityAsync(new ThreadSubscriptionEntity {UserID = userID, ThreadID = threadID }).ConfigureAwait(false);
+					return await adapterToUse.SaveEntityAsync(new ThreadSubscriptionEntity {UserID = userId, ThreadID = threadId }).ConfigureAwait(false);
 				}
 				// already subscribed, no-op.
 				return true;
@@ -113,10 +113,10 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Updates the last visit date for user.
 		/// </summary>
-		/// <param name="userID">The user ID of the user to update the date for.</param>
-		public static async Task UpdateLastVisitDateForUserAsync(int userID)
+		/// <param name="userId">The user ID of the user to update the date for.</param>
+		public static async Task UpdateLastVisitDateForUserAsync(int userId)
 		{
-			var user = await UserGuiHelper.GetUserAsync(userID);
+			var user = await UserGuiHelper.GetUserAsync(userId);
 			if(user == null)
 			{
 				// not found
@@ -133,13 +133,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Toggles the ban flag value.
 		/// </summary>
-		/// <param name="userID">The user ID of the user to toggle the ban flag.</param>
+		/// <param name="userId">The user ID of the user to toggle the ban flag.</param>
 		/// <returns>Tuple with two boolean flags. First value is toggle result, Second value is the new banflag value.
 		/// true if toggle was succesful, false otherwise
 		/// </returns>
-		public static async Task<(bool toggleResult, bool newBanFlagValue)> ToggleBanFlagValueAsync(int userID)
+		public static async Task<(bool toggleResult, bool newBanFlagValue)> ToggleBanFlagValueAsync(int userId)
 		{
-			var user = await UserGuiHelper.GetUserAsync(userID);
+			var user = await UserGuiHelper.GetUserAsync(userId);
 			if(user == null)
 			{
 				return (false, false);
@@ -157,24 +157,23 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Deletes the user with the ID passed in. Will reset all posts made by the user to the userid 0. 
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <remarks>Can't delete user 0</remarks>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> DeleteUserAsync(int userID)
+		public static async Task<bool> DeleteUserAsync(int userId)
 		{
-			if(userID == 0)
+			if(userId <= 1)
 			{
-				// can't delete the Anonymous coward user. 
+				// can't delete the Anonymous user nor the admin user 
 				return false;
 			}
 
-			var toDelete = await UserGuiHelper.GetUserAsync(userID);
+			var toDelete = await UserGuiHelper.GetUserAsync(userId);
 			if(toDelete==null)
 			{
 				// user doesn't exist
 				return false;
 			}
-
 			if(toDelete.NickName == "Admin")
 			{
 				// can't delete admin
@@ -188,40 +187,46 @@ namespace SD.HnD.BL
 					// we'll first update all PostedByUserId fields of all messages which are posted by the user to delete. 
 					var messageUpdater = new MessageEntity {PostedByUserID = 0};
 					// reset to AC.
-					await adapter.UpdateEntitiesDirectlyAsync(messageUpdater, new RelationPredicateBucket(MessageFields.PostedByUserID == userID)).ConfigureAwait(false);
+					await adapter.UpdateEntitiesDirectlyAsync(messageUpdater, new RelationPredicateBucket(MessageFields.PostedByUserID.Equal(userId)))
+								 .ConfigureAwait(false);
 					
 					// set the startuser of threads started by this user to 0
 					var threadUpdater = new ThreadEntity {StartedByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.StartedByUserID == userID)).ConfigureAwait(false);
+					await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.StartedByUserID.Equal(userId)))
+								 .ConfigureAwait(false);
 
 					// remove the user from the UserRoles set, as the user shouldn't be in any roles. 
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID == userID)).ConfigureAwait(false);
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID.Equal(userId)))
+								 .ConfigureAwait(false);
 
 					// delete all bookmarks of user
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.UserID == userID)).ConfigureAwait(false);
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.UserID.Equal(userId)))
+								 .ConfigureAwait(false);
 
 					// delete all audit data
 					// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
 					// be deleted directly from the db.
-					var qf = new QueryFactory();
-					var auditData = await adapter.FetchQueryAsync(qf.User.Where(UserFields.UserID == userID)).ConfigureAwait(false);
+					var auditData = await adapter.FetchQueryAsync(new QueryFactory().User.Where(UserFields.UserID.Equal(userId))).ConfigureAwait(false);
 					await adapter.DeleteEntityCollectionAsync(auditData).ConfigureAwait(false);
 
 					// set IP bans set by this user to userid 0
 					var ipbanUpdater = new IPBanEntity {IPBanSetByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(ipbanUpdater, new RelationPredicateBucket(IPBanFields.IPBanSetByUserID == userID)).ConfigureAwait(false);
+					await adapter.UpdateEntitiesDirectlyAsync(ipbanUpdater, new RelationPredicateBucket(IPBanFields.IPBanSetByUserID.Equal(userId)))
+								 .ConfigureAwait(false);
 
 					// delete threadsubscriptions
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadSubscriptionEntity), new RelationPredicateBucket(ThreadSubscriptionFields.UserID == userID))
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadSubscriptionEntity), new RelationPredicateBucket(ThreadSubscriptionFields.UserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// remove supportqueuethread claims
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), new RelationPredicateBucket(SupportQueueThreadFields.ClaimedByUserID == userID))
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+															  new RelationPredicateBucket(SupportQueueThreadFields.ClaimedByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// set all placed in queue references to userid 0, so the threads stay in the queues.
 					var supportQueueThreadUpdater = new SupportQueueThreadEntity {PlacedInQueueByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater, new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID == userID))
+					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater, 
+															  new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// now delete the actual user entity
@@ -241,14 +246,15 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Removes the threads with threadid in the arraylist passed in from the bookmarks
 		/// </summary>
-		/// <param name="threadIDsToRemove">Thread I ds to remove.</param>
-		/// <param name="userID">user for whom these bookmarks have to be deleted</param>
-		public static async Task RemoveBookmarksAsync(IEnumerable<int> threadIDsToRemove, int userID)
+		/// <param name="threadIdsToRemove">Thread I ds to remove.</param>
+		/// <param name="userId">user for whom these bookmarks have to be deleted</param>
+		public static async Task RemoveBookmarksAsync(IEnumerable<int> threadIdsToRemove, int userId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity),
-														  new RelationPredicateBucket(BookmarkFields.ThreadID.In(threadIDsToRemove).And(BookmarkFields.UserID == userID)))
+														  new RelationPredicateBucket(BookmarkFields.ThreadID.In(threadIdsToRemove)
+																									.And(BookmarkFields.UserID.Equal(userId))))
 							 .ConfigureAwait(false);
 			}
 		}
@@ -257,15 +263,16 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Removes the single bookmark passed in
 		/// </summary>
-		/// <param name="threadID">Thread ID.</param>
-		/// <param name="userID">User ID.</param>
+		/// <param name="threadId">Thread ID.</param>
+		/// <param name="userId">User ID.</param>
 		/// <returns></returns>
-		public static async Task RemoveSingleBookmarkAsync(int threadID, int userID)
+		public static async Task RemoveSingleBookmarkAsync(int threadId, int userId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), new RelationPredicateBucket((BookmarkFields.ThreadID == threadID)
-																											  .And(BookmarkFields.UserID == userID))).ConfigureAwait(false);
+				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), 
+														  new RelationPredicateBucket((BookmarkFields.ThreadID.Equal(threadId)).And(BookmarkFields.UserID.Equal(userId))))
+							 .ConfigureAwait(false);
 			}
 		}
 
@@ -280,9 +287,8 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var user = await adapter.FetchFirstAsync(qf.User.Where(UserFields.NickName.Equal(nickName)).WithPath(UserEntity.PrefetchPathPasswordResetToken))
-										.ConfigureAwait(false);
+				var q = new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)).WithPath(UserEntity.PrefetchPathPasswordResetToken);
+				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				if(user==null)
 				{
 					// not found
@@ -346,27 +352,27 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Updates the given user's profile data using the values of the properties of this class.
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <param name="dateOfBirth">The date of birth.</param>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="emailAddressIsPublic">flag to signal if the emailaddress is visible for everyone or not</param>
-		/// <param name="iconURL">The icon URL.</param>
+		/// <param name="iconUrl">The icon URL.</param>
 		/// <param name="location">The location.</param>
 		/// <param name="occupation">The occupation.</param>
 		/// <param name="password">The password.</param>
 		/// <param name="signature">The signature.</param>
 		/// <param name="website">The website.</param>
-		/// <param name="userTitleID">The user title ID.</param>
+		/// <param name="userTitleId">The user title ID.</param>
 		/// <param name="autoSubscribeThreads">Default value when user creates new threads.</param>
 		/// <param name="defaultMessagesPerPage">Messages per page to display</param>
 		/// <param name="isBanned">flag whether the user is banned or not. Can be null, in which case the value is left untouched</param>
-		/// <param name="roleIDs">The RoleIDs of the roles the user is in. Can be null, in which case no roles are updated</param>
+		/// <param name="roleIds">The RoleIDs of the roles the user is in. Can be null, in which case no roles are updated</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static async Task<bool> UpdateUserProfileAsync(int userID, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL,
-															 string location, string occupation, string password, string signature, string website, int userTitleID, 
-															 bool autoSubscribeThreads, short defaultMessagesPerPage, bool? isBanned=null, List<int> roleIDs=null)
+		public static async Task<bool> UpdateUserProfileAsync(int userId, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconUrl,
+															 string location, string occupation, string password, string signature, string website, int userTitleId, 
+															 bool autoSubscribeThreads, short defaultMessagesPerPage, bool? isBanned=null, List<int> roleIds=null)
 		{
-            var user = await UserGuiHelper.GetUserAsync(userID);
+            var user = await UserGuiHelper.GetUserAsync(userId);
             if (user == null)
             {
                 // not found
@@ -376,10 +382,10 @@ namespace SD.HnD.BL
 			user.DateOfBirth = dateOfBirth;
 			user.EmailAddress = emailAddress;
 			user.EmailAddressIsPublic = emailAddressIsPublic;
-			user.IconURL = iconURL;
+			user.IconURL = iconUrl;
 			user.Location = location;
 			user.Occupation = occupation;
-			user.UserTitleID = userTitleID;
+			user.UserTitleID = userTitleId;
 			if(isBanned.HasValue)
 			{
 				user.IsBanned = isBanned.Value;
@@ -399,10 +405,10 @@ namespace SD.HnD.BL
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(user);
 
-			if(roleIDs != null)
+			if(roleIds != null)
 			{
 				// Add new entities for the user for all roleid's in the list specified. We'll first delete the ones the user is already in below directly
-				foreach(var roleId in roleIDs)
+				foreach(var roleId in roleIds)
 				{
 					user.RoleUser.Add(new RoleUserEntity() {RoleID = roleId});
 				}
@@ -413,10 +419,12 @@ namespace SD.HnD.BL
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "Update User Info").ConfigureAwait(false);
 				try
 				{
-					if(roleIDs != null)
+					if(roleIds != null)
 					{
 						// first remove the user from all roles, we'll do that directly.
-						await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), new RelationPredicateBucket(RoleUserFields.UserID.Equal(userID))).ConfigureAwait(false);
+						await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
+																  new RelationPredicateBucket(RoleUserFields.UserID.Equal(userId)))
+									 .ConfigureAwait(false);
 					}
 
 					// then save everything in one go.
@@ -440,7 +448,7 @@ namespace SD.HnD.BL
 		/// <param name="dateOfBirth">The date of birth.</param>
 		/// <param name="emailAddress">The email address.</param>
 		/// <param name="emailAddressIsPublic">flag to signal if the emailaddress is visible for everyone or not</param>
-		/// <param name="iconURL">The icon URL.</param>
+		/// <param name="iconUrl">The icon URL.</param>
 		/// <param name="ipNumber">The ip number.</param>
 		/// <param name="location">The location.</param>
 		/// <param name="occupation">The occupation.</param>
@@ -452,7 +460,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
-		public static async Task<int> RegisterNewUserAsync(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconURL, 
+		public static async Task<int> RegisterNewUserAsync(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconUrl, 
 														   string ipNumber, string location, string occupation, string signature, string website, 
 														   Dictionary<string, string> emailData, bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
@@ -463,7 +471,7 @@ namespace SD.HnD.BL
 							  EmailAddress = emailAddress,
 							  EmailAddressIsPublic = emailAddressIsPublic,
 							  IPNumber = ipNumber,
-							  IconURL = iconURL,
+							  IconURL = iconUrl,
 							  IsBanned = false,
 							  JoinDate = DateTime.Now,
 							  Location = location,
@@ -480,7 +488,8 @@ namespace SD.HnD.BL
             newUser.AutoSubscribeToThread = autoSubscribeThreads;
             newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
 
-            //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly created RoleUserEntity.
+            //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly
+            //created RoleUserEntity.
             var systemData = await SystemGuiHelper.GetSystemSettingsAsync();
             newUser.UserTitleID = systemData.DefaultUserTitleNewUser;
 			newUser.RoleUser.Add(new RoleUserEntity { RoleID = systemData.DefaultRoleNewUser});
@@ -494,7 +503,7 @@ namespace SD.HnD.BL
 				if(await adapter.SaveEntityAsync(newUser).ConfigureAwait(false))
 				{
 					// all ok, Email the password
-					await HnDGeneralUtils.EmailPassword(password, emailAddress, emailData).ConfigureAwait(false);
+					await HnDGeneralUtils.EmailPassword(password, emailAddress, emailData);
 				}
 			}
 			return newUser.UserID;
@@ -517,8 +526,8 @@ namespace SD.HnD.BL
 
 			using(var adapter = new DataAccessAdapter())
 			{
-				var qf = new QueryFactory();
-				var user = await adapter.FetchFirstAsync(qf.User.Where(UserFields.UserID.Equal(passwordResetToken.UserID))).ConfigureAwait(false);
+				var q = new QueryFactory().User.Where(UserFields.UserID.Equal(passwordResetToken.UserID));
+				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 				if(user == null)
 				{
 					return false;

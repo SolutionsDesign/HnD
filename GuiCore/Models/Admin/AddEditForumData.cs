@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
-using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.EntityClasses;
-using SD.HnD.DALAdapter.TypedListClasses;
 using SD.HnD.DTOs.DtoClasses;
-using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui.Models.Admin
 {
@@ -15,7 +10,6 @@ namespace SD.HnD.Gui.Models.Admin
 	{
 		public AddEditForumData() : this(new ForumEntity())
 		{}
-
 
 		public AddEditForumData(ForumEntity toEdit)
 		{

@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -152,29 +152,22 @@ namespace SD.HnD.BL
 			}
 		}
 
-#error IMPLEMENT
+		
 		/// <summary>
-		/// Gets the last message in thread, and prefetches the user + usertitle entities. 
+		/// Gets the dto of the last message in the thread, which contains all information to render a message pane, which can be used to
+		/// show the last message in a thread one is replying to. 
 		/// </summary>
-		/// <param name="threadID">Thread ID.</param>
+		/// <param name="threadId">Thread ID.</param>
 		/// <returns>fetched messageentity with the userentity + usertitle entity fetched as well of the user who posted the message.</returns>
-		public static MessageEntity GetLastMessageInThreadWithUserInfo(int threadID)
+		public static async Task<MessageInThreadDto> GetLastMessageInThreadDtoAsync(int threadId)
 		{
-			var qf = new QueryFactory();
-			var q = qf.Message
-						.Where(MessageFields.MessageID.Equal(
-											qf.Create()
-												.Select(MessageFields.MessageID.Source("LastMessage"))
-												.Where((MessageFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
-														.And(MessageFields.ThreadID.Source("LastMessage")==threadID))
-												.Limit(1)
-												.OrderBy(MessageFields.PostingDate.Source("LastMessage").Descending())
-												.ToScalar()
-												.ForceRowLimit()))
-						.WithPath(MessageEntity.PrefetchPathPostedByUser.WithSubPath(UserEntity.PrefetchPathUserTitle));
 			using(var adapter = new DataAccessAdapter())
 			{
-				return adapter.FetchFirst(q);
+				var metaData = new LinqMetaData(adapter);
+				var q = metaData.Message
+								.Where(m => m.ThreadID == threadId)
+								.OrderByDescending(m => m.PostingDate);
+				return await q.ProjectToMessageInThreadDto().FirstOrDefaultAsync().ConfigureAwait(false);
 			}
 		}
 
@@ -183,17 +176,17 @@ namespace SD.HnD.BL
 		/// Constructs a list of hierarchical DTOs with all message data for a page. This is a list of DTOs as the attachments information is
 		/// fetched as well, which have a 1:n relationship with message. 
 		/// </summary>
-		/// <param name="threadID">ID of Thread which messages should be returned</param>
+		/// <param name="threadId">ID of Thread which messages should be returned</param>
 		/// <param name="pageNo">The page no.</param>
 		/// <param name="pageSize">Size of the page.</param>
 		/// <returns>List with all messages in the thread for the page specified</returns>
-		public static async Task<List<MessageInThreadDto>> GetAllMessagesInThreadAsDTOsAsync(int threadID, int pageNo, int pageSize)
+		public static async Task<List<MessageInThreadDto>> GetAllMessagesInThreadAsDTOsAsync(int threadId, int pageNo, int pageSize)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
 				var metaData = new LinqMetaData(adapter);
 				var q = metaData.Message
-								.Where(m => m.ThreadID == threadID)
+								.Where(m => m.ThreadID == threadId)
 								.OrderBy(m => m.PostingDate)
 								.TakePage(pageNo, pageSize);
 				var messages = await q.ProjectToMessageInThreadDto().ToListAsync().ConfigureAwait(false);
@@ -203,7 +196,7 @@ namespace SD.HnD.BL
 
 				// set the NumberOfViews field to an expression which increases it by 1
 				updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
-				await adapter.UpdateEntitiesDirectlyAsync(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadID)).ConfigureAwait(false);
+				await adapter.UpdateEntitiesDirectlyAsync(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadId)).ConfigureAwait(false);
 				return messages;
 			}
 		}
@@ -214,28 +207,28 @@ namespace SD.HnD.BL
 		/// thread. The page started with StartMessageNo will contain the message with ID messageID. Paging is done using the
 		/// maxAmountMessagesPerPage property in Application.
 		/// </summary>
-		/// <param name="threadID">ID of the thread to which the messages belong</param>
-		/// <param name="messageID"></param>
+		/// <param name="threadId">ID of the thread to which the messages belong</param>
+		/// <param name="messageId"></param>
 		/// <param name="maxAmountMessagesPerPage">The max amount of messages per page to show. </param>
 		/// <returns></returns>
-		public static async Task<int> GetStartAtMessageForGivenMessageAndThreadAsync(int threadID, int messageID, int maxAmountMessagesPerPage)
+		public static async Task<int> GetStartAtMessageForGivenMessageAndThreadAsync(int threadId, int messageId, int maxAmountMessagesPerPage)
         {
 			var qf = new QueryFactory();
 			var q = qf.Create()
 						.Select(()=>MessageFields.MessageID.ToValue<int>())
-						.Where(MessageFields.ThreadID == threadID)
+						.Where(MessageFields.ThreadID.Equal(threadId))
 						.OrderBy(MessageFields.PostingDate.Ascending())
 						.Distinct();
 	        using(var adapter = new DataAccessAdapter())
 	        {
-		        var messageIDs = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+		        var messageIds = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 		        var startAtMessage = 0;
 		        var rowIndex = 0;
-		        if(messageIDs.Count > 0)
+		        if(messageIds.Count > 0)
 		        {
-			        for(var i = 0; i < messageIDs.Count; i++)
+			        for(var i = 0; i < messageIds.Count; i++)
 			        {
-				        if(messageIDs[i] == messageID)
+				        if(messageIds[i] == messageId)
 				        {
 					        // found the row
 					        rowIndex = i;
@@ -252,23 +245,23 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Checks if the message with the ID specified is first message in thread with id specified.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="messageID">The message ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="messageId">The message ID.</param>
 		/// <returns>true if message is first message in thread, false otherwise</returns>
-		public static async Task<bool> CheckIfMessageIsFirstInThreadAsync(int threadID, int messageID)
+		public static async Task<bool> CheckIfMessageIsFirstInThreadAsync(int threadId, int messageId)
 		{
 			// use a scalar query, which obtains the first MessageID in a given thread. We sort on posting date ascending, and simply read
 			// the first messageid. If that's not available or not equal to messageID, the messageID isn't the first post in the thread, otherwise it is.
 			var qf = new QueryFactory();
 			var q = qf.Create()
 						.Select(()=>MessageFields.MessageID.ToValue<int>())
-						.Where(MessageFields.ThreadID == threadID)
+						.Where(MessageFields.ThreadID.Equal(threadId))
 						.OrderBy(MessageFields.PostingDate.Ascending())
 						.Limit(1);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var firstMessageId = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
-				return firstMessageId.HasValue && firstMessageId.Value == messageID;
+				return firstMessageId.HasValue && firstMessageId.Value == messageId;
 			}
 		}
 		
@@ -281,18 +274,18 @@ namespace SD.HnD.BL
 		/// by the user.
 		/// </summary>
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
-		/// <param name="userID">The user ID.</param>
+		/// <param name="userId">The user ID.</param>
 		/// <returns>ready to use thread filter.</returns>
-		internal static IPredicateExpression CreateThreadFilter(List<int> forumsWithThreadsFromOthers, int userID)
+		internal static IPredicateExpression CreateThreadFilter(List<int> forumsWithThreadsFromOthers, int userId)
 		{
 			if((forumsWithThreadsFromOthers != null) && (forumsWithThreadsFromOthers.Count > 0))
 			{
 				// accept only those threads which are in the forumsWithThreadsFromOthers list or which are either started by userID or sticky.
-				return ThreadFields.ForumID.In(forumsWithThreadsFromOthers).Or((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID));
+				return ThreadFields.ForumID.In(forumsWithThreadsFromOthers).Or((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userId));
 			}
 			// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
 			// sticky threads or threads started by the calling user.
-			return (ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userID);
+			return (ThreadFields.IsSticky.Equal(true)).Or(ThreadFields.StartedByUserID.Equal(userId));
 		}
 
 
@@ -345,7 +338,7 @@ namespace SD.HnD.BL
 		internal static IJoinOperand BuildFromClauseForAllThreadsWithStats(QueryFactory qf)
 		{
 			return qf.Thread
-					 .LeftJoin(qf.User.As("ThreadStarterUser")).On(ThreadFields.StartedByUserID == UserFields.UserID.Source("ThreadStarterUser"))
+					 .LeftJoin(qf.User.As("ThreadStarterUser")).On(ThreadFields.StartedByUserID.Equal(UserFields.UserID.Source("ThreadStarterUser")))
 					 .InnerJoin(qf.Create("LastMessage")
 								  .Select(MessageFields.MessageID.Source("m1"), MessageFields.PostedByUserID.Source("m1"), MessageFields.ThreadID.Source("m1"),
 										  qf.Field("NumberOfMessages").Source("m2"))
@@ -358,7 +351,7 @@ namespace SD.HnD.BL
 												.On(MessageFields.MessageID.Source("m1").Equal(qf.Field("MaxMessageID").Source("m2")))))
 							.On(ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
 					 .LeftJoin(qf.User.As("LastPostingUser"))
-							.On(MessageFields.PostedByUserID.Source("LastMessage") == UserFields.UserID.Source("LastPostingUser"));
+							.On(MessageFields.PostedByUserID.Source("LastMessage").Equal(UserFields.UserID.Source("LastPostingUser")));
 
 			// the LastMessage query is also doable with a scalar query sorted descending to obtain the last message, however this turns out to be slower:
 			/*

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Web;
-using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DTOs.DtoClasses;
 
 namespace SD.HnD.Gui.Models
 {
@@ -19,5 +18,6 @@ namespace SD.HnD.Gui.Models
 		[Required]
 		public string MessageText { get; set; }
 		public bool Subscribe { get; set; }
+		public MessageInThreadDto LastMessageInThread { get; set; }
 	}
 }

@@ -1,8 +1,8 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
-	http://www.sd.nl
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
 	it under the terms of version 2 of the GNU General Public License as published by
@@ -30,8 +30,7 @@ namespace SD.HnD.Gui
     /// ApplicationAdapter is used to access Application-wide variables stored in the HnDConfiguration.
 	/// </summary>
 	/// <remarks>
-    /// In previous versions
-    /// this class wrapped access to the HttpApplication object, however in ASP.NET Core this object is no longer present.
+    /// In previous versions this class wrapped access to the HttpApplication object, however in ASP.NET Core this object is no longer present.
     /// To avoid refactoring a lot of code, this class is kept as a central access point to global configuration data and instead
     /// of reading/writing into HttpApplication, it's using HnDConfiguration.Current instead.
     /// </remarks> 
@@ -65,18 +64,12 @@ namespace SD.HnD.Gui
 		{
 			return HnDConfiguration.Current.VirtualRoot;			
         }
-		
-
-        /// <summary>
-        /// Gets the data files folder MapPath.
-        /// </summary>
-        /// <returns>the data files folder MapPath if available, otherwise an empty string</returns>
-        public static string GetDataFilesMapPath()
-		{
-			return HnDConfiguration.Current.DataFilesPath;
-        }
 
 
+		/// <summary>
+		/// Gets the maximum number of minutes search results should be cached
+		/// </summary>
+		/// <returns></returns>
 		public static int GetMaxNumberOfMinutesToCacheSearchResults()
 		{
 			return HnDConfiguration.Current.MaxNumberOfMinutesToCacheSearchResults;
@@ -118,7 +111,7 @@ namespace SD.HnD.Gui
         }
 
 		/// <summary>
-		/// Gets the noise words.
+		/// Gets the noise words to filter out in searches
 		/// </summary>
 		/// <returns>Hashtable of noise words if available, otherwise null</returns>
 		public static HashSet<string> GetNoiseWords()
@@ -127,72 +120,66 @@ namespace SD.HnD.Gui
 		}
 
 
-	    /// <summary>
-		/// Gets the IP ban complain email address.
+		/// <summary>
+		/// Gets a dictionary with per name of the emoji (key) the filename the picture is located in (value)
 		/// </summary>
-		/// <returns>IPBanComplainEmailAddress if available, otherwise string.Empty</returns>
-		public static string GetIPBanComplainEmailAddress()
-		{
-			return HnDConfiguration.Current.IPBanComplainEmailAddress ?? string.Empty;
-	    }
-
-
-	    /// <summary>
-		/// Gets the cache flags per forumid
-		/// </summary>
-		/// <returns>Dictionary of cache flags if available, otherwise null</returns>
-		public static Dictionary<int, bool> GetCacheFlags()
-		{
-			return HnDConfiguration.Current.GetCacheFlags();
-	    }
-
-
+		/// <returns></returns>
 	    public static Dictionary<string, string> GetEmojiFilenamesPerName()
 		{
 			return HnDConfiguration.Current.EmojiFilenamesPerName;
 	    }
 
 
+		/// <summary>
+		/// Gets a dictionary with the mappings between smiley shortcuts (e.g. ':)') and the emoji names
+		/// </summary>
+		/// <returns></returns>
 		public static Dictionary<string, string> GetSmileyMappings()
 		{
 			return HnDConfiguration.Current.SmileyMappingsLookup;
 		}
 
 
+		/// <summary>
+		/// Gets the cached value representing the number of unapproved attachments
+		/// </summary>
+		/// <returns></returns>
 	    public static int GetCachedNumberOfUnapprovedAttachments()
 		{
 			return HnDConfiguration.Current.GetCachedNumberOfUnapprovedAttachments();
 	    }
 
 
+		/// <summary>
+		/// Removes the cached value representing the number of unapproved attachments 
+		/// </summary>
+		/// <returns></returns>
 	    public static int InvalidateCachedNumberOfUnapprovedAttachments()
 		{
 			return HnDConfiguration.Current.InvalidateCachedNumberOfUnapprovedAttachments();
 	    }
 
 
+		/// <summary>
+		/// Gets the cached value representing the number of threads in the support queues
+		/// </summary>
+		/// <returns></returns>
 	    public static int GetCachedNumberOfThreadsInSupportQueues()
 		{
 			return HnDConfiguration.Current.GetCachedNumberOfThreadsInSupportQueues();
 	    }
 
 
+		/// <summary>
+		/// Removes the cached value representing the number of threads in the support queues
+		/// </summary>
+		/// <returns></returns>
 	    public static int InvalidateCachedNumberOfThreadsInSupportQueues()
 		{
 			return HnDConfiguration.Current.InvalidateCachedNumberOfThreadsInSupportQueues();
 	    }
 
-
-		/// <summary>
-		/// sets the flag for the cached RSS feed for the given forum to false, so the cache will be invalidated for that forum rss feed
-		/// </summary>
-		/// <param name="forumID">ID of forum which rss feed to invalidate</param>
-		public static void InvalidateCachedForumRSS(int forumID)
-		{
-			HnDConfiguration.Current.InvalidateCachedForumRSS(forumID);
-		}
-
-
+		
 		/// <summary>
 		/// Checks if the nickname passed in is among the users which have to be logged out by force. All users which are deleted have to be logged out by force. 
 		/// </summary>

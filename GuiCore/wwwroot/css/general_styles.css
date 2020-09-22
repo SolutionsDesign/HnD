@@ -942,6 +942,10 @@ textarea.form-control{
 		padding: 0;
 		margin-bottom: 10px;
 	}
+    
+    .ps-lastmessage-header {
+        margin: 50px 0 0;
+    }
 /* #endregion*/
 
 /* #region different section definitions */
@@ -956,6 +960,11 @@ textarea.form-control{
 		font-size: 20px;
 		background-color: #ddd;
 	}
+
+    .fs-header-slim {
+        padding: 5px !important;
+        font-size: 18px !important;
+    }
 
 	.fs-headingrow {
 		padding: 0;

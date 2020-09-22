@@ -17,7 +17,7 @@ namespace SD.HnD.Gui.Models
 		public string NickName { get; set; }
 		public EntityView2<SectionEntity> SectionsFiltered { get; set; }
 		public MultiValueHashtable<int, AggregatedForumRow> ForumDataPerDisplayedSection { get; set; }
-		public DateTime UserLastVisitDate { get; set; }
+		public DateTime? UserLastVisitDate { get; set; }
 		public bool IsAnonymousUser { get; set; }
 	}
 }
