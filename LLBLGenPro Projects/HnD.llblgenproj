@@ -247,29 +247,28 @@
       <EntityDefinition Name="Forum" ObjectID="4babe252-b632-4c7e-97a8-871de4205065">
         <Fields>
           <Field Name="DefaultSupportQueueID" Type="int" IsOptional="true" IsAutoCreated="true" FieldIndex="6" />
-          <Field Name="DefaultThreadListInterval" Type="byte" FieldIndex="7" />
           <Field Name="ForumDescription" Type="string" MaxLength="250" FieldIndex="3" />
           <Field Name="ForumID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
           <Field Name="ForumLastPostingDate" Type="datetime" IsOptional="true" FieldIndex="4" />
           <Field Name="ForumName" Type="string" MaxLength="50" FieldIndex="2" />
           <Field Name="HasRSSFeed" Type="bool" FieldIndex="5" />
-          <Field Name="MaxAttachmentSize" Type="int" IsOptional="true" FieldIndex="9">
+          <Field Name="MaxAttachmentSize" Type="int" IsOptional="true" FieldIndex="8">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="MaxNoOfAttachmentsPerMessage" Type="short" IsOptional="true" FieldIndex="10">
+          <Field Name="MaxNoOfAttachmentsPerMessage" Type="short" IsOptional="true" FieldIndex="9">
             <OutputSettingValues>
               <SettingValues>
                 <SettingValue Name="64:GenerateAsNullableType" Value="false" Type="3" />
               </SettingValues>
             </OutputSettingValues>
           </Field>
-          <Field Name="NewThreadWelcomeText" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="11" />
-          <Field Name="NewThreadWelcomeTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="12" />
-          <Field Name="OrderNo" Type="short" FieldIndex="8" />
+          <Field Name="NewThreadWelcomeText" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="10" />
+          <Field Name="NewThreadWelcomeTextAsHTML" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="11" />
+          <Field Name="OrderNo" Type="short" FieldIndex="7" />
           <Field Name="SectionID" Type="int" IsAutoCreated="true" FieldIndex="1" />
         </Fields>
       </EntityDefinition>
@@ -769,7 +768,7 @@
       <Catalogs>
         <Catalog Name="HnD" SyncSource="1">
           <Schemas>
-            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2020-06-26T09:40:13.1034647Z">
+            <Schema Name="dbo" SyncSource="1" LastSyncWithModel="2020-09-23T09:09:48.7819689Z">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />
@@ -839,7 +838,6 @@
                     <Field Name="ForumLastPostingDate" Ordinal="5" IsOptional="true" DbType="4" />
                     <Field Name="HasRSSFeed" Ordinal="6" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
                     <Field Name="DefaultSupportQueueID" Ordinal="7" IsOptional="true" DbType="8" Precision="10" />
-                    <Field Name="DefaultThreadListInterval" Ordinal="8" HasDefaultValue="true" DefaultValue="(2)" DbType="22" Precision="3" />
                     <Field Name="OrderNo" Ordinal="9" HasDefaultValue="true" DefaultValue="(0)" DbType="16" Precision="5" />
                     <Field Name="MaxAttachmentSize" Ordinal="10" IsOptional="true" HasDefaultValue="true" DefaultValue="(512)" DbType="8" Precision="10" />
                     <Field Name="MaxNoOfAttachmentsPerMessage" Ordinal="11" IsOptional="true" HasDefaultValue="true" DefaultValue="(1)" DbType="16" Precision="5" />
@@ -1265,7 +1263,6 @@
         <EntityMapping EntityName=":Forum" TargetName="HnD:dbo:Forum">
           <FieldMappings>
             <FieldMapping FieldName="DefaultSupportQueueID" TargetFieldName="DefaultSupportQueueID" />
-            <FieldMapping FieldName="DefaultThreadListInterval" TargetFieldName="DefaultThreadListInterval" />
             <FieldMapping FieldName="ForumDescription" TargetFieldName="ForumDescription" />
             <FieldMapping FieldName="ForumID" TargetFieldName="ForumID" SequenceToUse="SCOPE_IDENTITY()" />
             <FieldMapping FieldName="ForumLastPostingDate" TargetFieldName="ForumLastPostingDate" />

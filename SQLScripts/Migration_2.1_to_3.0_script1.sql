@@ -77,3 +77,9 @@ ALTER TABLE [dbo].[PasswordResetToken]
 	ON DELETE CASCADE
 	ON UPDATE NO ACTION
 GO
+
+ALTER TABLE [dbo].[Forum] DROP CONSTRAINT [DF_Forum_DefaultThreadListInterval]
+GO
+
+ALTER TABLE [dbo].[Forum] DROP COLUMN [DefaultThreadListInterval]
+GO

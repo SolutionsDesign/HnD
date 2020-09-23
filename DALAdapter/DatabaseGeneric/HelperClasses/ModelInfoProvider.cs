@@ -147,7 +147,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddElementFieldInfo("ForumEntity", "ForumLastPostingDate", typeof(Nullable<System.DateTime>), false, false, false, true,  (int)ForumFieldIndex.ForumLastPostingDate, 0, 0, 0);
 			this.AddElementFieldInfo("ForumEntity", "HasRSSFeed", typeof(System.Boolean), false, false, false, false,  (int)ForumFieldIndex.HasRSSFeed, 0, 0, 0);
 			this.AddElementFieldInfo("ForumEntity", "DefaultSupportQueueID", typeof(Nullable<System.Int32>), false, true, false, true,  (int)ForumFieldIndex.DefaultSupportQueueID, 0, 0, 10);
-			this.AddElementFieldInfo("ForumEntity", "DefaultThreadListInterval", typeof(System.Byte), false, false, false, false,  (int)ForumFieldIndex.DefaultThreadListInterval, 0, 0, 3);
 			this.AddElementFieldInfo("ForumEntity", "OrderNo", typeof(System.Int16), false, false, false, false,  (int)ForumFieldIndex.OrderNo, 0, 0, 5);
 			this.AddElementFieldInfo("ForumEntity", "MaxAttachmentSize", typeof(System.Int32), false, false, false, true,  (int)ForumFieldIndex.MaxAttachmentSize, 0, 0, 10);
 			this.AddElementFieldInfo("ForumEntity", "MaxNoOfAttachmentsPerMessage", typeof(System.Int16), false, false, false, true,  (int)ForumFieldIndex.MaxNoOfAttachmentsPerMessage, 0, 0, 5);

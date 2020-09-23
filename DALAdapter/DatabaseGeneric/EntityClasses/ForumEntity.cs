@@ -249,15 +249,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set	{ SetValue((int)ForumFieldIndex.DefaultSupportQueueID, value); }
 		}
 
-		/// <summary>The DefaultThreadListInterval property of the Entity Forum<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Forum"."DefaultThreadListInterval".<br/>Table field type characteristics (type, precision, scale, length): TinyInt, 3, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
-		[Required]
-		public virtual System.Byte DefaultThreadListInterval
-		{
-			get { return (System.Byte)GetValue((int)ForumFieldIndex.DefaultThreadListInterval, true); }
-			set	{ SetValue((int)ForumFieldIndex.DefaultThreadListInterval, value); }
-		}
-
 		/// <summary>The OrderNo property of the Entity Forum<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Forum"."OrderNo".<br/>Table field type characteristics (type, precision, scale, length): SmallInt, 5, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		[Required]
@@ -353,8 +344,6 @@ namespace SD.HnD.DALAdapter
 		HasRSSFeed,
 		///<summary>DefaultSupportQueueID. </summary>
 		DefaultSupportQueueID,
-		///<summary>DefaultThreadListInterval. </summary>
-		DefaultThreadListInterval,
 		///<summary>OrderNo. </summary>
 		OrderNo,
 		///<summary>MaxAttachmentSize. </summary>

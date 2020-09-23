@@ -124,8 +124,6 @@ namespace SD.HnD.DALAdapter.HelperClasses
 		public static EntityField2 HasRSSFeed { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ForumFieldIndex.HasRSSFeed); }}
 		/// <summary>Creates a new ForumEntity.DefaultSupportQueueID field instance</summary>
 		public static EntityField2 DefaultSupportQueueID { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ForumFieldIndex.DefaultSupportQueueID); }}
-		/// <summary>Creates a new ForumEntity.DefaultThreadListInterval field instance</summary>
-		public static EntityField2 DefaultThreadListInterval { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ForumFieldIndex.DefaultThreadListInterval); }}
 		/// <summary>Creates a new ForumEntity.OrderNo field instance</summary>
 		public static EntityField2 OrderNo { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ForumFieldIndex.OrderNo); }}
 		/// <summary>Creates a new ForumEntity.MaxAttachmentSize field instance</summary>

@@ -61,7 +61,6 @@ namespace SD.HnD.BL
 							   ForumName = forumName,
 							   HasRSSFeed = hasRSSFeed,
 							   DefaultSupportQueueID = defaultSupportQueueID,
-							   DefaultThreadListInterval = Convert.ToByte(defaultThreadListInterval),
 							   OrderNo = orderNo,
 							   MaxAttachmentSize = maxAttachmentSize,
 							   MaxNoOfAttachmentsPerMessage = maxNoOfAttachmentsPerMessage,
@@ -85,7 +84,6 @@ namespace SD.HnD.BL
 		/// <param name="forumDescription">Short description of the forum.</param>
 		/// <param name="hasRSSFeed">True if the forum has an RSS feed.</param>
 		/// <param name="defaultSupportQueueId">The ID of the default support queue for this forum. Can be null.</param>
-		/// <param name="defaultThreadListInterval">The default thread list interval.</param>
 		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
 		/// <param name="maxAttachmentSize">Max. size of an attachment.</param>
 		/// <param name="maxNoOfAttachmentsPerMessage">The max no of attachments per message.</param>
@@ -93,7 +91,7 @@ namespace SD.HnD.BL
 		/// <param name="newThreadWelcomeTextAsHTML">The new thread welcome text as HTML, is null when newThreadWelcomeText is null or empty.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
 		public static async Task<bool> ModifyForumAsync(int forumId, int sectionId, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueId,
-														int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
+														short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
 														string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
 			var forum = await ForumGuiHelper.GetForumAsync(forumId);
@@ -107,7 +105,6 @@ namespace SD.HnD.BL
 			forum.ForumName = forumName;
 			forum.HasRSSFeed = hasRSSFeed;
 			forum.DefaultSupportQueueID = defaultSupportQueueId;
-			forum.DefaultThreadListInterval = Convert.ToByte(defaultThreadListInterval);
 			forum.OrderNo = orderNo;
 			forum.MaxAttachmentSize = maxAttachmentSize;
 			forum.MaxNoOfAttachmentsPerMessage = maxNoOfAttachmentsPerMessage;

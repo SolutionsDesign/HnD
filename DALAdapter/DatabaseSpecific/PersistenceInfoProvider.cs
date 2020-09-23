@@ -130,7 +130,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 		/// <summary>Inits ForumEntity's mappings</summary>
 		private void InitForumEntityMappings()
 		{
-			this.AddElementMapping("ForumEntity", @"HnD", @"dbo", "Forum", 13, 0);
+			this.AddElementMapping("ForumEntity", @"HnD", @"dbo", "Forum", 12, 0);
 			this.AddElementFieldMapping("ForumEntity", "ForumID", "ForumID", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
 			this.AddElementFieldMapping("ForumEntity", "SectionID", "SectionID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 1);
 			this.AddElementFieldMapping("ForumEntity", "ForumName", "ForumName", false, "NVarChar", 50, 0, 0, false, "", null, typeof(System.String), 2);
@@ -138,12 +138,11 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			this.AddElementFieldMapping("ForumEntity", "ForumLastPostingDate", "ForumLastPostingDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 4);
 			this.AddElementFieldMapping("ForumEntity", "HasRSSFeed", "HasRSSFeed", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 5);
 			this.AddElementFieldMapping("ForumEntity", "DefaultSupportQueueID", "DefaultSupportQueueID", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 6);
-			this.AddElementFieldMapping("ForumEntity", "DefaultThreadListInterval", "DefaultThreadListInterval", false, "TinyInt", 0, 3, 0, false, "", null, typeof(System.Byte), 7);
-			this.AddElementFieldMapping("ForumEntity", "OrderNo", "OrderNo", false, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 8);
-			this.AddElementFieldMapping("ForumEntity", "MaxAttachmentSize", "MaxAttachmentSize", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 9);
-			this.AddElementFieldMapping("ForumEntity", "MaxNoOfAttachmentsPerMessage", "MaxNoOfAttachmentsPerMessage", true, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 10);
-			this.AddElementFieldMapping("ForumEntity", "NewThreadWelcomeText", "NewThreadWelcomeText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 11);
-			this.AddElementFieldMapping("ForumEntity", "NewThreadWelcomeTextAsHTML", "NewThreadWelcomeTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 12);
+			this.AddElementFieldMapping("ForumEntity", "OrderNo", "OrderNo", false, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 7);
+			this.AddElementFieldMapping("ForumEntity", "MaxAttachmentSize", "MaxAttachmentSize", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 8);
+			this.AddElementFieldMapping("ForumEntity", "MaxNoOfAttachmentsPerMessage", "MaxNoOfAttachmentsPerMessage", true, "SmallInt", 0, 5, 0, false, "", null, typeof(System.Int16), 9);
+			this.AddElementFieldMapping("ForumEntity", "NewThreadWelcomeText", "NewThreadWelcomeText", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 10);
+			this.AddElementFieldMapping("ForumEntity", "NewThreadWelcomeTextAsHTML", "NewThreadWelcomeTextAsHTML", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 11);
 		}
 
 		/// <summary>Inits ForumRoleForumActionRightEntity's mappings</summary>

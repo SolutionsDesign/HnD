@@ -175,7 +175,7 @@ namespace SD.HnD.Gui.Controllers
 			try
 			{
 				await ForumManager.ModifyForumAsync(forumId, data.ForumEdited.SectionID, data.ForumEdited.ForumName, data.ForumEdited.ForumDescription,
-													data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, 1, data.ForumEdited.OrderNo,
+													data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, data.ForumEdited.OrderNo,
 													data.ForumEdited.MaxAttachmentSize, data.ForumEdited.MaxNoOfAttachmentsPerMessage,
 													data.ForumEdited.NewThreadWelcomeText, welcomeMessageAsHtml);
 			}
