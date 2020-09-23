@@ -44,6 +44,7 @@ namespace SD.HnD.Gui.Controllers
 
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Init(InitData data)
 		{
 			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync(); 

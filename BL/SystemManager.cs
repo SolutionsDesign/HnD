@@ -98,7 +98,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				await ActionProcedures.InstallAsync(emailAddress, passwordHashed, adapter, CancellationToken.None);
-				CacheController.PurgeResultsets("AnonymousUserQuery");
+				CacheController.PurgeResultsets(CacheKeys.AnonymousUserQueryResultset);
 			}
 		}
 	}

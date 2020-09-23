@@ -83,6 +83,10 @@ namespace SD.HnD.BL
 		/// The key to use to obtain and store the cached system data entity.
 		/// </summary>
 		public static readonly string SystemData = "SystemData";
+		/// <summary>
+		/// Cache key for the resultset for when querying for the anonymous user. 
+		/// </summary>
+		public static readonly string AnonymousUserQueryResultset = "AnonymousUserQuery";
 	}
 
 

@@ -342,7 +342,7 @@ namespace SD.HnD.BL
 				if(userId ==0 )
 				{
 					// cache the resultset, as the anonymous user doesn't change
-					q.CacheResultset(3600, false, "AnonymousUserQuery");
+					q.CacheResultset(3600, false, CacheKeys.AnonymousUserQueryResultset);
 				}
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
