@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using SD.HnD.BL;
 using SD.HnD.Gui.Classes;
 using SD.LLBLGen.Pro.DQE.SqlServer;
 using SD.LLBLGen.Pro.ORMSupportClasses;
@@ -89,20 +90,29 @@ namespace SD.HnD.Gui
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			
-			app.Use(async (ctx, next) =>
+			app.Use(async (context, next) =>
 					{
 						await next();
 
-						if(ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+						if(context.Response.StatusCode == 404 && !context.Response.HasStarted)
 						{
 							//Re-execute the request so the user gets the error page
-							string originalPath = ctx.Request.Path.Value;
-							ctx.Items["originalPath"] = originalPath;
-							ctx.Request.Path = "/Error/404";
+							string originalPath = context.Request.Path.Value;
+							context.Items["originalPath"] = originalPath;
+							context.Request.Path = "/Error/404";
+							// call next in pipeline
 							await next();
 						}
 					});
-			
+						
+			// If the database is empty, we have to redirect to the initialization page.  
+			app.Use(async (context, next) =>
+					{
+						await Startup.RedirectToInitIfRequired(context);
+						// call next in pipeline
+						await next();
+					});
+
 			app.UseRouting();
 			app.UseResponseCaching();
 			app.UseAuthentication();
@@ -110,6 +120,7 @@ namespace SD.HnD.Gui
 			
 			app.UseIPFilter();
 			app.UseSession();
+
 			// own middleware function to initialize session if required. 
 			app.Use(async (context, next) =>
 					{
@@ -119,12 +130,32 @@ namespace SD.HnD.Gui
 						// call next in pipeline
 						await next();
 					});
-
+			
 			// last element added to the chain.
 			app.UseEndpoints(endpoints => RegisterRoutes(endpoints));
 
 			// HnD one-time configuration now we now the environment.  
 			HnDConfiguration.Current.LoadStaticData(env.WebRootPath, env.ContentRootPath);
+		}
+
+
+		private static async Task RedirectToInitIfRequired(HttpContext context)
+		{
+			// check if there's an anonymous user in the database
+			var anonymous = await UserGuiHelper.GetUserAsync(0);		// use hardcoded 0 id. This also makes sure a misconfigured db isn't used further.
+			if(anonymous == null)
+			{
+				// database is empty 
+				context.Request.Path = ApplicationAdapter.GetVirtualRoot() + "Admin/Init";
+			}
+			else
+			{
+				if(anonymous.NickName != "Anonymous")
+				{
+					// Misconfigured.
+					context.Request.Path = ApplicationAdapter.GetVirtualRoot() + "Error/1337";
+				}
+			}
 		}
 
 
@@ -259,6 +290,7 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("ErrorHandler", "Error/{errorCode}", new {controller = "Error", action = "HandleErrorCode"});
 			
 			// Admin
+			routes.MapControllerRoute("InitializeSystem", "Admin/Init", new {controller = "SystemAdmin", action = "Init"});
 			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters", new {controller = "SystemAdmin", action = "SystemParameters"});
 			routes.MapControllerRoute("ReparseMessages", "Admin/ReparseMessages", new {controller = "SystemAdmin", action = "ReparseMessages"});
 			routes.MapControllerRoute("GetSupportQueues", "Admin/GetSupportQueues", new {controller = "SupportQueueAdmin", action = "GetSupportQueues"});

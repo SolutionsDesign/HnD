@@ -19,11 +19,14 @@
 */
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.Utility;
+using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
@@ -75,6 +78,27 @@ namespace SD.HnD.BL
 				systemData.MinNumberOfThreadsToFetch = minimalNumberOfThreadsToFetch;
 				systemData.SendReplyNotifications = sendReplyNotifications;
 				return await adapter.SaveEntityAsync(systemData).ConfigureAwait(false);
+			}
+		}
+
+
+		/// <summary>
+		/// Initializes the system, by running a stored procedure passing in the new admin password.
+		/// </summary>
+		/// <param name="newAdminPassword"></param>
+		/// <param name="emailAddress"></param>
+		/// <returns></returns>
+		public static async Task Initialize(string newAdminPassword, string emailAddress)
+		{
+			if(string.IsNullOrWhiteSpace(newAdminPassword))
+			{
+				return;
+			}
+			var passwordHashed = HnDGeneralUtils.HashPassword(newAdminPassword, performPreMD5Hashing:true);
+			using(var adapter = new DataAccessAdapter())
+			{
+				await ActionProcedures.InstallAsync(emailAddress, passwordHashed, adapter, CancellationToken.None);
+				CacheController.PurgeResultsets("AnonymousUserQuery");
 			}
 		}
 	}

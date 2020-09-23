@@ -31,6 +31,14 @@ namespace SD.HnD.Gui.Controllers
 							   ErrorText = "The system experienced an internal error. Please retry."
 						   };
 					break;
+				case 1337:
+					data = new ErrorData()
+						   {
+							   ErrorCode = 1337,
+							   ErrorTitle = "HnD internal error!",
+							   ErrorText = "The system has been misconfigured: the user Anonymous isn't userid 0 and / or the Admin user isn't userid 1. Please reconfigure the system."
+						   };
+					break;
 				default:
 					return RedirectToAction("Index", "Home");
 			}

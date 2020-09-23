@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LayoutInfo>
+  <ModelViews>
+    <ModelView Name="AuditingUser">
+      <EntityDefinitions>
+        <Entity Name=":AuditAction" X="643.3449" Y="449.093048" />
+        <Entity Name=":AuditDataCore" X="322.3449" Y="409.44165" />
+        <Entity Name=":AuditDataMessageRelated" X="322.344879" Y="630.569336" />
+        <Entity Name=":AuditDataThreadRelated" X="-28.65512" Y="433.441742" />
+        <Entity Name=":User" X="322.34494" Y="-4.38357544" />
+        <Entity Name=":Role" X="643.3445" Y="282.5935" />
+        <Entity Name=":RoleUser" X="643.3452" Y="131.616425" />
+        <Entity Name=":UserTitle" X="643.345" Y="-11.0571289" />
+        <Entity Name=":Thread" X="-28.65512" Y="67.61656" />
+      </EntityDefinitions>
+    </ModelView>
+    <ModelView Name="Security">
+      <EntityDefinitions>
+        <Entity Name=":ActionRight" X="646.187866" Y="88.72693" />
+        <Entity Name=":Forum" X="325.1877" Y="459.6213" />
+        <Entity Name=":ForumRoleForumActionRight" X="646.187866" Y="344.796021" />
+        <Entity Name=":Role" X="325.1877" Y="165.970825" />
+        <Entity Name=":RoleSystemActionRight" X="4.187622" Y="43.4830627" />
+        <Entity Name=":RoleUser" X="325.187744" Y="312.796051" />
+        <Entity Name=":User" X="4.18765259" Y="194.172256" />
+        <Entity Name=":PasswordResetToken" X="4.187622" Y="607.997437" />
+      </EntityDefinitions>
+    </ModelView>
+    <ModelView Name="Content">
+      <EntityDefinitions>
+        <Entity Name=":Attachment" X="703.3515" Y="-305.270264" />
+        <Entity Name=":Bookmark" X="381.91153" Y="239.455322" />
+        <Entity Name=":Forum" X="381.9116" Y="386.720642" />
+        <Entity Name=":Message" X="-29.5284977" Y="-283.5595" />
+        <Entity Name=":Section" X="703.3517" Y="450.720581" />
+        <Entity Name=":Thread" X="381.9117" Y="-35.8097076" />
+        <Entity Name=":User" X="-29.5284119" Y="-40.29422" />
+      </EntityDefinitions>
+    </ModelView>
+  </ModelViews>
+</LayoutInfo>

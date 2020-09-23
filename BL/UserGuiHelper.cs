@@ -339,6 +339,11 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				var q = new QueryFactory().User.Where(UserFields.UserID.Equal(userId));
+				if(userId ==0 )
+				{
+					// cache the resultset, as the anonymous user doesn't change
+					q.CacheResultset(3600, false, "AnonymousUserQuery");
+				}
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}

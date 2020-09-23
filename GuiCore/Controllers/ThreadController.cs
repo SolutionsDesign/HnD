@@ -97,7 +97,7 @@ namespace SD.HnD.Gui.Controllers
 			var systemData = await _cache.GetSystemDataAsync();
 			var aggregatedActiveThreadsData = await ThreadGuiHelper.GetActiveThreadsAggregatedData(
 																		   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum),
-																		   systemData.HoursThresholdForActiveThreads,
+																		   systemData?.HoursThresholdForActiveThreads ?? 0,
 																		   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers), 
 																		   this.HttpContext.Session.GetUserID());
 			var viewData = new ThreadsData() {ThreadRows = aggregatedActiveThreadsData};

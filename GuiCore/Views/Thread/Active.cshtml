@@ -19,7 +19,7 @@
         <div class="col-sm-12 pt0 mt0">
             <h2 class="br-bottom pt0 mt0">Active Threads</h2>
             <p>
-	            The list of all active threads of the past @systemData.HoursThresholdForActiveThreads hours.
+	            The list of all active threads of the past @systemData?.HoursThresholdForActiveThreads hours.
             </p>
         </div>
     </div>
@@ -31,7 +31,7 @@
                 Active threads
             </div>
         </div>
-		@if(Model.ThreadRows.Count <= 0)
+		@if(Model.ThreadRows==null || Model.ThreadRows.Count <= 0)
         {
             <div class="row fs-row pb30">
                 <div class="col-sm-12">
@@ -49,7 +49,7 @@
 	                    <div class="col-sm-1 notonmobile plr10">Views</div>
 	                    <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
                     </div>
-					@await Html.PartialAsync("SimpleThreadLister", Model.ThreadRows)
+					@await Html.PartialAsync("SimpleThreadLister", Model?.ThreadRows)
                 </div>
             </div>
 		}

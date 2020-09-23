@@ -1,9 +1,12 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using SD.HnD.BL;
+using SD.HnD.Gui.Classes;
+using SD.HnD.Gui.Models;
 using SD.HnD.Gui.Models.Admin;
 
 namespace SD.HnD.Gui.Controllers
@@ -20,8 +23,50 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
-		
-		
+
+
+		[HttpGet]
+		public async Task<ActionResult> Init()
+		{
+			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync(); 
+			if(incorrectlyConfigured)
+			{
+				return Redirect("~/Error/1337");
+			}
+
+			if(proceedWithInit)
+			{
+				return View("~/Views/Admin/Init.cshtml");
+			}
+			// database is initialized already
+			return RedirectToAction("Index", "Home");
+		}
+
+
+		[HttpPost]
+		public async Task<ActionResult> Init(InitData data)
+		{
+			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync(); 
+			if(incorrectlyConfigured)
+			{
+				return Redirect("~/Error/1337");
+			}
+
+			if(!proceedWithInit)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			if(!ModelState.IsValid)
+			{
+				return View("~/Views/Admin/Init.cshtml", data);
+			}
+
+			await SystemManager.Initialize(data.NewPassword, data.EmailAddress);
+			return RedirectToAction("Index", "Home");
+		}
+
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult> SystemParameters()
@@ -113,6 +158,39 @@ namespace SD.HnD.Gui.Controllers
 			data.Completed = true;
 			
 			return View("~/Views/Admin/ReparseMessages.cshtml", data);
+		}
+		
+
+		private async Task<(bool proceedWithInit, bool incorrectlyConfigured)> ShouldPerformInitAsync()
+		{
+			bool proceedWithInit = false;
+			bool incorrectlyConfigured = false;
+
+			// check if there's an anonymous user in the database
+			var anonymous = await UserGuiHelper.GetUserAsync(0); // use hardcoded 0 id.
+			if(anonymous == null)
+			{
+				proceedWithInit = true;
+			}
+			else
+			{
+				if(anonymous.NickName != "Anonymous")
+				{
+					incorrectlyConfigured = true;
+				}
+			}
+
+			if(proceedWithInit)
+			{
+				var admin = await UserGuiHelper.GetUserAsync(1); // use hardcoded 1 id.
+				if(admin != null)
+				{
+					proceedWithInit = false;
+					incorrectlyConfigured = true;	// anonymous wasn't there, but admin was... 
+				}
+			}
+
+			return (proceedWithInit, incorrectlyConfigured);
 		}
 	}
 }
