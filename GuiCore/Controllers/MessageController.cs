@@ -171,7 +171,7 @@ namespace SD.HnD.Gui.Controllers
 		{
 			if(submitButton != "Post")
 			{
-				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new { id = threadId });
+				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new { threadId = threadId });
 			}
 
 			if(!ModelState.IsValid)

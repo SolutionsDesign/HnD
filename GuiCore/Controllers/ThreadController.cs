@@ -29,7 +29,7 @@ namespace SD.HnD.Gui.Controllers
 		public ActionResult IndexOldVersion(int threadID)
 		{
 			// We expect the ThreadID as argument in the querystring. Typical URL is /Thread/Old/?ThreadID=1012
-			return RedirectToAction("Index", "Thread", new {id = threadID});
+			return RedirectToAction("Index", "Thread", new {threadId = threadID});
 		}
 		
 		
@@ -147,7 +147,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 			await ThreadManager.MoveThreadAsync(threadId, newForumId);
-			return RedirectToAction("Index", "Thread", new { id = threadId, pageNo = 1 });
+			return RedirectToAction("Index", "Thread", new { threadId = threadId, pageNo = 1 });
 		}
 
 
@@ -167,7 +167,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 			int forumId = thread.ForumID;
 			await ThreadManager.DeleteThreadAsync(id);
-			return RedirectToAction("Index", "Forum", new { id = forumId });
+			return RedirectToAction("Index", "Forum", new { forumId = forumId });
 		}
 
 
@@ -294,7 +294,7 @@ namespace SD.HnD.Gui.Controllers
 				{
 					return RedirectToAction("Index", "Home");
 				}
-				return RedirectToAction("Index", "Forum", new {id = forumId});
+				return RedirectToAction("Index", "Forum", new {forumId = forumId});
 			}
 			if(!ModelState.IsValid)
 			{
