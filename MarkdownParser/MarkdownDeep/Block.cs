@@ -384,14 +384,6 @@ namespace MarkdownDeep
 					b.Append("</p>\n");
 					break;
 // DocNet Extensions
-				case BlockType.font_awesome:
-					if(m.DocNetMode || m.HnDMode)
-					{
-						b.Append("<i class=\"fa fa-");
-						b.Append(this.Data as string ?? string.Empty);
-						b.Append("\"></i>");
-					}
-					break;
 				case BlockType.alert:
 					if(m.DocNetMode || m.HnDMode)
 					{
@@ -544,11 +536,11 @@ namespace MarkdownDeep
 					break;
 				case "warning":
 					title = "Warning!";
-					faIconName = "warning";
+					faIconName = "exclamation-triangle";
 					break;
 				case "important":
 					title = "Important!";
-					faIconName = "warning";
+					faIconName = "exclamation-circle";
 					alertTypeClass = "warning";
 					break;
 				case "neutral":
@@ -563,7 +555,7 @@ namespace MarkdownDeep
 			}
 			b.Append("<div class=\"alert alert-");
 			b.Append(alertTypeClass);
-			b.Append("\"><span class=\"alert-title\"><i class=\"fa fa-");
+			b.Append("\"><span class=\"alert-title\"><i class=\"fas fa-");
 			b.Append(faIconName);
 			b.Append("\"></i> ");
 			b.Append(title);

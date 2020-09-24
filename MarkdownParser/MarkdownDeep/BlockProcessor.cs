@@ -1252,7 +1252,6 @@ namespace MarkdownDeep
 
 		/// <summary>
 		/// Handles the extensions added by Solutions Design, starting with '@'. These are added for DocNet and HnD. This can be:
-		/// * @fa-
 		/// * @alert
 		///   @end
 		/// * @tabs

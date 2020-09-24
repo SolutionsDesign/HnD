@@ -281,8 +281,14 @@ namespace SD.HnD.Utility
 						 MarkdownInHtml = false,
 						 AutoHeadingIDs = false,
 						 EmojiFilePerName = emojiFilenamesPerName,
-						 EmojiPerSmileyShortcut = smileyMappings
+						 EmojiPerSmileyShortcut = smileyMappings,
+						 NoFollowLinks = true,
+						 HtmlClassTitledImages = "figure",
 					 };
+			if(!messageText.EndsWith(Environment.NewLine))
+			{
+				messageText += Environment.NewLine;
+			}
 			return md.Transform(messageText);
 		}
 		

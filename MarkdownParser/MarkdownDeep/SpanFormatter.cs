@@ -264,8 +264,8 @@ namespace MarkdownDeep
 
 					// DocNet Extensions
 					case TokenType.font_awesome:
-						sb.Append("<i class=\"fa fa-");
-						sb.Append(str, t.startOffset, t.length);
+						sb.Append("<i class=\"fas fa-");
+						m_Markdown.HtmlEncode(sb, str, t.startOffset, t.length);
 						sb.Append("\"></i>");
 						break;
 

@@ -28,6 +28,13 @@ namespace SD.HnD.Gui.Controllers
 			ArgumentVerifier.CantBeNull(cache, nameof(cache));
 			_cache = cache;
 		}
+
+
+		[HttpGet]
+		public ActionResult Help()
+		{
+			return View();
+		}
 		
 		
 		[HttpGet]
