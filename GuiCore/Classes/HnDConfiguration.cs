@@ -69,11 +69,6 @@ namespace SD.HnD.Gui.Classes
 			{
 				this.MaxAmountMessagesPerPage = 25;
 			}
-
-			foreach(var mapping in this.SmileyMappings)
-			{
-				this.SmileyMappingsLookup[mapping.From] = mapping.To ?? string.Empty;
-			}
 			
 			if(string.IsNullOrWhiteSpace(this.VirtualRoot))
 			{
@@ -91,6 +86,11 @@ namespace SD.HnD.Gui.Classes
 			this.DataFilesPath = this.DataFilesPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 			// clamp search result caching timeout between 1 and 60 minutes.
 			this.MaxNumberOfMinutesToCacheSearchResults = Math.Max(1, Math.Min(60, this.MaxNumberOfMinutesToCacheSearchResults));
+
+			foreach(var mapping in this.SmileyMappings)
+			{
+				this.SmileyMappingsLookup[mapping.From] = mapping.To ?? string.Empty;
+			}
 		}
 
 
@@ -271,10 +271,13 @@ namespace SD.HnD.Gui.Classes
 			this.ThreadUpdatedNotificationTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "ThreadUpdatedNotification.template"));
 			this.ResetPasswordLinkTemplate = File.ReadAllText(Path.Combine(this.DataFilesPath, "ResetPasswordLink.template"));
 
-			var emojiUrlPath = (this.EmojiFilesPath ?? string.Empty);
+			// Don't prefix the urlpath with the virtual root yet, as we use the path also for folder names below
+			var emojiUrlPath = this.EmojiFilesPath ?? string.Empty;
 			// replace / with \ if we're on windows and / with \ if we're on linux
 			var emojiUrlPathForFilename = emojiUrlPath.TrimStart('\\', '/').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar); 
 			var emojiFilesPath = Path.Combine(webRootPath ?? string.Empty, emojiUrlPathForFilename);
+			// We have to prefix the emojiUrlPath with the virtual root now. 
+			emojiUrlPath = (this.VirtualRoot + emojiUrlPath).Replace("//", "/");
 	        this.EmojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
 			// load nicks of banned users
 			var bannedNicknames = UserGuiHelper.GetAllBannedUserNicknames();

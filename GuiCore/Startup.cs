@@ -215,7 +215,11 @@ namespace SD.HnD.Gui
 			_configuration.Bind("LLBLGenPro", llblgenProConfig);
 			llblgenProConfig.Sanitize();
 			var connectionString = _configuration.GetConnectionString("Main.ConnectionString.SQL Server (SqlClient)");
-			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", connectionString);
+			if(!string.IsNullOrEmpty(connectionString)!)
+			{
+				RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", connectionString);
+			}
+
 			foreach(var kvp in llblgenProConfig.ConnectionStrings)
 			{
 				RuntimeConfiguration.AddConnectionString(kvp.Key, kvp.Value);
@@ -253,6 +257,8 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("ViewThread", "Thread/{threadId}/{pageNo}", new {controller="Thread", action="Index", pageNo=1});
 			routes.MapControllerRoute("ToggleMarkAsDone", "Thread/ToggleMarkAsDone/{threadId}/{pageNo}", new {controller="Thread", action="ToggleMarkAsDone", pageNo=1});
 			routes.MapControllerRoute("AddThread", "Thread/Add/{forumId}", new {controller="Thread", action="Add"});
+			routes.MapControllerRoute("MoveThread", "Thread/Move/{threadId}", new {controller="Thread", action="Move", pageNo=1});
+			routes.MapControllerRoute("EditThreadProperties", "Thread/EditProperties/{threadId}", new {controller="Thread", action="EditProperties", pageNo=1});
 
 			// Forum
 			routes.MapControllerRoute("ViewForum", "Forum/{forumId}/{pageNo}", new {controller="Forum", action="Index", pageNo=1});
