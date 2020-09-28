@@ -183,7 +183,7 @@ namespace SD.HnD.Gui.Controllers
 			await MessageManager.DeleteAttachmentAsync(messageId, attachmentId);
 			ApplicationAdapter.InvalidateCachedNumberOfUnapprovedAttachments();
 			// redirect to the message, using the message controller
-			return RedirectToAction("Goto", "Message", new {messageId = messageId});
+			return RedirectToAction("Goto", "Message", new {id = messageId});
 		}
 
 
