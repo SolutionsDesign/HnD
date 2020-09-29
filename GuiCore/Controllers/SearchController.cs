@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +43,8 @@ namespace SD.HnD.Gui.Controllers
 		{
 			_cache = cache;
 		}
-		
+
+
 		/// <summary>
 		/// Get method for the advanced search UI
 		/// </summary>
@@ -55,6 +76,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var allAccessibleForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
 			var forumsToSearch = new List<int>();
 			if(searchData.TargetForums == null || searchData.TargetForums.Count <= 0)
@@ -63,31 +85,35 @@ namespace SD.HnD.Gui.Controllers
 			}
 			else
 			{
-				forumsToSearch.AddRange(searchData.TargetForums.Where(f=>allAccessibleForums.Contains(f)));
+				forumsToSearch.AddRange(searchData.TargetForums.Where(f => allAccessibleForums.Contains(f)));
 			}
+
 			var firstSortClause = SearchResultsOrderSetting.ForumAscending;
 			if(!Enum.TryParse(searchData.FirstSortClause, out firstSortClause))
 			{
 				firstSortClause = SearchResultsOrderSetting.ForumAscending;
 			}
+
 			var secondSortClause = SearchResultsOrderSetting.LastPostDateAscending;
 			if(!Enum.TryParse(searchData.SecondSortClause, out secondSortClause))
 			{
 				secondSortClause = SearchResultsOrderSetting.LastPostDateAscending;
 			}
+
 			var searchTarget = SearchTarget.MessageText;
 			if(!Enum.TryParse(searchData.SearchTarget, out searchTarget))
 			{
 				searchTarget = SearchTarget.MessageText;
 			}
+
 			await PerformSearchAsync(searchData.SearchParameters, forumsToSearch, firstSortClause, secondSortClause, searchTarget);
-			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+			return RedirectToAction("Results", "Search", new {pageNo = 1});
 		}
 
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> SearchAll([Bind] string searchParameters="")
+		public async Task<ActionResult> SearchAll([Bind] string searchParameters = "")
 		{
 			if(string.IsNullOrWhiteSpace(searchParameters))
 			{
@@ -98,31 +124,34 @@ namespace SD.HnD.Gui.Controllers
 									 SearchResultsOrderSetting.LastPostDateDescending, SearchResultsOrderSetting.ForumAscending,
 									 SearchTarget.MessageTextAndThreadSubject);
 
-			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+			return RedirectToAction("Results", "Search", new {pageNo = 1});
 		}
 
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> SearchForum(int forumId = 0, string searchParameters="")
+		public async Task<ActionResult> SearchForum(int forumId = 0, string searchParameters = "")
 		{
 			if(string.IsNullOrWhiteSpace(searchParameters))
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var allAccessibleForums = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
 			if(!allAccessibleForums.Contains(forumId))
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var forum = await _cache.GetForumAsync(forumId);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			await PerformSearchAsync(searchParameters, new List<int>() { forumId}, SearchResultsOrderSetting.LastPostDateDescending, 
+
+			await PerformSearchAsync(searchParameters, new List<int>() {forumId}, SearchResultsOrderSetting.LastPostDateDescending,
 									 SearchResultsOrderSetting.ThreadSubjectAscending, SearchTarget.MessageTextAndThreadSubject);
-			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+			return RedirectToAction("Results", "Search", new {pageNo = 1});
 		}
 
 
@@ -132,7 +161,7 @@ namespace SD.HnD.Gui.Controllers
 			var forumIDs = this.Request.Query["ForumID"];
 			var forumIDsToSearchIn = new List<int>();
 			var allAccessibleForumIDs = this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum).ToHashSet();
-			if(forumIDs.Count<=0)
+			if(forumIDs.Count <= 0)
 			{
 				forumIDsToSearchIn.AddRange(allAccessibleForumIDs);
 			}
@@ -145,20 +174,23 @@ namespace SD.HnD.Gui.Controllers
 					{
 						return RedirectToAction("Index", "Home");
 					}
+
 					if(allAccessibleForumIDs.Contains(forumID))
 					{
 						forumIDsToSearchIn.Add(forumID);
 					}
 				}
 			}
-			string searchParameters = this.Request.Query["SearchTerms"];		// 'SearchTerms' is the URL argument used in older HnD versions, so we keep that.
+
+			string searchParameters = this.Request.Query["SearchTerms"]; // 'SearchTerms' is the URL argument used in older HnD versions, so we keep that.
 			if(string.IsNullOrWhiteSpace(searchParameters))
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			await PerformSearchAsync(searchParameters, forumIDsToSearchIn, SearchResultsOrderSetting.LastPostDateDescending, 
+
+			await PerformSearchAsync(searchParameters, forumIDsToSearchIn, SearchResultsOrderSetting.LastPostDateDescending,
 									 SearchResultsOrderSetting.ThreadSubjectAscending, SearchTarget.MessageTextAndThreadSubject);
-			return RedirectToAction("Results", "Search", new { pageNo = 1 });
+			return RedirectToAction("Results", "Search", new {pageNo = 1});
 		}
 
 
@@ -175,22 +207,26 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var systemData = await _cache.GetSystemDataAsync();
 			var pageSize = systemData.PageSizeSearchResults;
 			if(pageSize <= 0)
 			{
 				pageSize = 50;
 			}
+
 			int numberOfPages = (results.Count / pageSize);
 			if(numberOfPages * pageSize < results.Count)
 			{
 				numberOfPages++;
 			}
+
 			var rowsToShow = new List<SearchResultRow>();
 			for(int i = 0; (i < pageSize) && ((((pageNo - 1) * pageSize) + i) < results.Count); i++)
 			{
-				rowsToShow.Add(results[((pageNo-1)*pageSize) + i]);
+				rowsToShow.Add(results[((pageNo - 1) * pageSize) + i]);
 			}
+
 			var viewData = new SearchResultsData()
 						   {
 							   NumberOfPages = numberOfPages,
@@ -211,7 +247,7 @@ namespace SD.HnD.Gui.Controllers
 		}
 
 
-		private async Task PerformSearchAsync(string searchParameters, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement, 
+		private async Task PerformSearchAsync(string searchParameters, List<int> forumIDs, SearchResultsOrderSetting orderFirstElement,
 											  SearchResultsOrderSetting orderSecondElement, SearchTarget targetToSearch)
 		{
 			var searchTerms = searchParameters.Length > 1024 ? searchParameters.Substring(0, 1024) : searchParameters;

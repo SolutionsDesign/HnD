@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Linq;
@@ -30,7 +31,6 @@ using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.Linq;
-using SD.HnD.DALAdapter.TypedListClasses;
 using SD.HnD.DTOs.DtoClasses;
 using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.LinqSupportClasses;
@@ -127,32 +127,32 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums for which the calling user can view other users' threads. Can be null</param>
 		/// <param name="userId">The userid of the calling user.</param>
 		/// <returns>a list with objects representing the Active threads</returns>
-		public static async Task<List<AggregatedThreadRow>> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold, 
+		public static async Task<List<AggregatedThreadRow>> GetActiveThreadsAggregatedData(List<int> accessableForums, short hoursThreshold,
 																						   List<int> forumsWithThreadsFromOthers, int userId)
 		{
-            if (accessableForums == null || accessableForums.Count <= 0)
-            {
-                return null;
-            }
+			if(accessableForums == null || accessableForums.Count <= 0)
+			{
+				return null;
+			}
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
-						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-								.InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
-						.Where(ThreadFields.ForumID.In(accessableForums)
-									.And(ThreadFields.IsClosed.Equal(false))
-									.And(ThreadFields.MarkedAsDone.Equal(false))
-									.And(ThreadFields.ThreadLastPostingDate.GreaterEqual(DateTime.Now.AddHours((double)0 - hoursThreshold)))
-									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
-						.OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
+					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
+					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+					  .Where(ThreadFields.ForumID.In(accessableForums)
+										 .And(ThreadFields.IsClosed.Equal(false))
+										 .And(ThreadFields.MarkedAsDone.Equal(false))
+										 .And(ThreadFields.ThreadLastPostingDate.GreaterEqual(DateTime.Now.AddHours((double)0 - hoursThreshold)))
+										 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
+					  .OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Gets the dto of the last message in the thread, which contains all information to render a message pane, which can be used to
 		/// show the last message in a thread one is replying to. 
@@ -171,7 +171,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Constructs a list of hierarchical DTOs with all message data for a page. This is a list of DTOs as the attachments information is
 		/// fetched as well, which have a 1:n relationship with message. 
@@ -212,34 +212,37 @@ namespace SD.HnD.BL
 		/// <param name="maxAmountMessagesPerPage">The max amount of messages per page to show. </param>
 		/// <returns></returns>
 		public static async Task<int> GetStartAtMessageForGivenMessageAndThreadAsync(int threadId, int messageId, int maxAmountMessagesPerPage)
-        {
+		{
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(()=>MessageFields.MessageID.ToValue<int>())
-						.Where(MessageFields.ThreadID.Equal(threadId))
-						.OrderBy(MessageFields.PostingDate.Ascending())
-						.Distinct();
-	        using(var adapter = new DataAccessAdapter())
-	        {
-		        var messageIds = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-		        var startAtMessage = 0;
-		        var rowIndex = 0;
-		        if(messageIds.Count > 0)
-		        {
-			        for(var i = 0; i < messageIds.Count; i++)
-			        {
-				        if(messageIds[i] == messageId)
-				        {
-					        // found the row
-					        rowIndex = i;
-					        break;
-				        }
-			        }
-			        startAtMessage = (rowIndex / maxAmountMessagesPerPage) * maxAmountMessagesPerPage;
-		        }
-		        return startAtMessage;
-	        }
-        }
+					  .Select(() => MessageFields.MessageID.ToValue<int>())
+					  .Where(MessageFields.ThreadID.Equal(threadId))
+					  .OrderBy(MessageFields.PostingDate.Ascending())
+					  .Distinct();
+			
+			using(var adapter = new DataAccessAdapter())
+			{
+				var messageIds = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+				var startAtMessage = 0;
+				var rowIndex = 0;
+				if(messageIds.Count > 0)
+				{
+					for(var i = 0; i < messageIds.Count; i++)
+					{
+						if(messageIds[i] == messageId)
+						{
+							// found the row
+							rowIndex = i;
+							break;
+						}
+					}
+
+					startAtMessage = (rowIndex / maxAmountMessagesPerPage) * maxAmountMessagesPerPage;
+				}
+
+				return startAtMessage;
+			}
+		}
 
 
 		/// <summary>
@@ -254,17 +257,17 @@ namespace SD.HnD.BL
 			// the first messageid. If that's not available or not equal to messageID, the messageID isn't the first post in the thread, otherwise it is.
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(()=>MessageFields.MessageID.ToValue<int>())
-						.Where(MessageFields.ThreadID.Equal(threadId))
-						.OrderBy(MessageFields.PostingDate.Ascending())
-						.Limit(1);
+					  .Select(() => MessageFields.MessageID.ToValue<int>())
+					  .Where(MessageFields.ThreadID.Equal(threadId))
+					  .OrderBy(MessageFields.PostingDate.Ascending())
+					  .Limit(1);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var firstMessageId = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
 				return firstMessageId.HasValue && firstMessageId.Value == messageId;
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Creates the thread filter. Filters on the threads viewable by the passed in userid, which is the caller of the method. 
@@ -283,6 +286,7 @@ namespace SD.HnD.BL
 				// accept only those threads which are in the forumsWithThreadsFromOthers list or which are either started by userID or sticky.
 				return ThreadFields.ForumID.In(forumsWithThreadsFromOthers).Or((ThreadFields.IsSticky == true).Or(ThreadFields.StartedByUserID == userId));
 			}
+
 			// there are no forums enlisted in which the user has the right to view threads from others. So just filter on
 			// sticky threads or threads started by the calling user.
 			return (ThreadFields.IsSticky.Equal(true)).Or(ThreadFields.StartedByUserID.Equal(userId));
@@ -315,7 +319,7 @@ namespace SD.HnD.BL
 					   MessageFields.MessageID.Source("LastMessage").As("MessageIDLastPost"),
 				   };
 		}
-		
+
 
 		/// <summary>
 		/// Builds the projection elements for a dynamic query which contains thread information and additionally the forum name.
@@ -344,14 +348,14 @@ namespace SD.HnD.BL
 										  qf.Field("NumberOfMessages").Source("m2"))
 								  .From(qf.Message.As("m1")
 										  .InnerJoin(qf.Message
-													   .Select(MessageFields.ThreadID, MessageFields.MessageID.Max().As("MaxMessageID"), 
+													   .Select(MessageFields.ThreadID, MessageFields.MessageID.Max().As("MaxMessageID"),
 															   MessageFields.MessageID.Count().As("NumberOfMessages"))
 													   .GroupBy(MessageFields.ThreadID)
 													   .As("m2"))
-												.On(MessageFields.MessageID.Source("m1").Equal(qf.Field("MaxMessageID").Source("m2")))))
-							.On(ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
+										  .On(MessageFields.MessageID.Source("m1").Equal(qf.Field("MaxMessageID").Source("m2")))))
+					 .On(ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
 					 .LeftJoin(qf.User.As("LastPostingUser"))
-							.On(MessageFields.PostedByUserID.Source("LastMessage").Equal(UserFields.UserID.Source("LastPostingUser")));
+					 .On(MessageFields.PostedByUserID.Source("LastMessage").Equal(UserFields.UserID.Source("LastPostingUser")));
 
 			// the LastMessage query is also doable with a scalar query sorted descending to obtain the last message, however this turns out to be slower:
 			/*

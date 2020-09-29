@@ -34,6 +34,7 @@
 // Contributers to the code:
 //		- Frans Bouma [FB]
 //////////////////////////////////////////////////////////////////////
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,6 +56,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 		private object _semaphore;
 		private Timer _purgeTimer;
 		#endregion
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CacheKeyStore"/> class.
@@ -112,6 +114,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 					toReturn.AddRange(_cacheKeysPerTag.GetValue(tag));
 				}
 			}
+
 			return toReturn;
 		}
 
@@ -142,6 +145,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 						{
 							_cacheKeysPerTag.Add(tag, originalKey);
 						}
+
 						if(duration != TimeSpan.Zero)
 						{
 							_cacheKeysAndExpireDates.Add(new ValuePair<CacheKey, DateTime>(originalKey, DateTime.Now.ToUniversalTime().Add(duration)));
@@ -149,6 +153,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 					}
 				}
 			}
+
 			return toReturn.ToString();
 		}
 
@@ -161,7 +166,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 			using(TimedLock.Lock(_semaphore))
 			{
 				var now = DateTime.Now.ToUniversalTime();
-				var toPurge = _cacheKeysAndExpireDates.Where(kvp => kvp.Value2 < now).Select(kvp=>kvp.Value1).ToList();
+				var toPurge = _cacheKeysAndExpireDates.Where(kvp => kvp.Value2 < now).Select(kvp => kvp.Value1).ToList();
 				_cacheKeysAndExpireDates = _cacheKeysAndExpireDates.Where(kvp => kvp.Value2 >= now).ToList();
 
 				foreach(var key in toPurge)
@@ -179,6 +184,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 							}
 						}
 					}
+
 					foreach(var tag in tagsToRemove)
 					{
 						_cacheKeysPerTag.Remove(tag);
@@ -186,7 +192,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib.Caching
 				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Handles the Elapsed event of the _purgeTimer control.

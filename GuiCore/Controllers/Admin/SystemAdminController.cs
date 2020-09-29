@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -19,6 +39,7 @@ namespace SD.HnD.Gui.Controllers
 	{
 		private IMemoryCache _cache;
 
+
 		public SystemAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
@@ -28,7 +49,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpGet]
 		public async Task<ActionResult> Init()
 		{
-			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync(); 
+			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync();
 			if(incorrectlyConfigured)
 			{
 				return Redirect("~/Error/1337");
@@ -38,6 +59,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return View("~/Views/Admin/Init.cshtml");
 			}
+
 			// database is initialized already
 			return RedirectToAction("Index", "Home");
 		}
@@ -47,7 +69,7 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Init(InitData data)
 		{
-			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync(); 
+			var (proceedWithInit, incorrectlyConfigured) = await ShouldPerformInitAsync();
 			if(incorrectlyConfigured)
 			{
 				return Redirect("~/Error/1337");
@@ -101,7 +123,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			
+
 			if(!ModelState.IsValid)
 			{
 				return View("~/Views/Admin/SystemParameters.cshtml", data);
@@ -117,10 +139,11 @@ namespace SD.HnD.Gui.Controllers
 				_cache.Remove(CacheKeys.SystemData);
 				data.Persisted = true;
 			}
+
 			return View("~/Views/Admin/SystemParameters.cshtml", data);
 		}
 
-		
+
 		[HttpGet]
 		[Authorize]
 		public ActionResult ReparseMessages()
@@ -129,13 +152,13 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			
+
 			var data = new ReparsingMessageData();
 			data.Completed = false;
-			
+
 			return View("~/Views/Admin/ReparseMessages.cshtml", data);
 		}
-		
+
 
 		[HttpPost]
 		[Authorize]
@@ -146,21 +169,21 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			
+
 			if(submitAction == "cancel")
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			
+
 			var data = new ReparsingMessageData();
-			Action<string> consoleLogger = s => Console.WriteLine(s); 
-			data.NumberOfMessagesReparsed = await MessageManager.ReParseMessagesAsync(ApplicationAdapter.GetEmojiFilenamesPerName(), 
+			Action<string> consoleLogger = s => Console.WriteLine(s);
+			data.NumberOfMessagesReparsed = await MessageManager.ReParseMessagesAsync(ApplicationAdapter.GetEmojiFilenamesPerName(),
 																					  ApplicationAdapter.GetSmileyMappings(), consoleLogger).ConfigureAwait(false);
 			data.Completed = true;
-			
+
 			return View("~/Views/Admin/ReparseMessages.cshtml", data);
 		}
-		
+
 
 		private async Task<(bool proceedWithInit, bool incorrectlyConfigured)> ShouldPerformInitAsync()
 		{
@@ -187,7 +210,7 @@ namespace SD.HnD.Gui.Controllers
 				if(admin != null)
 				{
 					proceedWithInit = false;
-					incorrectlyConfigured = true;	// anonymous wasn't there, but admin was... 
+					incorrectlyConfigured = true; // anonymous wasn't there, but admin was... 
 				}
 			}
 

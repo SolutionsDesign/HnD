@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	https://www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -36,7 +56,7 @@ namespace SD.HnD.Gui.Models
 			this.IconURL = GuiHelper.StripProtocolsFromUrl(this.IconURL);
 			this.Website = GuiHelper.StripProtocolsFromUrl(this.Website);
 		}
-		
+
 
 		public virtual string NickName { get; set; }
 		[DataType(DataType.Password)]
@@ -52,7 +72,7 @@ namespace SD.HnD.Gui.Models
 		[StringLength(200)]
 		[MinLength(6)]
 		[EmailAddress]
-		public string EmailAddress { get;set; }
+		public string EmailAddress { get; set; }
 		[StringLength(250)]
 		public string Signature { get; set; }
 		[DataType(DataType.Date)]
@@ -69,6 +89,7 @@ namespace SD.HnD.Gui.Models
 		[Url]
 		[FileExtensions(Extensions = "jpg,png,bmp")]
 		public string IconURL { get; set; }
+
 		// preferences
 		[DisplayName("Email-address is public")]
 		public bool EmailAddressIsPublic { get; set; }

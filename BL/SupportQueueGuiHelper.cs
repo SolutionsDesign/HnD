@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections.Generic;
 using SD.LLBLGen.Pro.ORMSupportClasses;
@@ -27,7 +28,6 @@ using System.Threading.Tasks;
 using SD.HnD.BL.TypedDataClasses;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
-using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DTOs.DtoClasses;
@@ -70,7 +70,7 @@ namespace SD.HnD.BL
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Gets all support queues known in the system, sorted by orderno, ascending.
@@ -111,8 +111,8 @@ namespace SD.HnD.BL
 			// that entity doesn't exist, the thread isn't in a supportqueue.
 			var qf = new QueryFactory();
 			var q = qf.SupportQueue
-						.From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID.Equal(SupportQueueFields.QueueID)))
-						.Where(SupportQueueThreadFields.ThreadID.Equal(threadId));
+					  .From(QueryTarget.InnerJoin(qf.SupportQueueThread).On(SupportQueueThreadFields.QueueID.Equal(SupportQueueFields.QueueID)))
+					  .Where(SupportQueueThreadFields.ThreadID.Equal(threadId));
 
 			var localAdapter = adapter == null;
 			var adapterToUse = adapter ?? new DataAccessAdapter();
@@ -143,6 +143,7 @@ namespace SD.HnD.BL
 			{
 				q.WithPath(SupportQueueThreadEntity.PrefetchPathClaimedByUser);
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
@@ -166,11 +167,12 @@ namespace SD.HnD.BL
 			{
 				return new List<AggregatedSupportQueueContentsRow>();
 			}
+
 			var qf = new QueryFactory();
 			var projectionFields = new List<object>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf));
 			projectionFields.AddRange(new[]
 									  {
-										  SupportQueueThreadFields.QueueID, 
+										  SupportQueueThreadFields.QueueID,
 										  UserFields.NickName.Source("PlacedInQueueUser").As("PlacedInQueueByNickName"),
 										  SupportQueueThreadFields.PlacedInQueueByUserID,
 										  SupportQueueThreadFields.PlacedInQueueOn,
@@ -184,9 +186,9 @@ namespace SD.HnD.BL
 										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID))
 										   .InnerJoin(qf.SupportQueueThread).On(ThreadFields.ThreadID.Equal(SupportQueueThreadFields.ThreadID))
 										   .InnerJoin(qf.User.As("PlacedInQueueUser"))
-												.On(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(UserFields.UserID.Source("PlacedInQueueUser")))
+										   .On(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(UserFields.UserID.Source("PlacedInQueueUser")))
 										   .LeftJoin(qf.User.As("ClaimedThreadUser"))
-												.On(SupportQueueThreadFields.ClaimedByUserID.Equal(UserFields.UserID.Source("ClaimedThreadUser"))))
+										   .On(SupportQueueThreadFields.ClaimedByUserID.Equal(UserFields.UserID.Source("ClaimedThreadUser"))))
 					  .Where(ThreadFields.ForumID.In(accessableForums.ToArray()).And(SupportQueueThreadFields.QueueID.In(supportQueueIds)))
 					  .OrderBy(SupportQueueThreadFields.QueueID.Ascending(), ThreadFields.ThreadLastPostingDate.Ascending());
 			using(var adapter = new DataAccessAdapter())

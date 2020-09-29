@@ -17,21 +17,18 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Collections;
-using System.Security.Cryptography;
-
 using SD.HnD.Utility;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.HelperClasses;
-
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.HnD.DALAdapter.FactoryClasses;
@@ -52,7 +49,7 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Standard enum which is used to signal back the authentication result of an authentication request. 
 		/// </summary>
-		public enum AuthenticateResult:int
+		public enum AuthenticateResult : int
 		{
 			/// <summary>
 			/// Authentication was succesful
@@ -68,6 +65,7 @@ namespace SD.HnD.BL
 			IsBanned
 		}
 		#endregion
+
 
 		/// <summary>
 		/// Audits the login of the user with the id specified.
@@ -89,7 +87,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Audits the creation of a new thread by the specified user
 		/// </summary>
@@ -203,8 +201,8 @@ namespace SD.HnD.BL
 				return await adapter.SaveEntityAsync(toLog).ConfigureAwait(false);
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Adds the given IPBan
 		/// </summary>
@@ -216,6 +214,7 @@ namespace SD.HnD.BL
 			{
 				return 0;
 			}
+
 			var toInsert = new IPBanEntity()
 						   {
 							   IPSegment1 = toAdd.IPSegment1,
@@ -232,8 +231,8 @@ namespace SD.HnD.BL
 				return result ? toInsert.IPBanID : 0;
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Modifies the given IPBan
 		/// </summary>
@@ -245,11 +244,13 @@ namespace SD.HnD.BL
 			{
 				return false;
 			}
+
 			var ipBan = await SecurityGuiHelper.GetIPBanAsync(toUpdate.IPBanID);
 			if(ipBan == null)
 			{
 				return false;
 			}
+
 			ipBan.UpdateFromIPBan(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -257,7 +258,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Deletes the ipban with the id specified 
 		/// </summary>
@@ -268,7 +269,7 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.DeleteEntitiesDirectlyAsync(typeof(IPBanEntity), new RelationPredicateBucket(IPBanFields.IPBanID.Equal(idToDelete)))
-									.ConfigureAwait(false)> 0;
+									.ConfigureAwait(false) > 0;
 			}
 		}
 
@@ -288,21 +289,24 @@ namespace SD.HnD.BL
 				// is already present
 				return 0;
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
-				var newRole = new RoleEntity { RoleDescription = roleDescription };
+				var newRole = new RoleEntity {RoleDescription = roleDescription};
+
 				// we'll now create the intermediate entities for several m:n relationships. 
 				foreach(var actionRightId in systemActionRightsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
-					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightId});
+					newRole.RoleSystemActionRights.Add(new RoleSystemActionRightEntity {ActionRightID = actionRightId});
 				}
+
 				foreach(var auditActionId in auditActionsSet)
 				{
 					// The roleid will be inserted in the recursive graph save below
-					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionId});
+					newRole.RoleAuditAction.Add(new RoleAuditActionEntity() {AuditActionID = auditActionId});
 				}
-				
+
 				var toReturn = await adapter.SaveEntityAsync(newRole).ConfigureAwait(false);
 				return toReturn ? newRole.RoleID : 0;
 			}
@@ -341,24 +345,27 @@ namespace SD.HnD.BL
 						return false;
 					}
 				}
+
 				foreach(var actionRightId in systemActionRightsSet)
 				{
-					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity { ActionRightID = actionRightId});
+					role.RoleSystemActionRights.Add(new RoleSystemActionRightEntity {ActionRightID = actionRightId});
 				}
+
 				foreach(var auditActionId in auditActionsSet)
 				{
-					role.RoleAuditAction.Add(new RoleAuditActionEntity() { AuditActionID = auditActionId});
+					role.RoleAuditAction.Add(new RoleAuditActionEntity() {AuditActionID = auditActionId});
 				}
-				
+
 				// all set. We're going to delete all Role - SystemAction Rights combinations first, as we're going to re-insert them later on. 
 				// We'll use a transaction to be able to roll back all our changes if something fails. 
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "ModifyRole").ConfigureAwait(false);
 				try
 				{
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity),
 															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleId)));
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleId)));
 					await adapter.SaveEntityAsync(role).ConfigureAwait(false);
+
 					// all done, commit the transaction
 					adapter.Commit();
 					return true;
@@ -394,19 +401,21 @@ namespace SD.HnD.BL
 										   };
 				forumRightsPerRole.Add(newForumRightPerRole);
 			}
+
 			using(var adapter = new DataAccessAdapter())
-			{ 
+			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "SaveForumActionRights").ConfigureAwait(false);
 				try
 				{
 					// first remove the existing rows for the role. Do this by a query directly on the database.
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity),
 															  new RelationPredicateBucket((ForumRoleForumActionRightFields.RoleID.Equal(roleId))
 																						  .And(ForumRoleForumActionRightFields.ForumID.Equal(forumId))))
 								 .ConfigureAwait(false);
-					
+
 					// then save the new entities
 					await adapter.SaveEntityCollectionAsync(forumRightsPerRole).ConfigureAwait(false);
+
 					// all done, commit transaction
 					adapter.Commit();
 					return true;
@@ -419,7 +428,7 @@ namespace SD.HnD.BL
 				}
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Adds all users which ID's are stored in UsersToAdd, to the role with ID RoleID.
@@ -429,17 +438,19 @@ namespace SD.HnD.BL
 		/// <returns>true if succeeded, false otherwise</returns>
 		public static async Task<bool> AddUsersToRoleAsync(List<int> userIDsToAdd, int roleId)
 		{
-			if(userIDsToAdd.Count<=0)
+			if(userIDsToAdd.Count <= 0)
 			{
 				return true;
 			}
 
 			var roleUsers = new EntityCollection<RoleUserEntity>();
+
 			// for each userid in the list, add a new entity to the collection
 			foreach(var userId in userIDsToAdd)
 			{
-				roleUsers.Add(new RoleUserEntity { UserID = userId, RoleID = roleId });
+				roleUsers.Add(new RoleUserEntity {UserID = userId, RoleID = roleId});
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.SaveEntityCollectionAsync(roleUsers).ConfigureAwait(false) > 0;
@@ -463,7 +474,7 @@ namespace SD.HnD.BL
 			// we'll delete the role-user combination for the user plus for the given role with a query directly onto the DB.
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
+				return await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity),
 																 new RelationPredicateBucket(RoleUserFields.UserID.Equal(userId)
 																										   .And(RoleUserFields.RoleID.Equal(roleId))))
 									.ConfigureAwait(false) > 0;
@@ -486,24 +497,32 @@ namespace SD.HnD.BL
 			}
 
 			using(var adapter = new DataAccessAdapter())
-			{ 
+			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteRole").ConfigureAwait(false);
 				try
 				{
 					// remove the role - forum - action right entities
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity),
 															  new RelationPredicateBucket(ForumRoleForumActionRightFields.RoleID.Equal(roleId))).ConfigureAwait(false);
+
 					// Remove role-audit action entities
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity), 
-															  new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleAuditActionEntity),
+															  new RelationPredicateBucket(RoleAuditActionFields.RoleID.Equal(roleId))).ConfigureAwait(false);
+					;
+
 					// remove Role - systemright entities
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity), 
-															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleSystemActionRightEntity),
+															  new RelationPredicateBucket(RoleSystemActionRightFields.RoleID.Equal(roleId))).ConfigureAwait(false);
+					;
+
 					// remove Role - user entities
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
-															  new RelationPredicateBucket(RoleUserFields.RoleID.Equal(roleId))).ConfigureAwait(false);;
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity),
+															  new RelationPredicateBucket(RoleUserFields.RoleID.Equal(roleId))).ConfigureAwait(false);
+					;
+
 					// delete the actual role
-					await adapter.DeleteEntityAsync(toDelete).ConfigureAwait(false);;
+					await adapter.DeleteEntityAsync(toDelete).ConfigureAwait(false);
+					;
 					adapter.Commit();
 					return true;
 				}
@@ -516,7 +535,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Authenticates the user with the given Nickname and the given Password.
 		/// </summary>
@@ -550,16 +569,18 @@ namespace SD.HnD.BL
 				}
 
 				// check password and UserID. We disallow the user with id 0 to login as that's the anonymous coward ID for a user not logged in.
-				if(user.UserID!=Globals.UserIDToDenyLogin && HnDGeneralUtils.ComparePbkdf2HashedPassword(user.Password, password))
+				if(user.UserID != Globals.UserIDToDenyLogin && HnDGeneralUtils.ComparePbkdf2HashedPassword(user.Password, password))
 				{
 					// correct username/password combination
 					// delete any password reset tokens
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(PasswordResetTokenEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(PasswordResetTokenEntity),
 															  new RelationPredicateBucket(PasswordResetTokenFields.UserID.Equal(user.UserID)))
 								 .ConfigureAwait(false);
+
 					// all ok
 					return (AuthenticateResult.AllOk, user);
 				}
+
 				// something was wrong, report wrong authentication combination
 				return (AuthenticateResult.WrongUsernamePassword, user);
 			}
@@ -575,7 +596,7 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await new LinqMetaData(adapter).Role.AnyAsync(r=>r.RoleDescription == roleDescription).ConfigureAwait(false);
+				return await new LinqMetaData(adapter).Role.AnyAsync(r => r.RoleDescription == roleDescription).ConfigureAwait(false);
 			}
 		}
 	}

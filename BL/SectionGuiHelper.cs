@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Collections;
@@ -52,18 +53,18 @@ namespace SD.HnD.BL
 		}
 
 
-        /// <summary>
-        /// Gets all sections. 
-        /// </summary>
-        /// <returns>SectionCollection</returns>
-        public static async Task<EntityCollection<SectionEntity>> GetAllSectionsAsync()
-        {
+		/// <summary>
+		/// Gets all sections. 
+		/// </summary>
+		/// <returns>SectionCollection</returns>
+		public static async Task<EntityCollection<SectionEntity>> GetAllSectionsAsync()
+		{
 			var q = new QueryFactory().Section.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
-	        using(var adapter = new DataAccessAdapter())
-	        {
-		        return await adapter.FetchQueryAsync(q, new EntityCollection<SectionEntity>()).ConfigureAwait(false);
-	        }
-        }
+			using(var adapter = new DataAccessAdapter())
+			{
+				return await adapter.FetchQueryAsync(q, new EntityCollection<SectionEntity>()).ConfigureAwait(false);
+			}
+		}
 
 
 		/// <summary>

@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Text;
@@ -51,11 +52,11 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await adapter.SaveEntityAsync(new BookmarkEntity { UserID = userId, ThreadID = threadId}).ConfigureAwait(false);
+				return await adapter.SaveEntityAsync(new BookmarkEntity {UserID = userId, ThreadID = threadId}).ConfigureAwait(false);
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Unsubscribes the specified user from the specified thread. 
 		/// </summary>
@@ -73,6 +74,7 @@ namespace SD.HnD.BL
 					return await adapter.DeleteEntityAsync(subscription).ConfigureAwait(false);
 				}
 			}
+
 			return true;
 		}
 
@@ -95,8 +97,9 @@ namespace SD.HnD.BL
 				if(await ThreadGuiHelper.GetThreadSubscriptionAsync(threadId, userId, adapterToUse) == null)
 				{
 					// user isn't yet subscribed, add the subscription
-					return await adapterToUse.SaveEntityAsync(new ThreadSubscriptionEntity {UserID = userId, ThreadID = threadId }).ConfigureAwait(false);
+					return await adapterToUse.SaveEntityAsync(new ThreadSubscriptionEntity {UserID = userId, ThreadID = threadId}).ConfigureAwait(false);
 				}
+
 				// already subscribed, no-op.
 				return true;
 			}
@@ -122,6 +125,7 @@ namespace SD.HnD.BL
 				// not found
 				return;
 			}
+
 			user.LastVisitedDate = DateTime.Now;
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -144,6 +148,7 @@ namespace SD.HnD.BL
 			{
 				return (false, false);
 			}
+
 			var newBanFlagValue = !user.IsBanned;
 			user.IsBanned = newBanFlagValue;
 			using(var adapter = new DataAccessAdapter())
@@ -169,27 +174,30 @@ namespace SD.HnD.BL
 			}
 
 			var toDelete = await UserGuiHelper.GetUserAsync(userId);
-			if(toDelete==null)
+			if(toDelete == null)
 			{
 				// user doesn't exist
 				return false;
 			}
+
 			if(toDelete.NickName == "Admin")
 			{
 				// can't delete admin
 				return false;
 			}
+
 			using(var adapter = new DataAccessAdapter())
-			{ 
+			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteUser").ConfigureAwait(false);
 				try
 				{
 					// we'll first update all PostedByUserId fields of all messages which are posted by the user to delete. 
 					var messageUpdater = new MessageEntity {PostedByUserID = 0};
+
 					// reset to AC.
 					await adapter.UpdateEntitiesDirectlyAsync(messageUpdater, new RelationPredicateBucket(MessageFields.PostedByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
-					
+
 					// set the startuser of threads started by this user to 0
 					var threadUpdater = new ThreadEntity {StartedByUserID = 0};
 					await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.StartedByUserID.Equal(userId)))
@@ -219,13 +227,13 @@ namespace SD.HnD.BL
 								 .ConfigureAwait(false);
 
 					// remove supportqueuethread claims
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity),
 															  new RelationPredicateBucket(SupportQueueThreadFields.ClaimedByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// set all placed in queue references to userid 0, so the threads stay in the queues.
 					var supportQueueThreadUpdater = new SupportQueueThreadEntity {PlacedInQueueByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater, 
+					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater,
 															  new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
@@ -270,13 +278,13 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), 
+				await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity),
 														  new RelationPredicateBucket((BookmarkFields.ThreadID.Equal(threadId)).And(BookmarkFields.UserID.Equal(userId))))
 							 .ConfigureAwait(false);
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Emails to the user with the nickname specified a unique link which allows the user to reset their password
 		/// </summary>
@@ -289,7 +297,7 @@ namespace SD.HnD.BL
 			{
 				var q = new QueryFactory().User.Where(UserFields.NickName.Equal(nickName)).WithPath(UserEntity.PrefetchPathPasswordResetToken);
 				var user = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				if(user==null)
+				if(user == null)
 				{
 					// not found
 					return false;
@@ -299,9 +307,10 @@ namespace SD.HnD.BL
 				{
 					user.PasswordResetToken = new PasswordResetTokenEntity();
 				}
+
 				user.PasswordResetToken.PasswordResetToken = Guid.NewGuid();
 				user.PasswordResetToken.PasswordResetRequestedOn = DateTime.Now;
-				
+
 				// first persist the token
 				var result = await adapter.SaveEntityAsync(user, refetchAfterSave: true).ConfigureAwait(false);
 				if(!result)
@@ -316,7 +325,7 @@ namespace SD.HnD.BL
 				mailBody.Append(emailTemplate);
 				var applicationURL = emailData.GetValue("applicationURL") ?? string.Empty;
 				var siteName = emailData.GetValue("siteName") ?? string.Empty;
-				if (!string.IsNullOrEmpty(emailTemplate))
+				if(!string.IsNullOrEmpty(emailTemplate))
 				{
 					// Use the existing template to format the body
 					mailBody.Replace("[URL]", applicationURL);
@@ -325,14 +334,14 @@ namespace SD.HnD.BL
 				}
 
 				// format the subject
-				var subject =  (emailData.GetValue("passwordResetRequestSubject") ?? string.Empty) + siteName;
+				var subject = (emailData.GetValue("passwordResetRequestSubject") ?? string.Empty) + siteName;
 				var fromAddress = emailData.GetValue("defaultFromEmailAddress") ?? string.Empty;
 
 				try
 				{
 					//send message
-					result = await HnDGeneralUtils.SendEmail(subject, SD.HnD.Utility.StringBuilderCache.GetStringAndRelease(mailBody), fromAddress, 
-															 new [] {user.EmailAddress}, emailData)
+					result = await HnDGeneralUtils.SendEmail(subject, SD.HnD.Utility.StringBuilderCache.GetStringAndRelease(mailBody), fromAddress,
+															 new[] {user.EmailAddress}, emailData)
 												  .ConfigureAwait(false);
 				}
 				catch(SmtpFailedRecipientsException)
@@ -343,6 +352,7 @@ namespace SD.HnD.BL
 				{
 					// swallow, as there's nothing we can do
 				}
+
 				// rest: problematic, so bubble upwards.
 				return result;
 			}
@@ -369,15 +379,15 @@ namespace SD.HnD.BL
 		/// <param name="roleIds">The RoleIDs of the roles the user is in. Can be null, in which case no roles are updated</param>
 		/// <returns>true if succeeded, false otherwise</returns>
 		public static async Task<bool> UpdateUserProfileAsync(int userId, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconUrl,
-															 string location, string occupation, string password, string signature, string website, int userTitleId, 
-															 bool autoSubscribeThreads, short defaultMessagesPerPage, bool? isBanned=null, List<int> roleIds=null)
+															  string location, string occupation, string password, string signature, string website, int userTitleId,
+															  bool autoSubscribeThreads, short defaultMessagesPerPage, bool? isBanned = null, List<int> roleIds = null)
 		{
-            var user = await UserGuiHelper.GetUserAsync(userId);
-            if (user == null)
-            {
-                // not found
-                return false;
-            }
+			var user = await UserGuiHelper.GetUserAsync(userId);
+			if(user == null)
+			{
+				// not found
+				return false;
+			}
 
 			user.DateOfBirth = dateOfBirth;
 			user.EmailAddress = emailAddress;
@@ -393,14 +403,15 @@ namespace SD.HnD.BL
 
 			if(!string.IsNullOrWhiteSpace(password))
 			{
-				user.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
+				user.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing: true);
 			}
+
 			user.Signature = signature;
 			user.Website = website;
 
-            //Preferences
-            user.AutoSubscribeToThread = autoSubscribeThreads;
-            user.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
+			//Preferences
+			user.AutoSubscribeToThread = autoSubscribeThreads;
+			user.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
 
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(user);
@@ -422,7 +433,7 @@ namespace SD.HnD.BL
 					if(roleIds != null)
 					{
 						// first remove the user from all roles, we'll do that directly.
-						await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity), 
+						await adapter.DeleteEntitiesDirectlyAsync(typeof(RoleUserEntity),
 																  new RelationPredicateBucket(RoleUserFields.UserID.Equal(userId)))
 									 .ConfigureAwait(false);
 					}
@@ -460,8 +471,8 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// UserID of new user or 0 if registration failed.
 		/// </returns>
-		public static async Task<int> RegisterNewUserAsync(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconUrl, 
-														   string ipNumber, string location, string occupation, string signature, string website, 
+		public static async Task<int> RegisterNewUserAsync(string nickName, DateTime? dateOfBirth, string emailAddress, bool emailAddressIsPublic, string iconUrl,
+														   string ipNumber, string location, string occupation, string signature, string website,
 														   Dictionary<string, string> emailData, bool autoSubscribeThreads, short defaultMessagesPerPage)
 		{
 			var newUser = new UserEntity
@@ -482,17 +493,17 @@ namespace SD.HnD.BL
 						  };
 
 			var password = HnDGeneralUtils.GenerateRandomPassword();
-			newUser.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing:true);
+			newUser.Password = HnDGeneralUtils.HashPassword(password, performPreMD5Hashing: true);
 
-            //Preferences
-            newUser.AutoSubscribeToThread = autoSubscribeThreads;
-            newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
+			//Preferences
+			newUser.AutoSubscribeToThread = autoSubscribeThreads;
+			newUser.DefaultNumberOfMessagesPerPage = defaultMessagesPerPage;
 
-            //Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly
-            //created RoleUserEntity.
-            var systemData = await SystemGuiHelper.GetSystemSettingsAsync();
-            newUser.UserTitleID = systemData.DefaultUserTitleNewUser;
-			newUser.RoleUser.Add(new RoleUserEntity { RoleID = systemData.DefaultRoleNewUser});
+			//Fetch the SystemDataEntity to use the "DefaultUserTitleNewUser" as the user title & the "DefaultRoleNewUser" as the roleID of the newly
+			//created RoleUserEntity.
+			var systemData = await SystemGuiHelper.GetSystemSettingsAsync();
+			newUser.UserTitleID = systemData.DefaultUserTitleNewUser;
+			newUser.RoleUser.Add(new RoleUserEntity {RoleID = systemData.DefaultRoleNewUser});
 
 			// first encode fields which could lead to cross-site-scripting attacks
 			EncodeUserTextFields(newUser);
@@ -506,9 +517,10 @@ namespace SD.HnD.BL
 					await HnDGeneralUtils.EmailPassword(password, emailAddress, emailData);
 				}
 			}
+
 			return newUser.UserID;
 		}
-		
+
 
 		/// <summary>
 		/// Resets the password for the user related to the password token specified to the newPassword specified
@@ -519,7 +531,7 @@ namespace SD.HnD.BL
 		/// <returns>true if successful, false otherwise</returns>
 		public static async Task<bool> ResetPasswordAsync(string newPassword, PasswordResetTokenEntity passwordResetToken)
 		{
-			if(string.IsNullOrWhiteSpace(newPassword) || passwordResetToken==null)
+			if(string.IsNullOrWhiteSpace(newPassword) || passwordResetToken == null)
 			{
 				return false;
 			}

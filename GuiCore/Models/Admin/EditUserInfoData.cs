@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	https://www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,7 +28,7 @@ using SD.HnD.DALAdapter.HelperClasses;
 
 namespace SD.HnD.Gui.Models
 {
-	public class EditUserInfoData 
+	public class EditUserInfoData
 	{
 		public void Sanitize()
 		{
@@ -28,13 +48,14 @@ namespace SD.HnD.Gui.Models
 			}
 		}
 
+
 		public void StripProtocolsFromUrls()
 		{
 			this.IconURL = GuiHelper.StripProtocolsFromUrl(this.IconURL);
 			this.Website = GuiHelper.StripProtocolsFromUrl(this.Website);
 		}
-		
-		
+
+
 		public int UserId { get; set; }
 		public string IPAddress { get; set; }
 		public string LastVisitDate { get; set; }
@@ -52,7 +73,7 @@ namespace SD.HnD.Gui.Models
 		[StringLength(200)]
 		[MinLength(6)]
 		[EmailAddress]
-		public string EmailAddress { get;set; }
+		public string EmailAddress { get; set; }
 		[StringLength(250)]
 		public string Signature { get; set; }
 		[DataType(DataType.Date)]

@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,15 +37,16 @@ namespace SD.HnD.Gui.Controllers
 	/// </summary>
 	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class SupportQueueAdminController : Controller
-	{	
+	{
 		private IMemoryCache _cache;
-		
+
+
 		public SupportQueueAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public ActionResult ManageSupportQueues()
@@ -34,10 +55,11 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			return View("~/Views/Admin/SupportQueues.cshtml");
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult<IEnumerable<SupportQueueDto>>> GetSupportQueues()
@@ -67,11 +89,12 @@ namespace SD.HnD.Gui.Controllers
 			{
 				_cache.Remove(CacheKeys.AllSupportQueues);
 			}
+
 			// jsGrid requires the updated object as return value.
 			return Json(toUpdate);
 		}
-		
-		
+
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -83,16 +106,17 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var queueId = await SupportQueueManager.CreateNewSupportQueueAsync(toInsert);
-			if(queueId>0)
+			if(queueId > 0)
 			{
 				_cache.Remove(CacheKeys.AllSupportQueues);
 				toInsert.QueueID = queueId;
 			}
+
 			// jsGrid requires the inserted object as return value.
 			return Json(toInsert);
 		}
-		
-		
+
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -104,7 +128,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(queueId>0)
+			if(queueId > 0)
 			{
 				result = await SupportQueueManager.DeleteSupportQueueAsync(queueId);
 				if(result)
@@ -112,7 +136,8 @@ namespace SD.HnD.Gui.Controllers
 					_cache.Remove(CacheKeys.AllSupportQueues);
 				}
 			}
-			return Json(new {success=result});
+
+			return Json(new {success = result});
 		}
 	}
 }

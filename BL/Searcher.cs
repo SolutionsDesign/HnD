@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections;
 using System.Text;
@@ -25,7 +26,6 @@ using SD.HnD.DALAdapter.TypedListClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
-
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
@@ -52,9 +52,9 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// TypedList filled with threads matching the query.
 		/// </returns>
-		public static async Task<List<SearchResultRow>> DoSearchAsync(string searchString, List<int> forumIds, SearchResultsOrderSetting orderFirstElement, 
-																	 SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userId, 
-																	 SearchTarget targetToSearch)
+		public static async Task<List<SearchResultRow>> DoSearchAsync(string searchString, List<int> forumIds, SearchResultsOrderSetting orderFirstElement,
+																	  SearchResultsOrderSetting orderSecondElement, List<int> forumsWithThreadsFromOthers, int userId,
+																	  SearchTarget targetToSearch)
 		{
 			// the search utilizes full text search. It performs a CONTAINS upon the MessageText field of the Message entity. 
 			var searchTerms = PrepareSearchTerms(searchString);
@@ -73,9 +73,10 @@ namespace SD.HnD.BL
 				// Message contents filter
 				searchTermFilter.Add(ThreadFields.ThreadID.In(qf.Create()
 																.Select(MessageFields.ThreadID)
-																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, null, FullTextSearchOperator.Contains, 
+																.Where(new FieldFullTextSearchPredicate(MessageFields.MessageText, null, FullTextSearchOperator.Contains,
 																										searchTerms))));
 			}
+
 			if(searchSubject)
 			{
 				// Thread subject filter
@@ -88,10 +89,11 @@ namespace SD.HnD.BL
 					searchTermFilter.Add(new FieldFullTextSearchPredicate(ThreadFields.Subject, null, FullTextSearchOperator.Contains, searchTerms));
 				}
 			}
+
 			var q = qf.GetSearchResultTypedList()
 					  .Where(searchTermFilter
-								  .And(ForumFields.ForumID.In(forumIds))
-								  .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
+							 .And(ForumFields.ForumID.In(forumIds))
+							 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
 					  .Limit(500)
 					  .OrderBy(CreateSearchSortClause(orderFirstElement))
 					  .Distinct();
@@ -115,6 +117,7 @@ namespace SD.HnD.BL
 				// probably an error with the search words / user error. Swallow for now, which will result in an empty resultset.
 				toReturn = new List<SearchResultRow>();
 			}
+
 			return toReturn;
 		}
 
@@ -128,11 +131,12 @@ namespace SD.HnD.BL
 		{
 			var termsToProcess = new List<string>();
 			var terms = searchTerms.Split(' ');
+
 			// now traverse from front to back. Collide any sequence of terms where the start term starts with a '"' and the end term ends with a '"'.
-			for(var i=0;i<terms.Length;i++)
+			for(var i = 0; i < terms.Length; i++)
 			{
 				var term = terms[i];
-				if(term.Length<=0)
+				if(term.Length <= 0)
 				{
 					// dangling space
 					continue;
@@ -144,22 +148,24 @@ namespace SD.HnD.BL
 					var endOfSequenceFound = false;
 					var tmpTerm = new StringBuilder(256);
 					var endIndexOfSequence = i;
-					for (var j = i; j < terms.Length; j++)
+					for(var j = i; j < terms.Length; j++)
 					{
 						if(terms[j].EndsWith("\""))
 						{
 							// end of sequence found, collide
-							endOfSequenceFound=true;
+							endOfSequenceFound = true;
 							var firstTermSeen = false;
-							for(var k=i;k<=j;k++)
+							for(var k = i; k <= j; k++)
 							{
 								if(firstTermSeen)
 								{
 									tmpTerm.Append(" ");
 								}
+
 								tmpTerm.Append(terms[k]);
-								firstTermSeen=true;
+								firstTermSeen = true;
 							}
+
 							endIndexOfSequence = j;
 							break;
 						}
@@ -169,7 +175,7 @@ namespace SD.HnD.BL
 					{
 						// sequence found, append as one element
 						termsToProcess.Add(tmpTerm.ToString());
-						i=endIndexOfSequence;
+						i = endIndexOfSequence;
 					}
 					else
 					{
@@ -186,12 +192,13 @@ namespace SD.HnD.BL
 
 			// now rebuild the searchTerms. We insert 'AND' if no operator is present and we surround wildcard searches with '"' if no
 			// '"' is present.
-			var toReturn = new StringBuilder(searchTerms.Length+(5*termsToProcess.Count));
+			var toReturn = new StringBuilder(searchTerms.Length + (5 * termsToProcess.Count));
 			var operatorSeenLastIteration = false;
-			for (var i = 0; i < termsToProcess.Count; i++)
+			for(var i = 0; i < termsToProcess.Count; i++)
 			{
 				var term = (string)termsToProcess[i];
 				var termLowerCase = term.ToLowerInvariant();
+
 				// check if this is an operator.
 				switch(termLowerCase)
 				{
@@ -203,6 +210,7 @@ namespace SD.HnD.BL
 							operatorSeenLastIteration = true;
 							toReturn.AppendFormat(" {0} ", term);
 						}
+
 						continue;
 					case "not":
 						// emit an operator if none seen, and make the next element think an operator was just emitted
@@ -214,6 +222,7 @@ namespace SD.HnD.BL
 								toReturn.Append(" AND ");
 							}
 						}
+
 						operatorSeenLastIteration = true;
 						break;
 					default:
@@ -225,10 +234,13 @@ namespace SD.HnD.BL
 								// last iteration wasn't an operator, emit 'AND'
 								toReturn.Append(" AND ");
 							}
+
 							operatorSeenLastIteration = false;
 						}
+
 						break;
 				}
+
 				if(term.StartsWith("*") || term.EndsWith("*"))
 				{
 					// wildcard without proper quotes
@@ -254,7 +266,7 @@ namespace SD.HnD.BL
 			ISortClause toReturn = null;
 			switch(element)
 			{
-				case SearchResultsOrderSetting.ForumAscending:					
+				case SearchResultsOrderSetting.ForumAscending:
 					toReturn = ForumFields.ForumName.Ascending();
 					break;
 				case SearchResultsOrderSetting.ForumDescending:

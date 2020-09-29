@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,15 +38,16 @@ namespace SD.HnD.Gui.Controllers
 	/// </summary>
 	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
 	public class SecurityAdminController : Controller
-	{	
+	{
 		private IMemoryCache _cache;
-		
+
+
 		public SecurityAdminController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
 
-		
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult> ManageRoleRights()
@@ -47,7 +68,7 @@ namespace SD.HnD.Gui.Controllers
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ManageRightsForForum(ManageForumRoleRightsData data, string submitAction="")
+		public async Task<ActionResult> ManageRightsForForum(ManageForumRoleRightsData data, string submitAction = "")
 		{
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.SecurityManagement))
 			{
@@ -61,8 +82,9 @@ namespace SD.HnD.Gui.Controllers
 			{
 				case "save":
 					// save the data, then after this action, it'll reload the data and show it.
-					data.LastActionResult = await SecurityManager.SaveForumActionRightsForForumRoleAsync(data.ActionRightsSet, data.RoleID, data.ForumID) 
-													? "Save successful" : "Save failed";
+					data.LastActionResult = await SecurityManager.SaveForumActionRightsForForumRoleAsync(data.ActionRightsSet, data.RoleID, data.ForumID)
+						? "Save successful"
+						: "Save failed";
 					break;
 				case "cancel":
 					return RedirectToAction("Index", "Home");
@@ -70,6 +92,7 @@ namespace SD.HnD.Gui.Controllers
 					// nothin'
 					break;
 			}
+
 			// postback which should simply fill in the data and show the form
 			var forumActionRightRolesForForumRole = await SecurityGuiHelper.GetForumActionRightRolesForForumRoleAsync(data.RoleID, data.ForumID);
 			data.ActionRightsSet = forumActionRightRolesForForumRole.Select(r => r.ActionRightID).ToList();
@@ -91,7 +114,7 @@ namespace SD.HnD.Gui.Controllers
 			return Ok(forumActionRightRolesForForumRole.Select(r => r.ActionRightID).ToList());
 		}
 
-		
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult> ManageUsersPerRole()
@@ -105,8 +128,8 @@ namespace SD.HnD.Gui.Controllers
 			data.AvailableRoles = await SecurityGuiHelper.GetAllRolesAsync();
 			return View("~/Views/Admin/ManageUsersPerRole.cshtml", data);
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult<IEnumerable<SectionDto>>> GetUsersInRole(int roleId)
@@ -119,8 +142,8 @@ namespace SD.HnD.Gui.Controllers
 			var roleDtos = await UserGuiHelper.GetAllUserInRoleDtosForRoleAsync(roleId);
 			return Ok(roleDtos);
 		}
-		
-		
+
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -141,10 +164,11 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return Json(new {success = true});
 			}
+
 			return ValidationProblem("The user wasn't removed from the role.");
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public ActionResult ManageRoles()
@@ -153,10 +177,11 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			return View("~/Views/Admin/Roles.cshtml");
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult<IEnumerable<SectionDto>>> GetRoles()
@@ -169,7 +194,7 @@ namespace SD.HnD.Gui.Controllers
 			var roleDtos = await SecurityGuiHelper.GetAllRoleDtosAsync();
 			return Ok(roleDtos);
 		}
-		
+
 
 		[HttpGet]
 		[Authorize]
@@ -180,17 +205,18 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var data = new AddEditRoleData { RoleEdited = await SecurityGuiHelper.GetRoleAsync(roleId)};
+			var data = new AddEditRoleData {RoleEdited = await SecurityGuiHelper.GetRoleAsync(roleId)};
 			if(data.RoleEdited == null)
 			{
 				return RedirectToRoute("ManageRoles");
 			}
+
 			await FillAddEditRoleDataAsync(data);
 			data.SystemRightsSet = SecurityGuiHelper.GetAllSystemActionRightIDsForRole(roleId);
 			data.AuditActionsSet = SecurityGuiHelper.GetAllAuditActionIDsForRole(roleId);
 			return View("~/Views/Admin/EditRole.cshtml", data);
 		}
-		
+
 
 		[HttpPost]
 		[Authorize]
@@ -201,15 +227,18 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			if(submitAction == "cancel" || roleId <= 0)
 			{
 				return RedirectToRoute("ManageRoles");
 			}
+
 			if(!ModelState.IsValid)
 			{
 				await FillAddEditRoleDataAsync(data);
 				return View("~/Views/Admin/EditRole.cshtml", data);
 			}
+
 			try
 			{
 				var result = await SecurityManager.ModifyRoleAsync(roleId, data.RoleEdited.RoleDescription, data.SystemRightsSet, data.AuditActionsSet);
@@ -226,7 +255,8 @@ namespace SD.HnD.Gui.Controllers
 				await FillAddEditRoleDataAsync(data);
 				return View("~/Views/Admin/EditRole.cshtml", data);
 			}
-			return View("~/Views/Admin/Roles.cshtml", data);			
+
+			return View("~/Views/Admin/Roles.cshtml", data);
 		}
 
 
@@ -259,6 +289,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToRoute("ManageRoles");
 			}
+
 			if(!ModelState.IsValid)
 			{
 				await FillAddEditRoleDataAsync(data);
@@ -275,6 +306,7 @@ namespace SD.HnD.Gui.Controllers
 				await FillAddEditRoleDataAsync(data);
 				return View("~/Views/Admin/AddRole.cshtml", data);
 			}
+
 			return View("~/Views/Admin/Roles.cshtml", data);
 		}
 
@@ -290,7 +322,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(roleId>0)
+			if(roleId > 0)
 			{
 				// check if the role is set as a default role in system settings. If so, it's not deleted
 				var systemSettings = await _cache.GetSystemDataAsync();
@@ -309,8 +341,8 @@ namespace SD.HnD.Gui.Controllers
 
 			return ValidationProblem("The role wasn't deleted.");
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public ActionResult ManageIPBans()
@@ -319,10 +351,11 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			return View("~/Views/Admin/IPBans.cshtml");
 		}
-		
-		
+
+
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult<IEnumerable<SectionDto>>> GetIPBans()
@@ -353,11 +386,12 @@ namespace SD.HnD.Gui.Controllers
 			{
 				_cache.Remove(CacheKeys.AllIPBans);
 			}
+
 			// jsGrid requires the updated object as return value.
 			return Json(toUpdate);
 		}
-		
-		
+
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -371,16 +405,17 @@ namespace SD.HnD.Gui.Controllers
 			toInsert.IPBanSetByUserID = this.HttpContext.Session.GetUserID();
 			toInsert.IPBanSetOn = DateTime.Now;
 			var ipBanId = await SecurityManager.AddNewIPBanAsync(toInsert);
-			if(ipBanId>0)
+			if(ipBanId > 0)
 			{
 				_cache.Remove(CacheKeys.AllIPBans);
 				toInsert.IPBanID = ipBanId;
 			}
+
 			// jsGrid requires the inserted object as return value.
 			return Json(toInsert);
 		}
-		
-		
+
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
@@ -392,7 +427,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var result = false;
-			if(ipBanId>0)
+			if(ipBanId > 0)
 			{
 				result = await SecurityManager.DeleteIPBanAsync(ipBanId);
 				if(result)
@@ -400,14 +435,16 @@ namespace SD.HnD.Gui.Controllers
 					_cache.Remove(CacheKeys.AllIPBans);
 				}
 			}
+
 			if(result)
 			{
 				return Json(new {success = true});
 			}
+
 			return ValidationProblem("The IPBan wasn't deleted.");
 		}
-		
-		
+
+
 		private async Task FillAddEditRoleDataAsync(AddEditRoleData data)
 		{
 			data.AvailableSystemRights = await SecurityGuiHelper.GetAllSystemActionRightsAsync();

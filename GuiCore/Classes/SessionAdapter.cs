@@ -17,14 +17,13 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections.Generic;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.BL;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
@@ -35,11 +34,11 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
 {
-    /// <summary>
-    /// SessionAdapter is used to access session objects
-    /// </summary>
-    public static class SessionAdapter
-    {
+	/// <summary>
+	/// SessionAdapter is used to access session objects
+	/// </summary>
+	public static class SessionAdapter
+	{
 		/// <summary>
 		/// Initializes the session with the initial static data for the user. 
 		/// </summary>
@@ -52,7 +51,7 @@ namespace SD.HnD.Gui
 				// already initialized
 				return;
 			}
-			
+
 			bool useEntityBasedLastVisitDateTracking = false;
 			UserEntity user = null;
 			if(context.User.Identity.IsAuthenticated)
@@ -70,7 +69,7 @@ namespace SD.HnD.Gui
 			}
 			else
 			{
-				user = await UserGuiHelper.GetUserAsync(0);	// 0 is UserID of Anonymous Coward
+				user = await UserGuiHelper.GetUserAsync(0); // 0 is UserID of Anonymous Coward
 			}
 
 			if(user == null || user.IsBanned)
@@ -80,7 +79,7 @@ namespace SD.HnD.Gui
 				useEntityBasedLastVisitDateTracking = false;
 			}
 
-			if(user == null || user.UserID<=0)
+			if(user == null || user.UserID <= 0)
 			{
 				await session.LoadAnonymousSessionDataAsync();
 			}
@@ -109,12 +108,12 @@ namespace SD.HnD.Gui
 
 					// convert to datetime
 					lastVisitDate = new DateTime(
-							int.Parse(lastVisitDateAsString.Substring(4, 4)),	// Year
-							int.Parse(lastVisitDateAsString.Substring(2, 2)),	// Month
-							int.Parse(lastVisitDateAsString.Substring(0, 2)),	// Day
-							int.Parse(lastVisitDateAsString.Substring(8, 2)),	// Hour
-							int.Parse(lastVisitDateAsString.Substring(10, 2)),	// Minute
-							0);											// Seconds
+												 int.Parse(lastVisitDateAsString.Substring(4, 4)), // Year
+												 int.Parse(lastVisitDateAsString.Substring(2, 2)), // Month
+												 int.Parse(lastVisitDateAsString.Substring(0, 2)), // Day
+												 int.Parse(lastVisitDateAsString.Substring(8, 2)), // Hour
+												 int.Parse(lastVisitDateAsString.Substring(10, 2)), // Minute
+												 0); // Seconds
 
 					isLastVisitDateValid = true;
 				}
@@ -131,7 +130,7 @@ namespace SD.HnD.Gui
 			}
 
 			// update date
-			if(useEntityBasedLastVisitDateTracking || (user!=null && user.UserID != 0 && !user.LastVisitedDate.HasValue))
+			if(useEntityBasedLastVisitDateTracking || (user != null && user.UserID != 0 && !user.LastVisitedDate.HasValue))
 			{
 				await UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
 			}
@@ -141,30 +140,30 @@ namespace SD.HnD.Gui
 			context.Response.Cookies.Append(lastVisitDateCookieName, DateTime.Now.ToString("ddMMyyyyHHmm"),
 											new CookieOptions()
 											{
-												Expires = new DateTimeOffset(DateTime.Now.AddYears(1)), 
+												Expires = new DateTimeOffset(DateTime.Now.AddYears(1)),
 												Path = "/",
-												SameSite = SameSiteMode.Lax, 		
-												HttpOnly = true			// no js accessibility
+												SameSite = SameSiteMode.Lax,
+												HttpOnly = true // no js accessibility
 											});
 
 			if(session.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 			{
 				await SecurityManager.AuditLoginAsync(session.GetUserID());
 			}
-			
+
 			// mark the session as initialized.
 			session.SetInt32(SessionKeys.SessionInitialized, 1);
 		}
-		
-		
-        /// <summary>
-        /// Loads the user and his rights and audits to the session object.
-        /// </summary>
+
+
+		/// <summary>
+		/// Loads the user and his rights and audits to the session object.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
-        /// <param name="user">The user to be added to the session.</param>
-        public static async Task LoadUserSessionDataAsync(this ISession session, UserEntity user)
-        {
-	        session.AddUserObject(user);
+		/// <param name="user">The user to be added to the session.</param>
+		public static async Task LoadUserSessionDataAsync(this ISession session, UserEntity user)
+		{
+			session.AddUserObject(user);
 			session.AddSystemActionRights(await SecurityGuiHelper.GetSystemActionRightsForUserAsync(user.UserID));
 			session.AddAuditActions(await SecurityGuiHelper.GetAuditActionsForUserAsync(user.UserID));
 			session.AddForumsActionRights(await SecurityGuiHelper.GetForumsActionRightsForUserAsync(user.UserID));
@@ -176,40 +175,40 @@ namespace SD.HnD.Gui
 			{
 				session.AddLastVisitDate(DateTime.Now);
 			}
-        }
+		}
 
 
-        /// <summary>
-        /// Loads the anonymous user session data.
-        /// </summary>
+		/// <summary>
+		/// Loads the anonymous user session data.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
-        public static async Task LoadAnonymousSessionDataAsync(this ISession session)
-        {
+		public static async Task LoadAnonymousSessionDataAsync(this ISession session)
+		{
 			session.AddForumsActionRights(await SecurityGuiHelper.GetForumsActionRightsForUserAsync(0));
-        }
+		}
 
 
-        /// <summary>
-        /// Gets the forums action rights from the session.
-        /// </summary>
+		/// <summary>
+		/// Gets the forums action rights from the session.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
-        /// <returns>Dictionary of ActionRightID as a key and List of forumIDs as the corresponding value, if available otherwise returns null.</returns>
-        internal static MultiValueDictionary<int, int> GetForumsActionRights(this ISession session)
+		/// <returns>Dictionary of ActionRightID as a key and List of forumIDs as the corresponding value, if available otherwise returns null.</returns>
+		internal static MultiValueDictionary<int, int> GetForumsActionRights(this ISession session)
 		{
 			var rightsAsString = session.GetString(SessionKeys.ForumActionRights);
 			return string.IsNullOrEmpty(rightsAsString) ? null : JsonConvert.DeserializeObject<MultiValueDictionary<int, int>>(rightsAsString);
 		}
 
-		
-        /// <summary>
-        /// Adds the lastVisitDate & isLastVisitDateValid to the session.
-        /// </summary>
+
+		/// <summary>
+		/// Adds the lastVisitDate & isLastVisitDateValid to the session.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
-        /// <param name="lastVisitDate">The last visit date.</param>
-        public static void AddLastVisitDate(this ISession session, DateTime lastVisitDate)
-        {
+		/// <param name="lastVisitDate">The last visit date.</param>
+		public static void AddLastVisitDate(this ISession session, DateTime lastVisitDate)
+		{
 			session.SetString(SessionKeys.LastVisitedDateTickValue, lastVisitDate.Ticks.ToString());
-        }
+		}
 
 
 		/// <summary>
@@ -220,35 +219,37 @@ namespace SD.HnD.Gui
 		/// <param name="searchTerms">A string of search terms.</param>
 		/// <param name="searchResults">A dataTable of search results.</param>
 		public static void AddSearchTermsAndResults(this ISession session, IMemoryCache cache, string searchTerms, List<SearchResultRow> searchResults)
-        {
+		{
 			var resultsToCache = new SearchResultsWrapper() {SearchResults = searchResults, SearchTerms = searchTerms};
 			var key = Guid.NewGuid().ToString();
+
 			// cache the results for 10 minutes.
 			cache.Set(key, resultsToCache, new TimeSpan(0, ApplicationAdapter.GetMaxNumberOfMinutesToCacheSearchResults(), 0));
+
 			// cache the key in the session so we can find back the actual results in the cache!
 			session.SetString(SessionKeys.SearchResultsKey, key);
 		}
-		
 
-        /// <summary>
-        /// Gets the search terms.
-        /// </summary>
+
+		/// <summary>
+		/// Gets the search terms.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
 		/// <param name="cache">The cache to store the results in</param>
-        /// <returns>string of search terms, and an empty string if no such value is present in the session</returns>
-        public static string GetSearchTerms(this ISession session, IMemoryCache cache)
+		/// <returns>string of search terms, and an empty string if no such value is present in the session</returns>
+		public static string GetSearchTerms(this ISession session, IMemoryCache cache)
 		{
 			return SessionAdapter.GetSearchResultsFromCache(session, cache)?.SearchTerms ?? string.Empty;
 		}
 
-		
-        /// <summary>
-        /// Gets the search results.
-        /// </summary>
+
+		/// <summary>
+		/// Gets the search results.
+		/// </summary>
 		/// <param name="session">The session the method works on</param>
 		/// <param name="cache">The cache to store the results in</param>
-        /// <returns>A list of search result rows if present, or null if no such value is present in the session</returns>
-        public static List<SearchResultRow> GetSearchResults(this ISession session, IMemoryCache cache)
+		/// <returns>A list of search result rows if present, or null if no such value is present in the session</returns>
+		public static List<SearchResultRow> GetSearchResults(this ISession session, IMemoryCache cache)
 		{
 			return SessionAdapter.GetSearchResultsFromCache(session, cache)?.SearchResults;
 		}
@@ -261,12 +262,14 @@ namespace SD.HnD.Gui
 			{
 				return null;
 			}
+
 			var toReturn = cache.Get<SearchResultsWrapper>(key);
 			if(toReturn == null)
 			{
 				// cached data has expired. Remove key
 				session.Remove(SessionKeys.SearchResultsKey);
 			}
+
 			return toReturn;
 		}
 
@@ -302,6 +305,7 @@ namespace SD.HnD.Gui
 			{
 				forumsActionRightsInSession.Add(forumActionRight.ActionRightID, forumActionRight.ForumID);
 			}
+
 			session.SetString(SessionKeys.ForumActionRights, JsonConvert.SerializeObject(forumsActionRightsInSession));
 		}
 	}

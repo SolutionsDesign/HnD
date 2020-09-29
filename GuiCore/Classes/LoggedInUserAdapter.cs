@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,6 +129,7 @@ namespace SD.HnD.Gui
 			return toReturn == 1;
 		}
 
+
 		/// <summary>
 		/// Helper method which returns true if the Adminstrate menu should show, which is the case if the user can administrate or approve an attachment or can do queue content management.
 		/// </summary>
@@ -155,7 +176,8 @@ namespace SD.HnD.Gui
 			{
 				return false;
 			}
-			var rightsRequired = new HashSet<int>() { (int)ActionRights.SystemManagement, (int)ActionRights.SecurityManagement, (int)ActionRights.UserManagement };
+
+			var rightsRequired = new HashSet<int>() {(int)ActionRights.SystemManagement, (int)ActionRights.SecurityManagement, (int)ActionRights.UserManagement};
 			return actionRights.Any(a => rightsRequired.Contains(a));
 		}
 
@@ -172,6 +194,7 @@ namespace SD.HnD.Gui
 			return session.GetSystemActionRights()?.Length > 0;
 		}
 
+
 		/// <summary>
 		/// Checks if the user of the current context(session) has the ability to perform the action right on the system.
 		/// If this is correct, true is returned, otherwise false.
@@ -187,6 +210,7 @@ namespace SD.HnD.Gui
 			{
 				return actionRights.Contains((int)actionRightId);
 			}
+
 			return false;
 		}
 
@@ -246,6 +270,7 @@ namespace SD.HnD.Gui
 			{
 				return null;
 			}
+
 			var forumIDs = forumActionRights.GetValue((int)actionRightId);
 			return forumIDs == null ? null : forumIDs.ToList();
 		}
@@ -275,6 +300,7 @@ namespace SD.HnD.Gui
 			{
 				return DateTime.MinValue;
 			}
+
 			// is tickcount
 			var lastVisitDateAsLong = long.Parse(lastVisitDateValue);
 			return new DateTime(lastVisitDateAsLong);

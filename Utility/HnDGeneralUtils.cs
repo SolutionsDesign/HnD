@@ -17,18 +17,15 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.IO;
 using System.Security.Cryptography;
 using System.Collections;
-using System.Globalization;
 using System.Collections.Generic;
 using System.Net;
-using System.Net.Sockets;
 using System.Threading.Tasks;
-using System.Xml;
 using MailKit.Security;
 using MarkdownDeep;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -41,7 +38,7 @@ namespace SD.HnD.Utility
 	/// <summary>
 	/// General class for general utility routines. 
 	/// </summary>
-	public class HnDGeneralUtils
+	public static class HnDGeneralUtils
 	{
 		/// <summary>
 		/// Private constant for the maximum length for a generated password.
@@ -77,6 +74,7 @@ namespace SD.HnD.Utility
 			{
 				toReturn = 0;
 			}
+
 			return toReturn;
 		}
 
@@ -93,10 +91,11 @@ namespace SD.HnD.Utility
 			{
 				toReturn = 0;
 			}
+
 			return toReturn;
 		}
-		
-		
+
+
 		/// <summary>
 		/// Get the ip address passed in as string, which will remap the address to ip4 first. 
 		/// </summary>
@@ -106,8 +105,8 @@ namespace SD.HnD.Utility
 		{
 			return remoteAddress == null ? "0.0.0.0" : remoteAddress.MapToIPv4().ToString();
 		}
-		
-		
+
+
 		/// <summary>
 		/// Generates a random password string. The password generated contains solely readable
 		/// characters available on every keyboard.
@@ -116,21 +115,23 @@ namespace SD.HnD.Utility
 		public static string GenerateRandomPassword()
 		{
 			StringBuilder newPassword = new StringBuilder(GeneratedPasswordLength);
-			
+
 			// create randomizer object
 			Random rand = new Random(DateTime.Now.Millisecond + DateTime.Now.Second);
-			
-			for(int i = 0, randomNr=0;i < GeneratedPasswordLength; i++)
+
+			for(int i = 0, randomNr = 0; i < GeneratedPasswordLength; i++)
 			{
 				bool isValid = false;
 				while(!isValid)
 				{
 					randomNr = rand.Next(33, 126);
 					isValid = (randomNr > 47 && randomNr < 58) || (randomNr > 64 && randomNr < 91) ||
-								(randomNr > 96 && randomNr < 123);
+							  (randomNr > 96 && randomNr < 123);
 				}
+
 				newPassword.Append(Convert.ToChar(randomNr));
 			}
+
 			return newPassword.ToString();
 		}
 
@@ -166,21 +167,25 @@ namespace SD.HnD.Utility
 			{
 				return false;
 			}
+
 			if(string.IsNullOrEmpty(password))
 			{
 				return false;
 			}
-			
+
 			byte[] base64HashAsByteArray = Convert.FromBase64String(base64Hash);
 			if(base64HashAsByteArray.Length < (PasswordSaltLengthBytes + Pbkdf2HashLengthBytes))
 			{
 				// length of the byte array is wrong. 
 				return false;
 			}
+
 			var salt = new byte[PasswordSaltLengthBytes];
 			Array.Copy(base64HashAsByteArray, 0, salt, 0, PasswordSaltLengthBytes);
+
 			// we have to prehash with MD5 as the password passed in is a plain text password.
 			byte[] passwordPbkdf2Hashed = PerformPbkdf2Hashing(password, salt, performPreMD5Hashing: true);
+
 			// now we compare the arrays. We can suffice with comparing the hashed bytes however.
 			// base64HashAsBytes.Length is >= PasswordSaltLengthBytes, see above, so setting this to true is safe, it always iterates at least once.
 			bool areEqual = true;
@@ -192,6 +197,7 @@ namespace SD.HnD.Utility
 					break;
 				}
 			}
+
 			return areEqual;
 		}
 
@@ -211,8 +217,8 @@ namespace SD.HnD.Utility
 			var messageToSend = new MimeMessage();
 			messageToSend.To.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, defaultToMailAddress));
 			messageToSend.From.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, fromAddress));
-			messageToSend.Subject=subject;
-			messageToSend.Body = new TextPart(TextFormat.Plain) {Text = message };
+			messageToSend.Subject = subject;
+			messageToSend.Body = new TextPart(TextFormat.Plain) {Text = message};
 			for(int i = 0; i < toEmailAddresses.Length; i++)
 			{
 				messageToSend.Bcc.Add(new MailboxAddress(string.Empty, toEmailAddresses[i]));
@@ -226,6 +232,7 @@ namespace SD.HnD.Utility
 				await smtpClient.SendAsync(messageToSend).ConfigureAwait(false);
 				await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
 			}
+
 			return true;
 		}
 
@@ -272,6 +279,7 @@ namespace SD.HnD.Utility
 			{
 				return String.Empty;
 			}
+
 			var md = new Markdown()
 					 {
 						 HnDMode = true,
@@ -289,9 +297,10 @@ namespace SD.HnD.Utility
 			{
 				messageText += Environment.NewLine;
 			}
+
 			return md.Transform(messageText);
 		}
-		
+
 
 		/// <summary>
 		/// 

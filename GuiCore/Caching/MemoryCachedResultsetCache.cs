@@ -34,6 +34,7 @@
 // Contributers to the code:
 //		- Frans Bouma [FB]
 //////////////////////////////////////////////////////////////////////
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -168,6 +169,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib
 					toReturn.Add(toAdd);
 				}
 			}
+
 			return toReturn;
 		}
 
@@ -203,7 +205,7 @@ namespace SD.LLBLGen.Pro.ORMSupportClasses.Contrib
 		/// <returns></returns>
 		protected virtual CacheItemPolicy ProduceCacheItemPolicy(TimeSpan duration)
 		{
-			return new CacheItemPolicy() { AbsoluteExpiration = new DateTimeOffset(DateTime.Now.Add(duration)) };
+			return new CacheItemPolicy() {AbsoluteExpiration = new DateTimeOffset(DateTime.Now.Add(duration))};
 		}
 	}
 }

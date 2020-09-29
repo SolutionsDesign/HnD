@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,12 +68,14 @@ namespace SD.HnD.BL
 			{
 				return false;
 			}
+
 			var toModify = await SupportQueueGuiHelper.GetSupportQueueAsync(toUpdate.QueueID);
 			if(toModify == null)
 			{
 				// not found
 				return false;
 			}
+
 			toModify.UpdateFromSupportQueue(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -91,20 +94,26 @@ namespace SD.HnD.BL
 		public static async Task<bool> DeleteSupportQueueAsync(int queueId)
 		{
 			using(var adapter = new DataAccessAdapter())
-			{ 
+			{
 				// we'll do several actions in one atomic transaction, so start a transaction first. 
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteSupportQ").ConfigureAwait(false);
 				try
 				{
 					// first reset all the FKs in Forum to NULL if they point to this queue.
-					await adapter.UpdateEntitiesDirectlyAsync(new ForumEntity() { DefaultSupportQueueID = null }, 
-															  new RelationPredicateBucket(ForumFields.DefaultSupportQueueID.Equal(queueId))).ConfigureAwait(false);;
+					await adapter.UpdateEntitiesDirectlyAsync(new ForumEntity() {DefaultSupportQueueID = null},
+															  new RelationPredicateBucket(ForumFields.DefaultSupportQueueID.Equal(queueId))).ConfigureAwait(false);
+					;
+
 					// delete all SupportQueueThread entities which refer to this queue. This will make all threads which are in this queue become queue-less.
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
-															  new RelationPredicateBucket(SupportQueueThreadFields.QueueID.Equal(queueId))).ConfigureAwait(false);;
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity),
+															  new RelationPredicateBucket(SupportQueueThreadFields.QueueID.Equal(queueId))).ConfigureAwait(false);
+					;
+
 					// it's now time to delete the actual supportqueue entity.
-					var result = await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueEntity), 
-																		   new RelationPredicateBucket(SupportQueueFields.QueueID.Equal(queueId))).ConfigureAwait(false);;
+					var result = await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueEntity),
+																		   new RelationPredicateBucket(SupportQueueFields.QueueID.Equal(queueId))).ConfigureAwait(false);
+					;
+
 					// done so commit the transaction.
 					adapter.Commit();
 					return (result > 0);
@@ -151,9 +160,10 @@ namespace SD.HnD.BL
 			try
 			{
 				// delete the SupportQueueThread entity for this thread directly from the db
-				await adapterToUse.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+				await adapterToUse.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity),
 															   new RelationPredicateBucket(SupportQueueThreadFields.ThreadID.Equal(threadId)))
 								  .ConfigureAwait(false);
+
 				// don't commit the current transaction if specified, simply return to caller.
 			}
 			finally
@@ -208,6 +218,7 @@ namespace SD.HnD.BL
 				{
 					adapterToUse.Rollback();
 				}
+
 				throw;
 			}
 			finally
@@ -237,6 +248,7 @@ namespace SD.HnD.BL
 					// not found
 					return;
 				}
+
 				// simply overwrite an existing claim if any.
 				if(claim)
 				{

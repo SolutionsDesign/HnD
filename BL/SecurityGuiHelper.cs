@@ -17,11 +17,11 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Text;
 using System.Collections;
-
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -59,7 +59,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Gets all role objects.
 		/// </summary>
@@ -82,12 +82,11 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await adapter.FetchQueryAsync(new QueryFactory().AuditAction.OrderBy(AuditActionFields.AuditActionDescription.Ascending()), 
+				return await adapter.FetchQueryAsync(new QueryFactory().AuditAction.OrderBy(AuditActionFields.AuditActionDescription.Ascending()),
 													 new EntityCollection<AuditActionEntity>())
 									.ConfigureAwait(false);
 			}
 		}
-
 
 
 		/// <summary>
@@ -101,7 +100,7 @@ namespace SD.HnD.BL
 			{
 				var q = new QueryFactory().RoleAuditAction
 										  .Where(RoleAuditActionFields.RoleID.Equal(roleId))
-										  .Select(()=>RoleAuditActionFields.AuditActionID.ToValue<int>());
+										  .Select(() => RoleAuditActionFields.AuditActionID.ToValue<int>());
 				return adapter.FetchQuery(q);
 			}
 		}
@@ -141,7 +140,7 @@ namespace SD.HnD.BL
 				var q = (from i in metaData.IPBan
 						 orderby i.IPSegment1, i.IPSegment2, i.IPSegment3, i.IPSegment4
 						 select i)
-						.ProjectToIPBanDto();
+					.ProjectToIPBanDto();
 				return await q.ToListAsync().ConfigureAwait(false);
 			}
 		}
@@ -156,7 +155,7 @@ namespace SD.HnD.BL
 		public static async Task<EntityCollection<IPBanEntity>> GetAllIPBansAsync()
 		{
 			var q = new QueryFactory().IPBan
-									  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(), 
+									  .OrderBy(IPBanFields.IPSegment1.Ascending(), IPBanFields.IPSegment2.Ascending(), IPBanFields.IPSegment3.Ascending(),
 											   IPBanFields.IPSegment4.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -194,7 +193,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Gets all ids for the system action rights associated to the role with id specified
 		/// </summary>
@@ -207,11 +206,11 @@ namespace SD.HnD.BL
 				var qf = new QueryFactory();
 				var q = qf.RoleSystemActionRight
 						  .Where(RoleSystemActionRightFields.RoleID.Equal(roleID))
-						  .Select(()=>RoleSystemActionRightFields.ActionRightID.ToValue<int>());
+						  .Select(() => RoleSystemActionRightFields.ActionRightID.ToValue<int>());
 				return adapter.FetchQuery(q);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Retrieves an entitycollection with all the forum-actionright-role combinations currently defined for the role specified for the given forum
@@ -225,9 +224,9 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(new QueryFactory().ForumRoleForumActionRight
-																	.Where(ForumRoleForumActionRightFields.RoleID.Equal(roleID)
-																		  .And(ForumRoleForumActionRightFields.ForumID.Equal(forumID))),
-										  new EntityCollection<ForumRoleForumActionRightEntity>())
+																	   .Where(ForumRoleForumActionRightFields.RoleID.Equal(roleID)
+																											 .And(ForumRoleForumActionRightFields.ForumID.Equal(forumID))),
+													 new EntityCollection<ForumRoleForumActionRightEntity>())
 									.ConfigureAwait(false);
 			}
 		}
@@ -261,7 +260,7 @@ namespace SD.HnD.BL
 													 new EntityCollection<ActionRightEntity>()).ConfigureAwait(false);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Gets the system action rights for user.
@@ -272,11 +271,12 @@ namespace SD.HnD.BL
 		public static async Task<EntityCollection<ActionRightEntity>> GetSystemActionRightsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
+
 			// the subquery in the filter requires joins as the filter's subquery has to filter on fields in related entities:
 			// WHERE ActionRightID IN (SELECT ActionRightID FROM RoleSystemActionRight INNER JOIN Role ... INNER JOIN RoleUser ... WHERE RoleUser.UserID=userID)
 			var q = qf.ActionRight
 					  .Where(ActionRightFields.ActionRightID.In(
-															    qf.Create()
+																qf.Create()
 																  .Select(RoleSystemActionRightFields.ActionRightID)
 																  .From(qf.RoleSystemActionRight.InnerJoin(qf.Role).On(RoleSystemActionRightFields.RoleID.Equal(RoleFields.RoleID))
 																		  .InnerJoin(qf.RoleUser).On(RoleFields.RoleID.Equal(RoleUserFields.RoleID)))
@@ -298,6 +298,7 @@ namespace SD.HnD.BL
 		public static async Task<EntityCollection<ForumRoleForumActionRightEntity>> GetForumsActionRightsForUserAsync(int userID)
 		{
 			var qf = new QueryFactory();
+
 			// the subquery in the filter requires joins as the filter's subquery has to filter on fields in related entities:
 			// WHERE RoleID IN (SELECT RoleID FROM Role INNER JOIN RoleUser ... WHERE RoleUser.UserID=userID)
 			var q = qf.ForumRoleForumActionRight
@@ -350,26 +351,28 @@ namespace SD.HnD.BL
 				// can't do matching as the ip address has less or more segments
 				return null;
 			}
-			
+
 			Dictionary<string, IPBanEntity> rangeBans = null;
 			var ipTemp = new StringBuilder();
 			IPBanEntity toReturn = null;
 
 			// for each segment we'll check if it, combined with the previous segments, results in a match. If not, the next segment will be tried.
-			for(var i=0;i<4;i++)
+			for(var i = 0; i < 4; i++)
 			{
 				// check range ban. Build ip address segments from ip address passed in and check that with the segments in the range ban dictionary
 				if(i > 0)
 				{
 					ipTemp.Append(".");
 				}
+
 				ipTemp.Append(ipAddressSegments[i]);
-				rangeBans = allCachedIPBans.GetValue(8*(i+1));
-				if(rangeBans==null)
+				rangeBans = allCachedIPBans.GetValue(8 * (i + 1));
+				if(rangeBans == null)
 				{
 					// no range bans with this range, continue
 					continue;
 				}
+
 				if(rangeBans.TryGetValue(ipTemp.ToString(), out toReturn))
 				{
 					// we have a match!
@@ -390,7 +393,7 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				var q = new QueryFactory().RoleUser.Where(RoleUserFields.UserID.Equal(userId)).Select(()=>RoleUserFields.RoleID.ToValue<int>());
+				var q = new QueryFactory().RoleUser.Where(RoleUserFields.UserID.Equal(userId)).Select(() => RoleUserFields.RoleID.ToValue<int>());
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}

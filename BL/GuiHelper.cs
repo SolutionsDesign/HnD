@@ -17,12 +17,12 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace SD.HnD.BL
 {
@@ -33,7 +33,7 @@ namespace SD.HnD.BL
 	/// it provides a service to the GUI, but isn't part of it.
 	/// </summary>
 	public static class GuiHelper
-	{						
+	{
 		/// <summary>
 		/// Loads the noise words into hashset. Noise words are words which can be ignored during message indexing and searches.
 		/// </summary>
@@ -59,7 +59,8 @@ namespace SD.HnD.BL
 				return noiseWords;
 			}
 		}
-		
+
+
 		/// <summary>
 		/// Strips the protocol specification like http:// and https:// from the url specified
 		/// </summary>
@@ -73,6 +74,7 @@ namespace SD.HnD.BL
 				var urlAsUri = new Uri(url);
 				toReturn = urlAsUri.Host + urlAsUri.PathAndQuery + urlAsUri.Fragment;
 			}
+
 			return toReturn;
 		}
 

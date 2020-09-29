@@ -17,12 +17,12 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using SD.HnD.Utility;
-
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.EntityClasses;
@@ -102,6 +102,7 @@ namespace SD.HnD.BL
 																												  .Where(messageFilter))))
 						 .ConfigureAwait(false);
 			await adapter.DeleteEntitiesDirectlyAsync(typeof(MessageEntity), new RelationPredicateBucket(messageFilter)).ConfigureAwait(false);
+
 			// don't commit the transaction, leave that to the caller.
 		}
 
@@ -117,7 +118,7 @@ namespace SD.HnD.BL
 		/// change to keep evidence who made which change from which IP address</param>
 		/// <param name="messageAsXML">Message text as XML, which is the result of the parse action on MessageText.</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-        public static async Task<bool> UpdateEditedMessageAsync(int editorUserId, int editedMessageId, string messageText, string messageAsHTML, 
+		public static async Task<bool> UpdateEditedMessageAsync(int editorUserId, int editedMessageId, string messageText, string messageAsHTML,
 																string editorUserIDIPAddress, string messageAsXML)
 		{
 			using(var adapter = new DataAccessAdapter())
@@ -125,7 +126,7 @@ namespace SD.HnD.BL
 				// now save the message. First pull it from the db
 				var q = new QueryFactory().Message.Where(MessageFields.MessageID.Equal(editedMessageId));
 				var message = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				if(message==null)
+				if(message == null)
 				{
 					return false;
 				}
@@ -150,7 +151,7 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// the amount of messages re-parsed
 		/// </returns>
-		public static async Task<int> ReParseMessagesAsync(Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings, 
+		public static async Task<int> ReParseMessagesAsync(Dictionary<string, string> emojiFilenamesPerName, Dictionary<string, string> smileyMappings,
 														   Action<string> consoleLogger)
 		{
 			// index is blocks of 100 messages.
@@ -194,6 +195,7 @@ namespace SD.HnD.BL
 
 							await adapter.SaveEntityAsync(directUpdater).ConfigureAwait(false);
 						}
+
 						amountProcessed += messagesToParse.Count;
 						pageNo++;
 					}
@@ -205,6 +207,7 @@ namespace SD.HnD.BL
 #endif
 				}
 			}
+
 			return amountProcessed;
 		}
 
@@ -219,9 +222,9 @@ namespace SD.HnD.BL
 			// delete the attachment directly from the db, without loading it first into memory
 			using(var adapter = new DataAccessAdapter())
 			{
-				await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity), 
+				await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity),
 														  new RelationPredicateBucket(AttachmentFields.AttachmentID.Equal(attachmentId)
-																					  .And(AttachmentFields.MessageID.Equal(messageId))))
+																									  .And(AttachmentFields.MessageID.Equal(messageId))))
 							 .ConfigureAwait(false);
 			}
 		}
@@ -242,15 +245,17 @@ namespace SD.HnD.BL
 				var q = new QueryFactory().Attachment.Where(AttachmentFields.AttachmentID.Equal(attachmentId).And(AttachmentFields.MessageID.Equal(messageId)))
 										  .Exclude(AttachmentFields.Filecontents);
 				var attachment = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				if(attachment==null)
+				if(attachment == null)
 				{
 					// not found
 					return (false, false);
 				}
+
 				if(userIdForAuditing > 0)
 				{
 					await SecurityManager.AuditApproveAttachmentAsync(userIdForAuditing, attachmentId);
 				}
+
 				attachment.Approved = !attachment.Approved;
 				var newState = attachment.Approved;
 				await adapter.SaveEntityAsync(attachment).ConfigureAwait(false);
@@ -298,18 +303,19 @@ namespace SD.HnD.BL
 		/// Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
 		/// passed in transaction.
 		/// </remarks>
-		internal static async Task UpdateStatisticsAfterMessageInsert(int threadId, int userId, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired, 
+		internal static async Task UpdateStatisticsAfterMessageInsert(int threadId, int userId, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired,
 																	  bool subscribeToThread)
 		{
 			// user statistics
 			var userUpdater = new UserEntity();
+
 			// set the amountofpostings field to an expression so it will be increased with 1. Update the entity directly in the DB
 			userUpdater.Fields[(int)UserFieldIndex.AmountOfPostings].ExpressionToApply = (UserFields.AmountOfPostings + 1);
 			await adapter.UpdateEntitiesDirectlyAsync(userUpdater, new RelationPredicateBucket(UserFields.UserID.Equal(userId)))
 						 .ConfigureAwait(false);
 
 			// thread statistics
-			var threadUpdater = new ThreadEntity { ThreadLastPostingDate = postingDate, MarkedAsDone = false};
+			var threadUpdater = new ThreadEntity {ThreadLastPostingDate = postingDate, MarkedAsDone = false};
 			await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID.Equal(threadId)))
 						 .ConfigureAwait(false);
 
@@ -321,9 +327,10 @@ namespace SD.HnD.BL
 													  .Select(ThreadFields.ForumID)
 													  .Where(ThreadFields.ThreadID.Equal(threadId))));
 			var containingForum = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-			if(containingForum!=null)
+			if(containingForum != null)
 			{
 				containingForum.ForumLastPostingDate = postingDate;
+
 				// save the forum.
 				await adapter.SaveEntityAsync(containingForum, true).ConfigureAwait(false);
 				if(addToQueueIfRequired && containingForum.DefaultSupportQueueID.HasValue)
@@ -340,9 +347,9 @@ namespace SD.HnD.BL
 
 			//subscribe to thread if indicated
 			if(subscribeToThread)
-            {
+			{
 				await UserManager.AddThreadToSubscriptionsAsync(threadId, userId, adapter);
-            }
+			}
 		}
 	}
 }

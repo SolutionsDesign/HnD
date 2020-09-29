@@ -54,6 +54,7 @@ namespace SD.HnD.Utility
 		[ThreadStatic]
 		private static List<StringBuilder> _cachedInstances;
 
+
 		/// <summary>
 		/// Acquires a string builder with the capacity specified. If no cached string builder is found with the requested capacity a new one is returned. If there are 
 		/// cached stringbuilders with at least the requested capacity, the one with the minimal capacity is returned.  
@@ -78,12 +79,14 @@ namespace SD.HnD.Utility
 						minimalOverallInstance = cachedInstance;
 						indexMinimalOverall = i;
 					}
-					if(capacity <= cachedInstance.Capacity && (minimalMatchingCachedInstance==null || minimalMatchingCachedInstance.Capacity > cachedInstance.Capacity))
+
+					if(capacity <= cachedInstance.Capacity && (minimalMatchingCachedInstance == null || minimalMatchingCachedInstance.Capacity > cachedInstance.Capacity))
 					{
 						minimalMatchingCachedInstance = cachedInstance;
 						indexToRemove = i;
 					}
 				}
+
 				if(minimalMatchingCachedInstance == null)
 				{
 					// check if the cache is at capacity. If so, remove the one with the lowest capacity, which we determined in the previous loop. The cleared space is then
@@ -96,10 +99,11 @@ namespace SD.HnD.Utility
 				else
 				{
 					cachedInstances.RemoveAt(indexToRemove);
-					minimalMatchingCachedInstance.Length=0;
+					minimalMatchingCachedInstance.Length = 0;
 					return minimalMatchingCachedInstance;
 				}
 			}
+
 			// not a matching cached instance found, return a brand new one.
 			return new StringBuilder(capacity);
 		}
@@ -115,17 +119,20 @@ namespace SD.HnD.Utility
 			{
 				return;
 			}
+
 			var cachedInstances = AssureCachedInstancesStore();
 			if(cachedInstances.Count >= MAX_CACHED_INSTANCES)
 			{
 				// already at capacity, ignore
 				return;
 			}
+
 			if(sb.Capacity <= MAX_BUILDER_SIZE)
 			{
 				cachedInstances.Add(sb);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the string from the string builder specified and calls release on it
@@ -139,11 +146,12 @@ namespace SD.HnD.Utility
 			{
 				return string.Empty;
 			}
+
 			string result = sb.ToString();
 			Release(sb);
 			return result;
 		}
-		
+
 
 		/// <summary>
 		/// Makes sure the cached instances store is present for this thread.
@@ -157,6 +165,7 @@ namespace SD.HnD.Utility
 				toReturn = new List<StringBuilder>(MAX_CACHED_INSTANCES);
 				_cachedInstances = toReturn;
 			}
+
 			return toReturn;
 		}
 	}

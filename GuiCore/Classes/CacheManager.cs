@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using SD.HnD.BL;
 using System.Text;
@@ -53,6 +54,7 @@ namespace SD.HnD.Gui
 				// just store it in the cache without any dependency, as it's not changing often. 
 				cache.Set(CacheKeys.AllSections, toReturn);
 			}
+
 			return toReturn;
 		}
 
@@ -67,7 +69,7 @@ namespace SD.HnD.Gui
 		public static async Task<string> GetSectionNameAsync(this IMemoryCache cache, int sectionId)
 		{
 			var cachedSections = await cache.GetAllSectionsAsync();
-			var matchingSection = cachedSections.FirstOrDefault(s=>s.SectionID == sectionId);
+			var matchingSection = cachedSections.FirstOrDefault(s => s.SectionID == sectionId);
 			return matchingSection == null ? string.Empty : matchingSection.SectionName;
 		}
 
@@ -94,6 +96,7 @@ namespace SD.HnD.Gui
 					cache.Set(keyToUse, toReturn);
 				}
 			}
+
 			return toReturn;
 		}
 
@@ -115,6 +118,7 @@ namespace SD.HnD.Gui
 					cache.Set(CacheKeys.SystemData, toReturn);
 				}
 			}
+
 			return toReturn;
 		}
 
@@ -155,6 +159,7 @@ namespace SD.HnD.Gui
 			{
 				toReturn.AppendFormat(":{0}", value);
 			}
+
 			return toReturn.ToString();
 		}
 
@@ -204,6 +209,7 @@ namespace SD.HnD.Gui
 							// illegal range, ignore
 							continue;
 					}
+
 					if(!ipAddresses.ContainsKey(key))
 					{
 						ipAddresses.Add(key, currentIPBan);

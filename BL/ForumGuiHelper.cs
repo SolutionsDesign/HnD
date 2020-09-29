@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -35,8 +36,8 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Class to provide essential data for the Forum Gui
 	/// </summary>
-	public class ForumGuiHelper
-    {
+	public static class ForumGuiHelper
+	{
 		/// <summary>
 		/// Returns a TypedList which contains the last (amount) posted messages in the forum given. For RSS production.
 		/// </summary>
@@ -55,7 +56,7 @@ namespace SD.HnD.BL
 			}
 		}
 
-		
+
 		/// <summary>
 		/// Returns a list with aggregated data objects, one per thread, for the requested forum and page
 		/// </summary>
@@ -66,19 +67,19 @@ namespace SD.HnD.BL
 		/// Otherwise only the threads started by the user calling the method are returned.</param>
 		/// <param name="userId">The userid of the user calling the method.</param>
 		/// <returns>List with all the thread info, aggregated. Sticky threads are sorted to the top.</returns>
-		public static async Task<List<AggregatedThreadRow>> GetAllThreadsInForumAggregatedDataAsync(int forumId, int pageNumber, int pageSize, 
+		public static async Task<List<AggregatedThreadRow>> GetAllThreadsInForumAggregatedDataAsync(int forumId, int pageNumber, int pageSize,
 																									bool canViewNormalThreadsStartedByOthers, int userId)
 		{
 			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
 			// then sort the sticky threads at the top and page through the resultset.
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
-						  .Where(ThreadFields.ForumID.Equal(forumId))
-						  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
-						  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
-						  .Offset(pageSize * (pageNumber-1))		// skip the pages we don't need.
-						  .Limit(pageSize+1);						// fetch 1 row extra, which we can use to determine whether there are more pages left.
+					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
+					  .Where(ThreadFields.ForumID.Equal(forumId))
+					  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
+					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
+					  .Offset(pageSize * (pageNumber - 1)) // skip the pages we don't need.
+					  .Limit(pageSize + 1); // fetch 1 row extra, which we can use to determine whether there are more pages left.
 
 			// if the user can't view threads started by others, filter out threads started by users different from userID. Otherwise just filter on forumid and stickyness.
 			if(!canViewNormalThreadsStartedByOthers)
@@ -89,6 +90,7 @@ namespace SD.HnD.BL
 				// expression
 				q.AndWhere((ThreadFields.StartedByUserID.Equal(userId)).Or(ThreadFields.IsSticky.Equal(true)));
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
 				var toReturn = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -104,7 +106,7 @@ namespace SD.HnD.BL
 		public static async Task<List<ForumsWithSectionNameRow>> GetAllForumsWithSectionNamesAsync()
 		{
 			var q = new QueryFactory().GetForumsWithSectionNameTypedList()
-									  .OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(), 
+									  .OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending(), ForumFields.OrderNo.Ascending(),
 											   ForumFields.ForumName.Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -117,14 +119,14 @@ namespace SD.HnD.BL
 		/// Gets all forum IDs of all forums in the system, unordered.
 		/// </summary>
 		/// <returns></returns>
-	    public static async Task<List<int>> GetAllForumIdsAsync()
-	    {
-		    var q = new QueryFactory().Forum.Select(() => ForumFields.ForumID.ToValue<int>());
-		    using(var adapter = new DataAccessAdapter())
-		    {
-			    return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
-		    }
-	    }
+		public static async Task<List<int>> GetAllForumIdsAsync()
+		{
+			var q = new QueryFactory().Forum.Select(() => ForumFields.ForumID.ToValue<int>());
+			using(var adapter = new DataAccessAdapter())
+			{
+				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
+			}
+		}
 
 
 		/// <summary>
@@ -156,17 +158,17 @@ namespace SD.HnD.BL
 		/// MultiValueHashtable with per key (sectionID) a set of AggregatedForumRow instance, one row per forum in the section. If a section contains no forums
 		/// displayable to the user it's not present in the returned hashtable.
 		/// </returns>
-        public static async Task<MultiValueHashtable<int, AggregatedForumRow>> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections, 
-																												   List<int> accessableForums, 
+		public static async Task<MultiValueHashtable<int, AggregatedForumRow>> GetAllAvailableForumsAggregatedData(EntityCollection<SectionEntity> availableSections,
+																												   List<int> accessableForums,
 																												   List<int> forumsWithThreadsFromOthers, int userId)
-        {
+		{
 			var toReturn = new MultiValueHashtable<int, AggregatedForumRow>();
 
-            // return an empty list, if the user does not have a valid list of forums to access
-            if (accessableForums == null || accessableForums.Count <= 0)
-            {
-                return toReturn;
-            }
+			// return an empty list, if the user does not have a valid list of forums to access
+			if(accessableForums == null || accessableForums.Count <= 0)
+			{
+				return toReturn;
+			}
 
 			// fetch all forums with statistics in a dynamic list, while filtering on the list of accessable forums for this user. 
 			// Create the filter separate of the query itself, as it's re-used multiple times. 
@@ -174,12 +176,13 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select(() => new AggregatedForumRow()
-									  {
-										ForumID = ForumFields.ForumID.ToValue<int>(), 
-										ForumName = ForumFields.ForumName.ToValue<string>(), 
-										ForumDescription = ForumFields.ForumDescription.ToValue<string>(), 
+					  .Select(() => new AggregatedForumRow()
+									{
+										ForumID = ForumFields.ForumID.ToValue<int>(),
+										ForumName = ForumFields.ForumName.ToValue<string>(),
+										ForumDescription = ForumFields.ForumDescription.ToValue<string>(),
 										ForumLastPostingDate = ForumFields.ForumLastPostingDate.ToValue<DateTime?>(),
+
 										// add a scalar query which retrieves the # of threads in the specific forum. 
 										// this will result in the query:
 										// (
@@ -187,10 +190,11 @@ namespace SD.HnD.BL
 										//		WHERE ForumID = Forum.ForumID AND threadfilter. 
 										// ) As AmountThreads
 										AmountThreads = qf.Create()
-															.Select(ThreadFields.ThreadID.Count())
-															.CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
-															.Where(threadFilter)
-															.ToScalar().As("AmountThreads").ToValue<int>(),
+														  .Select(ThreadFields.ThreadID.Count())
+														  .CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
+														  .Where(threadFilter)
+														  .ToScalar().As("AmountThreads").ToValue<int>(),
+
 										// add a scalar query which retrieves the # of messages in the threads of this forum. 
 										// this will result in the query:
 										// (
@@ -200,20 +204,20 @@ namespace SD.HnD.BL
 										//			SELECT ThreadID FROM Thread WHERE ForumID = Forum.ForumID AND threadfilter
 										//		)
 										// ) AS AmountMessages
-							 			AmountMessages = qf.Create()
-												.Select(MessageFields.MessageID.Count())
-												.Where(MessageFields.ThreadID.In(
-														qf.Create()
-															.Select(ThreadFields.ThreadID)
-															.CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
-															.Where(threadFilter)))
-												.ToScalar().As("AmountMessages").ToValue<int>(),
-										HasRSSFeed = ForumFields.HasRSSFeed.ToValue<bool>(), 
+										AmountMessages = qf.Create()
+														   .Select(MessageFields.MessageID.Count())
+														   .Where(MessageFields.ThreadID.In(
+																							qf.Create()
+																							  .Select(ThreadFields.ThreadID)
+																							  .CorrelatedOver(ThreadFields.ForumID.Equal(ForumFields.ForumID))
+																							  .Where(threadFilter)))
+														   .ToScalar().As("AmountMessages").ToValue<int>(),
+										HasRSSFeed = ForumFields.HasRSSFeed.ToValue<bool>(),
 										SectionID = ForumFields.SectionID.ToValue<int>()
 									})
-						.Where(ForumFields.ForumID.In(accessableForums))
-						.OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending())
-						.CacheResultset(Globals.DefaultCacheDurationOfResultsets);
+					  .Where(ForumFields.ForumID.In(accessableForums))
+					  .OrderBy(ForumFields.OrderNo.Ascending(), ForumFields.ForumName.Ascending())
+					  .CacheResultset(Globals.DefaultCacheDurationOfResultsets);
 			using(var adapter = new DataAccessAdapter())
 			{
 				var results = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -222,8 +226,9 @@ namespace SD.HnD.BL
 					toReturn.Add(forum.SectionID, forum);
 				}
 			}
+
 			return toReturn;
-        }
+		}
 
 
 		/// <summary>

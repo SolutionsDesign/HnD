@@ -17,9 +17,9 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
-
 using SD.LLBLGen.Pro.QuerySpec;
 using SD.LLBLGen.Pro.ORMSupportClasses;
 using SD.HnD.DALAdapter.HelperClasses;
@@ -44,7 +44,7 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="messageId"></param>
 		/// <returns></returns>
-		public static async Task<int> GetTotalNumberOfAttachmentsOfMessageAsync(int messageId) 
+		public static async Task<int> GetTotalNumberOfAttachmentsOfMessageAsync(int messageId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -52,6 +52,7 @@ namespace SD.HnD.BL
 				return await adapter.FetchScalarAsync<int>(q).ConfigureAwait(false);
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the number of postings in all threads of all forums on this system. 
@@ -128,10 +129,10 @@ namespace SD.HnD.BL
 		{
 			var qf = new QueryFactory();
 			var q = qf.Message
-						.From(QueryTarget.InnerJoin(qf.Attachment).On(MessageFields.MessageID.Equal(AttachmentFields.MessageID)))
-						.Where(AttachmentFields.AttachmentID.Equal(attachmentId))
-						.Limit(1)
-						.WithPath(MessageEntity.PrefetchPathThread);
+					  .From(QueryTarget.InnerJoin(qf.Attachment).On(MessageFields.MessageID.Equal(AttachmentFields.MessageID)))
+					  .Where(AttachmentFields.AttachmentID.Equal(attachmentId))
+					  .Limit(1)
+					  .WithPath(MessageEntity.PrefetchPathThread);
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
@@ -147,8 +148,8 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums the calling user can view normal threads from others.</param>
 		/// <param name="userId">The user ID of the calling user.</param>
 		/// <returns>List with objects with the data requested.</returns>
-		public static async Task<List<AggregatedUnapprovedAttachmentRow>> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums, 
-																													 List<int> forumsWithApprovalRight, 
+		public static async Task<List<AggregatedUnapprovedAttachmentRow>> GetAllMessagesIDsWithUnapprovedAttachments(List<int> accessableForums,
+																													 List<int> forumsWithApprovalRight,
 																													 List<int> forumsWithThreadsFromOthers, int userId)
 		{
 			if((accessableForums == null) || (accessableForums.Count <= 0))
@@ -156,11 +157,13 @@ namespace SD.HnD.BL
 				// doesn't have access to any forum, return
 				return null;
 			}
+
 			if((forumsWithApprovalRight == null) || (forumsWithApprovalRight.Count <= 0))
 			{
 				// doesn't have a forum with attachment approval right
 				return null;
 			}
+
 			var qf = new QueryFactory();
 
 			// We've to filter the list of attachments based on the forums accessable by the calling user, the list of forums the calling user has approval 
@@ -195,7 +198,7 @@ namespace SD.HnD.BL
 		/// <param name="userId">The user ID.</param>
 		/// <returns>ready to use predicate expression for fetch actions on attachments with the approval state specified in the threads
 		/// matching the forumID's.</returns>
-		private static PredicateExpression CreateAttachmentFilter(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers, 
+		private static PredicateExpression CreateAttachmentFilter(List<int> accessableForums, List<int> forumsWithApprovalRight, List<int> forumsWithThreadsFromOthers,
 																  int userId)
 		{
 			var filter = new PredicateExpression();
@@ -212,6 +215,7 @@ namespace SD.HnD.BL
 			{
 				filter.Add(ThreadFields.ForumID.In(accessableForums));
 			}
+
 			// specify the filter for the forums with approval rights:
 			if(forumsWithApprovalRight.Count == 1)
 			{
@@ -223,9 +227,11 @@ namespace SD.HnD.BL
 			{
 				filter.Add(ThreadFields.ForumID.In(forumsWithApprovalRight));
 			}
+
 			// Also filter on the threads viewable by the passed in userid, which is the caller of the method. If a forum isn't in the list of
 			// forumsWithThreadsFromOthers, only the sticky threads and the threads started by userid should be counted / taken into account. 
 			filter.AddWithAnd(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId));
+
 			// as last filter, we'll add a filter to only get the data for attachments which aren't approved yet.
 			filter.AddWithAnd(AttachmentFields.Approved.Equal(false));
 			return filter;

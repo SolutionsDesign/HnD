@@ -17,18 +17,15 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Text;
 using System.Collections;
-
-using SD.HnD.DALAdapter;
 using SD.HnD.DALAdapter.EntityClasses;
 using SD.HnD.DALAdapter.HelperClasses;
 using SD.HnD.DALAdapter.FactoryClasses;
 using SD.HnD.DALAdapter.TypedListClasses;
-
-using SD.LLBLGen.Pro.ORMSupportClasses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +56,7 @@ namespace SD.HnD.BL
 			{
 				var q = new QueryFactory().User
 										  .Where(UserFields.IsBanned.Equal(true))
-										  .Select(()=>UserFields.NickName.ToValue<string>());
+										  .Select(() => UserFields.NickName.ToValue<string>());
 				return adapter.FetchQuery(q);
 			}
 		}
@@ -90,7 +87,7 @@ namespace SD.HnD.BL
 		/// <param name="callingUserId">The calling user ID.</param>
 		/// <param name="amount">The amount of threads to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId, 
+		public static Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId,
 																							   List<int> forumsWithThreadsFromOthers, int callingUserId, int amount)
 		{
 			return UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(accessableForums, participantUserId, forumsWithThreadsFromOthers, callingUserId, amount, 0);
@@ -108,9 +105,9 @@ namespace SD.HnD.BL
 		/// <param name="pageSize">Size of the page.</param>
 		/// <param name="pageNumber">The page number to fetch.</param>
 		/// <returns>a list with objects representing the last threads for the user</returns>
-		public static async Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId, 
-																									List<int> forumsWithThreadsFromOthers, int callingUserId, 
-																									int pageSize, int pageNumber)
+		public static async Task<List<AggregatedThreadRow>> GetLastThreadsForUserAggregatedDataAsync(List<int> accessableForums, int participantUserId,
+																									 List<int> forumsWithThreadsFromOthers, int callingUserId,
+																									 int pageSize, int pageNumber)
 		{
 			// return null, if the user does not have a valid list of forums to access
 			if(accessableForums == null || accessableForums.Count <= 0)
@@ -126,15 +123,15 @@ namespace SD.HnD.BL
 
 			var qf = new QueryFactory();
 			var q = qf.Create()
-							.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
-							.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-									 .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
-							.Where(ThreadFields.ForumID.In(accessableForums)
-									.And(ThreadFields.ThreadID.In(qf.Create()
-																		.Select(MessageFields.ThreadID)
-																		.Where(MessageFields.PostedByUserID.Equal(participantUserId))))
-									.And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserId)))
-							.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
+					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+					  .Where(ThreadFields.ForumID.In(accessableForums)
+										 .And(ThreadFields.ThreadID.In(qf.Create()
+																		 .Select(MessageFields.ThreadID)
+																		 .Where(MessageFields.PostedByUserID.Equal(participantUserId))))
+										 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserId)))
+					  .OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			if(pageNumber <= 0)
 			{
 				// no paging
@@ -146,6 +143,7 @@ namespace SD.HnD.BL
 				// use paging
 				q.Page(pageNumber, numberOfThreadsToFetch);
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -162,7 +160,7 @@ namespace SD.HnD.BL
 		/// <param name="forumsWithThreadsFromOthers">The forums with threads from others.</param>
 		/// <param name="callingUserId">The calling user ID.</param>
 		/// <returns>the total number of threads the user participated in</returns>
-		public static async Task<int> GetRowCountLastThreadsForUserAsync(List<int> accessableForums, int participantUserId, List<int> forumsWithThreadsFromOthers, 
+		public static async Task<int> GetRowCountLastThreadsForUserAsync(List<int> accessableForums, int participantUserId, List<int> forumsWithThreadsFromOthers,
 																		 int callingUserId)
 		{
 			// return null, if the user does not have a valid list of forums to access
@@ -170,6 +168,7 @@ namespace SD.HnD.BL
 			{
 				return 0;
 			}
+
 			var qf = new QueryFactory();
 			var q = qf.Create()
 					  .Select(Functions.CountRow())
@@ -196,8 +195,8 @@ namespace SD.HnD.BL
 		/// <param name="emailAddress">Email address.</param>
 		/// <param name="roleIDWhichUsersToExclude">The role id which users to exclude. </param>
 		/// <returns>User objects matching the query</returns>
-		public static async Task<EntityCollection<UserEntity>> FindUsers(bool filterOnRole, int roleId, bool filterOnNickName, string nickName, bool filterOnEmailAddress, 
-																		 string emailAddress, int roleIDWhichUsersToExclude=0)
+		public static async Task<EntityCollection<UserEntity>> FindUsers(bool filterOnRole, int roleId, bool filterOnNickName, string nickName, bool filterOnEmailAddress,
+																		 string emailAddress, int roleIDWhichUsersToExclude = 0)
 		{
 			var qf = new QueryFactory();
 			var q = qf.User.OrderBy(UserFields.NickName.Ascending());
@@ -205,18 +204,22 @@ namespace SD.HnD.BL
 			{
 				q.AndWhere(UserFields.UserID.In(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID.Equal(roleId))));
 			}
+
 			if(filterOnNickName)
 			{
 				q.AndWhere(UserFields.NickName.Contains(nickName));
 			}
+
 			if(filterOnEmailAddress)
 			{
 				q.AndWhere(UserFields.EmailAddress.Contains(emailAddress));
 			}
+
 			if(roleIDWhichUsersToExclude > 0)
 			{
 				q.AndWhere(UserFields.UserID.NotIn(qf.Create().Select(RoleUserFields.UserID).Where(RoleUserFields.RoleID.Equal(roleIDWhichUsersToExclude))));
 			}
+
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q, new EntityCollection<UserEntity>()).ConfigureAwait(false);
@@ -251,13 +254,13 @@ namespace SD.HnD.BL
 		{
 			var qf = new QueryFactory();
 			var q = qf.Create()
-						.Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
-						.From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
-												.InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
-						.Where(ThreadFields.ThreadID.In(qf.Create()
-														  .Select(BookmarkFields.ThreadID)
-														  .Where(BookmarkFields.UserID.Equal(userID))))
-						.OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStatsWithForumName(qf).ToArray())
+					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf)
+										   .InnerJoin(qf.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID)))
+					  .Where(ThreadFields.ThreadID.In(qf.Create()
+														.Select(BookmarkFields.ThreadID)
+														.Where(BookmarkFields.UserID.Equal(userID))))
+					  .OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -276,8 +279,8 @@ namespace SD.HnD.BL
 				return await adapter.FetchQueryAsync(new QueryFactory().UserTitle, new EntityCollection<UserTitleEntity>()).ConfigureAwait(false);
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Checks if the user with the given NickName exists in the database. This is necessary to check if a user which gets authenticated through
 		/// forms authentication is still available in the database. 
@@ -288,7 +291,7 @@ namespace SD.HnD.BL
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
-				return await new LinqMetaData(adapter).User.AnyAsync(u=>u.NickName == nickName).ConfigureAwait(false);
+				return await new LinqMetaData(adapter).User.AnyAsync(u => u.NickName == nickName).ConfigureAwait(false);
 			}
 		}
 
@@ -313,7 +316,7 @@ namespace SD.HnD.BL
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Gets all users in range specified
@@ -339,11 +342,12 @@ namespace SD.HnD.BL
 			using(var adapter = new DataAccessAdapter())
 			{
 				var q = new QueryFactory().User.Where(UserFields.UserID.Equal(userId));
-				if(userId ==0 )
+				if(userId == 0)
 				{
 					// cache the resultset, as the anonymous user doesn't change
 					q.CacheResultset(3600, false, CacheKeys.AnonymousUserQueryResultset);
 				}
+
 				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
 		}
@@ -377,8 +381,8 @@ namespace SD.HnD.BL
 				return await adapter.FetchQueryAsync(q, new EntityCollection<UserEntity>()).ConfigureAwait(false);
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Gets the password token entity for the tokenid specified or null if not found.
 		/// </summary>

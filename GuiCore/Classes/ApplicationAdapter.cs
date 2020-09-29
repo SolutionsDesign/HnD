@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using SD.HnD.BL;
 using System.Linq;
@@ -26,44 +27,44 @@ using SD.LLBLGen.Pro.ORMSupportClasses;
 
 namespace SD.HnD.Gui
 {
-    /// <summary>
-    /// ApplicationAdapter is used to access Application-wide variables stored in the HnDConfiguration.
+	/// <summary>
+	/// ApplicationAdapter is used to access Application-wide variables stored in the HnDConfiguration.
 	/// </summary>
 	/// <remarks>
-    /// In previous versions this class wrapped access to the HttpApplication object, however in ASP.NET Core this object is no longer present.
-    /// To avoid refactoring a lot of code, this class is kept as a central access point to global configuration data and instead
-    /// of reading/writing into HttpApplication, it's using HnDConfiguration.Current instead.
-    /// </remarks> 
-    public static class ApplicationAdapter
-    {
-        /// <summary>
-        /// Gets the max amount messages per page.
-        /// </summary>
-        /// <returns>maxAmountMessagesPerPage if available, otherwise 25</returns>
-        public static int GetMaxAmountMessagesPerPage()
+	/// In previous versions this class wrapped access to the HttpApplication object, however in ASP.NET Core this object is no longer present.
+	/// To avoid refactoring a lot of code, this class is kept as a central access point to global configuration data and instead
+	/// of reading/writing into HttpApplication, it's using HnDConfiguration.Current instead.
+	/// </remarks> 
+	public static class ApplicationAdapter
+	{
+		/// <summary>
+		/// Gets the max amount messages per page.
+		/// </summary>
+		/// <returns>maxAmountMessagesPerPage if available, otherwise 25</returns>
+		public static int GetMaxAmountMessagesPerPage()
 		{
 			return HnDConfiguration.Current.MaxAmountMessagesPerPage;
-        }
+		}
 
-		
-	    /// <summary>
-        /// Gets the name of the site.
-        /// </summary>
-        /// <returns>siteName if available, otherwise an empty string</returns>
-        public static string GetSiteName()
+
+		/// <summary>
+		/// Gets the name of the site.
+		/// </summary>
+		/// <returns>siteName if available, otherwise an empty string</returns>
+		public static string GetSiteName()
 		{
 			return HnDConfiguration.Current.SiteName;
-        }
+		}
 
 
-	    /// <summary>
-        /// Gets the virtual root.
-        /// </summary>
-        /// <returns>virtualRoot if available, otherwise an empty string</returns>
-        public static string GetVirtualRoot()
+		/// <summary>
+		/// Gets the virtual root.
+		/// </summary>
+		/// <returns>virtualRoot if available, otherwise an empty string</returns>
+		public static string GetVirtualRoot()
 		{
-			return HnDConfiguration.Current.VirtualRoot;			
-        }
+			return HnDConfiguration.Current.VirtualRoot;
+		}
 
 
 		/// <summary>
@@ -84,15 +85,15 @@ namespace SD.HnD.Gui
 		/// <param name="template">The template to add to the emailData. (optional</param>
 		/// <returns>a dictionary of the following keys (defaultFromEmailAddress, defaultToEmailAddress, defaultSMTPServer, emailPassowrdSubject,
 		/// siteName, applicationURL, smtpHost, smtpPort, smtpUserName, smtpPassword, smtpEnableSsl, emailTemplate)</returns>
-		public static Dictionary<string, string> GetEmailData(string hostName, EmailTemplate template=EmailTemplate.Undefined)
-        {
-            Dictionary<string, string> emailData = new Dictionary<string, string>();
-            emailData.Add("defaultFromEmailAddress", HnDConfiguration.Current.DefaultFromEmailAddress);
-            emailData.Add("defaultToEmailAddress", HnDConfiguration.Current.DefaultToEmailAddress);
+		public static Dictionary<string, string> GetEmailData(string hostName, EmailTemplate template = EmailTemplate.Undefined)
+		{
+			Dictionary<string, string> emailData = new Dictionary<string, string>();
+			emailData.Add("defaultFromEmailAddress", HnDConfiguration.Current.DefaultFromEmailAddress);
+			emailData.Add("defaultToEmailAddress", HnDConfiguration.Current.DefaultToEmailAddress);
 			emailData.Add("emailPasswordSubject", HnDConfiguration.Current.EmailPasswordSubject);
 			emailData.Add("emailThreadNotificationSubject", HnDConfiguration.Current.EmailThreadNotificationSubject);
 			emailData.Add("passwordResetRequestSubject", HnDConfiguration.Current.PasswordResetRequestSubject);
-            emailData.Add("siteName", GetSiteName());
+			emailData.Add("siteName", GetSiteName());
 			emailData.Add("applicationURL", "https://" + hostName + GetVirtualRoot());
 			emailData.Add("smtpHost", HnDConfiguration.Current.SmtpConfiguration.GetValue("MailServer"));
 			emailData.Add("smtpPort", HnDConfiguration.Current.SmtpConfiguration.GetValue("MailPort"));
@@ -107,8 +108,9 @@ namespace SD.HnD.Gui
 				_ => string.Empty
 			};
 			emailData.Add("emailTemplate", emailTemplate);
-            return emailData;
-        }
+			return emailData;
+		}
+
 
 		/// <summary>
 		/// Gets the noise words to filter out in searches
@@ -124,10 +126,10 @@ namespace SD.HnD.Gui
 		/// Gets a dictionary with per name of the emoji (key) the filename the picture is located in (value)
 		/// </summary>
 		/// <returns></returns>
-	    public static Dictionary<string, string> GetEmojiFilenamesPerName()
+		public static Dictionary<string, string> GetEmojiFilenamesPerName()
 		{
 			return HnDConfiguration.Current.EmojiFilenamesPerName;
-	    }
+		}
 
 
 		/// <summary>
@@ -144,42 +146,42 @@ namespace SD.HnD.Gui
 		/// Gets the cached value representing the number of unapproved attachments
 		/// </summary>
 		/// <returns></returns>
-	    public static int GetCachedNumberOfUnapprovedAttachments()
+		public static int GetCachedNumberOfUnapprovedAttachments()
 		{
 			return HnDConfiguration.Current.GetCachedNumberOfUnapprovedAttachments();
-	    }
+		}
 
 
 		/// <summary>
 		/// Removes the cached value representing the number of unapproved attachments 
 		/// </summary>
 		/// <returns></returns>
-	    public static int InvalidateCachedNumberOfUnapprovedAttachments()
+		public static int InvalidateCachedNumberOfUnapprovedAttachments()
 		{
 			return HnDConfiguration.Current.InvalidateCachedNumberOfUnapprovedAttachments();
-	    }
+		}
 
 
 		/// <summary>
 		/// Gets the cached value representing the number of threads in the support queues
 		/// </summary>
 		/// <returns></returns>
-	    public static int GetCachedNumberOfThreadsInSupportQueues()
+		public static int GetCachedNumberOfThreadsInSupportQueues()
 		{
 			return HnDConfiguration.Current.GetCachedNumberOfThreadsInSupportQueues();
-	    }
+		}
 
 
 		/// <summary>
 		/// Removes the cached value representing the number of threads in the support queues
 		/// </summary>
 		/// <returns></returns>
-	    public static int InvalidateCachedNumberOfThreadsInSupportQueues()
+		public static int InvalidateCachedNumberOfThreadsInSupportQueues()
 		{
 			return HnDConfiguration.Current.InvalidateCachedNumberOfThreadsInSupportQueues();
-	    }
+		}
 
-		
+
 		/// <summary>
 		/// Checks if the nickname passed in is among the users which have to be logged out by force. All users which are deleted have to be logged out by force. 
 		/// </summary>

@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -19,11 +39,13 @@ namespace SD.HnD.Gui.Controllers
 	{
 		private IMemoryCache _cache;
 
+
 		public MessageController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
-		
+
+
 		[HttpGet]
 		public ActionResult GotoOldVersion(int messageID)
 		{
@@ -31,7 +53,7 @@ namespace SD.HnD.Gui.Controllers
 			return RedirectToAction("Goto", "Message", new {messageId = messageID});
 		}
 
-		
+
 		[HttpGet]
 		public async Task<ActionResult> Goto(int id = 0)
 		{
@@ -49,11 +71,13 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var message = await MessageGuiHelper.GetMessageAsync(id);
 			if(message == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var thread = await ThreadGuiHelper.GetThreadAsync(message.ThreadID);
 			if(thread == null)
 			{
@@ -66,6 +90,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				await MessageManager.DeleteMessageAsync(id);
 			}
+
 			return RedirectToAction("Index", "Thread", new {threadId = thread.ThreadID, pageNo = 1});
 		}
 
@@ -83,11 +108,13 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var (userMayEditMessages, message) = await PerformEditMessageSecurityChecksAsync(id);
 			if(!userMayEditMessages)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var thread = message.Thread;
 			var forum = await _cache.GetForumAsync(thread.ForumID);
 			if(forum == null)
@@ -112,83 +139,92 @@ namespace SD.HnD.Gui.Controllers
 
 		[Authorize]
 		[HttpGet]
-		public async Task<ActionResult> Add(int threadId = 0, int messageIdToQuote=0)
+		public async Task<ActionResult> Add(int threadId = 0, int messageIdToQuote = 0)
 		{
 			if(this.HttpContext.Session.IsAnonymousUser())
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var (userMayAddMessages, thread) = await PerformAddMessageSecurityChecksAsync(threadId);
 			if(!userMayAddMessages)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			MessageEntity messageToQuote = null;
 			UserEntity userOfMessageToQuote = null;
 			if(messageIdToQuote > 0)
 			{
 				messageToQuote = await MessageGuiHelper.GetMessageAsync(messageIdToQuote);
-				if(messageToQuote == null || messageToQuote.ThreadID!=threadId)
+				if(messageToQuote == null || messageToQuote.ThreadID != threadId)
 				{
 					// doesn't exist, or is in another thread, ignore.
 					return RedirectToAction("Index", "Home");
 				}
+
 				userOfMessageToQuote = await UserGuiHelper.GetUserAsync(messageToQuote.PostedByUserID);
 				if(userOfMessageToQuote == null)
 				{
 					return RedirectToAction("Index", "Home");
 				}
 			}
+
 			var forum = await _cache.GetForumAsync(thread.ForumID);
 			if(forum == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
-			string messageTextForEditor = messageToQuote == null ? string.Empty
-																 : string.Format("@quote {0}{1}{2}{1}@end{1}", userOfMessageToQuote.NickName, Environment.NewLine, 
-																				 messageToQuote.MessageText);
+
+			string messageTextForEditor = messageToQuote == null
+				? string.Empty
+				: string.Format("@quote {0}{1}{2}{1}@end{1}", userOfMessageToQuote.NickName, Environment.NewLine,
+								messageToQuote.MessageText);
 			var messageData = new MessageData()
-			{
-				MessageText = messageTextForEditor,
-				CurrentUserID = this.HttpContext.Session.GetUserID(),
-				ForumID = forum.ForumID,
-				ThreadID = thread.ThreadID,
-				ForumName = forum.ForumName,
-				SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
-				ThreadSubject = thread.Subject,
-				PageNo = 1,
-				LastMessageInThread = await ThreadGuiHelper.GetLastMessageInThreadDtoAsync(threadId),
-			};
+							  {
+								  MessageText = messageTextForEditor,
+								  CurrentUserID = this.HttpContext.Session.GetUserID(),
+								  ForumID = forum.ForumID,
+								  ThreadID = thread.ThreadID,
+								  ForumName = forum.ForumName,
+								  SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
+								  ThreadSubject = thread.Subject,
+								  PageNo = 1,
+								  LastMessageInThread = await ThreadGuiHelper.GetLastMessageInThreadDtoAsync(threadId),
+							  };
 			return View(messageData);
 		}
 
-		
+
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> Add([Bind(nameof(MessageData.MessageText), nameof(MessageData.Subscribe))] MessageData messageData, string submitButton, 
+		public async Task<ActionResult> Add([Bind(nameof(MessageData.MessageText), nameof(MessageData.Subscribe))]
+											MessageData messageData, string submitButton,
 											int threadId = 0)
 		{
 			if(submitButton != "Post")
 			{
-				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new { threadId = threadId });
+				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new {threadId = threadId});
 			}
 
 			if(!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var (userMayAddMessages, thread) = await PerformAddMessageSecurityChecksAsync(threadId);
 			if(!userMayAddMessages)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			int newMessageId = 0;
 			if(submitButton == "Post")
 			{
 				// allowed, proceed
 				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
 																			ApplicationAdapter.GetSmileyMappings());
 				var systemData = await _cache.GetSystemDataAsync();
 				var remoteIPAddress = HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress);
@@ -202,19 +238,22 @@ namespace SD.HnD.Gui.Controllers
 					await SecurityManager.AuditNewMessageAsync(this.HttpContext.Session.GetUserID(), newMessageId);
 				}
 			}
+
 			return await CalculateRedirectToMessageAsync(thread.ThreadID, newMessageId);
 		}
-		
-		
+
+
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> Edit([Bind(nameof(MessageData.MessageText))] MessageData messageData, string submitButton, int id = 0)
+		public async Task<ActionResult> Edit([Bind(nameof(MessageData.MessageText))]
+											 MessageData messageData, string submitButton, int id = 0)
 		{
 			if(!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			var (userMayEditMessages, message) = await PerformEditMessageSecurityChecksAsync(id);
 			if(!userMayEditMessages)
 			{
@@ -224,7 +263,7 @@ namespace SD.HnD.Gui.Controllers
 			if(submitButton == "Post")
 			{
 				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(), 
+				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
 																			ApplicationAdapter.GetSmileyMappings());
 				await MessageManager.UpdateEditedMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
 															  this.Request.Host.Host, string.Empty);
@@ -233,6 +272,7 @@ namespace SD.HnD.Gui.Controllers
 					await SecurityManager.AuditAlteredMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID);
 				}
 			}
+
 			return await CalculateRedirectToMessageAsync(message.ThreadID, message.MessageID);
 		}
 
@@ -243,26 +283,31 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return (false, null);
 			}
-			var message = await MessageGuiHelper.GetMessageAsync(id, prefetchThread:true);
+
+			var message = await MessageGuiHelper.GetMessageAsync(id, prefetchThread: true);
 			if(message == null)
 			{
 				return (false, null);
 			}
+
 			var thread = message.Thread;
 			if(thread == null)
 			{
 				return (false, null);
 			}
+
 			if(!this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
 			{
 				return (false, null);
 			}
+
 			var userMayEditMessages = false;
 			if(!thread.IsClosed)
 			{
 				userMayEditMessages = this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID,
-																						  thread.IsSticky ? ActionRights.AddAndEditMessageInSticky 
-																							              : ActionRights.AddAndEditMessage);
+																						  thread.IsSticky
+																							  ? ActionRights.AddAndEditMessageInSticky
+																							  : ActionRights.AddAndEditMessage);
 			}
 
 			// User has the right to generally edit messages. Check if the user has the right to edit other peoples messages
@@ -284,6 +329,7 @@ namespace SD.HnD.Gui.Controllers
 				// can't edit this message, it's in a thread which isn't visible to the user
 				userMayEditMessages = false;
 			}
+
 			return (userMayEditMessages, message);
 		}
 
@@ -294,21 +340,25 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return (false, null);
 			}
+
 			var thread = await ThreadGuiHelper.GetThreadAsync(threadId);
 			if(thread == null)
 			{
 				return (false, null);
 			}
+
 			if(!this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.AccessForum))
 			{
 				return (false, null);
 			}
+
 			var userMayAddMessages = false;
 			if(!thread.IsClosed)
 			{
 				userMayAddMessages = this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID,
-																						 thread.IsSticky ? ActionRights.AddAndEditMessageInSticky 
-																										 : ActionRights.AddAndEditMessage);
+																						 thread.IsSticky
+																							 ? ActionRights.AddAndEditMessageInSticky
+																							 : ActionRights.AddAndEditMessage);
 			}
 
 			// check if the user can view the thread the message is in. If not, don't continue.
@@ -318,9 +368,10 @@ namespace SD.HnD.Gui.Controllers
 				// can't edit this message, it's in a thread which isn't visible to the user
 				userMayAddMessages = false;
 			}
+
 			return (userMayAddMessages, thread);
 		}
-		
+
 
 		/// <summary>
 		/// Calculates the redirect to message with the id specified. This is a response to the index action on the thread controller, with the proper page and '#' id redirect.
@@ -334,7 +385,7 @@ namespace SD.HnD.Gui.Controllers
 			var idOfStartMessage = await ThreadGuiHelper.GetStartAtMessageForGivenMessageAndThreadAsync(threadId, messageId, maxAmountMessagesPerPage);
 			int startAtMessageNo = messageId > 0 ? idOfStartMessage : 0;
 			int currentPageNo = (startAtMessageNo / maxAmountMessagesPerPage) + 1;
-			return Redirect(this.Url.Action("Index", "Thread", new { threadId = threadId, pageNo = currentPageNo }) + "#" + messageId);
+			return Redirect(this.Url.Action("Index", "Thread", new {threadId = threadId, pageNo = currentPageNo}) + "#" + messageId);
 		}
 	}
 }

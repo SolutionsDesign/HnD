@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 
 namespace SD.HnD.BL
@@ -121,15 +122,15 @@ namespace SD.HnD.BL
 	/// </summary>
 	public enum AuditActions
 	{
-		AuditLogin=1,
-		AuditNewMessage=2,
-		AuditNewThread=3,
-		AuditAlteredMessage=4,
-		AuditEditMemo=5,
-		AuditApproveAttachment=6
+		AuditLogin = 1,
+		AuditNewMessage = 2,
+		AuditNewThread = 3,
+		AuditAlteredMessage = 4,
+		AuditEditMemo = 5,
+		AuditApproveAttachment = 6
 	}
 
-	
+
 	/// <summary>
 	/// ActionRights constants. The Application object will hold a cached hashtable with the actionrights definitions from the database. These are
 	/// defined system wide, and are not mutated at runtime. 
@@ -145,16 +146,17 @@ namespace SD.HnD.BL
 		SystemManagement,
 		AddAndEditMessageInSticky,
 		SystemWideThreadManagement,
-		AddNormalThread,			// 10
+		AddNormalThread, // 10
 		AddStickyThread,
 		EditThreadMemo,
 		FlagThreadAsDone,
 		QueueContentManagement,
-		ViewNormalThreadsStartedByOthers,		// 15
+		ViewNormalThreadsStartedByOthers, // 15
 		ManageOtherUsersAttachments,
 		AddAttachment,
 		GetsAttachmentsApprovedAutomatically,
 		ApproveAttachment
+
 		// Add more here. Check the comma!
 	}
 

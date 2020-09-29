@@ -17,10 +17,11 @@
 		<PackageReference Include="System.Runtime.Caching" Version="4.7.0" />
 	</ItemGroup>
 	<ItemGroup>
+		<Content Include="LICENSE.txt" />
 		<Folder Include="Controllers\" />
 		<Folder Include="Models\" />
 		<Folder Include="Views\" />
-		<Content Include="DataFiles\**" CopyToPublishDirectory="PreserveNewest"/>
+		<Content Include="DataFiles\**" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\BL\SD.HnD.BL.csproj" />

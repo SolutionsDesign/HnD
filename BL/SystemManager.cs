@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Threading;
@@ -54,8 +55,8 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// true if save was succeeded, false otherwise
 		/// </returns>
-		public static async Task<bool> StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers, 
-															  short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch, 
+		public static async Task<bool> StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers,
+															  short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch,
 															  short minimalNumberOfNonStickyVisibleThreads, bool sendReplyNotifications)
 		{
 			using(var adapter = new DataAccessAdapter())
@@ -63,7 +64,7 @@ namespace SD.HnD.BL
 				// fetch the existing system data entity.
 				var q = new QueryFactory().SystemData.Where(SystemDataFields.ID.Equal(id));
 				var systemData = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
-				if(systemData==null)
+				if(systemData == null)
 				{
 					throw new InvalidOperationException("No system settings object found!");
 				}
@@ -94,7 +95,8 @@ namespace SD.HnD.BL
 			{
 				return;
 			}
-			var passwordHashed = HnDGeneralUtils.HashPassword(newAdminPassword, performPreMD5Hashing:true);
+
+			var passwordHashed = HnDGeneralUtils.HashPassword(newAdminPassword, performPreMD5Hashing: true);
 			using(var adapter = new DataAccessAdapter())
 			{
 				await ActionProcedures.InstallAsync(emailAddress, passwordHashed, adapter, CancellationToken.None);

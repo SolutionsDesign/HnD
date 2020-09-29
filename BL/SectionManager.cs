@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Threading.Tasks;
 using SD.HnD.DALAdapter.DatabaseSpecific;
@@ -52,8 +53,8 @@ namespace SD.HnD.BL
 
 			var section = new SectionEntity
 						  {
-							  SectionName = toInsert.SectionName, 
-							  SectionDescription = toInsert.SectionDescription, 
+							  SectionName = toInsert.SectionName,
+							  SectionDescription = toInsert.SectionDescription,
 							  OrderNo = toInsert.OrderNo
 						  };
 
@@ -63,8 +64,8 @@ namespace SD.HnD.BL
 				return result ? section.SectionID : 0;
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Modifies the given section's name and description
 		/// </summary>
@@ -76,23 +77,25 @@ namespace SD.HnD.BL
 			{
 				return false;
 			}
+
 			var section = await SectionGuiHelper.GetSectionAsync(toUpdate.SectionID);
 			if(section == null)
 			{
 				return false;
 			}
+
 			section.UpdateFromSection(toUpdate);
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.SaveEntityAsync(section).ConfigureAwait(false);
 			}
 		}
-		
-		
+
+
 		/// <summary>
 		/// Removes the given section from the database. Returns true if succeeded. Only allows deletion if the section is empty
 		/// </summary>
-        /// <param name="sectionId">ID of section to delete</param>
+		/// <param name="sectionId">ID of section to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
 		public static async Task<bool> DeleteSectionAsync(int sectionId)
 		{
@@ -106,9 +109,9 @@ namespace SD.HnD.BL
 					// has forums, can't delete this section.
 					return false;
 				}
-				
+
 				// trying to delete the entity directly from the database without first loading it.
-				var numberOfDeletedRows = await adapter.DeleteEntitiesDirectlyAsync(typeof(SectionEntity), 
+				var numberOfDeletedRows = await adapter.DeleteEntitiesDirectlyAsync(typeof(SectionEntity),
 																					new RelationPredicateBucket(SectionFields.SectionID.Equal(sectionId)))
 													   .ConfigureAwait(false);
 

@@ -17,6 +17,7 @@
 	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+
 using System;
 using System.Data;
 using System.Threading.Tasks;
@@ -41,7 +42,6 @@ namespace SD.HnD.BL
 		/// <param name="forumDescription">The forum description.</param>
 		/// <param name="hasRSSFeed">True if the forum has an RSS feed.</param>
 		/// <param name="defaultSupportQueueID">The ID of the default support queue for this forum. Can be null.</param>
-		/// <param name="defaultThreadListInterval">The default thread list interval.</param>
 		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
 		/// <param name="maxAttachmentSize">Max. size of an attachment.</param>
 		/// <param name="maxNoOfAttachmentsPerMessage">The max no of attachments per message.</param>
@@ -50,9 +50,9 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// ForumID of new forum or 0 if something went wrong.
 		/// </returns>
-		public static async Task<int>  CreateNewForumAsync(int sectionId, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID, 
-														   int defaultThreadListInterval, short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage, 
-														   string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
+		public static async Task<int> CreateNewForumAsync(int sectionId, string forumName, string forumDescription, bool hasRSSFeed, int? defaultSupportQueueID,
+														  short orderNo, int maxAttachmentSize, short maxNoOfAttachmentsPerMessage,
+														  string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
 			var newForum = new ForumEntity
 						   {
@@ -95,11 +95,12 @@ namespace SD.HnD.BL
 														string newThreadWelcomeText, string newThreadWelcomeTextAsHTML)
 		{
 			var forum = await ForumGuiHelper.GetForumAsync(forumId);
-			if(forum==null)
+			if(forum == null)
 			{
 				// not found
-				return false;	// doesn't exist
+				return false; // doesn't exist
 			}
+
 			forum.SectionID = sectionId;
 			forum.ForumDescription = forumDescription;
 			forum.ForumName = forumName;
@@ -133,7 +134,7 @@ namespace SD.HnD.BL
 					await ThreadManager.DeleteAllThreadsInForumAsync(forumId, adapter);
 
 					// remove all ForumRoleForumActionRight entities for this forum
-					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity), 
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(ForumRoleForumActionRightEntity),
 															  new RelationPredicateBucket(ForumRoleForumActionRightFields.ForumID.Equal(forumId)))
 								 .ConfigureAwait(false);
 
@@ -168,8 +169,8 @@ namespace SD.HnD.BL
 		/// <param name="subscribeToThread">If true, the user with userid is automatically subscribed to the new thread created</param>
 		/// <returns>tuple with ThreadID and messageid. ThreadId, if succeeded, is set to the threadid of the new thread, or 0 if failed.
 		/// The message ID is the id of the new message, which is the start message in the thread.</returns>
-		public static async Task<(int threadId, int messageId)> CreateNewThreadInForumAsync(int forumId, int userId, string subject, string messageText, 
-																							string messageAsHTML, bool isSticky, string userIdIPAddress, 
+		public static async Task<(int threadId, int messageId)> CreateNewThreadInForumAsync(int forumId, int userId, string subject, string messageText,
+																							string messageAsHTML, bool isSticky, string userIdIPAddress,
 																							int? defaultSupportQueueId, bool subscribeToThread)
 		{
 			var newThread = new ThreadEntity
@@ -190,6 +191,7 @@ namespace SD.HnD.BL
 												   QueueID = defaultSupportQueueId.Value,
 												   PlacedInQueueByUserID = userId,
 												   PlacedInQueueOn = DateTime.Now,
+
 												   // No need to set the Thread property, as it's auto-assigned due to the assignment of newThread.SupportQueueThread.
 											   };
 			}

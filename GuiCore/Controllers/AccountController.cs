@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -21,46 +41,48 @@ namespace SD.HnD.Gui.Controllers
 	/// Controller for Account related actions. 
 	/// </summary>
 	/// <remarks>The async methods don't use an Async suffix. This is by design, due to: https://github.com/dotnet/aspnetcore/issues/8998</remarks>
-    public class AccountController : Controller
-    {
+	public class AccountController : Controller
+	{
 		private IMemoryCache _cache;
-		
+
+
 		public AccountController(IMemoryCache cache)
 		{
 			_cache = cache;
 		}
-		
-		
-	    [Authorize]
-	    [HttpGet]
-	    public async Task<ActionResult> Bookmarks()
-	    {
-		    var bookmarkData = await UserGuiHelper.GetBookmarksAggregatedDataAsync(this.HttpContext.Session.GetUserID());
-		    var viewData = new ThreadsData() {ThreadRows = bookmarkData};
-		    return View(viewData);
-	    }
 
 
-	    [Authorize]
-	    [HttpPost]
+		[Authorize]
+		[HttpGet]
+		public async Task<ActionResult> Bookmarks()
+		{
+			var bookmarkData = await UserGuiHelper.GetBookmarksAggregatedDataAsync(this.HttpContext.Session.GetUserID());
+			var viewData = new ThreadsData() {ThreadRows = bookmarkData};
+			return View(viewData);
+		}
+
+
+		[Authorize]
+		[HttpPost]
 		[ValidateAntiForgeryToken]
-	    public async Task<ActionResult> UpdateBookmarks(int[] threadIdsToUnbookmark)
-	    {
+		public async Task<ActionResult> UpdateBookmarks(int[] threadIdsToUnbookmark)
+		{
 			// the user manager will take care of threads which are passed to this method and which don't exist. We'll only do a limit
-		    if(threadIdsToUnbookmark != null && threadIdsToUnbookmark.Length < 100 && threadIdsToUnbookmark.Length > 0)
-		    {
-			    await UserManager.RemoveBookmarksAsync(threadIdsToUnbookmark, this.HttpContext.Session.GetUserID());
-		    }
-		    return RedirectToAction("Bookmarks");
-	    }
-		
+			if(threadIdsToUnbookmark != null && threadIdsToUnbookmark.Length < 100 && threadIdsToUnbookmark.Length > 0)
+			{
+				await UserManager.RemoveBookmarksAsync(threadIdsToUnbookmark, this.HttpContext.Session.GetUserID());
+			}
+
+			return RedirectToAction("Bookmarks");
+		}
+
 
 		[HttpGet]
 		[Authorize]
 		public async Task<ActionResult> Threads(int pageNo = 1)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
-			if(userID <= 0 )
+			if(userID <= 0)
 			{
 				// not found
 				return RedirectToAction("Index", "Home");
@@ -81,24 +103,27 @@ namespace SD.HnD.Gui.Controllers
 			{
 				pageSize = 50;
 			}
+
 			int rowCountCapped = rowCount;
 			if(rowCount > 500)
 			{
 				// maximum is 500
 				rowCountCapped = 500;
 			}
+
 			int numberOfPages = (rowCountCapped / pageSize);
 			if((numberOfPages * pageSize) < rowCountCapped)
 			{
 				numberOfPages++;
 			}
+
 			var data = new MyThreadsData() {RowCount = rowCount, NumberOfPages = numberOfPages, PageNo = pageNo};
 			data.ThreadRows = await UserGuiHelper.GetLastThreadsForUserAggregatedDataAsync(this.HttpContext.Session.GetForumsWithActionRight(ActionRights.AccessForum), userID,
-																				this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
-																				userID, pageSize, pageNo);
+																						   this.HttpContext.Session.GetForumsWithActionRight(ActionRights.ViewNormalThreadsStartedByOthers),
+																						   userID, pageSize, pageNo);
 			return View(data);
 		}
-		
+
 
 		[HttpGet]
 		[Authorize]
@@ -128,7 +153,7 @@ namespace SD.HnD.Gui.Controllers
 			data.Sanitize();
 			return View(data);
 		}
-		
+
 
 		[HttpPost]
 		[Authorize]
@@ -136,16 +161,17 @@ namespace SD.HnD.Gui.Controllers
 		public async Task<ActionResult> EditProfile(EditProfileData data)
 		{
 			var userID = this.HttpContext.Session.GetUserID();
-			if(userID <= 0 )
+			if(userID <= 0)
 			{
 				// not found
 				return RedirectToAction("Index", "Home");
 			}
+
 			if(!ModelState.IsValid)
 			{
 				return View(data);
 			}
-		
+
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
 			var result = await UserManager.UpdateUserProfileAsync(userID, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL, data.Location,
@@ -158,20 +184,20 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			return View(data);
-		}		
+		}
 
-		
+
 		[HttpPost]
 		[Authorize]
 		[ValidateAntiForgeryToken]
-		public async Task<ActionResult> ToggleBanFlagForUser(int id=0)
+		public async Task<ActionResult> ToggleBanFlagForUser(int id = 0)
 		{
-			if(id < 2 || id==this.HttpContext.Session.GetUserID())
+			if(id < 2 || id == this.HttpContext.Session.GetUserID())
 			{
 				// not allowed
 				return RedirectToAction("Index", "Home");
 			}
-			
+
 			if(!this.HttpContext.Session.HasSystemActionRights() || !this.HttpContext.Session.HasSystemActionRight(ActionRights.UserManagement))
 			{
 				return RedirectToAction("Index", "Home");
@@ -186,10 +212,10 @@ namespace SD.HnD.Gui.Controllers
 		[HttpGet]
 		public ActionResult Register()
 		{
-			return View(new NewProfileData() { DefaultNumberOfMessagesPerPage = (short)this.HttpContext.Session.GetUserDefaultNumberOfMessagesPerPage() });
+			return View(new NewProfileData() {DefaultNumberOfMessagesPerPage = (short)this.HttpContext.Session.GetUserDefaultNumberOfMessagesPerPage()});
 		}
-		
-		
+
+
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<ActionResult> Register(NewProfileData data)
@@ -198,7 +224,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return View(data);
 			}
-		
+
 			data.Sanitize();
 			data.StripProtocolsFromUrls();
 
@@ -208,7 +234,7 @@ namespace SD.HnD.Gui.Controllers
 				ModelState.AddModelError("NickName", "NickName already exists");
 				return View(data);
 			}
-			
+
 			var result = await UserManager.RegisterNewUserAsync(data.NickName, data.DateOfBirth, data.EmailAddress, data.EmailAddressIsPublic, data.IconURL,
 																HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress), data.Location,
 																data.Occupation, data.Signature, data.Website,
@@ -222,7 +248,7 @@ namespace SD.HnD.Gui.Controllers
 
 			return View(data);
 		}
-		
+
 
 		[AllowAnonymous]
 		[HttpGet]
@@ -230,7 +256,7 @@ namespace SD.HnD.Gui.Controllers
 		{
 			return View(new ResetPasswordData());
 		}
-		
+
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -240,6 +266,15 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return View(data);
 			}
+			
+			// check if the email address specified is the one registered with the user. If not, redirect to home
+			var user = await UserGuiHelper.GetUserAsync(data.NickName);
+			if(string.Compare(user.EmailAddress, data.EmailAddress, StringComparison.OrdinalIgnoreCase) != 0)
+			{
+				// not the same, ignore request
+				return RedirectToAction("Index", "Home");
+			}
+
 			await PerformResetPasswordAsync(data);
 			return View(data);
 		}
@@ -255,6 +290,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			return View();
 		}
 
@@ -265,10 +301,11 @@ namespace SD.HnD.Gui.Controllers
 		{
 			// the token might be invalid or non existent.
 			var passwordResetToken = await UserGuiHelper.GetPasswordResetTokenAsync(tokenId);
-			if(passwordResetToken==null)
+			if(passwordResetToken == null)
 			{
 				return RedirectToAction("Index", "Home");
 			}
+
 			if(!ModelState.IsValid)
 			{
 				return View(data);
@@ -286,6 +323,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return View(data);
 			}
+
 			// all done, user can now login.
 			return RedirectToAction("Login", "Account");
 		}
@@ -301,36 +339,37 @@ namespace SD.HnD.Gui.Controllers
 
 
 		[HttpPost]
-	    [Authorize]
-	    public async Task<IActionResult> Logout()
-	    {
+		[Authorize]
+		public async Task<IActionResult> Logout()
+		{
 			await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 			this.HttpContext.Session.Clear();
 			return RedirectToLocal("~/");
-	    }
+		}
 
-		
-        [HttpPost]
+
+		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Login(LoginData data, string returnUrl)
-        {
-	        if(!ModelState.IsValid)
-	        {
-		        return View(data);
-	        }
-	        var result = await PerformLoginAsync(data);
-	        switch(result)
-	        {
+		{
+			if(!ModelState.IsValid)
+			{
+				return View(data);
+			}
+
+			var result = await PerformLoginAsync(data);
+			switch(result)
+			{
 				case SecurityManager.AuthenticateResult.AllOk:
 					return RedirectToLocal(returnUrl);
 				default:
-			        return View(data);
-	        }
-        }
+					return View(data);
+			}
+		}
 
 
 		private async Task<SecurityManager.AuthenticateResult> PerformLoginAsync(LoginData data)
-	    {
+		{
 			var (authenticateResult, user) = await SecurityManager.AuthenticateUserAsync(data.NickName, data.Password);
 
 			switch(authenticateResult)
@@ -339,19 +378,22 @@ namespace SD.HnD.Gui.Controllers
 					// authenticated
 					// Save session cacheable data
 					await this.HttpContext.Session.LoadUserSessionDataAsync(user);
+
 					// update last visit date in db
 					await UserManager.UpdateLastVisitDateForUserAsync(user.UserID);
+
 					// done
 					var claims = new List<Claim> {new Claim(ClaimTypes.Name, user.NickName)};
 					var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 					var authProperties = new AuthenticationProperties() {IsPersistent = data.RememberMe};
 					await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-					
+
 					// Audit the login action, if it was defined to be logged for this role.
 					if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditLogin))
 					{
 						await SecurityManager.AuditLoginAsync(this.HttpContext.Session.GetUserID());
 					}
+
 					break;
 				case SecurityManager.AuthenticateResult.IsBanned:
 					ModelState.AddModelError(string.Empty, "You are banned. Login won't work for you.");
@@ -360,13 +402,14 @@ namespace SD.HnD.Gui.Controllers
 					ModelState.AddModelError(string.Empty, "You specified a wrong User name - Password combination. Please try again.");
 					break;
 			}
+
 			return authenticateResult;
-	    }
-		
+		}
+
 
 		private async Task PerformResetPasswordAsync(ResetPasswordData data)
 		{
-			bool result = await UserManager.EmailPasswordResetLink(data.NickName, ApplicationAdapter.GetEmailData(this.Request.Host.Host, 
+			bool result = await UserManager.EmailPasswordResetLink(data.NickName, ApplicationAdapter.GetEmailData(this.Request.Host.Host,
 																												  EmailTemplate.ResetPasswordLink)).ConfigureAwait(false);
 			data.EmailSent = result;
 		}
@@ -378,7 +421,8 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return Redirect(returnUrl);
 			}
+
 			return RedirectToAction("Index", "Home");
 		}
-    }
+	}
 }

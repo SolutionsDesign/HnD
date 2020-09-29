@@ -1,3 +1,23 @@
+/*
+	This file is part of HnD.
+	HnD is (c) 2002-2020 Solutions Design.
+    https://www.llblgen.com
+	http:s//www.sd.nl
+
+	HnD is free software; you can redistribute it and/or modify
+	it under the terms of version 2 of the GNU General Public License as published by
+	the Free Software Foundation.
+
+	HnD is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with HnD, please see the LICENSE.txt file; if not, write to the Free Software
+	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -44,12 +64,14 @@ namespace SD.HnD.Gui.Classes
 				toReturn["PollingInterval"] = this.PollingInterval.ToString();
 				return toReturn;
 			}
-			
-			public int CacheMemoryLimitMegabytes { get; set;  }
+
+
+			public int CacheMemoryLimitMegabytes { get; set; }
 			public int PhysicalMemoryLimitPercentage { get; set; }
 			public TimeSpan PollingInterval { get; set; }
 		}
 		#endregion
+
 
 		public HnDConfiguration()
 		{
@@ -60,6 +82,7 @@ namespace SD.HnD.Gui.Classes
 			_cachedNumberOfThreadsInSupportQueues = null;
 		}
 
+
 		/// <summary>
 		/// Makes sure the values read from the config are usable. 
 		/// </summary>
@@ -69,21 +92,25 @@ namespace SD.HnD.Gui.Classes
 			{
 				this.MaxAmountMessagesPerPage = 25;
 			}
-			
+
 			if(string.IsNullOrWhiteSpace(this.VirtualRoot))
 			{
 				this.VirtualRoot = "/";
 			}
+
 			if(!this.VirtualRoot.EndsWith("/"))
 			{
 				this.VirtualRoot += "/";
 			}
+
 			if(this.DataFilesPath == null)
 			{
 				this.DataFilesPath = string.Empty;
 			}
+
 			// replace / with \ if we're on windows, or \ with / if we're on linux. 
 			this.DataFilesPath = this.DataFilesPath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
 			// clamp search result caching timeout between 1 and 60 minutes.
 			this.MaxNumberOfMinutesToCacheSearchResults = Math.Max(1, Math.Min(60, this.MaxNumberOfMinutesToCacheSearchResults));
 
@@ -100,21 +127,22 @@ namespace SD.HnD.Gui.Classes
 		/// </summary>
 		/// <returns></returns>
 		public int GetCachedNumberOfUnapprovedAttachments()
-	    {
+		{
 			_volatileDataLock.EnterUpgradeableReadLock();
-		    try
-		    {
-			    if(_cachedNumberOfUnapprovedAttachments.HasValue)
-			    {
-				    return _cachedNumberOfUnapprovedAttachments.Value;
-			    }
-			    return InvalidateCachedNumberOfUnapprovedAttachments();
-		    }
+			try
+			{
+				if(_cachedNumberOfUnapprovedAttachments.HasValue)
+				{
+					return _cachedNumberOfUnapprovedAttachments.Value;
+				}
+
+				return InvalidateCachedNumberOfUnapprovedAttachments();
+			}
 			finally
-		    {
+			{
 				_volatileDataLock.ExitUpgradeableReadLock();
-		    }
-	    }
+			}
+		}
 
 
 		/// <summary>
@@ -122,19 +150,19 @@ namespace SD.HnD.Gui.Classes
 		/// </summary>
 		/// <returns></returns>
 		/// <remarks>Not using async as it relies on locks to work so we need predictability.</remarks>
-	    public int InvalidateCachedNumberOfUnapprovedAttachments()
-	    {
+		public int InvalidateCachedNumberOfUnapprovedAttachments()
+		{
 			_volatileDataLock.EnterWriteLock();
-		    try
-		    {
+			try
+			{
 				_cachedNumberOfUnapprovedAttachments = MessageGuiHelper.GetTotalNumberOfAttachmentsToApprove();
-			    return _cachedNumberOfUnapprovedAttachments.Value;
-		    }
-		    finally
-		    {
+				return _cachedNumberOfUnapprovedAttachments.Value;
+			}
+			finally
+			{
 				_volatileDataLock.ExitWriteLock();
-		    }
-	    }
+			}
+		}
 
 
 		/// <summary>
@@ -142,8 +170,8 @@ namespace SD.HnD.Gui.Classes
 		/// fetch the number from the database. 
 		/// </summary>
 		/// <returns></returns>
-	    public int GetCachedNumberOfThreadsInSupportQueues()
-	    {
+		public int GetCachedNumberOfThreadsInSupportQueues()
+		{
 			_volatileDataLock.EnterUpgradeableReadLock();
 			try
 			{
@@ -151,21 +179,22 @@ namespace SD.HnD.Gui.Classes
 				{
 					return _cachedNumberOfThreadsInSupportQueues.Value;
 				}
+
 				return InvalidateCachedNumberOfThreadsInSupportQueues();
 			}
 			finally
 			{
 				_volatileDataLock.ExitUpgradeableReadLock();
 			}
-	    }
+		}
 
 
 		/// <summary>
 		/// Invalidates the number of threads in support queues by fetching the total number from the database. 
 		/// </summary>
 		/// <returns></returns>
-	    public int InvalidateCachedNumberOfThreadsInSupportQueues()
-	    {
+		public int InvalidateCachedNumberOfThreadsInSupportQueues()
+		{
 			_volatileDataLock.EnterWriteLock();
 			try
 			{
@@ -176,7 +205,7 @@ namespace SD.HnD.Gui.Classes
 			{
 				_volatileDataLock.ExitWriteLock();
 			}
-	    }
+		}
 
 
 		/// <summary>
@@ -192,6 +221,7 @@ namespace SD.HnD.Gui.Classes
 				{
 					return;
 				}
+
 				_volatileDataLock.EnterWriteLock();
 				try
 				{
@@ -207,7 +237,7 @@ namespace SD.HnD.Gui.Classes
 				_volatileDataLock.ExitUpgradeableReadLock();
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Checks if the nickname passed in is among the users which have to be logged out by force. All users which are deleted have to be logged out by force. 
@@ -241,6 +271,7 @@ namespace SD.HnD.Gui.Classes
 				{
 					return;
 				}
+
 				_volatileDataLock.EnterWriteLock();
 				try
 				{
@@ -273,12 +304,15 @@ namespace SD.HnD.Gui.Classes
 
 			// Don't prefix the urlpath with the virtual root yet, as we use the path also for folder names below
 			var emojiUrlPath = this.EmojiFilesPath ?? string.Empty;
+
 			// replace / with \ if we're on windows and / with \ if we're on linux
-			var emojiUrlPathForFilename = emojiUrlPath.TrimStart('\\', '/').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar); 
+			var emojiUrlPathForFilename = emojiUrlPath.TrimStart('\\', '/').Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
 			var emojiFilesPath = Path.Combine(webRootPath ?? string.Empty, emojiUrlPathForFilename);
+
 			// We have to prefix the emojiUrlPath with the virtual root now. 
 			emojiUrlPath = (this.VirtualRoot + emojiUrlPath).Replace("//", "/");
-	        this.EmojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
+			this.EmojiFilenamesPerName = LoadEmojiFilenames(emojiFilesPath, emojiUrlPath);
+
 			// load nicks of banned users
 			var bannedNicknames = UserGuiHelper.GetAllBannedUserNicknames();
 			_volatileDataLock.EnterWriteLock();
@@ -305,15 +339,16 @@ namespace SD.HnD.Gui.Classes
 			{
 				return new Dictionary<string, string>();
 			}
+
 			var emojiUrlPathToUse = (emojiUrlPath ?? string.Empty).TrimEnd('\\', '/');
 			return Directory
 				   .EnumerateFiles(emojiFilesPath, "*.png")
 				   .Union(Directory.EnumerateFiles(emojiFilesPath, "*.jpg"))
 				   .Union(Directory.EnumerateFiles(emojiFilesPath, "*.gif"))
-				   .ToDictionary(f=>Path.GetFileNameWithoutExtension(f), f=>emojiUrlPathToUse + '/' + Path.GetFileName(f));
+				   .ToDictionary(f => Path.GetFileNameWithoutExtension(f), f => emojiUrlPathToUse + '/' + Path.GetFileName(f));
 		}
-		
-		
+
+
 		public CacheConfiguration ResultsetCacheConfiguration { get; set; }
 		public List<FromToMapping> SmileyMappings { get; set; } = new List<FromToMapping>();
 		public Dictionary<string, string> SmileyMappingsLookup { get; } = new Dictionary<string, string>();
