@@ -75,7 +75,6 @@ installed the tables etc. in a catalog named other than `HnD`, specify that name
 the catalog instead of `HnD`.
 - **SqlServerDQECompatibilityLevel**. The SQL Server compatibility level to use. Unless you're running the forum on SQL Server 2005 or earlier, leave this at the default: 6.
 
-
 #### Connectionstrings.
 
 To specify the connection string, specify the right server and catalog as well as credentials in the string in the section `ConnectionStrings`. 
@@ -86,6 +85,15 @@ To build the system, simply build the solution. To run it, use `dotnet run` or `
 IIS, you should follow the asp.net core documentation how to host an asp.net core app inside IIS. 
 
 HnD was development on Windows, but should work fine on Linux as well. 
+
+#### Configuration
+
+When you start HnD for the first time, on an empty database you're greeted with a form which asks you to specify the new password for the Admin user and the email address for this user.
+It will behind the scenes call the `pr_Install` stored procedure which will initialize the database tables, generate two users, set rights and generate an initial forum. After this 
+process has been completed you can log in as Admin and the password you've specified and you can access the forum that's been generated. In the top menu you have the administration
+features which allow you to configure the system further. 
+
+The initial forum isn't visible to anonymous users. 
 
 ### License
 HnD is (c) [Solutions Design bv](https://www.sd.nl) and is released under [the GPL v2 license](https://github.com/SolutionsDesign/HnD/blob/master/LICENSE.txt)
