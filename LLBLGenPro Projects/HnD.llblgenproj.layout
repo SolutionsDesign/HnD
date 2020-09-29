@@ -14,6 +14,17 @@
         <Entity Name=":Thread" X="-28.65512" Y="67.61656" />
       </EntityDefinitions>
     </ModelView>
+    <ModelView Name="Content">
+      <EntityDefinitions>
+        <Entity Name=":Attachment" X="703.3515" Y="-305.270264" />
+        <Entity Name=":Bookmark" X="381.91153" Y="239.455322" />
+        <Entity Name=":Forum" X="381.9116" Y="386.720642" />
+        <Entity Name=":Message" X="-29.5284977" Y="-283.5595" />
+        <Entity Name=":Section" X="703.3517" Y="450.720581" />
+        <Entity Name=":Thread" X="381.9117" Y="-35.8097076" />
+        <Entity Name=":User" X="-29.5284119" Y="-40.29422" />
+      </EntityDefinitions>
+    </ModelView>
     <ModelView Name="Security">
       <EntityDefinitions>
         <Entity Name=":ActionRight" X="646.187866" Y="88.72693" />
@@ -24,17 +35,6 @@
         <Entity Name=":RoleUser" X="325.187744" Y="312.796051" />
         <Entity Name=":User" X="4.18765259" Y="194.172256" />
         <Entity Name=":PasswordResetToken" X="4.187622" Y="607.997437" />
-      </EntityDefinitions>
-    </ModelView>
-    <ModelView Name="Content">
-      <EntityDefinitions>
-        <Entity Name=":Attachment" X="703.3515" Y="-305.270264" />
-        <Entity Name=":Bookmark" X="381.91153" Y="239.455322" />
-        <Entity Name=":Forum" X="381.9116" Y="386.720642" />
-        <Entity Name=":Message" X="-29.5284977" Y="-283.5595" />
-        <Entity Name=":Section" X="703.3517" Y="450.720581" />
-        <Entity Name=":Thread" X="381.9117" Y="-35.8097076" />
-        <Entity Name=":User" X="-29.5284119" Y="-40.29422" />
       </EntityDefinitions>
     </ModelView>
   </ModelViews>

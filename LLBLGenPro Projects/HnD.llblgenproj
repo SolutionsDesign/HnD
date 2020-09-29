@@ -870,11 +870,11 @@
                     <Field Name="ForumLastPostingDate" Ordinal="5" IsOptional="true" DbType="4" />
                     <Field Name="HasRSSFeed" Ordinal="6" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
                     <Field Name="DefaultSupportQueueID" Ordinal="7" IsOptional="true" DbType="8" Precision="10" />
-                    <Field Name="OrderNo" Ordinal="9" HasDefaultValue="true" DefaultValue="(0)" DbType="16" Precision="5" />
-                    <Field Name="MaxAttachmentSize" Ordinal="10" IsOptional="true" HasDefaultValue="true" DefaultValue="(512)" DbType="8" Precision="10" />
-                    <Field Name="MaxNoOfAttachmentsPerMessage" Ordinal="11" IsOptional="true" HasDefaultValue="true" DefaultValue="(1)" DbType="16" Precision="5" />
-                    <Field Name="NewThreadWelcomeText" Ordinal="12" IsOptional="true" DbType="11" Length="1073741823" />
-                    <Field Name="NewThreadWelcomeTextAsHTML" Ordinal="13" IsOptional="true" DbType="11" Length="1073741823" />
+                    <Field Name="OrderNo" Ordinal="8" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="16" Precision="5" />
+                    <Field Name="MaxAttachmentSize" Ordinal="9" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(512)" DbType="8" Precision="10" />
+                    <Field Name="MaxNoOfAttachmentsPerMessage" Ordinal="10" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(1)" DbType="16" Precision="5" />
+                    <Field Name="NewThreadWelcomeText" Ordinal="11" IsOptional="true" TrackedChanges="2" DbType="11" Length="1073741823" />
+                    <Field Name="NewThreadWelcomeTextAsHTML" Ordinal="12" IsOptional="true" TrackedChanges="2" DbType="11" Length="1073741823" />
                   </Fields>
                 </Table>
                 <Table Name="ForumRoleForumActionRight">

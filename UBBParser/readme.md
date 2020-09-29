@@ -1,0 +1,1 @@
+This is the old UBB parser of HnD v2 and earlier. It's needed in the v1 to v3 converter to convert ubb to markdown. 

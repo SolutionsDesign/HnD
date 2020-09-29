@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Xsl;
 using SD.HnD.BL;
@@ -38,24 +39,24 @@ namespace V1ToV3Converter
 		private static RNGCryptoServiceProvider _rng = new RNGCryptoServiceProvider();
 		private const int BATCHSIZE = 1000;
 
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
 			// The generated code is a netstandard variant, so we have to use the RuntimeConfiguration class.
 			RuntimeConfiguration.AddConnectionString("Main.ConnectionString.SQL Server (SqlClient)", 
 													 ConfigurationManager.AppSettings["Main.ConnectionString.SQL Server (SqlClient)"]);
 			RuntimeConfiguration.ConfigureDQE<SQLServerDQEConfiguration>(c =>
 																		 {
-																			 c.AddCatalogNameOverwrite("HnD", "HnD_LLBLGen");
+																			 c.AddCatalogNameOverwrite("HnD", ConfigurationManager.AppSettings["DestinationCatalog"]);
 																			 c.AddDbProviderFactory(typeof(SqlClientFactory));
 																		 });
 		
 			try
 			{
-				//LoadXsltTemplates();
-				//ConvertForumWelcomeTexts();
-				//ConvertThreadMemos();
+				LoadXsltTemplates();
+				ConvertForumWelcomeTexts();
+				ConvertThreadMemos();
 				ConvertUsers();
-				//ConvertMessages();
+				await ConvertMessages();
 			}
 			catch(Exception ex)
 			{
@@ -200,10 +201,10 @@ namespace V1ToV3Converter
 		}
 
 
-		private static void ConvertMessages()
+		private static async Task ConvertMessages()
 		{
 			// display total amount of messages to process
-			int totalNumberOfMessages = MessageGuiHelper.GetTotalNumberOfMessages();
+			int totalNumberOfMessages = await MessageGuiHelper.GetTotalNumberOfMessagesAsync();
 			Console.WriteLine("Total # of messages to process: {0}. Using batch size: {1}", totalNumberOfMessages, BATCHSIZE);
 			var numberOfBatches = (totalNumberOfMessages/BATCHSIZE)+1;
 			var qf = new QueryFactory();
@@ -211,7 +212,7 @@ namespace V1ToV3Converter
 							  .Exclude(MessageFields.MessageTextAsHTML);
 			using(var adapter = new DataAccessAdapter())
 			{
-				adapter.StartTransaction(IsolationLevel.ReadCommitted, "Converting UBB to Markdown");
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "Converting UBB to Markdown").ConfigureAwait(false);
 				adapter.KeepTrackOfTransactionParticipants = false;
 				try
 				{
@@ -244,7 +245,7 @@ namespace V1ToV3Converter
 						}
 						Console.WriteLine("DONE");
 						Console.Write("\tPersisting batch...");
-						adapter.SaveEntityCollection(messages);
+						await adapter.SaveEntityCollectionAsync(messages).ConfigureAwait(false);
 						Console.WriteLine("DONE\n");
 					}
 					adapter.Commit();

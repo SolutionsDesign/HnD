@@ -20,6 +20,7 @@
 		<Folder Include="Controllers\" />
 		<Folder Include="Models\" />
 		<Folder Include="Views\" />
+		<Content Include="DataFiles\**" CopyToPublishDirectory="PreserveNewest"/>
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\BL\SD.HnD.BL.csproj" />
