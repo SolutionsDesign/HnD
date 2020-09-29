@@ -1,8 +1,8 @@
 ﻿/*
 	This file is part of HnD.
 	HnD is (c) 2002-2020 Solutions Design.
-    https://www.llblgen.com
-	http:s//www.sd.nl
+	https://www.llblgen.com
+	https://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
 	it under the terms of version 2 of the GNU General Public License as published by
@@ -266,7 +266,7 @@ namespace SD.HnD.Gui.Controllers
 			{
 				return View(data);
 			}
-			
+
 			// check if the email address specified is the one registered with the user. If not, redirect to home
 			var user = await UserGuiHelper.GetUserAsync(data.NickName);
 			if(string.Compare(user.EmailAddress, data.EmailAddress, StringComparison.OrdinalIgnoreCase) != 0)

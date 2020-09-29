@@ -1,8 +1,8 @@
 /*
 	This file is part of HnD.
 	HnD is (c) 2002-2020 Solutions Design.
-    https://www.llblgen.com
-	http:s//www.sd.nl
+	https://www.llblgen.com
+	https://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
 	it under the terms of version 2 of the GNU General Public License as published by
