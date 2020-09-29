@@ -14,7 +14,7 @@ namespace SD.HnD.Gui.Models
 		[Required]
 		[DataType(DataType.Password)]
 		[StringLength(100)]
-		[MinLength(8)]
+		[MinLength(1)]
 		public string Password { get; set; }
 
 		[Display(Name="Remember me")]
