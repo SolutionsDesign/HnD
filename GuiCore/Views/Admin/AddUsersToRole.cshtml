@@ -1,0 +1,66 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Classes
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.AddUsersToRoleData
+
+@{
+	ViewBag.Title = "HnD | Admin | Add users to role";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Add Users to Role</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Add Users to Role</h1>
+			<p>
+				Below you can add one or more users to the role <b>@Model.SelectedRoleDescription</b>. First select the users to add using the Find User portion of the form,
+				then you have to confirm you want to add them to the role.
+			</p>
+			<p>
+				Users already in role <b>@Model.SelectedRoleDescription</b> are filtered out in the search results.	
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			{
+				<input type="hidden" name="selectedRoleID" value="@Model.SelectedRoleID"/>
+				
+				@await Html.PartialAsync("Admin/FindUser", Model)
+				switch(Model.FindUserData.FindUserState)
+				{
+					case AdminFindUserState.FinalAction:
+						<div><p>Are you sure you want to add these users to the role?</p></div>
+						<div class="mt20">
+							<button type="submit" name="submitAction" value="Add" class="btn btn-default"> Yes </button>
+							&nbsp;&nbsp;
+							<button type="submit" name="submitAction" value="Cancel" class="btn btn-default"> No </button>
+						</div>
+						break;
+					case AdminFindUserState.PostAction:
+						<div><p>@Model.FinalActionResult</p></div>
+						break;
+				}
+			}			
+		</div>
+	</div>
+</div>

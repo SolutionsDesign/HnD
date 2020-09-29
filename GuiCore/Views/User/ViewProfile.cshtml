@@ -1,0 +1,127 @@
+@using SD.HnD.Gui
+@model SD.HnD.Gui.Models.UserProfileData
+
+@{
+	ViewBag.Title = string.Format("HnD | User profile of {0}", Model.ProfileDataFromDatabase.NickName ?? string.Empty);
+}
+
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12 pt0 mt0">
+			<h2 class="br-bottom pt0 mt0">User profile of @Model.ProfileDataFromDatabase.NickName</h2>
+		</div>
+	</div>
+</div>
+
+<section class="fs mt20">
+	<div class="container">
+		<div class="col-sm-8">
+			<div class="row fs-row">
+				<div class="mt20">
+					<div class="col-sm-3 pl25">
+						@if(!string.IsNullOrWhiteSpace(Model.ProfileDataFromDatabase.IconURL))
+						{
+							var fullURL = "https://" + Model.ProfileDataFromDatabase.IconURL;
+							<img src="@fullURL" class="ps-poster-avatar mt5" alt="@Model.ProfileDataFromDatabase.NickName avatar"/>
+							<br/>
+						}
+						<span>@Model.ProfileDataFromDatabase.NickName</span><br/>
+						<span class="ps-poster-title">@Model.ProfileDataFromDatabase.UserTitleDescription</span>
+					</div>
+					<div class="col-sm-9 pl0">
+						<p>
+							<i class="fas fa-envelope w25" title="Email address"></i>
+							@if((Model.ProfileDataFromDatabase.EmailAddressIsPublic.HasValue && Model.ProfileDataFromDatabase.EmailAddressIsPublic.Value) ||
+								Model.UserHasSystemManagementRight)
+							{
+								@Model.ProfileDataFromDatabase.EmailAddress
+								;
+							}	
+							else
+							{
+								<span>Email address is hidden</span>
+							}
+							<br/>
+							<i class="fas fa-map-marker-alt w25" title="Location"></i> @Model.ProfileDataFromDatabase.Location<br/>
+							<i class="fas fa-globe w25" title="Website"></i> <a href="https://@Model.ProfileDataFromDatabase.Website" target="_blank">https://@Model.ProfileDataFromDatabase.Website</a><br/>
+							<i class="fas fa-gift w25" title="Date of birth"></i>
+							@if(Model.ProfileDataFromDatabase.DateOfBirth.HasValue)
+							{
+								<span>@Model.ProfileDataFromDatabase.DateOfBirth.Value.ToString("dd-MMM-yyyy")</span>
+							}
+							<br/>
+							<i class="fas fa-building w25" title="Occupation"></i> @Model.ProfileDataFromDatabase.Occupation <br/>
+							<i class="fas fa-signature w25" title="Signature"></i> @Model.ProfileDataFromDatabase.Signature <br/>
+							<i class="fas fa-user-plus w25" title="Join date"></i> @Model.ProfileDataFromDatabase.JoinDate?.ToString("dd-MMM-yyyy") <br/>
+							<i class="fas fa-key w25" title="Last visit date"></i> @Model.ProfileDataFromDatabase.LastVisitedDate?.ToString("dd-MMM-yyyy hh:mm:ss") <br/>
+							<i class="fas fa-pencil-alt w25" title="Number of postings"></i> @Model.ProfileDataFromDatabase.AmountOfPostings <br/>
+							<i class="fas fa-hammer w25" title="Is banned"></i> @if(Model.ProfileDataFromDatabase.IsBanned)
+							                                                        {
+								                                                        <span>Banned</span>
+							                                                        } 
+							                                                        else
+								                                                    {
+									                                                    <span>&nbsp;</span>  
+								                                                    }
+							<br/>
+							@if(Model.AdminSectionIsVisible)
+							{
+								<i class="fas fa-network-wired w25" title="IP Address"></i>
+								@Model.ProfileDataFromDatabase.IPNumber<br/>
+								@if(Model.UserHasSystemManagementRight && Model.ProfileDataFromDatabase.UserID!=Model.CurrentlyLoggedInUserID)
+								{
+									@using(Html.BeginForm("ToggleBanFlagForUser", "Account", new {id = Model.ProfileDataFromDatabase.UserID}, FormMethod.Post, true, new {role = "form"}))
+									{
+										<div class="caption"><span class="light-caption">Administrative actions</span></div>
+										<div class="mt20">
+											<button type="submit" name="submitAction" value="ToggleBanFlag" class="btn btn-default"> Toggle Ban Flag </button>
+										</div>
+									}
+								}
+							}
+							<br/>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="fs mt20">
+    <div class="container">
+        <div class="col-sm-12 fs-header">
+            Last 25 threads this user participated in
+        </div>
+		@if(Model.LastThreads.Count <= 0)
+        {
+            <div class="fs-row pb30">
+                <div class="col-sm-12">
+                    There are no threads this user participated in.
+                </div>
+            </div>
+		}
+        else
+        {
+            <div class="col-sm-12">
+                <div class="row fs-headingrow">
+                    <div class="col-sm-8 col-xs-8"><span class="pl35">Thread subject</span></div>
+                    <div class="col-sm-1 notonmobile plr10">Posts</div>
+                    <div class="col-sm-1 notonmobile plr10">Views</div>
+                    <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+                </div>
+				@await Html.PartialAsync("SimpleThreadLister", Model.LastThreads)
+            </div>
+		}
+    </div>
+</section>
+

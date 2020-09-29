@@ -1,7 +1,7 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
-    http://www.llblgen.com
+	HnD is (c) 2002-2020 Solutions Design.
+	http://www.llblgen.com
 	http://www.sd.nl
 
 	HnD is free software; you can redistribute it and/or modify
@@ -22,27 +22,39 @@ using System;
 namespace SD.HnD.BL
 {
 	/// <summary>
-	/// Global values for Tiny forum.
+	/// Global values for HnD
 	/// </summary>
 	public static class Globals
 	{
 		/// <summary>
 		/// Version of HnD
 		/// </summary>
-		public static readonly string Version = "3.5";
+		public static readonly string Version = "3.0";
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "06062012";
+		public static readonly string Build = "29-sep-2020";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
-		public static readonly string ReleaseType = "Final";
+		public static readonly string ReleaseType = "Beta";
 		/// <summary>
 		/// The UserID to deny login rights, since this is the Anonymous Coward user, which is
 		/// used for non-logged in users.
 		/// </summary>
 		public static readonly int UserIDToDenyLogin = 0;
+		/// <summary>
+		/// Returns a representable string which displays the version in full in textual format: vVersion (Build, ReleaseType).
+		/// </summary>
+		public static readonly string VersionFull = string.Format("v{0} ({1} {2})", Version, Build, ReleaseType);
+		/// <summary>
+		/// The default max number of messages per page if it's not configured for a forum.
+		/// </summary>
+		public static readonly int DefaultMaxNumberOfMessagesPerPage = 25;
+		/// <summary>
+		/// Used in fetches of resultsets which can be cached. 
+		/// </summary>
+		public static readonly int DefaultCacheDurationOfResultsets = 30;
 	}
 
 
@@ -71,6 +83,10 @@ namespace SD.HnD.BL
 		/// The key to use to obtain and store the cached system data entity.
 		/// </summary>
 		public static readonly string SystemData = "SystemData";
+		/// <summary>
+		/// Cache key for the resultset for when querying for the anonymous user. 
+		/// </summary>
+		public static readonly string AnonymousUserQueryResultset = "AnonymousUserQuery";
 	}
 
 
@@ -78,7 +94,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Enum for specifying the ordering of the search results.
 	/// </summary>
-	public enum SearchResultsOrderSetting:int
+	public enum SearchResultsOrderSetting
 	{
 		LastPostDateDescending,
 		LastPostDateAscending,
@@ -92,7 +108,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Enum for defining the search target for a search. 
 	/// </summary>
-	public enum SearchTarget : int
+	public enum SearchTarget
 	{
 		MessageText,
 		ThreadSubject,
@@ -103,7 +119,7 @@ namespace SD.HnD.BL
 	/// <summary>
 	/// Audit actions
 	/// </summary>
-	public enum AuditActions:int
+	public enum AuditActions
 	{
 		AuditLogin=1,
 		AuditNewMessage=2,
@@ -113,25 +129,12 @@ namespace SD.HnD.BL
 		AuditApproveAttachment=6
 	}
 
-			
+	
 	/// <summary>
-	/// ThreadListInterval constants. 
+	/// ActionRights constants. The Application object will hold a cached hashtable with the actionrights definitions from the database. These are
+	/// defined system wide, and are not mutated at runtime. 
 	/// </summary>
-	public enum ThreadListInterval:byte
-	{
-		Last24Hours = 1,
-		Last48Hours,
-		LastWeek,
-		LastMonth,
-		LastYear
-	}
-
-	/// <summary>
-	/// ActionRights constants. The Application object will hold a cached hashtable with
-	/// the actionrights definitions from the database. These are defined system wide, and
-	/// are not mutated at runtime. 
-	/// </summary>
-	public enum ActionRights:int
+	public enum ActionRights
 	{
 		AddAndEditMessage = 1,
 		AccessForum,
@@ -155,13 +158,15 @@ namespace SD.HnD.BL
 		// Add more here. Check the comma!
 	}
 
-    /// <summary>
-    /// MailTemplate constants. The generated emails supported by the application. A dedicated helper 
-    /// will get the corresponding template file path
-    /// </summary>
-    public enum EmailTemplate : int
-    {
-        RegistrationReply = 1,
-        ThreadUpdatedNotification = 2
-    }
+	/// <summary>
+	/// MailTemplate constants. The generated emails supported by the application. A dedicated helper 
+	/// will get the corresponding template file path
+	/// </summary>
+	public enum EmailTemplate
+	{
+		Undefined = 0,
+		RegistrationReply = 1,
+		ThreadUpdatedNotification = 2,
+		ResetPasswordLink = 3,
+	}
 }

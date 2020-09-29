@@ -1,0 +1,48 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model SD.HnD.Gui.Models.Admin.ReparsingMessageData
+
+@{
+	ViewBag.Title = "HnD | Admin | Reparse Messages";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Reparse Messages</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Reparse Messages</h1>
+			<p>
+				As HnD uses pre-rendered HTML, you can re-render the messages' HTML by clicking the button below. This task is likely to take a while, so
+				be patient. 
+				<br/><br/>
+			</p>
+			<div class="mb40">
+			@if(Model.Completed)
+			{
+				<p>
+					@Model.NumberOfMessagesReparsed messages reparsed.
+				</p>
+			}
+			else
+			{
+				@using(Html.BeginForm("ReparseMessages", "SystemAdmin", null, FormMethod.Post, true, new {role="form"}))
+				{
+					<div class="mt20">
+						<button type="submit" name="submitAction" value="save" class="btn btn-default btn-primary"> Reparse messages </button>
+						&nbsp;&nbsp;&nbsp;
+						<button type="submit" name="submitAction" value="cancel" class="btn btn-default"> Cancel </button>
+					</div>
+				}
+			}
+			</div>
+		</div>
+	</div>
+</div>

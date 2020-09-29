@@ -1,0 +1,8 @@
+﻿pre
+
+~~this is striked through!~~
+this is not, but ~~this is~~
+
+This isn't, and ~~this isn't either~
+
+post

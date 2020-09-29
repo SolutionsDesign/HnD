@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -20,16 +20,19 @@
 using System;
 using System.Data;
 using System.Collections;
-
-using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL;
-using SD.HnD.DAL.DaoClasses;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using SD.LLBLGen.Pro.QuerySpec;
-using SD.LLBLGen.Pro.QuerySpec.SelfServicing;
-using SD.HnD.DAL.FactoryClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.Linq;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
+using SD.LLBLGen.Pro.LinqSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 
 namespace SD.HnD.BL
@@ -39,42 +42,13 @@ namespace SD.HnD.BL
 	/// </summary>
 	public static class SectionGuiHelper
 	{
-		/// <summary>
-		/// Constructs a DataView from the datatable which contains all sections available, plus the # of forums in the section.
-		/// Sections and forums are sorted on OrderNo ascending, then on Name  ascending.
-		/// </summary>
-		/// <param name="excludeEmptySections">If set to true, empty sections are ignored.</param>
-		/// <returns>
-		/// DataView with all the sections available, including statistics, directly bindable to webcontrols
-		/// </returns>
-		public static DataView GetAllSectionsWStatisticsAsDataView(bool excludeEmptySections)
+		public static async Task<List<SectionDto>> GetAllSectionDtosAsync()
 		{
-			// join with a derived table, which calculates the number of forums per section. This allows us to re-use the
-			// scalar values in multiple places (projection and where clause), without re-calculating the scalar per row.
-
-			var qf = new QueryFactory();
-			var q = qf.Create()
-							.Select(SectionFields.SectionID,
-									SectionFields.SectionName,
-									SectionFields.SectionDescription,
-									SectionFields.OrderNo,
-									qf.Field("ForumCountList", "ForumCount").As("AmountForums"))
-							.From(qf.Section.InnerJoin(
-										qf.Create()
-											.Select(ForumFields.ForumID.Count().As("ForumCount"), 
-													ForumFields.SectionID)
-											.GroupBy(ForumFields.SectionID)
-											.As("ForumCountList"))
-										.On(ForumFields.SectionID.Source("ForumCountList")==SectionFields.SectionID))
-							.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
-
-			if(excludeEmptySections)
+			using(var adapter = new DataAccessAdapter())
 			{
-				q.AndWhere(qf.Field("ForumCountList", "ForumCount")!=0);
+				var q = new LinqMetaData(adapter).Section.OrderBy(s => s.OrderNo).ProjectToSectionDto();
+				return await q.ToListAsync().ConfigureAwait(false);
 			}
-			TypedListDAO dao = new TypedListDAO();
-			var results = dao.FetchAsDataTable(q);
-			return results.DefaultView;
 		}
 
 
@@ -82,12 +56,13 @@ namespace SD.HnD.BL
         /// Gets all sections. 
         /// </summary>
         /// <returns>SectionCollection</returns>
-        public static SectionCollection GetAllSections()
+        public static async Task<EntityCollection<SectionEntity>> GetAllSectionsAsync()
         {
 			var q = new QueryFactory().Section.OrderBy(SectionFields.OrderNo.Ascending(), SectionFields.SectionName.Ascending());
-			SectionCollection sections = new SectionCollection();
-			sections.GetMulti(q);
-            return sections;
+	        using(var adapter = new DataAccessAdapter())
+	        {
+		        return await adapter.FetchQueryAsync(q, new EntityCollection<SectionEntity>()).ConfigureAwait(false);
+	        }
         }
 
 
@@ -96,15 +71,13 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="sectionID">The section ID.</param>
 		/// <returns>loaded sectionentity or null if not found</returns>
-		public static SectionEntity GetSection(int sectionID)
+		public static async Task<SectionEntity> GetSectionAsync(int sectionID)
 		{
-			SectionEntity toReturn = new SectionEntity(sectionID);
-			if(toReturn.IsNew)
+			using(var adapter = new DataAccessAdapter())
 			{
-				// not found
-				return null;
+				var q = new QueryFactory().Section.Where(SectionFields.SectionID.Equal(sectionID));
+				return await adapter.FetchFirstAsync(q).ConfigureAwait(false);
 			}
-			return toReturn;
 		}
 	}
 }

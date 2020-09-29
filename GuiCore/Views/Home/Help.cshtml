@@ -1,0 +1,3850 @@
+﻿@@{
+	ViewBag.Title = "HnD | Help";
+}
+<div class="container" xmlns="http://www.w3.org/1999/html">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li class="active">Help</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Help</h1>
+			<p>
+				Welcome to HnD! HnD is a forum system focussed on Q &amp; A. It works the same as most other forums on the internet. 
+				Please see the sections below for the questions you might have. 
+			</p>
+			<h2>Registering</h2>
+			<p>
+				To be able to start a new thread or post a message you have to 
+				<a href="~/Account/Register">Register</a> an account. After you've received your email with your password, you can
+				<a href="~/Account/LogIn">Log in</a> and post a message. Non-logged in users are able to visit some forums and see some messages but 
+				aren't able to interact with content nor add new messages nor threads.
+			</p>
+			<h2>Writing content</h2>
+			<p>
+				Messages are written in Markdown. HnD uses the Markdown engine of <a href="https://fransbouma.github.io/DocNet/" target="_blank">DocNet</a>, with 
+				a couple of extensions specifically for forum usage. The Markdown engine will convert all HTML in-lined in the markdown input to plain text. 
+			</p>
+			<h3>Basic markdown</h3>
+			<p>
+				The basic markdown from Gruber is supported in full:
+			</p>
+				<ul>
+					<li><a href="https://daringfireball.net/projects/markdown/basics" target="_blank">The Basics</a></li>
+					<li><a href="https://daringfireball.net/projects/markdown/syntax" target="_blank">Syntax per element</a></li>
+				</ul>
+			<p>
+				Additionally <a href="https://michelf.ca/projects/php-markdown/extra/" target="_blank">PHP Markdown Extra</a> is supported. 
+				PHP Markdown Extra comes with a set of neat extensions for markdown to define e.g. tables, footnotes and more. Please see the link above for all the syntax examples. 
+			</p>
+				<p>A couple of examples are given below</p>
+                <b id="footnotes">Footnotes</b>
+                <p>HnD supports Footnotes, which can be added through the following system: To specify a footnote marker, specify <code>[^1]</code>, which will result in:<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+                <p>The actual footnote text is then specified with <code>[^1]:</code> following the text of the actual footnote. Click on the superscript <code>1</code> link above to go to the footnote rendered at the bottom of this page. </p>
+                <h4 id="definition-lists">Definition lists</h4>
+                <p>To specify simple definition lists, simply do:</p>
+<pre>
+Item one
+:   this is the description of item one
+
+Item Two
+:   this is the text of item 2
+</pre>
+				<p>which results in: </p>
+                <dl>
+                <dt>Item one</dt>
+                <dd>this is the description of item one</dd>
+                <dt>Item Two</dt>
+                <dd>this is the text of item 2</dd>
+                </dl>
+                <b id="tables">Tables</b>
+                <p>There's basic support for defining tables. </p>
+                <p>Specifying: </p>
+<pre>Fruit|Color
+--|--
+Apples|Red
+Pears|Green
+Bananas|Yellow
+Bongo|Bongo... it's a strange color, do you have a minute? It's a bit like the sea, 
+but also a bit like the beach. 
+</pre>
+				<p>results in:</p>
+                <table class="table table-bordered-all table-responsive">
+                <thead>
+                <tr>
+                	<th>Fruit</th>
+                	<th>Color</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                	<td>Apples</td>
+                	<td>Red</td>
+                </tr>
+                <tr>
+                	<td>Pears</td>
+                	<td>Green</td>
+                </tr>
+                <tr>
+                	<td>Bananas</td>
+                	<td>Yellow</td>
+                </tr>
+                <tr>
+                	<td>Bongo</td>
+                	<td>Bongo... it's a strange color, do you have a minute? It's a bit like the sea, but also a bit like the beach.</td>
+                </tr>
+                </tbody>
+                </table>
+                <b id="special-attributes">Special attributes</b>
+                <p>HnD supports special attributes for Links and Images. Currently this is supported on normal links/image specifications only, e.g.:</p>
+<pre>![id text](imageurl){.cssclass1 .cssclass2 #idvalue name=value}
+</pre>
+				<p>which will result in:</p>
+<pre><code class="html">&lt;img src=&quot;imageurl&quot; alt=&quot;id text&quot; id=&quot;idvalue&quot; class=&quot;cssclass1 cssclass2&quot; name=&quot;value&quot; /&gt;
+</code></pre>
+			
+			<b id="image-rendering">Image rendering</b>
+            <p>By default images have no special rendering applied to them. To apply a shadow, specify '.shadowed' as css class in a special attribute specification. 
+            If you want to have an image rendered with a note below it, simply specify a title for the image: </p>
+<pre>![alttext](mypicture.jpg &quot;this is a picture&quot;){.shadowed}
+</pre><p>will be rendered as:</p>
+<pre><code class="html">&lt;div class=&quot;figure&quot;&gt;
+&lt;img src=&quot;mypicture.jpg&quot; alt=&quot;alttext&quot; class=&quot;shadowed&quot; title=&quot;this is a picture&quot; /&gt;
+&lt;p&gt;this is a picture&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+			
+			<b id="abbreviations">Abbreviations</b>
+            <p>There's also support for abbreviations, using the <code>&lt;abbr&gt;</code> HTML tag. </p>
+            <p>Specifying:</p>
+<pre>*[MyTerm]: This is my term</pre>
+            <p>gives an abbreviation link in the following sentence: This is a test for abbreviations: <abbr title="This is my term">MyTerm</abbr>.</p>
+			
+            <b id="highlighting-code">Highlighting code</b>
+            <p>The markdown parser has been extended with GitHub code specifications, so it's easy to specify a specific code beautifying based on a language. This feature uses the <a href="https://highlightjs.org/" target="_blank">Highlight.js</a> javascript library and most popular languages are included. </p>
+            <p>Example: to specify a codeblock as C#, append <code>cs</code> after the first <code>```</code> marker:</p>
+<pre>```cs
+var i=42;
+```
+</pre>
+			<p>will become: </p>
+<pre><code class="cs">var i=42;
+</code></pre>
+			To specify in-line code, wrap the word or small sentence in <code>`</code>. 
+			
+			<b>Links shorthand</b>
+			To formulate a link without a descriptive text, wrap the link in <code>&lt; &gt;</code>. Example:
+<pre>&lt;https://www.llblgen.com&gt;</pre>
+			will become:<br/>
+			<a href="https://www.llblgen.com">https://www.llblgen.com</a>
+			
+			<h3>DocNet markdown extensions</h3>
+			<p>HnD defines the following markdown extensions, borrowed from DocNet: </p>
+			<b id="alert-boxes">Alert boxes</b>
+			<p>To quickly define alert boxes, HnD defines the <code>@@alert</code> element. Three types of alerts are defined: <em>danger</em> (displayed in red), 
+				<em>warning</em> or <em>important</em> (displayed in yellow) and <em>info</em> or <em>neutral</em>, which is displayed in blue. You specify the type of
+				the alert after the <code>@@alert</code> statement using &#64;alert <em>name</em>. Close the <code>@@alert</code> with <code>@@end</code>.</p>
+			<p>Below are examples for each alert box and the markdown used to create them. </p>
+			<p>The markdown:</p>
+<pre>@@alert danger
+This is a dangerous text, it will be displayed in a danger alert box!
+@@end
+</pre>
+			<p>results in</p>
+			<div class="alert alert-danger"><span class="alert-title"><i class="fas fa-times-circle"></i> Danger!</span><p>This is a dangerous text, it will be displayed in a danger alert box!</p>
+			</div><p>The markdown:</p>
+<pre>@@alert warning
+This is a warning text, it will be displayed in a warning alert box!
+@@end
+</pre>
+			<p>results in</p>
+			<div class="alert alert-warning"><span class="alert-title"><i class="fas fa-exclamation-circle"></i> Warning!</span><p>This is a warning text, it will be displayed in a warning alert box!</p>
+			</div><p>The markdown:</p>
+<pre>@@alert important
+This is an important text, it will be displayed in a warning/important alert box!
+@@end
+</pre>
+			<p>results in</p>
+			<div class="alert alert-warning"><span class="alert-title"><i class="fas fa-exclamation-circle"></i> Important!</span><p>This is an important text, it will be displayed in a warning/important alert box!</p>
+			</div><p>The markdown:</p>
+<pre>@@alert info
+This is an info text, it will be displayed in an info alert box!
+@@end
+</pre>
+			<p>Results in</p>
+			<div class="alert alert-info"><span class="alert-title"><i class="fas fa-info-circle"></i> Info</span><p>This is an info text, it will be displayed in an info alert box!</p>
+			</div><p>The markdown:</p>
+<pre>@@alert tip
+This is a tip! It will be displayed in a tip alert box!
+@@end
+</pre>
+			<p>Results in</p>
+			<div class="alert alert-tip"><span class="alert-title"><i class="fas fa-info-circle"></i> Tip</span><p>This is a tip! It will be displayed in a tip alert box!</p>
+			</div>
+			<b id="font-awesome-icons">Font Awesome icons</b>
+			<p>To specify a font-awesome icon, use <code>@@fa-iconname</code>, where <em>iconname</em> is the name of the font-awesome icon.</p>
+			<p>Example: To specify the font awesome icon for a car, use <code>@@fa-car</code>, which will result in: <i class="fas fa-car"></i><br/>
+			Only solid font-awesome icons are supported, from the 'free, solid' batch, so the ones with 'fas' as prefix.
+			</p>
+			<b id="tabs">Tabs</b>
+			<p>
+				It's easy with HnD to add a tab control with one or more tabs to the HTML with a simple set of markdown statements. The tab statements are converted into pure 
+				CSS3/HTML tabs, based on the work of <a href="http://codepen.io/fusco/pen/Wvzjrm" target="_blank">Joseph Fusco</a>.</p>
+			<p>To start a Tab control, start with <code>@@tabs</code> and end the tabs definition with <code>@@endtabs</code>. Between those two statements, 
+				which each need to be suffixed with a newline, you define one or more tabs using <code>@@tab</code> followed by the label text for that tab, followed by a 
+				newline. End your tab contents with <code>@@end</code>.</p>
+			<p>The following example shows two tabs, one with label 'First Tab' and one with 'Second Tab':</p>
+<pre>@@tabs
+@@tab First Tab
+This is the text for the first tab. It's nothing special
+
+As you can see, it can deal with newlines as well. 
+@@end
+@@tab Second Tab
+Now, the second tab however is very interesting. At least let's pretend it is!
+@@end
+@@endtabs
+</pre>
+			<p>will result in: </p>
+			<div class="tab-wrap"><input type="radio" id="tab0_1" name="tabGroup1" class="tab" checked><label for="tab0_1">First Tab</label><input type="radio" id="tab1_1" name="tabGroup1" class="tab"><label for="tab1_1">Second Tab</label><div class="tab-content"><p>This is the text for the first tab. It's nothing special</p>
+			<p>As you can see, it can deal with newlines as well. </p>
+			</div><div class="tab-content"><p>Now, the second tab however is very interesting. At least let's pretend it is!</p>
+			</div></div>
+
+			<h3>HnD markdown extensions</h3>
+			<p>
+				For forum specific tasks, HnD defines a couple of extensions, again using the <code>@@</code> character as prefix. 
+			</p>
+			<b>Quoting a block of text</b>
+			<p>
+			To quote a block of text, use the <code>@@quote</code> element, followed by the text and at the end use a <code>@@end</code> element. To refer to a nickname, 
+			specify an optional nickname after <code>@@quote</code>. 
+			Example:
+			</p>
+<pre>@@quote Admin
+Please behave yourselves!
+@@end
+We'll do that!
+</pre>
+			will result in:
+			<div style="background:#ffffff;padding: 15px;">
+				<blockquote><p class="quote-nickname">Admin wrote:</p>
+	            <p>Please behave yourselves!</p>
+	            </blockquote>
+	            <p>We'll do that!</p>
+			</div>	
+			<br/>
+			<b>Specifying offtopic text</b>
+			<p>To specify some text as offtopic, first specify an <code>@@offtopic</code> element, followed by the offtopic text, and ending it with <code>@@end</code>
+				The offtopic text will be rendered smaller and with a lighter font</p>
+		
+			<h3>Supported emoji's</h3>
+			<p>HnD supports emoji's and smilies. It has a set of shorthands for regular smilies which were used in the older HnD versions as well. Additionally it
+				has support for an extensive set of emoji's using the <code>:emojiname:</code> markdown. </p>	
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<table class="table table-bordered-all table-responsive">
+			<thead>
+			<tr>
+				<th>Markdown</th>
+				<th>Emoji</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td><code>:)</code></td>
+				<td><img src="~/pics/emojis/simple_smile.png" class="emoji" alt="simple_smile"/></td>
+			</tr>
+			<tr>
+				<td><code>:(</code></td>
+				<td><img src="~/pics/emojis/rage.png" class="emoji" alt="rage"/></td>
+			</tr>
+			<tr>
+				<td><code>:?</code></td>
+				<td><img src="~/pics/emojis/confused.png" class="emoji" alt="confused"/></td>
+			</tr>
+			<tr>
+				<td><code>8)</code></td>
+				<td><img src="~/pics/emojis/sunglasses.png" class="emoji" alt="sunglasses"/></td>
+			</tr>
+			<tr>
+				<td><code>:/</code></td>
+				<td><img src="~/pics/emojis/disappointed.png" class="emoji" alt="disappointed"/></td>
+			</tr>
+			<tr>
+				<td><code>:!</code></td>
+				<td><img src="~/pics/emojis/flushed.png" class="emoji" alt="flushed"/></td>
+			</tr>
+			<tr>
+				<td><code>:D</code></td>
+				<td><img src="~/pics/emojis/smile.png" class="emoji" alt="smile"/></td>
+			</tr>
+			<tr>
+				<td><code>;(</code></td>
+				<td><img src="~/pics/emojis/cry.png" class="emoji" alt="cry"/></td>
+			</tr>
+			<tr>
+				<td><code>:o</code></td>
+				<td><img src="~/pics/emojis/frowning.png" class="emoji" alt="frowning"/></td>
+			</tr>
+			<tr>
+				<td><code>:P</code></td>
+				<td><img src="~/pics/emojis/stuck_out_tongue_winking_eye.png" class="emoji" alt="stuck_out_tongue_winking_eye"/></td>
+			</tr>
+			<tr>
+				<td><code>;)</code></td>
+				<td><img src="~/pics/emojis/wink.png" class="emoji" alt="wink"/></td>
+			</tr>
+			<tr>
+				<td><code>:+1:</code></td>
+				<td><img src="~/pics/emojis/+1.png" class="emoji" alt="+1"/></td>
+			</tr>
+			<tr>
+				<td><code>:-1:</code></td>
+				<td><img src="~/pics/emojis/-1.png" class="emoji" alt="-1"/></td>
+			</tr>
+			<tr>
+				<td><code>:100:</code></td>
+				<td><img src="~/pics/emojis/100.png" class="emoji" alt="100"/></td>
+			</tr>
+			<tr>
+				<td><code>:1234:</code></td>
+				<td><img src="~/pics/emojis/1234.png" class="emoji" alt="1234"/></td>
+			</tr>
+			<tr>
+				<td><code>:8ball:</code></td>
+				<td><img src="~/pics/emojis/8ball.png" class="emoji" alt="8ball"/></td>
+			</tr>
+			<tr>
+				<td><code>:a:</code></td>
+				<td><img src="~/pics/emojis/a.png" class="emoji" alt="a"/></td>
+			</tr>
+			<tr>
+				<td><code>:ab:</code></td>
+				<td><img src="~/pics/emojis/ab.png" class="emoji" alt="ab"/></td>
+			</tr>
+			<tr>
+				<td><code>:abc:</code></td>
+				<td><img src="~/pics/emojis/abc.png" class="emoji" alt="abc"/></td>
+			</tr>
+			<tr>
+				<td><code>:abcd:</code></td>
+				<td><img src="~/pics/emojis/abcd.png" class="emoji" alt="abcd"/></td>
+			</tr>
+			<tr>
+				<td><code>:accept:</code></td>
+				<td><img src="~/pics/emojis/accept.png" class="emoji" alt="accept"/></td>
+			</tr>
+			<tr>
+				<td><code>:aerial_tramway:</code></td>
+				<td><img src="~/pics/emojis/aerial_tramway.png" class="emoji" alt="aerial_tramway"/></td>
+			</tr>
+			<tr>
+				<td><code>:airplane:</code></td>
+				<td><img src="~/pics/emojis/airplane.png" class="emoji" alt="airplane"/></td>
+			</tr>
+			<tr>
+				<td><code>:alarm_clock:</code></td>
+				<td><img src="~/pics/emojis/alarm_clock.png" class="emoji" alt="alarm_clock"/></td>
+			</tr>
+			<tr>
+				<td><code>:alien:</code></td>
+				<td><img src="~/pics/emojis/alien.png" class="emoji" alt="alien"/></td>
+			</tr>
+			<tr>
+				<td><code>:ambulance:</code></td>
+				<td><img src="~/pics/emojis/ambulance.png" class="emoji" alt="ambulance"/></td>
+			</tr>
+			<tr>
+				<td><code>:anchor:</code></td>
+				<td><img src="~/pics/emojis/anchor.png" class="emoji" alt="anchor"/></td>
+			</tr>
+			<tr>
+				<td><code>:angel:</code></td>
+				<td><img src="~/pics/emojis/angel.png" class="emoji" alt="angel"/></td>
+			</tr>
+			<tr>
+				<td><code>:anger:</code></td>
+				<td><img src="~/pics/emojis/anger.png" class="emoji" alt="anger"/></td>
+			</tr>
+			<tr>
+				<td><code>:angry:</code></td>
+				<td><img src="~/pics/emojis/angry.png" class="emoji" alt="angry"/></td>
+			</tr>
+			<tr>
+				<td><code>:anguished:</code></td>
+				<td><img src="~/pics/emojis/anguished.png" class="emoji" alt="anguished"/></td>
+			</tr>
+			<tr>
+				<td><code>:ant:</code></td>
+				<td><img src="~/pics/emojis/ant.png" class="emoji" alt="ant"/></td>
+			</tr>
+			<tr>
+				<td><code>:apple:</code></td>
+				<td><img src="~/pics/emojis/apple.png" class="emoji" alt="apple"/></td>
+			</tr>
+			<tr>
+				<td><code>:aquarius:</code></td>
+				<td><img src="~/pics/emojis/aquarius.png" class="emoji" alt="aquarius"/></td>
+			</tr>
+			<tr>
+				<td><code>:aries:</code></td>
+				<td><img src="~/pics/emojis/aries.png" class="emoji" alt="aries"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrows_clockwise:</code></td>
+				<td><img src="~/pics/emojis/arrows_clockwise.png" class="emoji" alt="arrows_clockwise"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrows_counterclockwise:</code></td>
+				<td><img src="~/pics/emojis/arrows_counterclockwise.png" class="emoji" alt="arrows_counterclockwise"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_backward:</code></td>
+				<td><img src="~/pics/emojis/arrow_backward.png" class="emoji" alt="arrow_backward"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_double_down:</code></td>
+				<td><img src="~/pics/emojis/arrow_double_down.png" class="emoji" alt="arrow_double_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_double_up:</code></td>
+				<td><img src="~/pics/emojis/arrow_double_up.png" class="emoji" alt="arrow_double_up"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_down:</code></td>
+				<td><img src="~/pics/emojis/arrow_down.png" class="emoji" alt="arrow_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_down_small:</code></td>
+				<td><img src="~/pics/emojis/arrow_down_small.png" class="emoji" alt="arrow_down_small"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_forward:</code></td>
+				<td><img src="~/pics/emojis/arrow_forward.png" class="emoji" alt="arrow_forward"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_heading_down:</code></td>
+				<td><img src="~/pics/emojis/arrow_heading_down.png" class="emoji" alt="arrow_heading_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_heading_up:</code></td>
+				<td><img src="~/pics/emojis/arrow_heading_up.png" class="emoji" alt="arrow_heading_up"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_left:</code></td>
+				<td><img src="~/pics/emojis/arrow_left.png" class="emoji" alt="arrow_left"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_lower_left:</code></td>
+				<td><img src="~/pics/emojis/arrow_lower_left.png" class="emoji" alt="arrow_lower_left"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_lower_right:</code></td>
+				<td><img src="~/pics/emojis/arrow_lower_right.png" class="emoji" alt="arrow_lower_right"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_right:</code></td>
+				<td><img src="~/pics/emojis/arrow_right.png" class="emoji" alt="arrow_right"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_right_hook:</code></td>
+				<td><img src="~/pics/emojis/arrow_right_hook.png" class="emoji" alt="arrow_right_hook"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_up:</code></td>
+				<td><img src="~/pics/emojis/arrow_up.png" class="emoji" alt="arrow_up"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_upper_left:</code></td>
+				<td><img src="~/pics/emojis/arrow_upper_left.png" class="emoji" alt="arrow_upper_left"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_upper_right:</code></td>
+				<td><img src="~/pics/emojis/arrow_upper_right.png" class="emoji" alt="arrow_upper_right"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_up_down:</code></td>
+				<td><img src="~/pics/emojis/arrow_up_down.png" class="emoji" alt="arrow_up_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:arrow_up_small:</code></td>
+				<td><img src="~/pics/emojis/arrow_up_small.png" class="emoji" alt="arrow_up_small"/></td>
+			</tr>
+			<tr>
+				<td><code>:art:</code></td>
+				<td><img src="~/pics/emojis/art.png" class="emoji" alt="art"/></td>
+			</tr>
+			<tr>
+				<td><code>:articulated_lorry:</code></td>
+				<td><img src="~/pics/emojis/articulated_lorry.png" class="emoji" alt="articulated_lorry"/></td>
+			</tr>
+			<tr>
+				<td><code>:astonished:</code></td>
+				<td><img src="~/pics/emojis/astonished.png" class="emoji" alt="astonished"/></td>
+			</tr>
+			<tr>
+				<td><code>:atm:</code></td>
+				<td><img src="~/pics/emojis/atm.png" class="emoji" alt="atm"/></td>
+			</tr>
+			<tr>
+				<td><code>:b:</code></td>
+				<td><img src="~/pics/emojis/b.png" class="emoji" alt="b"/></td>
+			</tr>
+			<tr>
+				<td><code>:baby:</code></td>
+				<td><img src="~/pics/emojis/baby.png" class="emoji" alt="baby"/></td>
+			</tr>
+			<tr>
+				<td><code>:baby_bottle:</code></td>
+				<td><img src="~/pics/emojis/baby_bottle.png" class="emoji" alt="baby_bottle"/></td>
+			</tr>
+			<tr>
+				<td><code>:baby_chick:</code></td>
+				<td><img src="~/pics/emojis/baby_chick.png" class="emoji" alt="baby_chick"/></td>
+			</tr>
+			<tr>
+				<td><code>:baby_symbol:</code></td>
+				<td><img src="~/pics/emojis/baby_symbol.png" class="emoji" alt="baby_symbol"/></td>
+			</tr>
+			<tr>
+				<td><code>:back:</code></td>
+				<td><img src="~/pics/emojis/back.png" class="emoji" alt="back"/></td>
+			</tr>
+			<tr>
+				<td><code>:baggage_claim:</code></td>
+				<td><img src="~/pics/emojis/baggage_claim.png" class="emoji" alt="baggage_claim"/></td>
+			</tr>
+			<tr>
+				<td><code>:balloon:</code></td>
+				<td><img src="~/pics/emojis/balloon.png" class="emoji" alt="balloon"/></td>
+			</tr>
+			<tr>
+				<td><code>:ballot_box_with_check:</code></td>
+				<td><img src="~/pics/emojis/ballot_box_with_check.png" class="emoji" alt="ballot_box_with_check"/></td>
+			</tr>
+			<tr>
+				<td><code>:bamboo:</code></td>
+				<td><img src="~/pics/emojis/bamboo.png" class="emoji" alt="bamboo"/></td>
+			</tr>
+			<tr>
+				<td><code>:banana:</code></td>
+				<td><img src="~/pics/emojis/banana.png" class="emoji" alt="banana"/></td>
+			</tr>
+			<tr>
+				<td><code>:bangbang:</code></td>
+				<td><img src="~/pics/emojis/bangbang.png" class="emoji" alt="bangbang"/></td>
+			</tr>
+			<tr>
+				<td><code>:bank:</code></td>
+				<td><img src="~/pics/emojis/bank.png" class="emoji" alt="bank"/></td>
+			</tr>
+			<tr>
+				<td><code>:barber:</code></td>
+				<td><img src="~/pics/emojis/barber.png" class="emoji" alt="barber"/></td>
+			</tr>
+			<tr>
+				<td><code>:bar_chart:</code></td>
+				<td><img src="~/pics/emojis/bar_chart.png" class="emoji" alt="bar_chart"/></td>
+			</tr>
+			<tr>
+				<td><code>:baseball:</code></td>
+				<td><img src="~/pics/emojis/baseball.png" class="emoji" alt="baseball"/></td>
+			</tr>
+			<tr>
+				<td><code>:basketball:</code></td>
+				<td><img src="~/pics/emojis/basketball.png" class="emoji" alt="basketball"/></td>
+			</tr>
+			<tr>
+				<td><code>:bath:</code></td>
+				<td><img src="~/pics/emojis/bath.png" class="emoji" alt="bath"/></td>
+			</tr>
+			<tr>
+				<td><code>:bathtub:</code></td>
+				<td><img src="~/pics/emojis/bathtub.png" class="emoji" alt="bathtub"/></td>
+			</tr>
+			<tr>
+				<td><code>:battery:</code></td>
+				<td><img src="~/pics/emojis/battery.png" class="emoji" alt="battery"/></td>
+			</tr>
+			<tr>
+				<td><code>:bear:</code></td>
+				<td><img src="~/pics/emojis/bear.png" class="emoji" alt="bear"/></td>
+			</tr>
+			<tr>
+				<td><code>:bee:</code></td>
+				<td><img src="~/pics/emojis/bee.png" class="emoji" alt="bee"/></td>
+			</tr>
+			<tr>
+				<td><code>:beer:</code></td>
+				<td><img src="~/pics/emojis/beer.png" class="emoji" alt="beer"/></td>
+			</tr>
+			<tr>
+				<td><code>:beers:</code></td>
+				<td><img src="~/pics/emojis/beers.png" class="emoji" alt="beers"/></td>
+			</tr>
+			<tr>
+				<td><code>:beetle:</code></td>
+				<td><img src="~/pics/emojis/beetle.png" class="emoji" alt="beetle"/></td>
+			</tr>
+			<tr>
+				<td><code>:beginner:</code></td>
+				<td><img src="~/pics/emojis/beginner.png" class="emoji" alt="beginner"/></td>
+			</tr>
+			<tr>
+				<td><code>:bell:</code></td>
+				<td><img src="~/pics/emojis/bell.png" class="emoji" alt="bell"/></td>
+			</tr>
+			<tr>
+				<td><code>:bento:</code></td>
+				<td><img src="~/pics/emojis/bento.png" class="emoji" alt="bento"/></td>
+			</tr>
+			<tr>
+				<td><code>:bicyclist:</code></td>
+				<td><img src="~/pics/emojis/bicyclist.png" class="emoji" alt="bicyclist"/></td>
+			</tr>
+			<tr>
+				<td><code>:bike:</code></td>
+				<td><img src="~/pics/emojis/bike.png" class="emoji" alt="bike"/></td>
+			</tr>
+			<tr>
+				<td><code>:bikini:</code></td>
+				<td><img src="~/pics/emojis/bikini.png" class="emoji" alt="bikini"/></td>
+			</tr>
+			<tr>
+				<td><code>:bird:</code></td>
+				<td><img src="~/pics/emojis/bird.png" class="emoji" alt="bird"/></td>
+			</tr>
+			<tr>
+				<td><code>:birthday:</code></td>
+				<td><img src="~/pics/emojis/birthday.png" class="emoji" alt="birthday"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_circle:</code></td>
+				<td><img src="~/pics/emojis/black_circle.png" class="emoji" alt="black_circle"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_joker:</code></td>
+				<td><img src="~/pics/emojis/black_joker.png" class="emoji" alt="black_joker"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_medium_small_square:</code></td>
+				<td><img src="~/pics/emojis/black_medium_small_square.png" class="emoji" alt="black_medium_small_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_medium_square:</code></td>
+				<td><img src="~/pics/emojis/black_medium_square.png" class="emoji" alt="black_medium_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_nib:</code></td>
+				<td><img src="~/pics/emojis/black_nib.png" class="emoji" alt="black_nib"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_small_square:</code></td>
+				<td><img src="~/pics/emojis/black_small_square.png" class="emoji" alt="black_small_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_square:</code></td>
+				<td><img src="~/pics/emojis/black_square.png" class="emoji" alt="black_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:black_square_button:</code></td>
+				<td><img src="~/pics/emojis/black_square_button.png" class="emoji" alt="black_square_button"/></td>
+			</tr>
+			<tr>
+				<td><code>:blossom:</code></td>
+				<td><img src="~/pics/emojis/blossom.png" class="emoji" alt="blossom"/></td>
+			</tr>
+			<tr>
+				<td><code>:blowfish:</code></td>
+				<td><img src="~/pics/emojis/blowfish.png" class="emoji" alt="blowfish"/></td>
+			</tr>
+			<tr>
+				<td><code>:blue_book:</code></td>
+				<td><img src="~/pics/emojis/blue_book.png" class="emoji" alt="blue_book"/></td>
+			</tr>
+			<tr>
+				<td><code>:blue_car:</code></td>
+				<td><img src="~/pics/emojis/blue_car.png" class="emoji" alt="blue_car"/></td>
+			</tr>
+			<tr>
+				<td><code>:blue_heart:</code></td>
+				<td><img src="~/pics/emojis/blue_heart.png" class="emoji" alt="blue_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:blush:</code></td>
+				<td><img src="~/pics/emojis/blush.png" class="emoji" alt="blush"/></td>
+			</tr>
+			<tr>
+				<td><code>:boar:</code></td>
+				<td><img src="~/pics/emojis/boar.png" class="emoji" alt="boar"/></td>
+			</tr>
+			<tr>
+				<td><code>:boat:</code></td>
+				<td><img src="~/pics/emojis/boat.png" class="emoji" alt="boat"/></td>
+			</tr>
+			<tr>
+				<td><code>:bomb:</code></td>
+				<td><img src="~/pics/emojis/bomb.png" class="emoji" alt="bomb"/></td>
+			</tr>
+			<tr>
+				<td><code>:book:</code></td>
+				<td><img src="~/pics/emojis/book.png" class="emoji" alt="book"/></td>
+			</tr>
+			<tr>
+				<td><code>:bookmark:</code></td>
+				<td><img src="~/pics/emojis/bookmark.png" class="emoji" alt="bookmark"/></td>
+			</tr>
+			<tr>
+				<td><code>:bookmark_tabs:</code></td>
+				<td><img src="~/pics/emojis/bookmark_tabs.png" class="emoji" alt="bookmark_tabs"/></td>
+			</tr>
+			<tr>
+				<td><code>:books:</code></td>
+				<td><img src="~/pics/emojis/books.png" class="emoji" alt="books"/></td>
+			</tr>
+			<tr>
+				<td><code>:boom:</code></td>
+				<td><img src="~/pics/emojis/boom.png" class="emoji" alt="boom"/></td>
+			</tr>
+			<tr>
+				<td><code>:boot:</code></td>
+				<td><img src="~/pics/emojis/boot.png" class="emoji" alt="boot"/></td>
+			</tr>
+			<tr>
+				<td><code>:bouquet:</code></td>
+				<td><img src="~/pics/emojis/bouquet.png" class="emoji" alt="bouquet"/></td>
+			</tr>
+			<tr>
+				<td><code>:bow:</code></td>
+				<td><img src="~/pics/emojis/bow.png" class="emoji" alt="bow"/></td>
+			</tr>
+			<tr>
+				<td><code>:bowling:</code></td>
+				<td><img src="~/pics/emojis/bowling.png" class="emoji" alt="bowling"/></td>
+			</tr>
+			<tr>
+				<td><code>:bowtie:</code></td>
+				<td><img src="~/pics/emojis/bowtie.png" class="emoji" alt="bowtie"/></td>
+			</tr>
+			<tr>
+				<td><code>:boy:</code></td>
+				<td><img src="~/pics/emojis/boy.png" class="emoji" alt="boy"/></td>
+			</tr>
+			<tr>
+				<td><code>:bread:</code></td>
+				<td><img src="~/pics/emojis/bread.png" class="emoji" alt="bread"/></td>
+			</tr>
+			<tr>
+				<td><code>:bride_with_veil:</code></td>
+				<td><img src="~/pics/emojis/bride_with_veil.png" class="emoji" alt="bride_with_veil"/></td>
+			</tr>
+			<tr>
+				<td><code>:bridge_at_night:</code></td>
+				<td><img src="~/pics/emojis/bridge_at_night.png" class="emoji" alt="bridge_at_night"/></td>
+			</tr>
+			<tr>
+				<td><code>:briefcase:</code></td>
+				<td><img src="~/pics/emojis/briefcase.png" class="emoji" alt="briefcase"/></td>
+			</tr>
+			<tr>
+				<td><code>:broken_heart:</code></td>
+				<td><img src="~/pics/emojis/broken_heart.png" class="emoji" alt="broken_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:bug:</code></td>
+				<td><img src="~/pics/emojis/bug.png" class="emoji" alt="bug"/></td>
+			</tr>
+			<tr>
+				<td><code>:bulb:</code></td>
+				<td><img src="~/pics/emojis/bulb.png" class="emoji" alt="bulb"/></td>
+			</tr>
+			<tr>
+				<td><code>:bullettrain_front:</code></td>
+				<td><img src="~/pics/emojis/bullettrain_front.png" class="emoji" alt="bullettrain_front"/></td>
+			</tr>
+			<tr>
+				<td><code>:bullettrain_side:</code></td>
+				<td><img src="~/pics/emojis/bullettrain_side.png" class="emoji" alt="bullettrain_side"/></td>
+			</tr>
+			<tr>
+				<td><code>:bus:</code></td>
+				<td><img src="~/pics/emojis/bus.png" class="emoji" alt="bus"/></td>
+			</tr>
+			<tr>
+				<td><code>:busstop:</code></td>
+				<td><img src="~/pics/emojis/busstop.png" class="emoji" alt="busstop"/></td>
+			</tr>
+			<tr>
+				<td><code>:busts_in_silhouette:</code></td>
+				<td><img src="~/pics/emojis/busts_in_silhouette.png" class="emoji" alt="busts_in_silhouette"/></td>
+			</tr>
+			<tr>
+				<td><code>:bust_in_silhouette:</code></td>
+				<td><img src="~/pics/emojis/bust_in_silhouette.png" class="emoji" alt="bust_in_silhouette"/></td>
+			</tr>
+			<tr>
+				<td><code>:cactus:</code></td>
+				<td><img src="~/pics/emojis/cactus.png" class="emoji" alt="cactus"/></td>
+			</tr>
+			<tr>
+				<td><code>:cake:</code></td>
+				<td><img src="~/pics/emojis/cake.png" class="emoji" alt="cake"/></td>
+			</tr>
+			<tr>
+				<td><code>:calendar:</code></td>
+				<td><img src="~/pics/emojis/calendar.png" class="emoji" alt="calendar"/></td>
+			</tr>
+			<tr>
+				<td><code>:calling:</code></td>
+				<td><img src="~/pics/emojis/calling.png" class="emoji" alt="calling"/></td>
+			</tr>
+			<tr>
+				<td><code>:camel:</code></td>
+				<td><img src="~/pics/emojis/camel.png" class="emoji" alt="camel"/></td>
+			</tr>
+			<tr>
+				<td><code>:camera:</code></td>
+				<td><img src="~/pics/emojis/camera.png" class="emoji" alt="camera"/></td>
+			</tr>
+			<tr>
+				<td><code>:cancer:</code></td>
+				<td><img src="~/pics/emojis/cancer.png" class="emoji" alt="cancer"/></td>
+			</tr>
+			<tr>
+				<td><code>:candy:</code></td>
+				<td><img src="~/pics/emojis/candy.png" class="emoji" alt="candy"/></td>
+			</tr>
+			<tr>
+				<td><code>:capital_abcd:</code></td>
+				<td><img src="~/pics/emojis/capital_abcd.png" class="emoji" alt="capital_abcd"/></td>
+			</tr>
+			<tr>
+				<td><code>:capricorn:</code></td>
+				<td><img src="~/pics/emojis/capricorn.png" class="emoji" alt="capricorn"/></td>
+			</tr>
+			<tr>
+				<td><code>:car:</code></td>
+				<td><img src="~/pics/emojis/car.png" class="emoji" alt="car"/></td>
+			</tr>
+			<tr>
+				<td><code>:card_index:</code></td>
+				<td><img src="~/pics/emojis/card_index.png" class="emoji" alt="card_index"/></td>
+			</tr>
+			<tr>
+				<td><code>:carousel_horse:</code></td>
+				<td><img src="~/pics/emojis/carousel_horse.png" class="emoji" alt="carousel_horse"/></td>
+			</tr>
+			<tr>
+				<td><code>:cat:</code></td>
+				<td><img src="~/pics/emojis/cat.png" class="emoji" alt="cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:cat2:</code></td>
+				<td><img src="~/pics/emojis/cat2.png" class="emoji" alt="cat2"/></td>
+			</tr>
+			<tr>
+				<td><code>:cd:</code></td>
+				<td><img src="~/pics/emojis/cd.png" class="emoji" alt="cd"/></td>
+			</tr>
+			<tr>
+				<td><code>:chart:</code></td>
+				<td><img src="~/pics/emojis/chart.png" class="emoji" alt="chart"/></td>
+			</tr>
+			<tr>
+				<td><code>:chart_with_downwards_trend:</code></td>
+				<td><img src="~/pics/emojis/chart_with_downwards_trend.png" class="emoji" alt="chart_with_downwards_trend"/></td>
+			</tr>
+			<tr>
+				<td><code>:chart_with_upwards_trend:</code></td>
+				<td><img src="~/pics/emojis/chart_with_upwards_trend.png" class="emoji" alt="chart_with_upwards_trend"/></td>
+			</tr>
+			<tr>
+				<td><code>:checkered_flag:</code></td>
+				<td><img src="~/pics/emojis/checkered_flag.png" class="emoji" alt="checkered_flag"/></td>
+			</tr>
+			<tr>
+				<td><code>:cherries:</code></td>
+				<td><img src="~/pics/emojis/cherries.png" class="emoji" alt="cherries"/></td>
+			</tr>
+			<tr>
+				<td><code>:cherry_blossom:</code></td>
+				<td><img src="~/pics/emojis/cherry_blossom.png" class="emoji" alt="cherry_blossom"/></td>
+			</tr>
+			<tr>
+				<td><code>:chestnut:</code></td>
+				<td><img src="~/pics/emojis/chestnut.png" class="emoji" alt="chestnut"/></td>
+			</tr>
+			<tr>
+				<td><code>:chicken:</code></td>
+				<td><img src="~/pics/emojis/chicken.png" class="emoji" alt="chicken"/></td>
+			</tr>
+			<tr>
+				<td><code>:children_crossing:</code></td>
+				<td><img src="~/pics/emojis/children_crossing.png" class="emoji" alt="children_crossing"/></td>
+			</tr>
+			<tr>
+				<td><code>:chocolate_bar:</code></td>
+				<td><img src="~/pics/emojis/chocolate_bar.png" class="emoji" alt="chocolate_bar"/></td>
+			</tr>
+			<tr>
+				<td><code>:christmas_tree:</code></td>
+				<td><img src="~/pics/emojis/christmas_tree.png" class="emoji" alt="christmas_tree"/></td>
+			</tr>
+			<tr>
+				<td><code>:church:</code></td>
+				<td><img src="~/pics/emojis/church.png" class="emoji" alt="church"/></td>
+			</tr>
+			<tr>
+				<td><code>:cinema:</code></td>
+				<td><img src="~/pics/emojis/cinema.png" class="emoji" alt="cinema"/></td>
+			</tr>
+			<tr>
+				<td><code>:circus_tent:</code></td>
+				<td><img src="~/pics/emojis/circus_tent.png" class="emoji" alt="circus_tent"/></td>
+			</tr>
+			<tr>
+				<td><code>:city_sunrise:</code></td>
+				<td><img src="~/pics/emojis/city_sunrise.png" class="emoji" alt="city_sunrise"/></td>
+			</tr>
+			<tr>
+				<td><code>:city_sunset:</code></td>
+				<td><img src="~/pics/emojis/city_sunset.png" class="emoji" alt="city_sunset"/></td>
+			</tr>
+			<tr>
+				<td><code>:cl:</code></td>
+				<td><img src="~/pics/emojis/cl.png" class="emoji" alt="cl"/></td>
+			</tr>
+			<tr>
+				<td><code>:clap:</code></td>
+				<td><img src="~/pics/emojis/clap.png" class="emoji" alt="clap"/></td>
+			</tr>
+			<tr>
+				<td><code>:clapper:</code></td>
+				<td><img src="~/pics/emojis/clapper.png" class="emoji" alt="clapper"/></td>
+			</tr>
+			<tr>
+				<td><code>:clipboard:</code></td>
+				<td><img src="~/pics/emojis/clipboard.png" class="emoji" alt="clipboard"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock1:</code></td>
+				<td><img src="~/pics/emojis/clock1.png" class="emoji" alt="clock1"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock10:</code></td>
+				<td><img src="~/pics/emojis/clock10.png" class="emoji" alt="clock10"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock1030:</code></td>
+				<td><img src="~/pics/emojis/clock1030.png" class="emoji" alt="clock1030"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock11:</code></td>
+				<td><img src="~/pics/emojis/clock11.png" class="emoji" alt="clock11"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock1130:</code></td>
+				<td><img src="~/pics/emojis/clock1130.png" class="emoji" alt="clock1130"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock12:</code></td>
+				<td><img src="~/pics/emojis/clock12.png" class="emoji" alt="clock12"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock1230:</code></td>
+				<td><img src="~/pics/emojis/clock1230.png" class="emoji" alt="clock1230"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock130:</code></td>
+				<td><img src="~/pics/emojis/clock130.png" class="emoji" alt="clock130"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock2:</code></td>
+				<td><img src="~/pics/emojis/clock2.png" class="emoji" alt="clock2"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock230:</code></td>
+				<td><img src="~/pics/emojis/clock230.png" class="emoji" alt="clock230"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock3:</code></td>
+				<td><img src="~/pics/emojis/clock3.png" class="emoji" alt="clock3"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock330:</code></td>
+				<td><img src="~/pics/emojis/clock330.png" class="emoji" alt="clock330"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock4:</code></td>
+				<td><img src="~/pics/emojis/clock4.png" class="emoji" alt="clock4"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock430:</code></td>
+				<td><img src="~/pics/emojis/clock430.png" class="emoji" alt="clock430"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock5:</code></td>
+				<td><img src="~/pics/emojis/clock5.png" class="emoji" alt="clock5"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock530:</code></td>
+				<td><img src="~/pics/emojis/clock530.png" class="emoji" alt="clock530"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock6:</code></td>
+				<td><img src="~/pics/emojis/clock6.png" class="emoji" alt="clock6"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock630:</code></td>
+				<td><img src="~/pics/emojis/clock630.png" class="emoji" alt="clock630"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock7:</code></td>
+				<td><img src="~/pics/emojis/clock7.png" class="emoji" alt="clock7"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock730:</code></td>
+				<td><img src="~/pics/emojis/clock730.png" class="emoji" alt="clock730"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock8:</code></td>
+				<td><img src="~/pics/emojis/clock8.png" class="emoji" alt="clock8"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock830:</code></td>
+				<td><img src="~/pics/emojis/clock830.png" class="emoji" alt="clock830"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock9:</code></td>
+				<td><img src="~/pics/emojis/clock9.png" class="emoji" alt="clock9"/></td>
+			</tr>
+			<tr>
+				<td><code>:clock930:</code></td>
+				<td><img src="~/pics/emojis/clock930.png" class="emoji" alt="clock930"/></td>
+			</tr>
+			<tr>
+				<td><code>:closed_book:</code></td>
+				<td><img src="~/pics/emojis/closed_book.png" class="emoji" alt="closed_book"/></td>
+			</tr>
+			<tr>
+				<td><code>:closed_lock_with_key:</code></td>
+				<td><img src="~/pics/emojis/closed_lock_with_key.png" class="emoji" alt="closed_lock_with_key"/></td>
+			</tr>
+			<tr>
+				<td><code>:closed_umbrella:</code></td>
+				<td><img src="~/pics/emojis/closed_umbrella.png" class="emoji" alt="closed_umbrella"/></td>
+			</tr>
+			<tr>
+				<td><code>:cloud:</code></td>
+				<td><img src="~/pics/emojis/cloud.png" class="emoji" alt="cloud"/></td>
+			</tr>
+			<tr>
+				<td><code>:clubs:</code></td>
+				<td><img src="~/pics/emojis/clubs.png" class="emoji" alt="clubs"/></td>
+			</tr>
+			<tr>
+				<td><code>:cn:</code></td>
+				<td><img src="~/pics/emojis/cn.png" class="emoji" alt="cn"/></td>
+			</tr>
+			<tr>
+				<td><code>:cocktail:</code></td>
+				<td><img src="~/pics/emojis/cocktail.png" class="emoji" alt="cocktail"/></td>
+			</tr>
+			<tr>
+				<td><code>:coffee:</code></td>
+				<td><img src="~/pics/emojis/coffee.png" class="emoji" alt="coffee"/></td>
+			</tr>
+			<tr>
+				<td><code>:cold_sweat:</code></td>
+				<td><img src="~/pics/emojis/cold_sweat.png" class="emoji" alt="cold_sweat"/></td>
+			</tr>
+			<tr>
+				<td><code>:collision:</code></td>
+				<td><img src="~/pics/emojis/collision.png" class="emoji" alt="collision"/></td>
+			</tr>
+			<tr>
+				<td><code>:computer:</code></td>
+				<td><img src="~/pics/emojis/computer.png" class="emoji" alt="computer"/></td>
+			</tr>
+			<tr>
+				<td><code>:confetti_ball:</code></td>
+				<td><img src="~/pics/emojis/confetti_ball.png" class="emoji" alt="confetti_ball"/></td>
+			</tr>
+			<tr>
+				<td><code>:confounded:</code></td>
+				<td><img src="~/pics/emojis/confounded.png" class="emoji" alt="confounded"/></td>
+			</tr>
+			<tr>
+				<td><code>:confused:</code></td>
+				<td><img src="~/pics/emojis/confused.png" class="emoji" alt="confused"/></td>
+			</tr>
+			<tr>
+				<td><code>:congratulations:</code></td>
+				<td><img src="~/pics/emojis/congratulations.png" class="emoji" alt="congratulations"/></td>
+			</tr>
+			<tr>
+				<td><code>:construction:</code></td>
+				<td><img src="~/pics/emojis/construction.png" class="emoji" alt="construction"/></td>
+			</tr>
+			<tr>
+				<td><code>:construction_worker:</code></td>
+				<td><img src="~/pics/emojis/construction_worker.png" class="emoji" alt="construction_worker"/></td>
+			</tr>
+			<tr>
+				<td><code>:convenience_store:</code></td>
+				<td><img src="~/pics/emojis/convenience_store.png" class="emoji" alt="convenience_store"/></td>
+			</tr>
+			<tr>
+				<td><code>:cookie:</code></td>
+				<td><img src="~/pics/emojis/cookie.png" class="emoji" alt="cookie"/></td>
+			</tr>
+			<tr>
+				<td><code>:cool:</code></td>
+				<td><img src="~/pics/emojis/cool.png" class="emoji" alt="cool"/></td>
+			</tr>
+			<tr>
+				<td><code>:cop:</code></td>
+				<td><img src="~/pics/emojis/cop.png" class="emoji" alt="cop"/></td>
+			</tr>
+			<tr>
+				<td><code>:copyright:</code></td>
+				<td><img src="~/pics/emojis/copyright.png" class="emoji" alt="copyright"/></td>
+			</tr>
+			<tr>
+				<td><code>:corn:</code></td>
+				<td><img src="~/pics/emojis/corn.png" class="emoji" alt="corn"/></td>
+			</tr>
+			<tr>
+				<td><code>:couple:</code></td>
+				<td><img src="~/pics/emojis/couple.png" class="emoji" alt="couple"/></td>
+			</tr>
+			<tr>
+				<td><code>:couplekiss:</code></td>
+				<td><img src="~/pics/emojis/couplekiss.png" class="emoji" alt="couplekiss"/></td>
+			</tr>
+			<tr>
+				<td><code>:couple_with_heart:</code></td>
+				<td><img src="~/pics/emojis/couple_with_heart.png" class="emoji" alt="couple_with_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:cow:</code></td>
+				<td><img src="~/pics/emojis/cow.png" class="emoji" alt="cow"/></td>
+			</tr>
+			<tr>
+				<td><code>:cow2:</code></td>
+				<td><img src="~/pics/emojis/cow2.png" class="emoji" alt="cow2"/></td>
+			</tr>
+			<tr>
+				<td><code>:credit_card:</code></td>
+				<td><img src="~/pics/emojis/credit_card.png" class="emoji" alt="credit_card"/></td>
+			</tr>
+			<tr>
+				<td><code>:crescent_moon:</code></td>
+				<td><img src="~/pics/emojis/crescent_moon.png" class="emoji" alt="crescent_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:crocodile:</code></td>
+				<td><img src="~/pics/emojis/crocodile.png" class="emoji" alt="crocodile"/></td>
+			</tr>
+			<tr>
+				<td><code>:crossed_flags:</code></td>
+				<td><img src="~/pics/emojis/crossed_flags.png" class="emoji" alt="crossed_flags"/></td>
+			</tr>
+			<tr>
+				<td><code>:crown:</code></td>
+				<td><img src="~/pics/emojis/crown.png" class="emoji" alt="crown"/></td>
+			</tr>
+			<tr>
+				<td><code>:cry:</code></td>
+				<td><img src="~/pics/emojis/cry.png" class="emoji" alt="cry"/></td>
+			</tr>
+			<tr>
+				<td><code>:crying_cat_face:</code></td>
+				<td><img src="~/pics/emojis/crying_cat_face.png" class="emoji" alt="crying_cat_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:crystal_ball:</code></td>
+				<td><img src="~/pics/emojis/crystal_ball.png" class="emoji" alt="crystal_ball"/></td>
+			</tr>
+			<tr>
+				<td><code>:cupid:</code></td>
+				<td><img src="~/pics/emojis/cupid.png" class="emoji" alt="cupid"/></td>
+			</tr>
+			<tr>
+				<td><code>:curly_loop:</code></td>
+				<td><img src="~/pics/emojis/curly_loop.png" class="emoji" alt="curly_loop"/></td>
+			</tr>
+			<tr>
+				<td><code>:currency_exchange:</code></td>
+				<td><img src="~/pics/emojis/currency_exchange.png" class="emoji" alt="currency_exchange"/></td>
+			</tr>
+			<tr>
+				<td><code>:curry:</code></td>
+				<td><img src="~/pics/emojis/curry.png" class="emoji" alt="curry"/></td>
+			</tr>
+			<tr>
+				<td><code>:custard:</code></td>
+				<td><img src="~/pics/emojis/custard.png" class="emoji" alt="custard"/></td>
+			</tr>
+			<tr>
+				<td><code>:customs:</code></td>
+				<td><img src="~/pics/emojis/customs.png" class="emoji" alt="customs"/></td>
+			</tr>
+			<tr>
+				<td><code>:cyclone:</code></td>
+				<td><img src="~/pics/emojis/cyclone.png" class="emoji" alt="cyclone"/></td>
+			</tr>
+			<tr>
+				<td><code>:dancer:</code></td>
+				<td><img src="~/pics/emojis/dancer.png" class="emoji" alt="dancer"/></td>
+			</tr>
+			<tr>
+				<td><code>:dancers:</code></td>
+				<td><img src="~/pics/emojis/dancers.png" class="emoji" alt="dancers"/></td>
+			</tr>
+			<tr>
+				<td><code>:dango:</code></td>
+				<td><img src="~/pics/emojis/dango.png" class="emoji" alt="dango"/></td>
+			</tr>
+			<tr>
+				<td><code>:dart:</code></td>
+				<td><img src="~/pics/emojis/dart.png" class="emoji" alt="dart"/></td>
+			</tr>
+			<tr>
+				<td><code>:dash:</code></td>
+				<td><img src="~/pics/emojis/dash.png" class="emoji" alt="dash"/></td>
+			</tr>
+			<tr>
+				<td><code>:date:</code></td>
+				<td><img src="~/pics/emojis/date.png" class="emoji" alt="date"/></td>
+			</tr>
+			<tr>
+				<td><code>:de:</code></td>
+				<td><img src="~/pics/emojis/de.png" class="emoji" alt="de"/></td>
+			</tr>
+			<tr>
+				<td><code>:deciduous_tree:</code></td>
+				<td><img src="~/pics/emojis/deciduous_tree.png" class="emoji" alt="deciduous_tree"/></td>
+			</tr>
+			<tr>
+				<td><code>:department_store:</code></td>
+				<td><img src="~/pics/emojis/department_store.png" class="emoji" alt="department_store"/></td>
+			</tr>
+			<tr>
+				<td><code>:diamonds:</code></td>
+				<td><img src="~/pics/emojis/diamonds.png" class="emoji" alt="diamonds"/></td>
+			</tr>
+			<tr>
+				<td><code>:diamond_shape_with_a_dot_inside:</code></td>
+				<td><img src="~/pics/emojis/diamond_shape_with_a_dot_inside.png" class="emoji" alt="diamond_shape_with_a_dot_inside"/></td>
+			</tr>
+			<tr>
+				<td><code>:disappointed:</code></td>
+				<td><img src="~/pics/emojis/disappointed.png" class="emoji" alt="disappointed"/></td>
+			</tr>
+			<tr>
+				<td><code>:disappointed_relieved:</code></td>
+				<td><img src="~/pics/emojis/disappointed_relieved.png" class="emoji" alt="disappointed_relieved"/></td>
+			</tr>
+			<tr>
+				<td><code>:dizzy:</code></td>
+				<td><img src="~/pics/emojis/dizzy.png" class="emoji" alt="dizzy"/></td>
+			</tr>
+			<tr>
+				<td><code>:dizzy_face:</code></td>
+				<td><img src="~/pics/emojis/dizzy_face.png" class="emoji" alt="dizzy_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:dog:</code></td>
+				<td><img src="~/pics/emojis/dog.png" class="emoji" alt="dog"/></td>
+			</tr>
+			<tr>
+				<td><code>:dog2:</code></td>
+				<td><img src="~/pics/emojis/dog2.png" class="emoji" alt="dog2"/></td>
+			</tr>
+			<tr>
+				<td><code>:dollar:</code></td>
+				<td><img src="~/pics/emojis/dollar.png" class="emoji" alt="dollar"/></td>
+			</tr>
+			<tr>
+				<td><code>:dolls:</code></td>
+				<td><img src="~/pics/emojis/dolls.png" class="emoji" alt="dolls"/></td>
+			</tr>
+			<tr>
+				<td><code>:dolphin:</code></td>
+				<td><img src="~/pics/emojis/dolphin.png" class="emoji" alt="dolphin"/></td>
+			</tr>
+			<tr>
+				<td><code>:donut:</code></td>
+				<td><img src="~/pics/emojis/donut.png" class="emoji" alt="donut"/></td>
+			</tr>
+			<tr>
+				<td><code>:door:</code></td>
+				<td><img src="~/pics/emojis/door.png" class="emoji" alt="door"/></td>
+			</tr>
+			<tr>
+				<td><code>:doughnut:</code></td>
+				<td><img src="~/pics/emojis/doughnut.png" class="emoji" alt="doughnut"/></td>
+			</tr>
+			<tr>
+				<td><code>:do_not_litter:</code></td>
+				<td><img src="~/pics/emojis/do_not_litter.png" class="emoji" alt="do_not_litter"/></td>
+			</tr>
+			<tr>
+				<td><code>:dragon:</code></td>
+				<td><img src="~/pics/emojis/dragon.png" class="emoji" alt="dragon"/></td>
+			</tr>
+			<tr>
+				<td><code>:dragon_face:</code></td>
+				<td><img src="~/pics/emojis/dragon_face.png" class="emoji" alt="dragon_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:dress:</code></td>
+				<td><img src="~/pics/emojis/dress.png" class="emoji" alt="dress"/></td>
+			</tr>
+			<tr>
+				<td><code>:dromedary_camel:</code></td>
+				<td><img src="~/pics/emojis/dromedary_camel.png" class="emoji" alt="dromedary_camel"/></td>
+			</tr>
+			<tr>
+				<td><code>:droplet:</code></td>
+				<td><img src="~/pics/emojis/droplet.png" class="emoji" alt="droplet"/></td>
+			</tr>
+			<tr>
+				<td><code>:dvd:</code></td>
+				<td><img src="~/pics/emojis/dvd.png" class="emoji" alt="dvd"/></td>
+			</tr>
+			<tr>
+				<td><code>:e-mail:</code></td>
+				<td><img src="~/pics/emojis/e-mail.png" class="emoji" alt="e-mail"/></td>
+			</tr>
+			<tr>
+				<td><code>:ear:</code></td>
+				<td><img src="~/pics/emojis/ear.png" class="emoji" alt="ear"/></td>
+			</tr>
+			<tr>
+				<td><code>:earth_africa:</code></td>
+				<td><img src="~/pics/emojis/earth_africa.png" class="emoji" alt="earth_africa"/></td>
+			</tr>
+			<tr>
+				<td><code>:earth_americas:</code></td>
+				<td><img src="~/pics/emojis/earth_americas.png" class="emoji" alt="earth_americas"/></td>
+			</tr>
+			<tr>
+				<td><code>:earth_asia:</code></td>
+				<td><img src="~/pics/emojis/earth_asia.png" class="emoji" alt="earth_asia"/></td>
+			</tr>
+			<tr>
+				<td><code>:ear_of_rice:</code></td>
+				<td><img src="~/pics/emojis/ear_of_rice.png" class="emoji" alt="ear_of_rice"/></td>
+			</tr>
+			<tr>
+				<td><code>:egg:</code></td>
+				<td><img src="~/pics/emojis/egg.png" class="emoji" alt="egg"/></td>
+			</tr>
+			<tr>
+				<td><code>:eggplant:</code></td>
+				<td><img src="~/pics/emojis/eggplant.png" class="emoji" alt="eggplant"/></td>
+			</tr>
+			<tr>
+				<td><code>:eight:</code></td>
+				<td><img src="~/pics/emojis/eight.png" class="emoji" alt="eight"/></td>
+			</tr>
+			<tr>
+				<td><code>:eight_pointed_black_star:</code></td>
+				<td><img src="~/pics/emojis/eight_pointed_black_star.png" class="emoji" alt="eight_pointed_black_star"/></td>
+			</tr>
+			<tr>
+				<td><code>:eight_spoked_asterisk:</code></td>
+				<td><img src="~/pics/emojis/eight_spoked_asterisk.png" class="emoji" alt="eight_spoked_asterisk"/></td>
+			</tr>
+			<tr>
+				<td><code>:electric_plug:</code></td>
+				<td><img src="~/pics/emojis/electric_plug.png" class="emoji" alt="electric_plug"/></td>
+			</tr>
+			<tr>
+				<td><code>:elephant:</code></td>
+				<td><img src="~/pics/emojis/elephant.png" class="emoji" alt="elephant"/></td>
+			</tr>
+			<tr>
+				<td><code>:email:</code></td>
+				<td><img src="~/pics/emojis/email.png" class="emoji" alt="email"/></td>
+			</tr>
+			<tr>
+				<td><code>:end:</code></td>
+				<td><img src="~/pics/emojis/end.png" class="emoji" alt="end"/></td>
+			</tr>
+			<tr>
+				<td><code>:envelope:</code></td>
+				<td><img src="~/pics/emojis/envelope.png" class="emoji" alt="envelope"/></td>
+			</tr>
+			<tr>
+				<td><code>:es:</code></td>
+				<td><img src="~/pics/emojis/es.png" class="emoji" alt="es"/></td>
+			</tr>
+			<tr>
+				<td><code>:euro:</code></td>
+				<td><img src="~/pics/emojis/euro.png" class="emoji" alt="euro"/></td>
+			</tr>
+			<tr>
+				<td><code>:european_castle:</code></td>
+				<td><img src="~/pics/emojis/european_castle.png" class="emoji" alt="european_castle"/></td>
+			</tr>
+			<tr>
+				<td><code>:european_post_office:</code></td>
+				<td><img src="~/pics/emojis/european_post_office.png" class="emoji" alt="european_post_office"/></td>
+			</tr>
+			<tr>
+				<td><code>:evergreen_tree:</code></td>
+				<td><img src="~/pics/emojis/evergreen_tree.png" class="emoji" alt="evergreen_tree"/></td>
+			</tr>
+			<tr>
+				<td><code>:exclamation:</code></td>
+				<td><img src="~/pics/emojis/exclamation.png" class="emoji" alt="exclamation"/></td>
+			</tr>
+			<tr>
+				<td><code>:expressionless:</code></td>
+				<td><img src="~/pics/emojis/expressionless.png" class="emoji" alt="expressionless"/></td>
+			</tr>
+			<tr>
+				<td><code>:eyeglasses:</code></td>
+				<td><img src="~/pics/emojis/eyeglasses.png" class="emoji" alt="eyeglasses"/></td>
+			</tr>
+			<tr>
+				<td><code>:eyes:</code></td>
+				<td><img src="~/pics/emojis/eyes.png" class="emoji" alt="eyes"/></td>
+			</tr>
+			<tr>
+				<td><code>:facepunch:</code></td>
+				<td><img src="~/pics/emojis/facepunch.png" class="emoji" alt="facepunch"/></td>
+			</tr>
+			<tr>
+				<td><code>:factory:</code></td>
+				<td><img src="~/pics/emojis/factory.png" class="emoji" alt="factory"/></td>
+			</tr>
+			<tr>
+				<td><code>:fallen_leaf:</code></td>
+				<td><img src="~/pics/emojis/fallen_leaf.png" class="emoji" alt="fallen_leaf"/></td>
+			</tr>
+			<tr>
+				<td><code>:family:</code></td>
+				<td><img src="~/pics/emojis/family.png" class="emoji" alt="family"/></td>
+			</tr>
+			<tr>
+				<td><code>:fast_forward:</code></td>
+				<td><img src="~/pics/emojis/fast_forward.png" class="emoji" alt="fast_forward"/></td>
+			</tr>
+			<tr>
+				<td><code>:fax:</code></td>
+				<td><img src="~/pics/emojis/fax.png" class="emoji" alt="fax"/></td>
+			</tr>
+			<tr>
+				<td><code>:fearful:</code></td>
+				<td><img src="~/pics/emojis/fearful.png" class="emoji" alt="fearful"/></td>
+			</tr>
+			<tr>
+				<td><code>:feelsgood:</code></td>
+				<td><img src="~/pics/emojis/feelsgood.png" class="emoji" alt="feelsgood"/></td>
+			</tr>
+			<tr>
+				<td><code>:feet:</code></td>
+				<td><img src="~/pics/emojis/feet.png" class="emoji" alt="feet"/></td>
+			</tr>
+			<tr>
+				<td><code>:ferris_wheel:</code></td>
+				<td><img src="~/pics/emojis/ferris_wheel.png" class="emoji" alt="ferris_wheel"/></td>
+			</tr>
+			<tr>
+				<td><code>:file_folder:</code></td>
+				<td><img src="~/pics/emojis/file_folder.png" class="emoji" alt="file_folder"/></td>
+			</tr>
+			<tr>
+				<td><code>:finnadie:</code></td>
+				<td><img src="~/pics/emojis/finnadie.png" class="emoji" alt="finnadie"/></td>
+			</tr>
+			<tr>
+				<td><code>:fire:</code></td>
+				<td><img src="~/pics/emojis/fire.png" class="emoji" alt="fire"/></td>
+			</tr>
+			<tr>
+				<td><code>:fireworks:</code></td>
+				<td><img src="~/pics/emojis/fireworks.png" class="emoji" alt="fireworks"/></td>
+			</tr>
+			<tr>
+				<td><code>:fire_engine:</code></td>
+				<td><img src="~/pics/emojis/fire_engine.png" class="emoji" alt="fire_engine"/></td>
+			</tr>
+			<tr>
+				<td><code>:first_quarter_moon:</code></td>
+				<td><img src="~/pics/emojis/first_quarter_moon.png" class="emoji" alt="first_quarter_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:first_quarter_moon_with_face:</code></td>
+				<td><img src="~/pics/emojis/first_quarter_moon_with_face.png" class="emoji" alt="first_quarter_moon_with_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:fish:</code></td>
+				<td><img src="~/pics/emojis/fish.png" class="emoji" alt="fish"/></td>
+			</tr>
+			<tr>
+				<td><code>:fishing_pole_and_fish:</code></td>
+				<td><img src="~/pics/emojis/fishing_pole_and_fish.png" class="emoji" alt="fishing_pole_and_fish"/></td>
+			</tr>
+			<tr>
+				<td><code>:fish_cake:</code></td>
+				<td><img src="~/pics/emojis/fish_cake.png" class="emoji" alt="fish_cake"/></td>
+			</tr>
+			<tr>
+				<td><code>:fist:</code></td>
+				<td><img src="~/pics/emojis/fist.png" class="emoji" alt="fist"/></td>
+			</tr>
+			<tr>
+				<td><code>:five:</code></td>
+				<td><img src="~/pics/emojis/five.png" class="emoji" alt="five"/></td>
+			</tr>
+			<tr>
+				<td><code>:flags:</code></td>
+				<td><img src="~/pics/emojis/flags.png" class="emoji" alt="flags"/></td>
+			</tr>
+			<tr>
+				<td><code>:flashlight:</code></td>
+				<td><img src="~/pics/emojis/flashlight.png" class="emoji" alt="flashlight"/></td>
+			</tr>
+			<tr>
+				<td><code>:floppy_disk:</code></td>
+				<td><img src="~/pics/emojis/floppy_disk.png" class="emoji" alt="floppy_disk"/></td>
+			</tr>
+			<tr>
+				<td><code>:flower_playing_cards:</code></td>
+				<td><img src="~/pics/emojis/flower_playing_cards.png" class="emoji" alt="flower_playing_cards"/></td>
+			</tr>
+			<tr>
+				<td><code>:flushed:</code></td>
+				<td><img src="~/pics/emojis/flushed.png" class="emoji" alt="flushed"/></td>
+			</tr>
+			<tr>
+				<td><code>:foggy:</code></td>
+				<td><img src="~/pics/emojis/foggy.png" class="emoji" alt="foggy"/></td>
+			</tr>
+			<tr>
+				<td><code>:football:</code></td>
+				<td><img src="~/pics/emojis/football.png" class="emoji" alt="football"/></td>
+			</tr>
+			<tr>
+				<td><code>:fork_and_knife:</code></td>
+				<td><img src="~/pics/emojis/fork_and_knife.png" class="emoji" alt="fork_and_knife"/></td>
+			</tr>
+			<tr>
+				<td><code>:fountain:</code></td>
+				<td><img src="~/pics/emojis/fountain.png" class="emoji" alt="fountain"/></td>
+			</tr>
+			<tr>
+				<td><code>:four:</code></td>
+				<td><img src="~/pics/emojis/four.png" class="emoji" alt="four"/></td>
+			</tr>
+			<tr>
+				<td><code>:four_leaf_clover:</code></td>
+				<td><img src="~/pics/emojis/four_leaf_clover.png" class="emoji" alt="four_leaf_clover"/></td>
+			</tr>
+			<tr>
+				<td><code>:fr:</code></td>
+				<td><img src="~/pics/emojis/fr.png" class="emoji" alt="fr"/></td>
+			</tr>
+			<tr>
+				<td><code>:free:</code></td>
+				<td><img src="~/pics/emojis/free.png" class="emoji" alt="free"/></td>
+			</tr>
+			<tr>
+				<td><code>:fried_shrimp:</code></td>
+				<td><img src="~/pics/emojis/fried_shrimp.png" class="emoji" alt="fried_shrimp"/></td>
+			</tr>
+			<tr>
+				<td><code>:fries:</code></td>
+				<td><img src="~/pics/emojis/fries.png" class="emoji" alt="fries"/></td>
+			</tr>
+			<tr>
+				<td><code>:frog:</code></td>
+				<td><img src="~/pics/emojis/frog.png" class="emoji" alt="frog"/></td>
+			</tr>
+			<tr>
+				<td><code>:frowning:</code></td>
+				<td><img src="~/pics/emojis/frowning.png" class="emoji" alt="frowning"/></td>
+			</tr>
+			<tr>
+				<td><code>:fu:</code></td>
+				<td><img src="~/pics/emojis/fu.png" class="emoji" alt="fu"/></td>
+			</tr>
+			<tr>
+				<td><code>:fuelpump:</code></td>
+				<td><img src="~/pics/emojis/fuelpump.png" class="emoji" alt="fuelpump"/></td>
+			</tr>
+			<tr>
+				<td><code>:full_moon:</code></td>
+				<td><img src="~/pics/emojis/full_moon.png" class="emoji" alt="full_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:full_moon_with_face:</code></td>
+				<td><img src="~/pics/emojis/full_moon_with_face.png" class="emoji" alt="full_moon_with_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:game_die:</code></td>
+				<td><img src="~/pics/emojis/game_die.png" class="emoji" alt="game_die"/></td>
+			</tr>
+			<tr>
+				<td><code>:gb:</code></td>
+				<td><img src="~/pics/emojis/gb.png" class="emoji" alt="gb"/></td>
+			</tr>
+			<tr>
+				<td><code>:gem:</code></td>
+				<td><img src="~/pics/emojis/gem.png" class="emoji" alt="gem"/></td>
+			</tr>
+			<tr>
+				<td><code>:gemini:</code></td>
+				<td><img src="~/pics/emojis/gemini.png" class="emoji" alt="gemini"/></td>
+			</tr>
+			<tr>
+				<td><code>:ghost:</code></td>
+				<td><img src="~/pics/emojis/ghost.png" class="emoji" alt="ghost"/></td>
+			</tr>
+			<tr>
+				<td><code>:gift:</code></td>
+				<td><img src="~/pics/emojis/gift.png" class="emoji" alt="gift"/></td>
+			</tr>
+			<tr>
+				<td><code>:gift_heart:</code></td>
+				<td><img src="~/pics/emojis/gift_heart.png" class="emoji" alt="gift_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:girl:</code></td>
+				<td><img src="~/pics/emojis/girl.png" class="emoji" alt="girl"/></td>
+			</tr>
+			<tr>
+				<td><code>:globe_with_meridians:</code></td>
+				<td><img src="~/pics/emojis/globe_with_meridians.png" class="emoji" alt="globe_with_meridians"/></td>
+			</tr>
+			<tr>
+				<td><code>:goat:</code></td>
+				<td><img src="~/pics/emojis/goat.png" class="emoji" alt="goat"/></td>
+			</tr>
+			<tr>
+				<td><code>:goberserk:</code></td>
+				<td><img src="~/pics/emojis/goberserk.png" class="emoji" alt="goberserk"/></td>
+			</tr>
+			<tr>
+				<td><code>:godmode:</code></td>
+				<td><img src="~/pics/emojis/godmode.png" class="emoji" alt="godmode"/></td>
+			</tr>
+			<tr>
+				<td><code>:golf:</code></td>
+				<td><img src="~/pics/emojis/golf.png" class="emoji" alt="golf"/></td>
+			</tr>
+			<tr>
+				<td><code>:grapes:</code></td>
+				<td><img src="~/pics/emojis/grapes.png" class="emoji" alt="grapes"/></td>
+			</tr>
+			<tr>
+				<td><code>:green_apple:</code></td>
+				<td><img src="~/pics/emojis/green_apple.png" class="emoji" alt="green_apple"/></td>
+			</tr>
+			<tr>
+				<td><code>:green_book:</code></td>
+				<td><img src="~/pics/emojis/green_book.png" class="emoji" alt="green_book"/></td>
+			</tr>
+			<tr>
+				<td><code>:green_heart:</code></td>
+				<td><img src="~/pics/emojis/green_heart.png" class="emoji" alt="green_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:grey_exclamation:</code></td>
+				<td><img src="~/pics/emojis/grey_exclamation.png" class="emoji" alt="grey_exclamation"/></td>
+			</tr>
+			<tr>
+				<td><code>:grey_question:</code></td>
+				<td><img src="~/pics/emojis/grey_question.png" class="emoji" alt="grey_question"/></td>
+			</tr>
+			<tr>
+				<td><code>:grimacing:</code></td>
+				<td><img src="~/pics/emojis/grimacing.png" class="emoji" alt="grimacing"/></td>
+			</tr>
+			<tr>
+				<td><code>:grin:</code></td>
+				<td><img src="~/pics/emojis/grin.png" class="emoji" alt="grin"/></td>
+			</tr>
+			<tr>
+				<td><code>:grinning:</code></td>
+				<td><img src="~/pics/emojis/grinning.png" class="emoji" alt="grinning"/></td>
+			</tr>
+			<tr>
+				<td><code>:guardsman:</code></td>
+				<td><img src="~/pics/emojis/guardsman.png" class="emoji" alt="guardsman"/></td>
+			</tr>
+			<tr>
+				<td><code>:guitar:</code></td>
+				<td><img src="~/pics/emojis/guitar.png" class="emoji" alt="guitar"/></td>
+			</tr>
+			<tr>
+				<td><code>:gun:</code></td>
+				<td><img src="~/pics/emojis/gun.png" class="emoji" alt="gun"/></td>
+			</tr>
+			<tr>
+				<td><code>:haircut:</code></td>
+				<td><img src="~/pics/emojis/haircut.png" class="emoji" alt="haircut"/></td>
+			</tr>
+			<tr>
+				<td><code>:hamburger:</code></td>
+				<td><img src="~/pics/emojis/hamburger.png" class="emoji" alt="hamburger"/></td>
+			</tr>
+			<tr>
+				<td><code>:hammer:</code></td>
+				<td><img src="~/pics/emojis/hammer.png" class="emoji" alt="hammer"/></td>
+			</tr>
+			<tr>
+				<td><code>:hamster:</code></td>
+				<td><img src="~/pics/emojis/hamster.png" class="emoji" alt="hamster"/></td>
+			</tr>
+			<tr>
+				<td><code>:hand:</code></td>
+				<td><img src="~/pics/emojis/hand.png" class="emoji" alt="hand"/></td>
+			</tr>
+			<tr>
+				<td><code>:handbag:</code></td>
+				<td><img src="~/pics/emojis/handbag.png" class="emoji" alt="handbag"/></td>
+			</tr>
+			<tr>
+				<td><code>:hankey:</code></td>
+				<td><img src="~/pics/emojis/hankey.png" class="emoji" alt="hankey"/></td>
+			</tr>
+			<tr>
+				<td><code>:hash:</code></td>
+				<td><img src="~/pics/emojis/hash.png" class="emoji" alt="hash"/></td>
+			</tr>
+			<tr>
+				<td><code>:hatched_chick:</code></td>
+				<td><img src="~/pics/emojis/hatched_chick.png" class="emoji" alt="hatched_chick"/></td>
+			</tr>
+			<tr>
+				<td><code>:hatching_chick:</code></td>
+				<td><img src="~/pics/emojis/hatching_chick.png" class="emoji" alt="hatching_chick"/></td>
+			</tr>
+			<tr>
+				<td><code>:headphones:</code></td>
+				<td><img src="~/pics/emojis/headphones.png" class="emoji" alt="headphones"/></td>
+			</tr>
+			<tr>
+				<td><code>:heart:</code></td>
+				<td><img src="~/pics/emojis/heart.png" class="emoji" alt="heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:heartbeat:</code></td>
+				<td><img src="~/pics/emojis/heartbeat.png" class="emoji" alt="heartbeat"/></td>
+			</tr>
+			<tr>
+				<td><code>:heartpulse:</code></td>
+				<td><img src="~/pics/emojis/heartpulse.png" class="emoji" alt="heartpulse"/></td>
+			</tr>
+			<tr>
+				<td><code>:hearts:</code></td>
+				<td><img src="~/pics/emojis/hearts.png" class="emoji" alt="hearts"/></td>
+			</tr>
+			<tr>
+				<td><code>:heart_decoration:</code></td>
+				<td><img src="~/pics/emojis/heart_decoration.png" class="emoji" alt="heart_decoration"/></td>
+			</tr>
+			<tr>
+				<td><code>:heart_eyes:</code></td>
+				<td><img src="~/pics/emojis/heart_eyes.png" class="emoji" alt="heart_eyes"/></td>
+			</tr>
+			<tr>
+				<td><code>:heart_eyes_cat:</code></td>
+				<td><img src="~/pics/emojis/heart_eyes_cat.png" class="emoji" alt="heart_eyes_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:hear_no_evil:</code></td>
+				<td><img src="~/pics/emojis/hear_no_evil.png" class="emoji" alt="hear_no_evil"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_check_mark:</code></td>
+				<td><img src="~/pics/emojis/heavy_check_mark.png" class="emoji" alt="heavy_check_mark"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_division_sign:</code></td>
+				<td><img src="~/pics/emojis/heavy_division_sign.png" class="emoji" alt="heavy_division_sign"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_dollar_sign:</code></td>
+				<td><img src="~/pics/emojis/heavy_dollar_sign.png" class="emoji" alt="heavy_dollar_sign"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_exclamation_mark:</code></td>
+				<td><img src="~/pics/emojis/heavy_exclamation_mark.png" class="emoji" alt="heavy_exclamation_mark"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_minus_sign:</code></td>
+				<td><img src="~/pics/emojis/heavy_minus_sign.png" class="emoji" alt="heavy_minus_sign"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_multiplication_x:</code></td>
+				<td><img src="~/pics/emojis/heavy_multiplication_x.png" class="emoji" alt="heavy_multiplication_x"/></td>
+			</tr>
+			<tr>
+				<td><code>:heavy_plus_sign:</code></td>
+				<td><img src="~/pics/emojis/heavy_plus_sign.png" class="emoji" alt="heavy_plus_sign"/></td>
+			</tr>
+			<tr>
+				<td><code>:helicopter:</code></td>
+				<td><img src="~/pics/emojis/helicopter.png" class="emoji" alt="helicopter"/></td>
+			</tr>
+			<tr>
+				<td><code>:herb:</code></td>
+				<td><img src="~/pics/emojis/herb.png" class="emoji" alt="herb"/></td>
+			</tr>
+			<tr>
+				<td><code>:hibiscus:</code></td>
+				<td><img src="~/pics/emojis/hibiscus.png" class="emoji" alt="hibiscus"/></td>
+			</tr>
+			<tr>
+				<td><code>:high_brightness:</code></td>
+				<td><img src="~/pics/emojis/high_brightness.png" class="emoji" alt="high_brightness"/></td>
+			</tr>
+			<tr>
+				<td><code>:high_heel:</code></td>
+				<td><img src="~/pics/emojis/high_heel.png" class="emoji" alt="high_heel"/></td>
+			</tr>
+			<tr>
+				<td><code>:hocho:</code></td>
+				<td><img src="~/pics/emojis/hocho.png" class="emoji" alt="hocho"/></td>
+			</tr>
+			<tr>
+				<td><code>:honeybee:</code></td>
+				<td><img src="~/pics/emojis/honeybee.png" class="emoji" alt="honeybee"/></td>
+			</tr>
+			<tr>
+				<td><code>:honey_pot:</code></td>
+				<td><img src="~/pics/emojis/honey_pot.png" class="emoji" alt="honey_pot"/></td>
+			</tr>
+			<tr>
+				<td><code>:horse:</code></td>
+				<td><img src="~/pics/emojis/horse.png" class="emoji" alt="horse"/></td>
+			</tr>
+			<tr>
+				<td><code>:horse_racing:</code></td>
+				<td><img src="~/pics/emojis/horse_racing.png" class="emoji" alt="horse_racing"/></td>
+			</tr>
+			<tr>
+				<td><code>:hospital:</code></td>
+				<td><img src="~/pics/emojis/hospital.png" class="emoji" alt="hospital"/></td>
+			</tr>
+			<tr>
+				<td><code>:hotel:</code></td>
+				<td><img src="~/pics/emojis/hotel.png" class="emoji" alt="hotel"/></td>
+			</tr>
+			<tr>
+				<td><code>:hotsprings:</code></td>
+				<td><img src="~/pics/emojis/hotsprings.png" class="emoji" alt="hotsprings"/></td>
+			</tr>
+			<tr>
+				<td><code>:hourglass:</code></td>
+				<td><img src="~/pics/emojis/hourglass.png" class="emoji" alt="hourglass"/></td>
+			</tr>
+			<tr>
+				<td><code>:hourglass_flowing_sand:</code></td>
+				<td><img src="~/pics/emojis/hourglass_flowing_sand.png" class="emoji" alt="hourglass_flowing_sand"/></td>
+			</tr>
+			<tr>
+				<td><code>:house:</code></td>
+				<td><img src="~/pics/emojis/house.png" class="emoji" alt="house"/></td>
+			</tr>
+			<tr>
+				<td><code>:house_with_garden:</code></td>
+				<td><img src="~/pics/emojis/house_with_garden.png" class="emoji" alt="house_with_garden"/></td>
+			</tr>
+			<tr>
+				<td><code>:hurtrealbad:</code></td>
+				<td><img src="~/pics/emojis/hurtrealbad.png" class="emoji" alt="hurtrealbad"/></td>
+			</tr>
+			<tr>
+				<td><code>:hushed:</code></td>
+				<td><img src="~/pics/emojis/hushed.png" class="emoji" alt="hushed"/></td>
+			</tr>
+			<tr>
+				<td><code>:icecream:</code></td>
+				<td><img src="~/pics/emojis/icecream.png" class="emoji" alt="icecream"/></td>
+			</tr>
+			<tr>
+				<td><code>:ice_cream:</code></td>
+				<td><img src="~/pics/emojis/ice_cream.png" class="emoji" alt="ice_cream"/></td>
+			</tr>
+			<tr>
+				<td><code>:id:</code></td>
+				<td><img src="~/pics/emojis/id.png" class="emoji" alt="id"/></td>
+			</tr>
+			<tr>
+				<td><code>:ideograph_advantage:</code></td>
+				<td><img src="~/pics/emojis/ideograph_advantage.png" class="emoji" alt="ideograph_advantage"/></td>
+			</tr>
+			<tr>
+				<td><code>:imp:</code></td>
+				<td><img src="~/pics/emojis/imp.png" class="emoji" alt="imp"/></td>
+			</tr>
+			<tr>
+				<td><code>:inbox_tray:</code></td>
+				<td><img src="~/pics/emojis/inbox_tray.png" class="emoji" alt="inbox_tray"/></td>
+			</tr>
+			<tr>
+				<td><code>:incoming_envelope:</code></td>
+				<td><img src="~/pics/emojis/incoming_envelope.png" class="emoji" alt="incoming_envelope"/></td>
+			</tr>
+			<tr>
+				<td><code>:information_desk_person:</code></td>
+				<td><img src="~/pics/emojis/information_desk_person.png" class="emoji" alt="information_desk_person"/></td>
+			</tr>
+			<tr>
+				<td><code>:information_source:</code></td>
+				<td><img src="~/pics/emojis/information_source.png" class="emoji" alt="information_source"/></td>
+			</tr>
+			<tr>
+				<td><code>:innocent:</code></td>
+				<td><img src="~/pics/emojis/innocent.png" class="emoji" alt="innocent"/></td>
+			</tr>
+			<tr>
+				<td><code>:interrobang:</code></td>
+				<td><img src="~/pics/emojis/interrobang.png" class="emoji" alt="interrobang"/></td>
+			</tr>
+			<tr>
+				<td><code>:iphone:</code></td>
+				<td><img src="~/pics/emojis/iphone.png" class="emoji" alt="iphone"/></td>
+			</tr>
+			<tr>
+				<td><code>:it:</code></td>
+				<td><img src="~/pics/emojis/it.png" class="emoji" alt="it"/></td>
+			</tr>
+			<tr>
+				<td><code>:izakaya_lantern:</code></td>
+				<td><img src="~/pics/emojis/izakaya_lantern.png" class="emoji" alt="izakaya_lantern"/></td>
+			</tr>
+			<tr>
+				<td><code>:jack_o_lantern:</code></td>
+				<td><img src="~/pics/emojis/jack_o_lantern.png" class="emoji" alt="jack_o_lantern"/></td>
+			</tr>
+			<tr>
+				<td><code>:japan:</code></td>
+				<td><img src="~/pics/emojis/japan.png" class="emoji" alt="japan"/></td>
+			</tr>
+			<tr>
+				<td><code>:japanese_castle:</code></td>
+				<td><img src="~/pics/emojis/japanese_castle.png" class="emoji" alt="japanese_castle"/></td>
+			</tr>
+			<tr>
+				<td><code>:japanese_goblin:</code></td>
+				<td><img src="~/pics/emojis/japanese_goblin.png" class="emoji" alt="japanese_goblin"/></td>
+			</tr>
+			<tr>
+				<td><code>:japanese_ogre:</code></td>
+				<td><img src="~/pics/emojis/japanese_ogre.png" class="emoji" alt="japanese_ogre"/></td>
+			</tr>
+			<tr>
+				<td><code>:jeans:</code></td>
+				<td><img src="~/pics/emojis/jeans.png" class="emoji" alt="jeans"/></td>
+			</tr>
+			<tr>
+				<td><code>:joy:</code></td>
+				<td><img src="~/pics/emojis/joy.png" class="emoji" alt="joy"/></td>
+			</tr>
+			<tr>
+				<td><code>:joy_cat:</code></td>
+				<td><img src="~/pics/emojis/joy_cat.png" class="emoji" alt="joy_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:jp:</code></td>
+				<td><img src="~/pics/emojis/jp.png" class="emoji" alt="jp"/></td>
+			</tr>
+			<tr>
+				<td><code>:key:</code></td>
+				<td><img src="~/pics/emojis/key.png" class="emoji" alt="key"/></td>
+			</tr>
+			<tr>
+				<td><code>:keycap_ten:</code></td>
+				<td><img src="~/pics/emojis/keycap_ten.png" class="emoji" alt="keycap_ten"/></td>
+			</tr>
+			<tr>
+				<td><code>:kimono:</code></td>
+				<td><img src="~/pics/emojis/kimono.png" class="emoji" alt="kimono"/></td>
+			</tr>
+			<tr>
+				<td><code>:kiss:</code></td>
+				<td><img src="~/pics/emojis/kiss.png" class="emoji" alt="kiss"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing:</code></td>
+				<td><img src="~/pics/emojis/kissing.png" class="emoji" alt="kissing"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing_cat:</code></td>
+				<td><img src="~/pics/emojis/kissing_cat.png" class="emoji" alt="kissing_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing_closed_eyes:</code></td>
+				<td><img src="~/pics/emojis/kissing_closed_eyes.png" class="emoji" alt="kissing_closed_eyes"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing_face:</code></td>
+				<td><img src="~/pics/emojis/kissing_face.png" class="emoji" alt="kissing_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing_heart:</code></td>
+				<td><img src="~/pics/emojis/kissing_heart.png" class="emoji" alt="kissing_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:kissing_smiling_eyes:</code></td>
+				<td><img src="~/pics/emojis/kissing_smiling_eyes.png" class="emoji" alt="kissing_smiling_eyes"/></td>
+			</tr>
+			<tr>
+				<td><code>:koala:</code></td>
+				<td><img src="~/pics/emojis/koala.png" class="emoji" alt="koala"/></td>
+			</tr>
+			<tr>
+				<td><code>:koko:</code></td>
+				<td><img src="~/pics/emojis/koko.png" class="emoji" alt="koko"/></td>
+			</tr>
+			<tr>
+				<td><code>:kr:</code></td>
+				<td><img src="~/pics/emojis/kr.png" class="emoji" alt="kr"/></td>
+			</tr>
+			<tr>
+				<td><code>:large_blue_circle:</code></td>
+				<td><img src="~/pics/emojis/large_blue_circle.png" class="emoji" alt="large_blue_circle"/></td>
+			</tr>
+			<tr>
+				<td><code>:large_blue_diamond:</code></td>
+				<td><img src="~/pics/emojis/large_blue_diamond.png" class="emoji" alt="large_blue_diamond"/></td>
+			</tr>
+			<tr>
+				<td><code>:large_orange_diamond:</code></td>
+				<td><img src="~/pics/emojis/large_orange_diamond.png" class="emoji" alt="large_orange_diamond"/></td>
+			</tr>
+			<tr>
+				<td><code>:last_quarter_moon:</code></td>
+				<td><img src="~/pics/emojis/last_quarter_moon.png" class="emoji" alt="last_quarter_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:last_quarter_moon_with_face:</code></td>
+				<td><img src="~/pics/emojis/last_quarter_moon_with_face.png" class="emoji" alt="last_quarter_moon_with_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:laughing:</code></td>
+				<td><img src="~/pics/emojis/laughing.png" class="emoji" alt="laughing"/></td>
+			</tr>
+			<tr>
+				<td><code>:leaves:</code></td>
+				<td><img src="~/pics/emojis/leaves.png" class="emoji" alt="leaves"/></td>
+			</tr>
+			</tbody>
+			</table>		
+		</div>
+		<div class="col-sm-4">
+			<table class="table table-bordered-all table-responsive">
+			<thead>
+			<tr>
+				<th>Markdown</th>
+				<th>Emoji</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td><code>:ledger:</code></td>
+				<td><img src="~/pics/emojis/ledger.png" class="emoji" alt="ledger"/></td>
+			</tr>
+			<tr>
+				<td><code>:leftwards_arrow_with_hook:</code></td>
+				<td><img src="~/pics/emojis/leftwards_arrow_with_hook.png" class="emoji" alt="leftwards_arrow_with_hook"/></td>
+			</tr>
+			<tr>
+				<td><code>:left_luggage:</code></td>
+				<td><img src="~/pics/emojis/left_luggage.png" class="emoji" alt="left_luggage"/></td>
+			</tr>
+			<tr>
+				<td><code>:left_right_arrow:</code></td>
+				<td><img src="~/pics/emojis/left_right_arrow.png" class="emoji" alt="left_right_arrow"/></td>
+			</tr>
+			<tr>
+				<td><code>:lemon:</code></td>
+				<td><img src="~/pics/emojis/lemon.png" class="emoji" alt="lemon"/></td>
+			</tr>
+			<tr>
+				<td><code>:leo:</code></td>
+				<td><img src="~/pics/emojis/leo.png" class="emoji" alt="leo"/></td>
+			</tr>
+			<tr>
+				<td><code>:leopard:</code></td>
+				<td><img src="~/pics/emojis/leopard.png" class="emoji" alt="leopard"/></td>
+			</tr>
+			<tr>
+				<td><code>:libra:</code></td>
+				<td><img src="~/pics/emojis/libra.png" class="emoji" alt="libra"/></td>
+			</tr>
+			<tr>
+				<td><code>:light_rail:</code></td>
+				<td><img src="~/pics/emojis/light_rail.png" class="emoji" alt="light_rail"/></td>
+			</tr>
+			<tr>
+				<td><code>:link:</code></td>
+				<td><img src="~/pics/emojis/link.png" class="emoji" alt="link"/></td>
+			</tr>
+			<tr>
+				<td><code>:lips:</code></td>
+				<td><img src="~/pics/emojis/lips.png" class="emoji" alt="lips"/></td>
+			</tr>
+			<tr>
+				<td><code>:lipstick:</code></td>
+				<td><img src="~/pics/emojis/lipstick.png" class="emoji" alt="lipstick"/></td>
+			</tr>
+			<tr>
+				<td><code>:lock:</code></td>
+				<td><img src="~/pics/emojis/lock.png" class="emoji" alt="lock"/></td>
+			</tr>
+			<tr>
+				<td><code>:lock_with_ink_pen:</code></td>
+				<td><img src="~/pics/emojis/lock_with_ink_pen.png" class="emoji" alt="lock_with_ink_pen"/></td>
+			</tr>
+			<tr>
+				<td><code>:lollipop:</code></td>
+				<td><img src="~/pics/emojis/lollipop.png" class="emoji" alt="lollipop"/></td>
+			</tr>
+			<tr>
+				<td><code>:loop:</code></td>
+				<td><img src="~/pics/emojis/loop.png" class="emoji" alt="loop"/></td>
+			</tr>
+			<tr>
+				<td><code>:loudspeaker:</code></td>
+				<td><img src="~/pics/emojis/loudspeaker.png" class="emoji" alt="loudspeaker"/></td>
+			</tr>
+			<tr>
+				<td><code>:love_hotel:</code></td>
+				<td><img src="~/pics/emojis/love_hotel.png" class="emoji" alt="love_hotel"/></td>
+			</tr>
+			<tr>
+				<td><code>:love_letter:</code></td>
+				<td><img src="~/pics/emojis/love_letter.png" class="emoji" alt="love_letter"/></td>
+			</tr>
+			<tr>
+				<td><code>:low_brightness:</code></td>
+				<td><img src="~/pics/emojis/low_brightness.png" class="emoji" alt="low_brightness"/></td>
+			</tr>
+			<tr>
+				<td><code>:m:</code></td>
+				<td><img src="~/pics/emojis/m.png" class="emoji" alt="m"/></td>
+			</tr>
+			<tr>
+				<td><code>:mag:</code></td>
+				<td><img src="~/pics/emojis/mag.png" class="emoji" alt="mag"/></td>
+			</tr>
+			<tr>
+				<td><code>:mag_right:</code></td>
+				<td><img src="~/pics/emojis/mag_right.png" class="emoji" alt="mag_right"/></td>
+			</tr>
+			<tr>
+				<td><code>:mahjong:</code></td>
+				<td><img src="~/pics/emojis/mahjong.png" class="emoji" alt="mahjong"/></td>
+			</tr>
+			<tr>
+				<td><code>:mailbox:</code></td>
+				<td><img src="~/pics/emojis/mailbox.png" class="emoji" alt="mailbox"/></td>
+			</tr>
+			<tr>
+				<td><code>:mailbox_closed:</code></td>
+				<td><img src="~/pics/emojis/mailbox_closed.png" class="emoji" alt="mailbox_closed"/></td>
+			</tr>
+			<tr>
+				<td><code>:mailbox_with_mail:</code></td>
+				<td><img src="~/pics/emojis/mailbox_with_mail.png" class="emoji" alt="mailbox_with_mail"/></td>
+			</tr>
+			<tr>
+				<td><code>:mailbox_with_no_mail:</code></td>
+				<td><img src="~/pics/emojis/mailbox_with_no_mail.png" class="emoji" alt="mailbox_with_no_mail"/></td>
+			</tr>
+			<tr>
+				<td><code>:man:</code></td>
+				<td><img src="~/pics/emojis/man.png" class="emoji" alt="man"/></td>
+			</tr>
+			<tr>
+				<td><code>:mans_shoe:</code></td>
+				<td><img src="~/pics/emojis/mans_shoe.png" class="emoji" alt="mans_shoe"/></td>
+			</tr>
+			<tr>
+				<td><code>:man_with_gua_pi_mao:</code></td>
+				<td><img src="~/pics/emojis/man_with_gua_pi_mao.png" class="emoji" alt="man_with_gua_pi_mao"/></td>
+			</tr>
+			<tr>
+				<td><code>:man_with_turban:</code></td>
+				<td><img src="~/pics/emojis/man_with_turban.png" class="emoji" alt="man_with_turban"/></td>
+			</tr>
+			<tr>
+				<td><code>:maple_leaf:</code></td>
+				<td><img src="~/pics/emojis/maple_leaf.png" class="emoji" alt="maple_leaf"/></td>
+			</tr>
+			<tr>
+				<td><code>:mask:</code></td>
+				<td><img src="~/pics/emojis/mask.png" class="emoji" alt="mask"/></td>
+			</tr>
+			<tr>
+				<td><code>:massage:</code></td>
+				<td><img src="~/pics/emojis/massage.png" class="emoji" alt="massage"/></td>
+			</tr>
+			<tr>
+				<td><code>:meat_on_bone:</code></td>
+				<td><img src="~/pics/emojis/meat_on_bone.png" class="emoji" alt="meat_on_bone"/></td>
+			</tr>
+			<tr>
+				<td><code>:mega:</code></td>
+				<td><img src="~/pics/emojis/mega.png" class="emoji" alt="mega"/></td>
+			</tr>
+			<tr>
+				<td><code>:melon:</code></td>
+				<td><img src="~/pics/emojis/melon.png" class="emoji" alt="melon"/></td>
+			</tr>
+			<tr>
+				<td><code>:memo:</code></td>
+				<td><img src="~/pics/emojis/memo.png" class="emoji" alt="memo"/></td>
+			</tr>
+			<tr>
+				<td><code>:mens:</code></td>
+				<td><img src="~/pics/emojis/mens.png" class="emoji" alt="mens"/></td>
+			</tr>
+			<tr>
+				<td><code>:metal:</code></td>
+				<td><img src="~/pics/emojis/metal.png" class="emoji" alt="metal"/></td>
+			</tr>
+			<tr>
+				<td><code>:metro:</code></td>
+				<td><img src="~/pics/emojis/metro.png" class="emoji" alt="metro"/></td>
+			</tr>
+			<tr>
+				<td><code>:microphone:</code></td>
+				<td><img src="~/pics/emojis/microphone.png" class="emoji" alt="microphone"/></td>
+			</tr>
+			<tr>
+				<td><code>:microscope:</code></td>
+				<td><img src="~/pics/emojis/microscope.png" class="emoji" alt="microscope"/></td>
+			</tr>
+			<tr>
+				<td><code>:milky_way:</code></td>
+				<td><img src="~/pics/emojis/milky_way.png" class="emoji" alt="milky_way"/></td>
+			</tr>
+			<tr>
+				<td><code>:minibus:</code></td>
+				<td><img src="~/pics/emojis/minibus.png" class="emoji" alt="minibus"/></td>
+			</tr>
+			<tr>
+				<td><code>:minidisc:</code></td>
+				<td><img src="~/pics/emojis/minidisc.png" class="emoji" alt="minidisc"/></td>
+			</tr>
+			<tr>
+				<td><code>:mobile_phone_off:</code></td>
+				<td><img src="~/pics/emojis/mobile_phone_off.png" class="emoji" alt="mobile_phone_off"/></td>
+			</tr>
+			<tr>
+				<td><code>:moneybag:</code></td>
+				<td><img src="~/pics/emojis/moneybag.png" class="emoji" alt="moneybag"/></td>
+			</tr>
+			<tr>
+				<td><code>:money_with_wings:</code></td>
+				<td><img src="~/pics/emojis/money_with_wings.png" class="emoji" alt="money_with_wings"/></td>
+			</tr>
+			<tr>
+				<td><code>:monkey:</code></td>
+				<td><img src="~/pics/emojis/monkey.png" class="emoji" alt="monkey"/></td>
+			</tr>
+			<tr>
+				<td><code>:monkey_face:</code></td>
+				<td><img src="~/pics/emojis/monkey_face.png" class="emoji" alt="monkey_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:monorail:</code></td>
+				<td><img src="~/pics/emojis/monorail.png" class="emoji" alt="monorail"/></td>
+			</tr>
+			<tr>
+				<td><code>:mortar_board:</code></td>
+				<td><img src="~/pics/emojis/mortar_board.png" class="emoji" alt="mortar_board"/></td>
+			</tr>
+			<tr>
+				<td><code>:mountain_bicyclist:</code></td>
+				<td><img src="~/pics/emojis/mountain_bicyclist.png" class="emoji" alt="mountain_bicyclist"/></td>
+			</tr>
+			<tr>
+				<td><code>:mountain_cableway:</code></td>
+				<td><img src="~/pics/emojis/mountain_cableway.png" class="emoji" alt="mountain_cableway"/></td>
+			</tr>
+			<tr>
+				<td><code>:mountain_railway:</code></td>
+				<td><img src="~/pics/emojis/mountain_railway.png" class="emoji" alt="mountain_railway"/></td>
+			</tr>
+			<tr>
+				<td><code>:mount_fuji:</code></td>
+				<td><img src="~/pics/emojis/mount_fuji.png" class="emoji" alt="mount_fuji"/></td>
+			</tr>
+			<tr>
+				<td><code>:mouse:</code></td>
+				<td><img src="~/pics/emojis/mouse.png" class="emoji" alt="mouse"/></td>
+			</tr>
+			<tr>
+				<td><code>:mouse2:</code></td>
+				<td><img src="~/pics/emojis/mouse2.png" class="emoji" alt="mouse2"/></td>
+			</tr>
+			<tr>
+				<td><code>:movie_camera:</code></td>
+				<td><img src="~/pics/emojis/movie_camera.png" class="emoji" alt="movie_camera"/></td>
+			</tr>
+			<tr>
+				<td><code>:moyai:</code></td>
+				<td><img src="~/pics/emojis/moyai.png" class="emoji" alt="moyai"/></td>
+			</tr>
+			<tr>
+				<td><code>:muscle:</code></td>
+				<td><img src="~/pics/emojis/muscle.png" class="emoji" alt="muscle"/></td>
+			</tr>
+			<tr>
+				<td><code>:mushroom:</code></td>
+				<td><img src="~/pics/emojis/mushroom.png" class="emoji" alt="mushroom"/></td>
+			</tr>
+			<tr>
+				<td><code>:musical_keyboard:</code></td>
+				<td><img src="~/pics/emojis/musical_keyboard.png" class="emoji" alt="musical_keyboard"/></td>
+			</tr>
+			<tr>
+				<td><code>:musical_note:</code></td>
+				<td><img src="~/pics/emojis/musical_note.png" class="emoji" alt="musical_note"/></td>
+			</tr>
+			<tr>
+				<td><code>:musical_score:</code></td>
+				<td><img src="~/pics/emojis/musical_score.png" class="emoji" alt="musical_score"/></td>
+			</tr>
+			<tr>
+				<td><code>:mute:</code></td>
+				<td><img src="~/pics/emojis/mute.png" class="emoji" alt="mute"/></td>
+			</tr>
+			<tr>
+				<td><code>:nail_care:</code></td>
+				<td><img src="~/pics/emojis/nail_care.png" class="emoji" alt="nail_care"/></td>
+			</tr>
+			<tr>
+				<td><code>:name_badge:</code></td>
+				<td><img src="~/pics/emojis/name_badge.png" class="emoji" alt="name_badge"/></td>
+			</tr>
+			<tr>
+				<td><code>:neckbeard:</code></td>
+				<td><img src="~/pics/emojis/neckbeard.png" class="emoji" alt="neckbeard"/></td>
+			</tr>
+			<tr>
+				<td><code>:necktie:</code></td>
+				<td><img src="~/pics/emojis/necktie.png" class="emoji" alt="necktie"/></td>
+			</tr>
+			<tr>
+				<td><code>:negative_squared_cross_mark:</code></td>
+				<td><img src="~/pics/emojis/negative_squared_cross_mark.png" class="emoji" alt="negative_squared_cross_mark"/></td>
+			</tr>
+			<tr>
+				<td><code>:neutral_face:</code></td>
+				<td><img src="~/pics/emojis/neutral_face.png" class="emoji" alt="neutral_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:new:</code></td>
+				<td><img src="~/pics/emojis/new.png" class="emoji" alt="new"/></td>
+			</tr>
+			<tr>
+				<td><code>:newspaper:</code></td>
+				<td><img src="~/pics/emojis/newspaper.png" class="emoji" alt="newspaper"/></td>
+			</tr>
+			<tr>
+				<td><code>:new_moon:</code></td>
+				<td><img src="~/pics/emojis/new_moon.png" class="emoji" alt="new_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:new_moon_with_face:</code></td>
+				<td><img src="~/pics/emojis/new_moon_with_face.png" class="emoji" alt="new_moon_with_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:ng:</code></td>
+				<td><img src="~/pics/emojis/ng.png" class="emoji" alt="ng"/></td>
+			</tr>
+			<tr>
+				<td><code>:nine:</code></td>
+				<td><img src="~/pics/emojis/nine.png" class="emoji" alt="nine"/></td>
+			</tr>
+			<tr>
+				<td><code>:non-potable_water:</code></td>
+				<td><img src="~/pics/emojis/non-potable_water.png" class="emoji" alt="non-potable_water"/></td>
+			</tr>
+			<tr>
+				<td><code>:nose:</code></td>
+				<td><img src="~/pics/emojis/nose.png" class="emoji" alt="nose"/></td>
+			</tr>
+			<tr>
+				<td><code>:notebook:</code></td>
+				<td><img src="~/pics/emojis/notebook.png" class="emoji" alt="notebook"/></td>
+			</tr>
+			<tr>
+				<td><code>:notebook_with_decorative_cover:</code></td>
+				<td><img src="~/pics/emojis/notebook_with_decorative_cover.png" class="emoji" alt="notebook_with_decorative_cover"/></td>
+			</tr>
+			<tr>
+				<td><code>:notes:</code></td>
+				<td><img src="~/pics/emojis/notes.png" class="emoji" alt="notes"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_bell:</code></td>
+				<td><img src="~/pics/emojis/no_bell.png" class="emoji" alt="no_bell"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_bicycles:</code></td>
+				<td><img src="~/pics/emojis/no_bicycles.png" class="emoji" alt="no_bicycles"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_entry:</code></td>
+				<td><img src="~/pics/emojis/no_entry.png" class="emoji" alt="no_entry"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_entry_sign:</code></td>
+				<td><img src="~/pics/emojis/no_entry_sign.png" class="emoji" alt="no_entry_sign"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_good:</code></td>
+				<td><img src="~/pics/emojis/no_good.png" class="emoji" alt="no_good"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_mobile_phones:</code></td>
+				<td><img src="~/pics/emojis/no_mobile_phones.png" class="emoji" alt="no_mobile_phones"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_mouth:</code></td>
+				<td><img src="~/pics/emojis/no_mouth.png" class="emoji" alt="no_mouth"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_pedestrians:</code></td>
+				<td><img src="~/pics/emojis/no_pedestrians.png" class="emoji" alt="no_pedestrians"/></td>
+			</tr>
+			<tr>
+				<td><code>:no_smoking:</code></td>
+				<td><img src="~/pics/emojis/no_smoking.png" class="emoji" alt="no_smoking"/></td>
+			</tr>
+			<tr>
+				<td><code>:nut_and_bolt:</code></td>
+				<td><img src="~/pics/emojis/nut_and_bolt.png" class="emoji" alt="nut_and_bolt"/></td>
+			</tr>
+			<tr>
+				<td><code>:o:</code></td>
+				<td><img src="~/pics/emojis/o.png" class="emoji" alt="o"/></td>
+			</tr>
+			<tr>
+				<td><code>:o2:</code></td>
+				<td><img src="~/pics/emojis/o2.png" class="emoji" alt="o2"/></td>
+			</tr>
+			<tr>
+				<td><code>:ocean:</code></td>
+				<td><img src="~/pics/emojis/ocean.png" class="emoji" alt="ocean"/></td>
+			</tr>
+			<tr>
+				<td><code>:octocat:</code></td>
+				<td><img src="~/pics/emojis/octocat.png" class="emoji" alt="octocat"/></td>
+			</tr>
+			<tr>
+				<td><code>:octopus:</code></td>
+				<td><img src="~/pics/emojis/octopus.png" class="emoji" alt="octopus"/></td>
+			</tr>
+			<tr>
+				<td><code>:oden:</code></td>
+				<td><img src="~/pics/emojis/oden.png" class="emoji" alt="oden"/></td>
+			</tr>
+			<tr>
+				<td><code>:office:</code></td>
+				<td><img src="~/pics/emojis/office.png" class="emoji" alt="office"/></td>
+			</tr>
+			<tr>
+				<td><code>:ok:</code></td>
+				<td><img src="~/pics/emojis/ok.png" class="emoji" alt="ok"/></td>
+			</tr>
+			<tr>
+				<td><code>:ok_hand:</code></td>
+				<td><img src="~/pics/emojis/ok_hand.png" class="emoji" alt="ok_hand"/></td>
+			</tr>
+			<tr>
+				<td><code>:ok_woman:</code></td>
+				<td><img src="~/pics/emojis/ok_woman.png" class="emoji" alt="ok_woman"/></td>
+			</tr>
+			<tr>
+				<td><code>:older_man:</code></td>
+				<td><img src="~/pics/emojis/older_man.png" class="emoji" alt="older_man"/></td>
+			</tr>
+			<tr>
+				<td><code>:older_woman:</code></td>
+				<td><img src="~/pics/emojis/older_woman.png" class="emoji" alt="older_woman"/></td>
+			</tr>
+			<tr>
+				<td><code>:on:</code></td>
+				<td><img src="~/pics/emojis/on.png" class="emoji" alt="on"/></td>
+			</tr>
+			<tr>
+				<td><code>:oncoming_automobile:</code></td>
+				<td><img src="~/pics/emojis/oncoming_automobile.png" class="emoji" alt="oncoming_automobile"/></td>
+			</tr>
+			<tr>
+				<td><code>:oncoming_bus:</code></td>
+				<td><img src="~/pics/emojis/oncoming_bus.png" class="emoji" alt="oncoming_bus"/></td>
+			</tr>
+			<tr>
+				<td><code>:oncoming_police_car:</code></td>
+				<td><img src="~/pics/emojis/oncoming_police_car.png" class="emoji" alt="oncoming_police_car"/></td>
+			</tr>
+			<tr>
+				<td><code>:oncoming_taxi:</code></td>
+				<td><img src="~/pics/emojis/oncoming_taxi.png" class="emoji" alt="oncoming_taxi"/></td>
+			</tr>
+			<tr>
+				<td><code>:one:</code></td>
+				<td><img src="~/pics/emojis/one.png" class="emoji" alt="one"/></td>
+			</tr>
+			<tr>
+				<td><code>:open_file_folder:</code></td>
+				<td><img src="~/pics/emojis/open_file_folder.png" class="emoji" alt="open_file_folder"/></td>
+			</tr>
+			<tr>
+				<td><code>:open_hands:</code></td>
+				<td><img src="~/pics/emojis/open_hands.png" class="emoji" alt="open_hands"/></td>
+			</tr>
+			<tr>
+				<td><code>:open_mouth:</code></td>
+				<td><img src="~/pics/emojis/open_mouth.png" class="emoji" alt="open_mouth"/></td>
+			</tr>
+			<tr>
+				<td><code>:ophiuchus:</code></td>
+				<td><img src="~/pics/emojis/ophiuchus.png" class="emoji" alt="ophiuchus"/></td>
+			</tr>
+			<tr>
+				<td><code>:orange_book:</code></td>
+				<td><img src="~/pics/emojis/orange_book.png" class="emoji" alt="orange_book"/></td>
+			</tr>
+			<tr>
+				<td><code>:outbox_tray:</code></td>
+				<td><img src="~/pics/emojis/outbox_tray.png" class="emoji" alt="outbox_tray"/></td>
+			</tr>
+			<tr>
+				<td><code>:ox:</code></td>
+				<td><img src="~/pics/emojis/ox.png" class="emoji" alt="ox"/></td>
+			</tr>
+			<tr>
+				<td><code>:package:</code></td>
+				<td><img src="~/pics/emojis/package.png" class="emoji" alt="package"/></td>
+			</tr>
+			<tr>
+				<td><code>:pager:</code></td>
+				<td><img src="~/pics/emojis/pager.png" class="emoji" alt="pager"/></td>
+			</tr>
+			<tr>
+				<td><code>:page_facing_up:</code></td>
+				<td><img src="~/pics/emojis/page_facing_up.png" class="emoji" alt="page_facing_up"/></td>
+			</tr>
+			<tr>
+				<td><code>:page_with_curl:</code></td>
+				<td><img src="~/pics/emojis/page_with_curl.png" class="emoji" alt="page_with_curl"/></td>
+			</tr>
+			<tr>
+				<td><code>:palm_tree:</code></td>
+				<td><img src="~/pics/emojis/palm_tree.png" class="emoji" alt="palm_tree"/></td>
+			</tr>
+			<tr>
+				<td><code>:panda_face:</code></td>
+				<td><img src="~/pics/emojis/panda_face.png" class="emoji" alt="panda_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:paperclip:</code></td>
+				<td><img src="~/pics/emojis/paperclip.png" class="emoji" alt="paperclip"/></td>
+			</tr>
+			<tr>
+				<td><code>:parking:</code></td>
+				<td><img src="~/pics/emojis/parking.png" class="emoji" alt="parking"/></td>
+			</tr>
+			<tr>
+				<td><code>:partly_sunny:</code></td>
+				<td><img src="~/pics/emojis/partly_sunny.png" class="emoji" alt="partly_sunny"/></td>
+			</tr>
+			<tr>
+				<td><code>:part_alternation_mark:</code></td>
+				<td><img src="~/pics/emojis/part_alternation_mark.png" class="emoji" alt="part_alternation_mark"/></td>
+			</tr>
+			<tr>
+				<td><code>:passport_control:</code></td>
+				<td><img src="~/pics/emojis/passport_control.png" class="emoji" alt="passport_control"/></td>
+			</tr>
+			<tr>
+				<td><code>:paw_prints:</code></td>
+				<td><img src="~/pics/emojis/paw_prints.png" class="emoji" alt="paw_prints"/></td>
+			</tr>
+			<tr>
+				<td><code>:peach:</code></td>
+				<td><img src="~/pics/emojis/peach.png" class="emoji" alt="peach"/></td>
+			</tr>
+			<tr>
+				<td><code>:pear:</code></td>
+				<td><img src="~/pics/emojis/pear.png" class="emoji" alt="pear"/></td>
+			</tr>
+			<tr>
+				<td><code>:pencil:</code></td>
+				<td><img src="~/pics/emojis/pencil.png" class="emoji" alt="pencil"/></td>
+			</tr>
+			<tr>
+				<td><code>:pencil2:</code></td>
+				<td><img src="~/pics/emojis/pencil2.png" class="emoji" alt="pencil2"/></td>
+			</tr>
+			<tr>
+				<td><code>:penguin:</code></td>
+				<td><img src="~/pics/emojis/penguin.png" class="emoji" alt="penguin"/></td>
+			</tr>
+			<tr>
+				<td><code>:pensive:</code></td>
+				<td><img src="~/pics/emojis/pensive.png" class="emoji" alt="pensive"/></td>
+			</tr>
+			<tr>
+				<td><code>:performing_arts:</code></td>
+				<td><img src="~/pics/emojis/performing_arts.png" class="emoji" alt="performing_arts"/></td>
+			</tr>
+			<tr>
+				<td><code>:persevere:</code></td>
+				<td><img src="~/pics/emojis/persevere.png" class="emoji" alt="persevere"/></td>
+			</tr>
+			<tr>
+				<td><code>:person_frowning:</code></td>
+				<td><img src="~/pics/emojis/person_frowning.png" class="emoji" alt="person_frowning"/></td>
+			</tr>
+			<tr>
+				<td><code>:person_with_blond_hair:</code></td>
+				<td><img src="~/pics/emojis/person_with_blond_hair.png" class="emoji" alt="person_with_blond_hair"/></td>
+			</tr>
+			<tr>
+				<td><code>:person_with_pouting_face:</code></td>
+				<td><img src="~/pics/emojis/person_with_pouting_face.png" class="emoji" alt="person_with_pouting_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:phone:</code></td>
+				<td><img src="~/pics/emojis/phone.png" class="emoji" alt="phone"/></td>
+			</tr>
+			<tr>
+				<td><code>:pig:</code></td>
+				<td><img src="~/pics/emojis/pig.png" class="emoji" alt="pig"/></td>
+			</tr>
+			<tr>
+				<td><code>:pig2:</code></td>
+				<td><img src="~/pics/emojis/pig2.png" class="emoji" alt="pig2"/></td>
+			</tr>
+			<tr>
+				<td><code>:pig_nose:</code></td>
+				<td><img src="~/pics/emojis/pig_nose.png" class="emoji" alt="pig_nose"/></td>
+			</tr>
+			<tr>
+				<td><code>:pill:</code></td>
+				<td><img src="~/pics/emojis/pill.png" class="emoji" alt="pill"/></td>
+			</tr>
+			<tr>
+				<td><code>:pineapple:</code></td>
+				<td><img src="~/pics/emojis/pineapple.png" class="emoji" alt="pineapple"/></td>
+			</tr>
+			<tr>
+				<td><code>:pisces:</code></td>
+				<td><img src="~/pics/emojis/pisces.png" class="emoji" alt="pisces"/></td>
+			</tr>
+			<tr>
+				<td><code>:pizza:</code></td>
+				<td><img src="~/pics/emojis/pizza.png" class="emoji" alt="pizza"/></td>
+			</tr>
+			<tr>
+				<td><code>:plus1:</code></td>
+				<td><img src="~/pics/emojis/plus1.png" class="emoji" alt="plus1"/></td>
+			</tr>
+			<tr>
+				<td><code>:point_down:</code></td>
+				<td><img src="~/pics/emojis/point_down.png" class="emoji" alt="point_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:point_left:</code></td>
+				<td><img src="~/pics/emojis/point_left.png" class="emoji" alt="point_left"/></td>
+			</tr>
+			<tr>
+				<td><code>:point_right:</code></td>
+				<td><img src="~/pics/emojis/point_right.png" class="emoji" alt="point_right"/></td>
+			</tr>
+			<tr>
+				<td><code>:point_up:</code></td>
+				<td><img src="~/pics/emojis/point_up.png" class="emoji" alt="point_up"/></td>
+			</tr>
+			<tr>
+				<td><code>:point_up_2:</code></td>
+				<td><img src="~/pics/emojis/point_up_2.png" class="emoji" alt="point_up_2"/></td>
+			</tr>
+			<tr>
+				<td><code>:police_car:</code></td>
+				<td><img src="~/pics/emojis/police_car.png" class="emoji" alt="police_car"/></td>
+			</tr>
+			<tr>
+				<td><code>:poodle:</code></td>
+				<td><img src="~/pics/emojis/poodle.png" class="emoji" alt="poodle"/></td>
+			</tr>
+			<tr>
+				<td><code>:poop:</code></td>
+				<td><img src="~/pics/emojis/poop.png" class="emoji" alt="poop"/></td>
+			</tr>
+			<tr>
+				<td><code>:postal_horn:</code></td>
+				<td><img src="~/pics/emojis/postal_horn.png" class="emoji" alt="postal_horn"/></td>
+			</tr>
+			<tr>
+				<td><code>:postbox:</code></td>
+				<td><img src="~/pics/emojis/postbox.png" class="emoji" alt="postbox"/></td>
+			</tr>
+			<tr>
+				<td><code>:post_office:</code></td>
+				<td><img src="~/pics/emojis/post_office.png" class="emoji" alt="post_office"/></td>
+			</tr>
+			<tr>
+				<td><code>:potable_water:</code></td>
+				<td><img src="~/pics/emojis/potable_water.png" class="emoji" alt="potable_water"/></td>
+			</tr>
+			<tr>
+				<td><code>:pouch:</code></td>
+				<td><img src="~/pics/emojis/pouch.png" class="emoji" alt="pouch"/></td>
+			</tr>
+			<tr>
+				<td><code>:poultry_leg:</code></td>
+				<td><img src="~/pics/emojis/poultry_leg.png" class="emoji" alt="poultry_leg"/></td>
+			</tr>
+			<tr>
+				<td><code>:pound:</code></td>
+				<td><img src="~/pics/emojis/pound.png" class="emoji" alt="pound"/></td>
+			</tr>
+			<tr>
+				<td><code>:pouting_cat:</code></td>
+				<td><img src="~/pics/emojis/pouting_cat.png" class="emoji" alt="pouting_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:pray:</code></td>
+				<td><img src="~/pics/emojis/pray.png" class="emoji" alt="pray"/></td>
+			</tr>
+			<tr>
+				<td><code>:princess:</code></td>
+				<td><img src="~/pics/emojis/princess.png" class="emoji" alt="princess"/></td>
+			</tr>
+			<tr>
+				<td><code>:punch:</code></td>
+				<td><img src="~/pics/emojis/punch.png" class="emoji" alt="punch"/></td>
+			</tr>
+			<tr>
+				<td><code>:purple_heart:</code></td>
+				<td><img src="~/pics/emojis/purple_heart.png" class="emoji" alt="purple_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:purse:</code></td>
+				<td><img src="~/pics/emojis/purse.png" class="emoji" alt="purse"/></td>
+			</tr>
+			<tr>
+				<td><code>:pushpin:</code></td>
+				<td><img src="~/pics/emojis/pushpin.png" class="emoji" alt="pushpin"/></td>
+			</tr>
+			<tr>
+				<td><code>:put_litter_in_its_place:</code></td>
+				<td><img src="~/pics/emojis/put_litter_in_its_place.png" class="emoji" alt="put_litter_in_its_place"/></td>
+			</tr>
+			<tr>
+				<td><code>:question:</code></td>
+				<td><img src="~/pics/emojis/question.png" class="emoji" alt="question"/></td>
+			</tr>
+			<tr>
+				<td><code>:rabbit:</code></td>
+				<td><img src="~/pics/emojis/rabbit.png" class="emoji" alt="rabbit"/></td>
+			</tr>
+			<tr>
+				<td><code>:rabbit2:</code></td>
+				<td><img src="~/pics/emojis/rabbit2.png" class="emoji" alt="rabbit2"/></td>
+			</tr>
+			<tr>
+				<td><code>:racehorse:</code></td>
+				<td><img src="~/pics/emojis/racehorse.png" class="emoji" alt="racehorse"/></td>
+			</tr>
+			<tr>
+				<td><code>:radio:</code></td>
+				<td><img src="~/pics/emojis/radio.png" class="emoji" alt="radio"/></td>
+			</tr>
+			<tr>
+				<td><code>:radio_button:</code></td>
+				<td><img src="~/pics/emojis/radio_button.png" class="emoji" alt="radio_button"/></td>
+			</tr>
+			<tr>
+				<td><code>:rage:</code></td>
+				<td><img src="~/pics/emojis/rage.png" class="emoji" alt="rage"/></td>
+			</tr>
+			<tr>
+				<td><code>:rage1:</code></td>
+				<td><img src="~/pics/emojis/rage1.png" class="emoji" alt="rage1"/></td>
+			</tr>
+			<tr>
+				<td><code>:rage2:</code></td>
+				<td><img src="~/pics/emojis/rage2.png" class="emoji" alt="rage2"/></td>
+			</tr>
+			<tr>
+				<td><code>:rage3:</code></td>
+				<td><img src="~/pics/emojis/rage3.png" class="emoji" alt="rage3"/></td>
+			</tr>
+			<tr>
+				<td><code>:rage4:</code></td>
+				<td><img src="~/pics/emojis/rage4.png" class="emoji" alt="rage4"/></td>
+			</tr>
+			<tr>
+				<td><code>:railway_car:</code></td>
+				<td><img src="~/pics/emojis/railway_car.png" class="emoji" alt="railway_car"/></td>
+			</tr>
+			<tr>
+				<td><code>:rainbow:</code></td>
+				<td><img src="~/pics/emojis/rainbow.png" class="emoji" alt="rainbow"/></td>
+			</tr>
+			<tr>
+				<td><code>:raised_hand:</code></td>
+				<td><img src="~/pics/emojis/raised_hand.png" class="emoji" alt="raised_hand"/></td>
+			</tr>
+			<tr>
+				<td><code>:raised_hands:</code></td>
+				<td><img src="~/pics/emojis/raised_hands.png" class="emoji" alt="raised_hands"/></td>
+			</tr>
+			<tr>
+				<td><code>:raising_hand:</code></td>
+				<td><img src="~/pics/emojis/raising_hand.png" class="emoji" alt="raising_hand"/></td>
+			</tr>
+			<tr>
+				<td><code>:ram:</code></td>
+				<td><img src="~/pics/emojis/ram.png" class="emoji" alt="ram"/></td>
+			</tr>
+			<tr>
+				<td><code>:ramen:</code></td>
+				<td><img src="~/pics/emojis/ramen.png" class="emoji" alt="ramen"/></td>
+			</tr>
+			<tr>
+				<td><code>:rat:</code></td>
+				<td><img src="~/pics/emojis/rat.png" class="emoji" alt="rat"/></td>
+			</tr>
+			<tr>
+				<td><code>:recycle:</code></td>
+				<td><img src="~/pics/emojis/recycle.png" class="emoji" alt="recycle"/></td>
+			</tr>
+			<tr>
+				<td><code>:red_car:</code></td>
+				<td><img src="~/pics/emojis/red_car.png" class="emoji" alt="red_car"/></td>
+			</tr>
+			<tr>
+				<td><code>:red_circle:</code></td>
+				<td><img src="~/pics/emojis/red_circle.png" class="emoji" alt="red_circle"/></td>
+			</tr>
+			<tr>
+				<td><code>:registered:</code></td>
+				<td><img src="~/pics/emojis/registered.png" class="emoji" alt="registered"/></td>
+			</tr>
+			<tr>
+				<td><code>:relaxed:</code></td>
+				<td><img src="~/pics/emojis/relaxed.png" class="emoji" alt="relaxed"/></td>
+			</tr>
+			<tr>
+				<td><code>:relieved:</code></td>
+				<td><img src="~/pics/emojis/relieved.png" class="emoji" alt="relieved"/></td>
+			</tr>
+			<tr>
+				<td><code>:repeat:</code></td>
+				<td><img src="~/pics/emojis/repeat.png" class="emoji" alt="repeat"/></td>
+			</tr>
+			<tr>
+				<td><code>:repeat_one:</code></td>
+				<td><img src="~/pics/emojis/repeat_one.png" class="emoji" alt="repeat_one"/></td>
+			</tr>
+			<tr>
+				<td><code>:restroom:</code></td>
+				<td><img src="~/pics/emojis/restroom.png" class="emoji" alt="restroom"/></td>
+			</tr>
+			<tr>
+				<td><code>:revolving_hearts:</code></td>
+				<td><img src="~/pics/emojis/revolving_hearts.png" class="emoji" alt="revolving_hearts"/></td>
+			</tr>
+			<tr>
+				<td><code>:rewind:</code></td>
+				<td><img src="~/pics/emojis/rewind.png" class="emoji" alt="rewind"/></td>
+			</tr>
+			<tr>
+				<td><code>:ribbon:</code></td>
+				<td><img src="~/pics/emojis/ribbon.png" class="emoji" alt="ribbon"/></td>
+			</tr>
+			<tr>
+				<td><code>:rice:</code></td>
+				<td><img src="~/pics/emojis/rice.png" class="emoji" alt="rice"/></td>
+			</tr>
+			<tr>
+				<td><code>:rice_ball:</code></td>
+				<td><img src="~/pics/emojis/rice_ball.png" class="emoji" alt="rice_ball"/></td>
+			</tr>
+			<tr>
+				<td><code>:rice_cracker:</code></td>
+				<td><img src="~/pics/emojis/rice_cracker.png" class="emoji" alt="rice_cracker"/></td>
+			</tr>
+			<tr>
+				<td><code>:rice_scene:</code></td>
+				<td><img src="~/pics/emojis/rice_scene.png" class="emoji" alt="rice_scene"/></td>
+			</tr>
+			<tr>
+				<td><code>:ring:</code></td>
+				<td><img src="~/pics/emojis/ring.png" class="emoji" alt="ring"/></td>
+			</tr>
+			<tr>
+				<td><code>:rocket:</code></td>
+				<td><img src="~/pics/emojis/rocket.png" class="emoji" alt="rocket"/></td>
+			</tr>
+			<tr>
+				<td><code>:roller_coaster:</code></td>
+				<td><img src="~/pics/emojis/roller_coaster.png" class="emoji" alt="roller_coaster"/></td>
+			</tr>
+			<tr>
+				<td><code>:rooster:</code></td>
+				<td><img src="~/pics/emojis/rooster.png" class="emoji" alt="rooster"/></td>
+			</tr>
+			<tr>
+				<td><code>:rose:</code></td>
+				<td><img src="~/pics/emojis/rose.png" class="emoji" alt="rose"/></td>
+			</tr>
+			<tr>
+				<td><code>:rotating_light:</code></td>
+				<td><img src="~/pics/emojis/rotating_light.png" class="emoji" alt="rotating_light"/></td>
+			</tr>
+			<tr>
+				<td><code>:round_pushpin:</code></td>
+				<td><img src="~/pics/emojis/round_pushpin.png" class="emoji" alt="round_pushpin"/></td>
+			</tr>
+			<tr>
+				<td><code>:rowboat:</code></td>
+				<td><img src="~/pics/emojis/rowboat.png" class="emoji" alt="rowboat"/></td>
+			</tr>
+			<tr>
+				<td><code>:ru:</code></td>
+				<td><img src="~/pics/emojis/ru.png" class="emoji" alt="ru"/></td>
+			</tr>
+			<tr>
+				<td><code>:rugby_football:</code></td>
+				<td><img src="~/pics/emojis/rugby_football.png" class="emoji" alt="rugby_football"/></td>
+			</tr>
+			<tr>
+				<td><code>:runner:</code></td>
+				<td><img src="~/pics/emojis/runner.png" class="emoji" alt="runner"/></td>
+			</tr>
+			<tr>
+				<td><code>:running:</code></td>
+				<td><img src="~/pics/emojis/running.png" class="emoji" alt="running"/></td>
+			</tr>
+			<tr>
+				<td><code>:running_shirt_with_sash:</code></td>
+				<td><img src="~/pics/emojis/running_shirt_with_sash.png" class="emoji" alt="running_shirt_with_sash"/></td>
+			</tr>
+			<tr>
+				<td><code>:sa:</code></td>
+				<td><img src="~/pics/emojis/sa.png" class="emoji" alt="sa"/></td>
+			</tr>
+			<tr>
+				<td><code>:sagittarius:</code></td>
+				<td><img src="~/pics/emojis/sagittarius.png" class="emoji" alt="sagittarius"/></td>
+			</tr>
+			<tr>
+				<td><code>:sailboat:</code></td>
+				<td><img src="~/pics/emojis/sailboat.png" class="emoji" alt="sailboat"/></td>
+			</tr>
+			<tr>
+				<td><code>:sake:</code></td>
+				<td><img src="~/pics/emojis/sake.png" class="emoji" alt="sake"/></td>
+			</tr>
+			<tr>
+				<td><code>:sandal:</code></td>
+				<td><img src="~/pics/emojis/sandal.png" class="emoji" alt="sandal"/></td>
+			</tr>
+			<tr>
+				<td><code>:santa:</code></td>
+				<td><img src="~/pics/emojis/santa.png" class="emoji" alt="santa"/></td>
+			</tr>
+			<tr>
+				<td><code>:satellite:</code></td>
+				<td><img src="~/pics/emojis/satellite.png" class="emoji" alt="satellite"/></td>
+			</tr>
+			<tr>
+				<td><code>:satisfied:</code></td>
+				<td><img src="~/pics/emojis/satisfied.png" class="emoji" alt="satisfied"/></td>
+			</tr>
+			<tr>
+				<td><code>:saxophone:</code></td>
+				<td><img src="~/pics/emojis/saxophone.png" class="emoji" alt="saxophone"/></td>
+			</tr>
+			<tr>
+				<td><code>:school:</code></td>
+				<td><img src="~/pics/emojis/school.png" class="emoji" alt="school"/></td>
+			</tr>
+			<tr>
+				<td><code>:school_satchel:</code></td>
+				<td><img src="~/pics/emojis/school_satchel.png" class="emoji" alt="school_satchel"/></td>
+			</tr>
+			<tr>
+				<td><code>:scissors:</code></td>
+				<td><img src="~/pics/emojis/scissors.png" class="emoji" alt="scissors"/></td>
+			</tr>
+			<tr>
+				<td><code>:scorpius:</code></td>
+				<td><img src="~/pics/emojis/scorpius.png" class="emoji" alt="scorpius"/></td>
+			</tr>
+			<tr>
+				<td><code>:scream:</code></td>
+				<td><img src="~/pics/emojis/scream.png" class="emoji" alt="scream"/></td>
+			</tr>
+			<tr>
+				<td><code>:scream_cat:</code></td>
+				<td><img src="~/pics/emojis/scream_cat.png" class="emoji" alt="scream_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:scroll:</code></td>
+				<td><img src="~/pics/emojis/scroll.png" class="emoji" alt="scroll"/></td>
+			</tr>
+			<tr>
+				<td><code>:seat:</code></td>
+				<td><img src="~/pics/emojis/seat.png" class="emoji" alt="seat"/></td>
+			</tr>
+			<tr>
+				<td><code>:secret:</code></td>
+				<td><img src="~/pics/emojis/secret.png" class="emoji" alt="secret"/></td>
+			</tr>
+			<tr>
+				<td><code>:seedling:</code></td>
+				<td><img src="~/pics/emojis/seedling.png" class="emoji" alt="seedling"/></td>
+			</tr>
+			<tr>
+				<td><code>:see_no_evil:</code></td>
+				<td><img src="~/pics/emojis/see_no_evil.png" class="emoji" alt="see_no_evil"/></td>
+			</tr>
+			<tr>
+				<td><code>:seven:</code></td>
+				<td><img src="~/pics/emojis/seven.png" class="emoji" alt="seven"/></td>
+			</tr>
+			<tr>
+				<td><code>:shaved_ice:</code></td>
+				<td><img src="~/pics/emojis/shaved_ice.png" class="emoji" alt="shaved_ice"/></td>
+			</tr>
+			<tr>
+				<td><code>:sheep:</code></td>
+				<td><img src="~/pics/emojis/sheep.png" class="emoji" alt="sheep"/></td>
+			</tr>
+			<tr>
+				<td><code>:shell:</code></td>
+				<td><img src="~/pics/emojis/shell.png" class="emoji" alt="shell"/></td>
+			</tr>
+			<tr>
+				<td><code>:ship:</code></td>
+				<td><img src="~/pics/emojis/ship.png" class="emoji" alt="ship"/></td>
+			</tr>
+			<tr>
+				<td><code>:shipit:</code></td>
+				<td><img src="~/pics/emojis/shipit.png" class="emoji" alt="shipit"/></td>
+			</tr>
+			<tr>
+				<td><code>:shirt:</code></td>
+				<td><img src="~/pics/emojis/shirt.png" class="emoji" alt="shirt"/></td>
+			</tr>
+			<tr>
+				<td><code>:shit:</code></td>
+				<td><img src="~/pics/emojis/shit.png" class="emoji" alt="shit"/></td>
+			</tr>
+			<tr>
+				<td><code>:shoe:</code></td>
+				<td><img src="~/pics/emojis/shoe.png" class="emoji" alt="shoe"/></td>
+			</tr>
+			<tr>
+				<td><code>:shower:</code></td>
+				<td><img src="~/pics/emojis/shower.png" class="emoji" alt="shower"/></td>
+			</tr>
+			<tr>
+				<td><code>:signal_strength:</code></td>
+				<td><img src="~/pics/emojis/signal_strength.png" class="emoji" alt="signal_strength"/></td>
+			</tr>
+			<tr>
+				<td><code>:simple_smile:</code></td>
+				<td><img src="~/pics/emojis/simple_smile.png" class="emoji" alt="simple_smile"/></td>
+			</tr>
+			<tr>
+				<td><code>:six:</code></td>
+				<td><img src="~/pics/emojis/six.png" class="emoji" alt="six"/></td>
+			</tr>
+			<tr>
+				<td><code>:six_pointed_star:</code></td>
+				<td><img src="~/pics/emojis/six_pointed_star.png" class="emoji" alt="six_pointed_star"/></td>
+			</tr>
+			<tr>
+				<td><code>:ski:</code></td>
+				<td><img src="~/pics/emojis/ski.png" class="emoji" alt="ski"/></td>
+			</tr>
+			<tr>
+				<td><code>:skull:</code></td>
+				<td><img src="~/pics/emojis/skull.png" class="emoji" alt="skull"/></td>
+			</tr>
+			<tr>
+				<td><code>:sleeping:</code></td>
+				<td><img src="~/pics/emojis/sleeping.png" class="emoji" alt="sleeping"/></td>
+			</tr>
+			<tr>
+				<td><code>:sleepy:</code></td>
+				<td><img src="~/pics/emojis/sleepy.png" class="emoji" alt="sleepy"/></td>
+			</tr>
+			<tr>
+				<td><code>:slot_machine:</code></td>
+				<td><img src="~/pics/emojis/slot_machine.png" class="emoji" alt="slot_machine"/></td>
+			</tr>
+			<tr>
+				<td><code>:small_blue_diamond:</code></td>
+				<td><img src="~/pics/emojis/small_blue_diamond.png" class="emoji" alt="small_blue_diamond"/></td>
+			</tr>
+			<tr>
+				<td><code>:small_orange_diamond:</code></td>
+				<td><img src="~/pics/emojis/small_orange_diamond.png" class="emoji" alt="small_orange_diamond"/></td>
+			</tr>
+			<tr>
+				<td><code>:small_red_triangle:</code></td>
+				<td><img src="~/pics/emojis/small_red_triangle.png" class="emoji" alt="small_red_triangle"/></td>
+			</tr>
+			<tr>
+				<td><code>:small_red_triangle_down:</code></td>
+				<td><img src="~/pics/emojis/small_red_triangle_down.png" class="emoji" alt="small_red_triangle_down"/></td>
+			</tr>
+			<tr>
+				<td><code>:smile:</code></td>
+				<td><img src="~/pics/emojis/smile.png" class="emoji" alt="smile"/></td>
+			</tr>
+			<tr>
+				<td><code>:smiley:</code></td>
+				<td><img src="~/pics/emojis/smiley.png" class="emoji" alt="smiley"/></td>
+			</tr>
+			<tr>
+				<td><code>:smiley_cat:</code></td>
+				<td><img src="~/pics/emojis/smiley_cat.png" class="emoji" alt="smiley_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:smile_cat:</code></td>
+				<td><img src="~/pics/emojis/smile_cat.png" class="emoji" alt="smile_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:smiling_imp:</code></td>
+				<td><img src="~/pics/emojis/smiling_imp.png" class="emoji" alt="smiling_imp"/></td>
+			</tr>
+			<tr>
+				<td><code>:smirk:</code></td>
+				<td><img src="~/pics/emojis/smirk.png" class="emoji" alt="smirk"/></td>
+			</tr>
+			<tr>
+				<td><code>:smirk_cat:</code></td>
+				<td><img src="~/pics/emojis/smirk_cat.png" class="emoji" alt="smirk_cat"/></td>
+			</tr>
+			<tr>
+				<td><code>:smoking:</code></td>
+				<td><img src="~/pics/emojis/smoking.png" class="emoji" alt="smoking"/></td>
+			</tr>
+			<tr>
+				<td><code>:snail:</code></td>
+				<td><img src="~/pics/emojis/snail.png" class="emoji" alt="snail"/></td>
+			</tr>
+			<tr>
+				<td><code>:snake:</code></td>
+				<td><img src="~/pics/emojis/snake.png" class="emoji" alt="snake"/></td>
+			</tr>
+			<tr>
+				<td><code>:snowboarder:</code></td>
+				<td><img src="~/pics/emojis/snowboarder.png" class="emoji" alt="snowboarder"/></td>
+			</tr>
+			<tr>
+				<td><code>:snowflake:</code></td>
+				<td><img src="~/pics/emojis/snowflake.png" class="emoji" alt="snowflake"/></td>
+			</tr>
+			<tr>
+				<td><code>:snowman:</code></td>
+				<td><img src="~/pics/emojis/snowman.png" class="emoji" alt="snowman"/></td>
+			</tr>
+			<tr>
+				<td><code>:sob:</code></td>
+				<td><img src="~/pics/emojis/sob.png" class="emoji" alt="sob"/></td>
+			</tr>
+			<tr>
+				<td><code>:soccer:</code></td>
+				<td><img src="~/pics/emojis/soccer.png" class="emoji" alt="soccer"/></td>
+			</tr>
+			<tr>
+				<td><code>:soon:</code></td>
+				<td><img src="~/pics/emojis/soon.png" class="emoji" alt="soon"/></td>
+			</tr>
+			<tr>
+				<td><code>:sos:</code></td>
+				<td><img src="~/pics/emojis/sos.png" class="emoji" alt="sos"/></td>
+			</tr>
+			<tr>
+				<td><code>:sound:</code></td>
+				<td><img src="~/pics/emojis/sound.png" class="emoji" alt="sound"/></td>
+			</tr>
+			<tr>
+				<td><code>:space_invader:</code></td>
+				<td><img src="~/pics/emojis/space_invader.png" class="emoji" alt="space_invader"/></td>
+			</tr>
+			<tr>
+				<td><code>:spades:</code></td>
+				<td><img src="~/pics/emojis/spades.png" class="emoji" alt="spades"/></td>
+			</tr>
+			<tr>
+				<td><code>:spaghetti:</code></td>
+				<td><img src="~/pics/emojis/spaghetti.png" class="emoji" alt="spaghetti"/></td>
+			</tr>
+			<tr>
+				<td><code>:sparkle:</code></td>
+				<td><img src="~/pics/emojis/sparkle.png" class="emoji" alt="sparkle"/></td>
+			</tr>
+			<tr>
+				<td><code>:sparkler:</code></td>
+				<td><img src="~/pics/emojis/sparkler.png" class="emoji" alt="sparkler"/></td>
+			</tr>
+			<tr>
+				<td><code>:sparkles:</code></td>
+				<td><img src="~/pics/emojis/sparkles.png" class="emoji" alt="sparkles"/></td>
+			</tr>
+			<tr>
+				<td><code>:sparkling_heart:</code></td>
+				<td><img src="~/pics/emojis/sparkling_heart.png" class="emoji" alt="sparkling_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:speaker:</code></td>
+				<td><img src="~/pics/emojis/speaker.png" class="emoji" alt="speaker"/></td>
+			</tr>
+			<tr>
+				<td><code>:speak_no_evil:</code></td>
+				<td><img src="~/pics/emojis/speak_no_evil.png" class="emoji" alt="speak_no_evil"/></td>
+			</tr>
+			<tr>
+				<td><code>:speech_balloon:</code></td>
+				<td><img src="~/pics/emojis/speech_balloon.png" class="emoji" alt="speech_balloon"/></td>
+			</tr>
+			<tr>
+				<td><code>:speedboat:</code></td>
+				<td><img src="~/pics/emojis/speedboat.png" class="emoji" alt="speedboat"/></td>
+			</tr>
+			<tr>
+				<td><code>:squirrel:</code></td>
+				<td><img src="~/pics/emojis/squirrel.png" class="emoji" alt="squirrel"/></td>
+			</tr>
+			<tr>
+				<td><code>:star:</code></td>
+				<td><img src="~/pics/emojis/star.png" class="emoji" alt="star"/></td>
+			</tr>
+			<tr>
+				<td><code>:star2:</code></td>
+				<td><img src="~/pics/emojis/star2.png" class="emoji" alt="star2"/></td>
+			</tr>
+			<tr>
+				<td><code>:stars:</code></td>
+				<td><img src="~/pics/emojis/stars.png" class="emoji" alt="stars"/></td>
+			</tr>
+			<tr>
+				<td><code>:station:</code></td>
+				<td><img src="~/pics/emojis/station.png" class="emoji" alt="station"/></td>
+			</tr>
+			<tr>
+				<td><code>:statue_of_liberty:</code></td>
+				<td><img src="~/pics/emojis/statue_of_liberty.png" class="emoji" alt="statue_of_liberty"/></td>
+			</tr>
+			<tr>
+				<td><code>:steam_locomotive:</code></td>
+				<td><img src="~/pics/emojis/steam_locomotive.png" class="emoji" alt="steam_locomotive"/></td>
+			</tr>
+			<tr>
+				<td><code>:stew:</code></td>
+				<td><img src="~/pics/emojis/stew.png" class="emoji" alt="stew"/></td>
+			</tr>
+			<tr>
+				<td><code>:straight_ruler:</code></td>
+				<td><img src="~/pics/emojis/straight_ruler.png" class="emoji" alt="straight_ruler"/></td>
+			</tr>
+			<tr>
+				<td><code>:strawberry:</code></td>
+				<td><img src="~/pics/emojis/strawberry.png" class="emoji" alt="strawberry"/></td>
+			</tr>
+			<tr>
+				<td><code>:stuck_out_tongue:</code></td>
+				<td><img src="~/pics/emojis/stuck_out_tongue.png" class="emoji" alt="stuck_out_tongue"/></td>
+			</tr>
+			<tr>
+				<td><code>:stuck_out_tongue_closed_eyes:</code></td>
+				<td><img src="~/pics/emojis/stuck_out_tongue_closed_eyes.png" class="emoji" alt="stuck_out_tongue_closed_eyes"/></td>
+			</tr>
+			<tr>
+				<td><code>:stuck_out_tongue_winking_eye:</code></td>
+				<td><img src="~/pics/emojis/stuck_out_tongue_winking_eye.png" class="emoji" alt="stuck_out_tongue_winking_eye"/></td>
+			</tr>
+			<tr>
+				<td><code>:sunflower:</code></td>
+				<td><img src="~/pics/emojis/sunflower.png" class="emoji" alt="sunflower"/></td>
+			</tr>
+			<tr>
+				<td><code>:sunglasses:</code></td>
+				<td><img src="~/pics/emojis/sunglasses.png" class="emoji" alt="sunglasses"/></td>
+			</tr>
+			<tr>
+				<td><code>:sunny:</code></td>
+				<td><img src="~/pics/emojis/sunny.png" class="emoji" alt="sunny"/></td>
+			</tr>
+			<tr>
+				<td><code>:sunrise:</code></td>
+				<td><img src="~/pics/emojis/sunrise.png" class="emoji" alt="sunrise"/></td>
+			</tr>
+			<tr>
+				<td><code>:sunrise_over_mountains:</code></td>
+				<td><img src="~/pics/emojis/sunrise_over_mountains.png" class="emoji" alt="sunrise_over_mountains"/></td>
+			</tr>
+			<tr>
+				<td><code>:sun_with_face:</code></td>
+				<td><img src="~/pics/emojis/sun_with_face.png" class="emoji" alt="sun_with_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:surfer:</code></td>
+				<td><img src="~/pics/emojis/surfer.png" class="emoji" alt="surfer"/></td>
+			</tr>
+			<tr>
+				<td><code>:sushi:</code></td>
+				<td><img src="~/pics/emojis/sushi.png" class="emoji" alt="sushi"/></td>
+			</tr>
+			<tr>
+				<td><code>:suspect:</code></td>
+				<td><img src="~/pics/emojis/suspect.png" class="emoji" alt="suspect"/></td>
+			</tr>
+			<tr>
+				<td><code>:suspension_railway:</code></td>
+				<td><img src="~/pics/emojis/suspension_railway.png" class="emoji" alt="suspension_railway"/></td>
+			</tr>
+			<tr>
+				<td><code>:sweat:</code></td>
+				<td><img src="~/pics/emojis/sweat.png" class="emoji" alt="sweat"/></td>
+			</tr>
+			<tr>
+				<td><code>:sweat_drops:</code></td>
+				<td><img src="~/pics/emojis/sweat_drops.png" class="emoji" alt="sweat_drops"/></td>
+			</tr>
+			<tr>
+				<td><code>:sweat_smile:</code></td>
+				<td><img src="~/pics/emojis/sweat_smile.png" class="emoji" alt="sweat_smile"/></td>
+			</tr>
+			<tr>
+				<td><code>:sweet_potato:</code></td>
+				<td><img src="~/pics/emojis/sweet_potato.png" class="emoji" alt="sweet_potato"/></td>
+			</tr>
+			<tr>
+				<td><code>:swimmer:</code></td>
+				<td><img src="~/pics/emojis/swimmer.png" class="emoji" alt="swimmer"/></td>
+			</tr>
+			<tr>
+				<td><code>:symbols:</code></td>
+				<td><img src="~/pics/emojis/symbols.png" class="emoji" alt="symbols"/></td>
+			</tr>
+			<tr>
+				<td><code>:syringe:</code></td>
+				<td><img src="~/pics/emojis/syringe.png" class="emoji" alt="syringe"/></td>
+			</tr>
+			<tr>
+				<td><code>:tada:</code></td>
+				<td><img src="~/pics/emojis/tada.png" class="emoji" alt="tada"/></td>
+			</tr>
+			<tr>
+				<td><code>:tanabata_tree:</code></td>
+				<td><img src="~/pics/emojis/tanabata_tree.png" class="emoji" alt="tanabata_tree"/></td>
+			</tr>
+			<tr>
+				<td><code>:tangerine:</code></td>
+				<td><img src="~/pics/emojis/tangerine.png" class="emoji" alt="tangerine"/></td>
+			</tr>
+			<tr>
+				<td><code>:taurus:</code></td>
+				<td><img src="~/pics/emojis/taurus.png" class="emoji" alt="taurus"/></td>
+			</tr>
+			<tr>
+				<td><code>:taxi:</code></td>
+				<td><img src="~/pics/emojis/taxi.png" class="emoji" alt="taxi"/></td>
+			</tr>
+			<tr>
+				<td><code>:tea:</code></td>
+				<td><img src="~/pics/emojis/tea.png" class="emoji" alt="tea"/></td>
+			</tr>
+			<tr>
+				<td><code>:telephone:</code></td>
+				<td><img src="~/pics/emojis/telephone.png" class="emoji" alt="telephone"/></td>
+			</tr>
+			<tr>
+				<td><code>:telephone_receiver:</code></td>
+				<td><img src="~/pics/emojis/telephone_receiver.png" class="emoji" alt="telephone_receiver"/></td>
+			</tr>
+			<tr>
+				<td><code>:telescope:</code></td>
+				<td><img src="~/pics/emojis/telescope.png" class="emoji" alt="telescope"/></td>
+			</tr>
+			<tr>
+				<td><code>:tennis:</code></td>
+				<td><img src="~/pics/emojis/tennis.png" class="emoji" alt="tennis"/></td>
+			</tr>
+			<tr>
+				<td><code>:tent:</code></td>
+				<td><img src="~/pics/emojis/tent.png" class="emoji" alt="tent"/></td>
+			</tr>
+			<tr>
+				<td><code>:thought_balloon:</code></td>
+				<td><img src="~/pics/emojis/thought_balloon.png" class="emoji" alt="thought_balloon"/></td>
+			</tr>
+			<tr>
+				<td><code>:three:</code></td>
+				<td><img src="~/pics/emojis/three.png" class="emoji" alt="three"/></td>
+			</tr>
+			<tr>
+				<td><code>:thumbsdown:</code></td>
+				<td><img src="~/pics/emojis/thumbsdown.png" class="emoji" alt="thumbsdown"/></td>
+			</tr>
+			<tr>
+				<td><code>:thumbsup:</code></td>
+				<td><img src="~/pics/emojis/thumbsup.png" class="emoji" alt="thumbsup"/></td>
+			</tr>
+			<tr>
+				<td><code>:ticket:</code></td>
+				<td><img src="~/pics/emojis/ticket.png" class="emoji" alt="ticket"/></td>
+			</tr>
+			<tr>
+				<td><code>:tiger:</code></td>
+				<td><img src="~/pics/emojis/tiger.png" class="emoji" alt="tiger"/></td>
+			</tr>
+			<tr>
+				<td><code>:tiger2:</code></td>
+				<td><img src="~/pics/emojis/tiger2.png" class="emoji" alt="tiger2"/></td>
+			</tr>
+			<tr>
+				<td><code>:tired_face:</code></td>
+				<td><img src="~/pics/emojis/tired_face.png" class="emoji" alt="tired_face"/></td>
+			</tr>
+			<tr>
+				<td><code>:tm:</code></td>
+				<td><img src="~/pics/emojis/tm.png" class="emoji" alt="tm"/></td>
+			</tr>
+			<tr>
+				<td><code>:toilet:</code></td>
+				<td><img src="~/pics/emojis/toilet.png" class="emoji" alt="toilet"/></td>
+			</tr>
+			<tr>
+				<td><code>:tokyo_tower:</code></td>
+				<td><img src="~/pics/emojis/tokyo_tower.png" class="emoji" alt="tokyo_tower"/></td>
+			</tr>
+			<tr>
+				<td><code>:tomato:</code></td>
+				<td><img src="~/pics/emojis/tomato.png" class="emoji" alt="tomato"/></td>
+			</tr>
+			<tr>
+				<td><code>:tongue:</code></td>
+				<td><img src="~/pics/emojis/tongue.png" class="emoji" alt="tongue"/></td>
+			</tr>
+			<tr>
+				<td><code>:top:</code></td>
+				<td><img src="~/pics/emojis/top.png" class="emoji" alt="top"/></td>
+			</tr>
+			<tr>
+				<td><code>:tophat:</code></td>
+				<td><img src="~/pics/emojis/tophat.png" class="emoji" alt="tophat"/></td>
+			</tr>
+			<tr>
+				<td><code>:tractor:</code></td>
+				<td><img src="~/pics/emojis/tractor.png" class="emoji" alt="tractor"/></td>
+			</tr>
+			<tr>
+				<td><code>:traffic_light:</code></td>
+				<td><img src="~/pics/emojis/traffic_light.png" class="emoji" alt="traffic_light"/></td>
+			</tr>
+			<tr>
+				<td><code>:train:</code></td>
+				<td><img src="~/pics/emojis/train.png" class="emoji" alt="train"/></td>
+			</tr>
+			<tr>
+				<td><code>:train2:</code></td>
+				<td><img src="~/pics/emojis/train2.png" class="emoji" alt="train2"/></td>
+			</tr>
+			<tr>
+				<td><code>:tram:</code></td>
+				<td><img src="~/pics/emojis/tram.png" class="emoji" alt="tram"/></td>
+			</tr>
+			<tr>
+				<td><code>:triangular_flag_on_post:</code></td>
+				<td><img src="~/pics/emojis/triangular_flag_on_post.png" class="emoji" alt="triangular_flag_on_post"/></td>
+			</tr>
+			<tr>
+				<td><code>:triangular_ruler:</code></td>
+				<td><img src="~/pics/emojis/triangular_ruler.png" class="emoji" alt="triangular_ruler"/></td>
+			</tr>
+			<tr>
+				<td><code>:trident:</code></td>
+				<td><img src="~/pics/emojis/trident.png" class="emoji" alt="trident"/></td>
+			</tr>
+			<tr>
+				<td><code>:triumph:</code></td>
+				<td><img src="~/pics/emojis/triumph.png" class="emoji" alt="triumph"/></td>
+			</tr>
+			<tr>
+				<td><code>:trolleybus:</code></td>
+				<td><img src="~/pics/emojis/trolleybus.png" class="emoji" alt="trolleybus"/></td>
+			</tr>
+			<tr>
+				<td><code>:trollface:</code></td>
+				<td><img src="~/pics/emojis/trollface.png" class="emoji" alt="trollface"/></td>
+			</tr>
+			<tr>
+				<td><code>:trophy:</code></td>
+				<td><img src="~/pics/emojis/trophy.png" class="emoji" alt="trophy"/></td>
+			</tr>
+			<tr>
+				<td><code>:tropical_drink:</code></td>
+				<td><img src="~/pics/emojis/tropical_drink.png" class="emoji" alt="tropical_drink"/></td>
+			</tr>
+			<tr>
+				<td><code>:tropical_fish:</code></td>
+				<td><img src="~/pics/emojis/tropical_fish.png" class="emoji" alt="tropical_fish"/></td>
+			</tr>
+			<tr>
+				<td><code>:truck:</code></td>
+				<td><img src="~/pics/emojis/truck.png" class="emoji" alt="truck"/></td>
+			</tr>
+			<tr>
+				<td><code>:trumpet:</code></td>
+				<td><img src="~/pics/emojis/trumpet.png" class="emoji" alt="trumpet"/></td>
+			</tr>
+			<tr>
+				<td><code>:tshirt:</code></td>
+				<td><img src="~/pics/emojis/tshirt.png" class="emoji" alt="tshirt"/></td>
+			</tr>
+			<tr>
+				<td><code>:tulip:</code></td>
+				<td><img src="~/pics/emojis/tulip.png" class="emoji" alt="tulip"/></td>
+			</tr>
+			<tr>
+				<td><code>:turtle:</code></td>
+				<td><img src="~/pics/emojis/turtle.png" class="emoji" alt="turtle"/></td>
+			</tr>
+			<tr>
+				<td><code>:tv:</code></td>
+				<td><img src="~/pics/emojis/tv.png" class="emoji" alt="tv"/></td>
+			</tr>
+			<tr>
+				<td><code>:twisted_rightwards_arrows:</code></td>
+				<td><img src="~/pics/emojis/twisted_rightwards_arrows.png" class="emoji" alt="twisted_rightwards_arrows"/></td>
+			</tr>
+			<tr>
+				<td><code>:two:</code></td>
+				<td><img src="~/pics/emojis/two.png" class="emoji" alt="two"/></td>
+			</tr>
+			<tr>
+				<td><code>:two_hearts:</code></td>
+				<td><img src="~/pics/emojis/two_hearts.png" class="emoji" alt="two_hearts"/></td>
+			</tr>
+			<tr>
+				<td><code>:two_men_holding_hands:</code></td>
+				<td><img src="~/pics/emojis/two_men_holding_hands.png" class="emoji" alt="two_men_holding_hands"/></td>
+			</tr>
+			<tr>
+				<td><code>:two_women_holding_hands:</code></td>
+				<td><img src="~/pics/emojis/two_women_holding_hands.png" class="emoji" alt="two_women_holding_hands"/></td>
+			</tr>
+			<tr>
+				<td><code>:u5272:</code></td>
+				<td><img src="~/pics/emojis/u5272.png" class="emoji" alt="u5272"/></td>
+			</tr>
+			<tr>
+				<td><code>:u5408:</code></td>
+				<td><img src="~/pics/emojis/u5408.png" class="emoji" alt="u5408"/></td>
+			</tr>
+			<tr>
+				<td><code>:u55b6:</code></td>
+				<td><img src="~/pics/emojis/u55b6.png" class="emoji" alt="u55b6"/></td>
+			</tr>
+			<tr>
+				<td><code>:u6307:</code></td>
+				<td><img src="~/pics/emojis/u6307.png" class="emoji" alt="u6307"/></td>
+			</tr>
+			<tr>
+				<td><code>:u6708:</code></td>
+				<td><img src="~/pics/emojis/u6708.png" class="emoji" alt="u6708"/></td>
+			</tr>
+			<tr>
+				<td><code>:u6709:</code></td>
+				<td><img src="~/pics/emojis/u6709.png" class="emoji" alt="u6709"/></td>
+			</tr>
+			<tr>
+				<td><code>:u6e80:</code></td>
+				<td><img src="~/pics/emojis/u6e80.png" class="emoji" alt="u6e80"/></td>
+			</tr>
+			<tr>
+				<td><code>:u7121:</code></td>
+				<td><img src="~/pics/emojis/u7121.png" class="emoji" alt="u7121"/></td>
+			</tr>
+			<tr>
+				<td><code>:u7533:</code></td>
+				<td><img src="~/pics/emojis/u7533.png" class="emoji" alt="u7533"/></td>
+			</tr>
+			<tr>
+				<td><code>:u7981:</code></td>
+				<td><img src="~/pics/emojis/u7981.png" class="emoji" alt="u7981"/></td>
+			</tr>
+			<tr>
+				<td><code>:u7a7a:</code></td>
+				<td><img src="~/pics/emojis/u7a7a.png" class="emoji" alt="u7a7a"/></td>
+			</tr>
+			<tr>
+				<td><code>:uk:</code></td>
+				<td><img src="~/pics/emojis/uk.png" class="emoji" alt="uk"/></td>
+			</tr>
+			<tr>
+				<td><code>:umbrella:</code></td>
+				<td><img src="~/pics/emojis/umbrella.png" class="emoji" alt="umbrella"/></td>
+			</tr>
+			<tr>
+				<td><code>:unamused:</code></td>
+				<td><img src="~/pics/emojis/unamused.png" class="emoji" alt="unamused"/></td>
+			</tr>
+			<tr>
+				<td><code>:underage:</code></td>
+				<td><img src="~/pics/emojis/underage.png" class="emoji" alt="underage"/></td>
+			</tr>
+			<tr>
+				<td><code>:unlock:</code></td>
+				<td><img src="~/pics/emojis/unlock.png" class="emoji" alt="unlock"/></td>
+			</tr>
+			<tr>
+				<td><code>:up:</code></td>
+				<td><img src="~/pics/emojis/up.png" class="emoji" alt="up"/></td>
+			</tr>
+			<tr>
+				<td><code>:us:</code></td>
+				<td><img src="~/pics/emojis/us.png" class="emoji" alt="us"/></td>
+			</tr>
+			<tr>
+				<td><code>:v:</code></td>
+				<td><img src="~/pics/emojis/v.png" class="emoji" alt="v"/></td>
+			</tr>
+			<tr>
+				<td><code>:vertical_traffic_light:</code></td>
+				<td><img src="~/pics/emojis/vertical_traffic_light.png" class="emoji" alt="vertical_traffic_light"/></td>
+			</tr>
+			<tr>
+				<td><code>:vhs:</code></td>
+				<td><img src="~/pics/emojis/vhs.png" class="emoji" alt="vhs"/></td>
+			</tr>
+			<tr>
+				<td><code>:vibration_mode:</code></td>
+				<td><img src="~/pics/emojis/vibration_mode.png" class="emoji" alt="vibration_mode"/></td>
+			</tr>
+			<tr>
+				<td><code>:video_camera:</code></td>
+				<td><img src="~/pics/emojis/video_camera.png" class="emoji" alt="video_camera"/></td>
+			</tr>
+			<tr>
+				<td><code>:video_game:</code></td>
+				<td><img src="~/pics/emojis/video_game.png" class="emoji" alt="video_game"/></td>
+			</tr>
+			<tr>
+				<td><code>:violin:</code></td>
+				<td><img src="~/pics/emojis/violin.png" class="emoji" alt="violin"/></td>
+			</tr>
+			<tr>
+				<td><code>:virgo:</code></td>
+				<td><img src="~/pics/emojis/virgo.png" class="emoji" alt="virgo"/></td>
+			</tr>
+			<tr>
+				<td><code>:volcano:</code></td>
+				<td><img src="~/pics/emojis/volcano.png" class="emoji" alt="volcano"/></td>
+			</tr>
+			<tr>
+				<td><code>:vs:</code></td>
+				<td><img src="~/pics/emojis/vs.png" class="emoji" alt="vs"/></td>
+			</tr>
+			<tr>
+				<td><code>:walking:</code></td>
+				<td><img src="~/pics/emojis/walking.png" class="emoji" alt="walking"/></td>
+			</tr>
+			<tr>
+				<td><code>:waning_crescent_moon:</code></td>
+				<td><img src="~/pics/emojis/waning_crescent_moon.png" class="emoji" alt="waning_crescent_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:waning_gibbous_moon:</code></td>
+				<td><img src="~/pics/emojis/waning_gibbous_moon.png" class="emoji" alt="waning_gibbous_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:warning:</code></td>
+				<td><img src="~/pics/emojis/warning.png" class="emoji" alt="warning"/></td>
+			</tr>
+			<tr>
+				<td><code>:watch:</code></td>
+				<td><img src="~/pics/emojis/watch.png" class="emoji" alt="watch"/></td>
+			</tr>
+			<tr>
+				<td><code>:watermelon:</code></td>
+				<td><img src="~/pics/emojis/watermelon.png" class="emoji" alt="watermelon"/></td>
+			</tr>
+			<tr>
+				<td><code>:water_buffalo:</code></td>
+				<td><img src="~/pics/emojis/water_buffalo.png" class="emoji" alt="water_buffalo"/></td>
+			</tr>
+			<tr>
+				<td><code>:wave:</code></td>
+				<td><img src="~/pics/emojis/wave.png" class="emoji" alt="wave"/></td>
+			</tr>
+			<tr>
+				<td><code>:wavy_dash:</code></td>
+				<td><img src="~/pics/emojis/wavy_dash.png" class="emoji" alt="wavy_dash"/></td>
+			</tr>
+			<tr>
+				<td><code>:waxing_crescent_moon:</code></td>
+				<td><img src="~/pics/emojis/waxing_crescent_moon.png" class="emoji" alt="waxing_crescent_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:waxing_gibbous_moon:</code></td>
+				<td><img src="~/pics/emojis/waxing_gibbous_moon.png" class="emoji" alt="waxing_gibbous_moon"/></td>
+			</tr>
+			<tr>
+				<td><code>:wc:</code></td>
+				<td><img src="~/pics/emojis/wc.png" class="emoji" alt="wc"/></td>
+			</tr>
+			<tr>
+				<td><code>:weary:</code></td>
+				<td><img src="~/pics/emojis/weary.png" class="emoji" alt="weary"/></td>
+			</tr>
+			<tr>
+				<td><code>:wedding:</code></td>
+				<td><img src="~/pics/emojis/wedding.png" class="emoji" alt="wedding"/></td>
+			</tr>
+			<tr>
+				<td><code>:whale:</code></td>
+				<td><img src="~/pics/emojis/whale.png" class="emoji" alt="whale"/></td>
+			</tr>
+			<tr>
+				<td><code>:whale2:</code></td>
+				<td><img src="~/pics/emojis/whale2.png" class="emoji" alt="whale2"/></td>
+			</tr>
+			<tr>
+				<td><code>:wheelchair:</code></td>
+				<td><img src="~/pics/emojis/wheelchair.png" class="emoji" alt="wheelchair"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_check_mark:</code></td>
+				<td><img src="~/pics/emojis/white_check_mark.png" class="emoji" alt="white_check_mark"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_circle:</code></td>
+				<td><img src="~/pics/emojis/white_circle.png" class="emoji" alt="white_circle"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_flower:</code></td>
+				<td><img src="~/pics/emojis/white_flower.png" class="emoji" alt="white_flower"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_large_square:</code></td>
+				<td><img src="~/pics/emojis/white_large_square.png" class="emoji" alt="white_large_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_medium_small_square:</code></td>
+				<td><img src="~/pics/emojis/white_medium_small_square.png" class="emoji" alt="white_medium_small_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_medium_square:</code></td>
+				<td><img src="~/pics/emojis/white_medium_square.png" class="emoji" alt="white_medium_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_small_square:</code></td>
+				<td><img src="~/pics/emojis/white_small_square.png" class="emoji" alt="white_small_square"/></td>
+			</tr>
+			<tr>
+				<td><code>:white_square_button:</code></td>
+				<td><img src="~/pics/emojis/white_square_button.png" class="emoji" alt="white_square_button"/></td>
+			</tr>
+			<tr>
+				<td><code>:wind_chime:</code></td>
+				<td><img src="~/pics/emojis/wind_chime.png" class="emoji" alt="wind_chime"/></td>
+			</tr>
+			<tr>
+				<td><code>:wine_glass:</code></td>
+				<td><img src="~/pics/emojis/wine_glass.png" class="emoji" alt="wine_glass"/></td>
+			</tr>
+			<tr>
+				<td><code>:wink:</code></td>
+				<td><img src="~/pics/emojis/wink.png" class="emoji" alt="wink"/></td>
+			</tr>
+			<tr>
+				<td><code>:wolf:</code></td>
+				<td><img src="~/pics/emojis/wolf.png" class="emoji" alt="wolf"/></td>
+			</tr>
+			<tr>
+				<td><code>:woman:</code></td>
+				<td><img src="~/pics/emojis/woman.png" class="emoji" alt="woman"/></td>
+			</tr>
+			<tr>
+				<td><code>:womans_clothes:</code></td>
+				<td><img src="~/pics/emojis/womans_clothes.png" class="emoji" alt="womans_clothes"/></td>
+			</tr>
+			<tr>
+				<td><code>:womans_hat:</code></td>
+				<td><img src="~/pics/emojis/womans_hat.png" class="emoji" alt="womans_hat"/></td>
+			</tr>
+			<tr>
+				<td><code>:womens:</code></td>
+				<td><img src="~/pics/emojis/womens.png" class="emoji" alt="womens"/></td>
+			</tr>
+			<tr>
+				<td><code>:worried:</code></td>
+				<td><img src="~/pics/emojis/worried.png" class="emoji" alt="worried"/></td>
+			</tr>
+			<tr>
+				<td><code>:wrench:</code></td>
+				<td><img src="~/pics/emojis/wrench.png" class="emoji" alt="wrench"/></td>
+			</tr>
+			<tr>
+				<td><code>:x:</code></td>
+				<td><img src="~/pics/emojis/x.png" class="emoji" alt="x"/></td>
+			</tr>
+			<tr>
+				<td><code>:yellow_heart:</code></td>
+				<td><img src="~/pics/emojis/yellow_heart.png" class="emoji" alt="yellow_heart"/></td>
+			</tr>
+			<tr>
+				<td><code>:yen:</code></td>
+				<td><img src="~/pics/emojis/yen.png" class="emoji" alt="yen"/></td>
+			</tr>
+			<tr>
+				<td><code>:yum:</code></td>
+				<td><img src="~/pics/emojis/yum.png" class="emoji" alt="yum"/></td>
+			</tr>
+			<tr>
+				<td><code>:zap:</code></td>
+				<td><img src="~/pics/emojis/zap.png" class="emoji" alt="zap"/></td>
+			</tr>
+			<tr>
+				<td><code>:zero:</code></td>
+				<td><img src="~/pics/emojis/zero.png" class="emoji" alt="zero"/></td>
+			</tr>
+			<tr>
+				<td><code>:zzz:</code></td>
+				<td><img src="~/pics/emojis/zzz.png" class="emoji" alt="zzz"/></td>
+			</tr>
+			</tbody>
+			</table>		
+		</div>
+	</div>
+</div>

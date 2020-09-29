@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -19,8 +19,11 @@
 */
 using System;
 using System.Data;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
+using System.Threading.Tasks;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 
 namespace SD.HnD.BL
@@ -33,15 +36,13 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Retrieves the current system settings, which is 1 row. 
 		/// </summary>
-		/// <returns>DataTable with 1 row with the system settings. See TF_SystemData.</returns>
-		public static SystemDataEntity GetSystemSettings()
+		/// <returns>The entity with the system data</returns>
+		public static async Task<SystemDataEntity> GetSystemSettingsAsync()
 		{
-			SystemDataCollection systemData = new SystemDataCollection();
-			// get all entities, there's just 1
-			systemData.GetMulti(null);
-
-			// if the system is setup correctly, there's one entity
-			return systemData[0];
+			using(var adapter = new DataAccessAdapter())
+			{
+				return await adapter.FetchFirstAsync(new QueryFactory().SystemData).ConfigureAwait(false);
+			}
 		}
 	}
 }

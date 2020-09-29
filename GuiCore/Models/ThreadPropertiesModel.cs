@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+
+namespace SD.HnD.Gui.Models
+{
+	public class ThreadPropertiesModel
+	{
+		[Required]
+		[MaxLength(250)]
+		[MinLength(5)]
+		public string Subject { get; set; }
+		public bool IsSticky { get; set; }
+		public bool IsClosed { get; set; }
+	}
+}

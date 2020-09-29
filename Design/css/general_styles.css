@@ -1,0 +1,595 @@
+﻿/* #region general tag css definitions */
+html,
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	-moz-osx-font-smoothing: grayscale;
+	min-height: 100%;
+	font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 26px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 300;
+	letter-spacing: -1px;
+	margin: 0;
+}
+
+h1 {
+	font-size: 42px;
+	line-height: 44px;
+	margin: 0 0 40px 0;
+}
+
+h2 {
+	font-size: 36px;
+	line-height: 38px;
+	margin: 0 0 35px 0;
+}
+
+h3 {
+	font-size: 24px;
+	font-weight: 300;
+	letter-spacing: normal;
+	line-height: 28px;
+	margin-bottom: 30px;
+}
+
+h4, h5, h6 {
+	letter-spacing: normal;
+	margin: 0 0 15px 0;
+}
+
+h4 {
+	font-size: 16px;
+	font-weight: 300;
+	line-height: 26px;
+}
+
+h5 {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 18px;
+}
+
+h6 {
+	font-size: 12px;
+	font-weight: 400;
+	line-height: 18px;
+}
+
+input[type=search],
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=file],
+input[type=number],
+input[type=search] {
+	border-radius:0;
+}
+
+input[type=checkbox] {
+	margin-top: 7px;	/* to align the label with the checkbox. Hurray for HTML! such an advanced system... */
+}
+/* #endregion */
+
+/* #region id defines */
+#main-wrapper{
+    min-height: 100%;
+    position:relative;
+}
+
+#body-content{
+    padding-bottom: 300px;    /* height of footer */
+}
+
+#footer {
+    height: 240px; 
+    width:100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+	right: 0;
+}
+/* #endregion*/
+
+
+/* #region pseudo-elements */
+::-moz-selection {
+	text-shadow:none;
+	color: #fff;
+	background:rgba(181,67,33,0.8);
+}
+::selection {
+	text-shadow:none;
+	color: #fff;
+	background:rgba(181,67,33,0.8);
+}
+/* #endregion */
+
+/* #region general padding and margin shortcuts*/
+	.mb0 { margin-bottom: 0;}
+	.mb10 { margin-bottom: 10px;}
+	.mb20 { margin-bottom: 20px;}
+	.mb30 { margin-bottom: 30px;}
+	.mb40 { margin-bottom: 40px;}
+
+	.pb0 { padding-bottom: 0;}
+	.pb10 { padding-bottom: 10px;}
+	.pb20 { padding-bottom: 20px;}
+	.pb30 { padding-bottom: 30px;}
+	.pb40 { padding-bottom: 40px;}
+
+	.mt0 { margin-top: 0;}
+	.mt5 { margin-top: 5px;}
+	.mt10 { margin-top: 10px;}
+	.mt20 { margin-top: 20px;}
+	.mt30 { margin-top: 30px;}
+	.mt40 { margin-top: 40px;}
+
+	.pt0 { padding-top: 0;}
+	.pt10 { padding-top: 10px;}
+	.pt20 { padding-top: 20px;}
+	.pt30 { padding-top: 30px;}
+	.pt40 { padding-top: 40px;}
+
+	.plr0 { 
+		padding-left: 0;
+		padding-right: 0;
+	}
+
+	.plr7 {
+		padding-left: 7px;
+		padding-right: 7px;
+	}
+
+	.plr10 { 
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.plr20 { 
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+
+	.pl20 { padding-left: 20px;}
+	.pl30 { padding-left: 30px;}
+	.pl40 { padding-left: 40px;}
+	.pl50 { padding-left: 50px;}
+	.pl70 { padding-left: 70px;}
+
+	.p0 { padding: 0;}
+	.p5 { padding: 5px;}
+	.p10 { padding: 10px;}
+	.p20 { padding: 20px;}
+
+	.m0 { margin: 0;}
+	.m5 { margin: 5px;}
+	.m10 { margin: 10px;}
+	.m20 { margin: 20px;}
+
+/* #endregion */
+
+/* #region general class definitions, sorted alphabetically */
+	a:hover,
+	a:focus, 
+	a:active,
+	.btn:hover,
+	.btn:focus, 
+	.btn:active,
+	button:hover,
+	button:focus, 
+	button:active  {
+		text-decoration:none;
+		outline:0;
+		box-shadow:none;
+		-webkit-transition:all 0.2s easeout; transition:all 0.2s ease-out;
+	}
+	
+	/* gives a small line at the left, under the text it is applied to*/
+	.br-bottom:after {
+		content:"";
+		display:block;
+		height:1px;
+		width:35px;
+		border-top: 2px solid #008080;
+		margin:6px 0 10px;
+	}
+
+	.breadcrumb {
+		font-size: 15px;
+	}
+
+	.btn {
+		border-radius:0;
+	}
+
+	.clear { clear: both; }
+
+	.collapsing {
+		-webkit-transition: none;
+		transition: none;
+	}
+
+	.column-wrapper {
+		margin-left: 40px;
+	}
+
+	.column-wrapper-bookmarks {
+		margin-left: 60px;
+	}
+
+	.column-fixed {
+		float: left;
+		width: 40px;
+		margin-left: -40px;
+	}
+
+	
+	.column-fixed-bookmarks {
+		float: left;
+		width: 60px;
+		margin-left: -60px;
+	}
+
+	.column-fluent {
+		float: right;
+		width: 100%;
+		padding-left: 10px;
+	}
+
+	.column-clear {
+		clear: both;	
+	}
+
+	.empty-space-unanswered {
+		padding-left: 19px;
+	}
+
+	.headerattop {
+		box-shadow: none;
+		-moz-box-shadow: none;
+		-webkit-box-shadow: none;
+		-webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
+	}
+
+	.headerscrolled {
+        box-shadow:0 0 10px rgba(0, 0, 0, 0.3);
+		-webkit-transition: all 0.3s ease-out; transition: all 0.3s ease-out;
+	}
+
+	.list-row-description {
+		font-size: 14px;
+	}
+
+	.page-header {
+		padding-bottom: 0;
+		padding-top: 40px;
+		margin: 40px 0 0;
+		border-bottom: 0;
+	}
+
+	.page-header-breadcrumbs {
+		padding-bottom: 0;
+		padding-top: 25px;
+		margin: 30px 0 0;
+		border-bottom: 0;
+	}
+
+	.pull-center {
+		display: block;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		clear: both;
+		text-align:center;
+	}
+
+	.inpageDropDown {
+		margin-top: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+
+	.text-nowrap-responsive {
+		white-space: nowrap;
+	}
+/* #endregion */
+
+/* #region post definitions */
+
+img.ps-poster-avatar {
+		width: 100px;
+		height: 100px;
+		margin-bottom: 10px;
+	}
+
+	.ps-message {
+		overflow: auto;
+		padding: 0;
+		width: auto;
+		float: none;
+		display: block;
+	}
+
+	.ps-message-content {
+		overflow: auto;
+		padding: 1px 8px 1px;
+		font-size: 15px;
+		min-height: 120px;
+	}
+
+	.ps-message-title {
+		font-size: 14px;
+		padding: 1px 8px 1px;
+		width: 100%;
+		float: left;
+		display: block;
+	}
+
+	.ps-message-signature {
+		font-size: 12px;
+		padding: 4px 8px 1px;
+		margin-top: 5px;
+		line-height: 20px;
+	}
+
+	.ps-message-tools {
+		float: right;
+	}
+
+	.ps-poster {
+		padding: 5px;
+		width: 170px;
+		min-height: 100px;
+		display: block;
+		float: left;
+		position: relative;
+		margin-top: 20px;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		clear: both;
+		text-align:center;
+	}
+
+	.ps-poster-title,
+	.ps-poster-info {
+		font-size: 12px;
+	}
+
+	.ps-poster-stats {
+		margin-top: 30px;
+	}
+
+	.ps {
+		padding: 0;
+		margin-bottom: 10px;
+	}
+/* #endregion*/
+
+/* #region different section definitions */
+	.fs,
+	.as {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	
+	.fs-header {
+		padding: 10px;
+		font-size: 20px;
+		background-color: #ddd;
+	}
+
+	.fs-headingrow {
+		padding: 0;
+		font-weight: bold;
+		font-size: 14px;
+		background-color: #efefef;
+	}
+
+	.fs-row {
+		padding: 5px;
+		margin-bottom: 1px;
+	}
+
+	.fs-thread-header,
+	.fs-thread-pager {
+		float: left;
+		display: block;
+	}
+	
+	/* toggles for the forum section headers */
+	.areatoggle.collapsed .glyphicon-chevron-up {
+		display: none;
+	}
+
+	.areatoggle.collapsed .glyphicon-chevron-down {
+		display: inline-block;
+	}
+
+	.areatoggle .glyphicon-chevron-down {
+		display: none;
+	}
+	
+	.as-header {
+		font-size: 16px;
+		background-color: #ddd;
+	}
+
+	.as-label {
+		display: inline-block; 
+		margin-top: 2px; 
+		vertical-align: middle;
+	}
+
+	.as-row {
+		padding-bottom: 10px;
+	}
+
+/* #endregion */
+
+/* #region Footer*/
+
+	.footer-widget .underlined-links {
+		text-decoration: underline;
+	}
+
+	.footer-wrapper {
+		background-color: #303236;
+	    color: #d8dade;
+	    position:relative;
+	    padding:60px 0 40px;
+		height: 100%;
+	}
+
+	.footer-widget {
+		 margin-bottom:10px;
+		font-size: 14px;
+	}
+
+	.footer-widget > a {
+		color: #d8dade;
+	}
+
+	/* Footer title */
+	.footer-title {
+		font-family:"Montserrat",sans-serif;
+	    font-size: 16px;
+	    margin-bottom:5px;
+	    color: #d8dade;
+	    letter-spacing: 1px;
+	}
+	.footer-title:after {
+		content:"";
+		display:block;
+		height:1px;
+		width:22px;
+		border-top:2px solid rgb(181,67,33);
+		margin:5px 0 0;
+	}
+
+	.footer-links {
+		margin:0;
+		padding:0;
+	}
+	.footer-links > li {
+		margin:0 20px 15px 0;
+		display:inline-block;
+		list-style:none;
+	}
+	.footer-links > li > a {
+		color:#d8dade;
+		-webkit-transition:all 0.6s ease-out; transition:all 0.6s ease-out;
+	}
+	.footer-links > li > a:hover,
+	.footer-links > li > a:focus,
+	.footer-links > li > a:active {
+		color: rgb(181,67,33);
+		-webkit-transition:all 0.3s ease-out; transition:all 0.3s ease-out;
+	}
+/* #endregion*/
+
+
+/* #region Mobile specific definitions*/
+
+@media (max-width:992px) {
+	 .notonmobile { display: none;}
+
+	 img.ps-poster-avatar {
+		width: 64px;
+		height: 64px;
+		margin: 5px;
+		 float: left;
+	}
+
+	/*.fs-header {
+		height: 50px;
+	}*/
+
+	.ps-message-tools {
+		float: left;
+		margin-left: 10px;
+	}
+
+	.ps-message {
+		overflow: auto;
+		padding: 5px;
+		width: 100%;
+		float: right;
+		display: block;
+	}
+
+	.ps-poster {
+		margin-top: 10px;
+		padding: 0 10px 0;
+		width: auto;
+		min-height: initial;
+		height: 83px;
+		display: block;
+		float: none;
+		margin-left: auto !important;
+		margin-right: auto !important;
+		position: relative;
+		clear: both;
+		text-align: initial;
+	}
+
+	.ps-poster-name {
+		padding-left: 10px;
+		padding-right: 20px;
+		float: left;
+		display: block;
+		margin-top: 0;
+	}
+
+	.ps-poster-stats {
+		margin-left: 10px;
+		margin-top: 0;
+		padding-top: 0;
+		display: block;
+		float: left;
+		line-height: 24px;
+	}
+}
+
+
+@media (min-width:767px) {
+	/* to make the menus show when hovering over them with a mouse. */
+	.dropdown:hover .dropdown-menu {
+		display: block;
+	}
+	
+	.navbar-brand {
+		padding-left: 0;
+	}
+}
+
+@media (max-width: 767px) {
+	.navbar-default {
+		background-color: inherit;
+	}
+
+	.text-nowrap-responsive {
+		white-space: normal;
+	}
+
+	.xs-pull-left { float:left !important; }
+
+
+	#body-content{
+		padding-bottom: 400px;    /* height of footer */
+	}
+
+	#footer {
+		height: 340px; 
+	}
+}
+/* #endregion*/

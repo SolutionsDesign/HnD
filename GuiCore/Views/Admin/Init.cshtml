@@ -1,0 +1,52 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model SD.HnD.Gui.Models.InitData
+
+@{
+	ViewBag.Title = "HnD | Admin | Initialize HnD";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li class="active">Initialize HnD</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Initialize HnD</h1>
+			<p>
+				Below you can start the initialization of HnD. All you have to do is specify a password for the user 'Admin' and click the 
+				initialization button. The system will then setup the system, add one forum and redirect you to the main page. You can then log in
+				as Admin and configure the system further using the Administration sub menu in the top menu.
+			</p>
+			<div class="mb40">
+				@using(Html.BeginForm("Init", "SystemAdmin", null, FormMethod.Post, true, new {role = "form"}))
+				{
+					@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+					<div class="form-group">
+						@Html.LabelFor(m => m.NewPassword, "Password for Admin", new {@class = "control-label above-control"})
+						@Html.PasswordFor(m => m.NewPassword, new {@class = "form-control", placeholder = " Admin password"})
+						@Html.ValidationMessageFor(m => m.NewPassword, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.ConfirmNewPassword, "Confirm password for Admin", new {@class = "control-label above-control"})
+						@Html.PasswordFor(m => m.ConfirmNewPassword, new {@class = "form-control", placeholder = " Please confirm the admin password"})
+						@Html.ValidationMessageFor(m => m.ConfirmNewPassword, "", new {@class = "text-danger"})
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(m => m.EmailAddress, "Admin email-address ", new {@class = "control-label above-control"})
+						@Html.TextBoxFor(m => m.EmailAddress, new {@class = "form-control", placeholder = " Admin email-address", autofocus = "true"})
+						@Html.ValidationMessageFor(m => m.EmailAddress, "", new {@class = "text-danger"})
+					</div>
+					<div class="mt20">
+						<button type="submit" class="btn btn-default btn-primary"> Initialize </button>
+					</div>
+				}
+			</div>
+		</div>
+	</div>
+</div>

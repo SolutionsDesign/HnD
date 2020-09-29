@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -19,19 +19,10 @@
 */
 using System;
 using System.Collections;
-using System.Collections.Specialized;
-using System.Data;
+using System.Collections.Generic;
 using System.Globalization;
-using System.Configuration;
-using System.Xml.Xsl;
 using System.IO;
-using System.Text.RegularExpressions;
-
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
-using SD.HnD.DAL.DaoClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.LLBLGen.Pro.ORMSupportClasses;
+using System.Threading.Tasks;
 
 namespace SD.HnD.BL
 {
@@ -44,30 +35,65 @@ namespace SD.HnD.BL
 	public static class GuiHelper
 	{						
 		/// <summary>
-		/// Loads the noise words into hashtable. Noise words are words which can be ignored during message indexing and searches.
+		/// Loads the noise words into hashset. Noise words are words which can be ignored during message indexing and searches.
 		/// </summary>
 		/// <param name="dataFilesPath">Path to the datafiles folder</param>
-		/// <returns>A hashtable with all the noisewords found in the file Datafiles/Noise.txt</returns>
-		public static Hashtable LoadNoiseWordsIntoHashtable(string dataFilesPath)
+		/// <returns>A hashset with all the noisewords found in the file Datafiles/Noise.txt</returns>
+		public static HashSet<string> LoadNoiseWordsIntoHashSet(string dataFilesPath)
 		{
-			string fullPath = Path.Combine(dataFilesPath, "Noise.txt");
-			StreamReader reader = new StreamReader(fullPath);
-			bool eofReached = false;
-			Hashtable noiseWords = new Hashtable(256);
-			while(!eofReached)
+			var fullPath = Path.Combine(dataFilesPath, "Noise.txt");
+			using(var reader = new StreamReader(fullPath))
 			{
-				string noiseWord = reader.ReadLine();
-				eofReached=(noiseWord==null);
-				if(!eofReached)
+				var noiseWords = new HashSet<string>();
+				var eofReached = false;
+				while(!eofReached)
 				{
-					if(!noiseWords.ContainsKey(noiseWord))
+					var noiseWord = reader.ReadLine();
+					eofReached = (noiseWord == null);
+					if(!eofReached)
 					{
-						noiseWords.Add(noiseWord, null);
+						noiseWords.Add(noiseWord);
 					}
+				}
+
+				return noiseWords;
+			}
+		}
+		
+		/// <summary>
+		/// Strips the protocol specification like http:// and https:// from the url specified
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public static string StripProtocolsFromUrl(string url)
+		{
+			var toReturn = url;
+			if(!string.IsNullOrEmpty(toReturn))
+			{
+				var urlAsUri = new Uri(url);
+				toReturn = urlAsUri.Host + urlAsUri.PathAndQuery + urlAsUri.Fragment;
+			}
+			return toReturn;
+		}
+
+
+		/// <summary>
+		/// Sanitizes the string specified, which means it will prefix the string with https:// if there's no http:// or https:// at the start.
+		/// </summary>
+		/// <param name="toSanitize"></param>
+		/// <returns></returns>
+		public static string SanitizeUrl(string toSanitize)
+		{
+			var toReturn = toSanitize;
+			if(!string.IsNullOrEmpty(toReturn))
+			{
+				if(!(toReturn.StartsWith("http://", true, CultureInfo.InvariantCulture) || toReturn.StartsWith("https://", true, CultureInfo.InvariantCulture)))
+				{
+					toReturn = "https://" + toReturn;
 				}
 			}
 
-			return noiseWords;
+			return toReturn;
 		}
 	}
 }

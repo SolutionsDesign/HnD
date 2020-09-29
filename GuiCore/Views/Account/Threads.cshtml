@@ -1,0 +1,55 @@
+@model SD.HnD.Gui.Models.MyThreadsData
+@using SD.HnD.Gui
+
+@{
+	ViewBag.Title = "HnD | My Threads";
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+			</ol>
+		</div>
+	</div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0">My Threads</h2>
+            <p>
+	            The list of all the threads you participated in. Total number of threads: @Model.RowCount. @if(Model.RowCount>=500) { <span>(Capped at 500)</span>}
+            </p>
+        </div>
+    </div>
+</div>
+<section class="fs mt20">
+    <div class="container">
+        <div class="col-sm-12 fs-header">
+			<div class="fs-thread-pager"><span class="plr7">Threads</span>&nbsp;&nbsp;&nbsp;
+				@await Html.PartialAsync("MyThreadsPager", Model)
+			</div>
+		</div>
+		@if(Model.ThreadRows.Count <= 0)
+	    {
+	        <div class="fs-row pb30">
+	            <div class="col-sm-12">
+	                There are no threads you participated in.
+	            </div>
+	        </div>
+		}
+	    else
+	    {
+	        <div class="col-sm-12">
+	            <div class="row fs-headingrow">
+	                <div class="col-sm-8 col-xs-8"><span class="pl35">Thread subject</span></div>
+	                <div class="col-sm-1 notonmobile plr10">Posts</div>
+	                <div class="col-sm-1 notonmobile plr10">Views</div>
+	                <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+	            </div>
+				@await Html.PartialAsync("SimpleThreadLister", Model.ThreadRows)
+	        </div>
+		}
+    </div>
+</section>
+

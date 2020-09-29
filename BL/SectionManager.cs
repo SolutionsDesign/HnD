@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -18,11 +18,16 @@
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 using System;
-
+using System.Threading.Tasks;
+using SD.HnD.DALAdapter.DatabaseSpecific;
 using SD.LLBLGen.Pro.ORMSupportClasses;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.CollectionClasses;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -34,32 +39,28 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Adds a new section to the forum system.
 		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="description">The description.</param>
-		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
+		/// <param name="toInsert">The dto with the values to insert</param>
 		/// <returns>
 		/// the SectionID of the new section. Or Zero if failed
 		/// </returns>
-        public static int AddNewSection(string name, string description, short orderNo)
+		public static async Task<int> AddNewSectionAsync(SectionDto toInsert)
 		{
-            SectionEntity section = new SectionEntity();
-
-            // fill the entity fields with data
-            section.SectionName = name;
-            section.SectionDescription = description;
-			section.OrderNo = orderNo;
-            
-            // try to save the entity
-            bool saveResult = section.Save();
-			
-			// if succeeds return the new ID, else return Zero.
-			if(saveResult == true)
-			{
-				return section.SectionID;
-			}
-			else
+			if(toInsert == null)
 			{
 				return 0;
+			}
+
+			var section = new SectionEntity
+						  {
+							  SectionName = toInsert.SectionName, 
+							  SectionDescription = toInsert.SectionDescription, 
+							  OrderNo = toInsert.OrderNo
+						  };
+
+			using(var adapter = new DataAccessAdapter())
+			{
+				var result = await adapter.SaveEntityAsync(section).ConfigureAwait(false);
+				return result ? section.SectionID : 0;
 			}
 		}
 		
@@ -67,49 +68,53 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Modifies the given section's name and description
 		/// </summary>
-        /// <param name="ID">ID of section to modify</param>
-        /// <param name="name">New name of section</param>
-        /// <param name="description">Description of section</param>
-		/// <param name="orderNo">The order no for the section. Sections are sorted ascending on orderno.</param>
+		/// <param name="toUpdate">the dto containing the values to update the associated entity with</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool ModifySection(int ID, string name, string description, short orderNo)
+		public static async Task<bool> ModifySectionAsync(SectionDto toUpdate)
 		{
-            // load the entity from the database
-            SectionEntity section = new SectionEntity(ID);
-
-            //check if the entity is new (not found in the database), then return false.
-			if(section.IsNew == true)
+			if(toUpdate == null)
 			{
 				return false;
 			}
-
-            // update the fields with new values
-            section.SectionName = name;
-            section.SectionDescription = description;
-			section.OrderNo = orderNo;
-          
-            //try to save the changes
-            return section.Save();
+			var section = await SectionGuiHelper.GetSectionAsync(toUpdate.SectionID);
+			if(section == null)
+			{
+				return false;
+			}
+			section.UpdateFromSection(toUpdate);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return await adapter.SaveEntityAsync(section).ConfigureAwait(false);
+			}
 		}
 		
 		
 		/// <summary>
-		/// Removes the given section from the database. Returns true if succeeded.
+		/// Removes the given section from the database. Returns true if succeeded. Only allows deletion if the section is empty
 		/// </summary>
-        /// <param name="ID">ID of section to delete</param>
+        /// <param name="sectionId">ID of section to delete</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static bool DeleteSection(int ID)
+		public static async Task<bool> DeleteSectionAsync(int sectionId)
 		{
-			// trying to delete the entity directly from the database without first loading it.
-			// for that we use an entity collection and use the DeleteMulti method with a filter on the PK.
-			SectionCollection sections = new SectionCollection();
-            // try to delete the entity
-			int deletedRows = sections.DeleteMulti(SectionFields.SectionID == ID);
+			using(var adapter = new DataAccessAdapter())
+			{
+				// first check if the section has any forums
+				var q = new QueryFactory().Forum.Where(ForumFields.SectionID.Equal(sectionId)).Select(Functions.CountRow());
+				var numberOfForums = await adapter.FetchScalarAsync<int?>(q).ConfigureAwait(false);
+				if(numberOfForums.HasValue && numberOfForums > 0)
+				{
+					// has forums, can't delete this section.
+					return false;
+				}
+				
+				// trying to delete the entity directly from the database without first loading it.
+				var numberOfDeletedRows = await adapter.DeleteEntitiesDirectlyAsync(typeof(SectionEntity), 
+																					new RelationPredicateBucket(SectionFields.SectionID.Equal(sectionId)))
+													   .ConfigureAwait(false);
 
-			// there should only be one deleted row, since we are filtering by the PK.
-			// return true if there's 1, otherwise false.
-			return (deletedRows == 1); 
+				// there should only be one deleted row, since we are filtering by the PK.
+				return numberOfDeletedRows == 1;
+			}
 		}
-		
 	}
 }

@@ -1,0 +1,126 @@
+﻿@using System.Globalization
+@using SD.HnD.DALAdapter.EntityClasses
+@model SD.HnD.Gui.Models.MessageData
+@{
+    ViewBag.Title = string.Format("HnD | Add new message to thread {0}", Model.ThreadSubject);
+}
+
+<a id="top"></a>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+                <li>@Model.SectionName</li>
+                <li><a href="~/Forum/@Model.ForumID/1">@Model.ForumName</a></li>
+                <li><a href="~/Thread/@Model.ThreadID/1">@Model.ThreadSubject</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0 mb0 pb0">Add New Message</h2>
+        </div>
+    </div>
+</div>
+<section class="mt20">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @using(Html.BeginForm("Add", "Message", FormMethod.Post, new { role = "form", threadId=@Model.ThreadID }))
+                {
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @await Html.PartialAsync("MarkdownEditor", Model)
+                    <div class="mt20">
+                        <input type="submit" name="submitButton" value="Post" class="btn btn-primary btn-default"/>&nbsp;&nbsp;&nbsp;
+                        <input type="submit" name="submitButton" formnovalidate value="Cancel" class="btn btn-default" />
+                    </div>
+                }
+            </div>
+        </div>
+		@if(Model.LastMessageInThread != null)
+		{
+			var currentMessage = Model.LastMessageInThread;
+			<div class="row ps ps-lastmessage-header">
+		        <div class="col-sm-12 fs-header fs-header-slim">
+                    Last post in thread
+                </div>
+				<div class="col-sm-12 plr0">
+					<div class="ps-poster" id="@Html.Raw("MessagePoster" + currentMessage.MessageID)">
+						@if(!string.IsNullOrWhiteSpace(currentMessage.PostedByUser.IconURL))
+						{
+							var fullURL = "https://" + currentMessage.PostedByUser.IconURL;
+							<img src="@fullURL" class="ps-poster-avatar" alt="@currentMessage.PostedByUser.NickName avatar"/>
+						}
+						<div class="ps-poster-name">
+							<a href="~/User/@currentMessage.PostedByUser.UserID">@currentMessage.PostedByUser.NickName</a><br/>
+							<span class="ps-poster-title">@currentMessage.PostedByUser.UserTitleDescription</span>
+						</div>
+						<div class="ps-poster-stats">
+							<span class="ps-poster-info"><b>Posts:</b> @currentMessage.PostedByUser.AmountOfPostings</span><br/>
+							@if(currentMessage.PostedByUser.JoinDate.HasValue)
+							{
+								<span class="ps-poster-info"><b>Joined:</b> @currentMessage.PostedByUser.JoinDate.Value.ToString("dd-MMM-yyyy")</span>
+								<br/>
+							}
+						</div>
+					</div>
+					<div class="ps-message">
+						<div class="ps-message-title">
+							<div class="pull-left">
+								<a href="~/Message/Goto/@currentMessage.MessageID">#</a> Posted on: @currentMessage.PostingDate.ToString("dd-MMM-yyyy HH:mm:ss")&nbsp;&nbsp;&nbsp;
+							</div>
+						</div>
+						<div class="ps-message-content" id="@Html.Raw("MessageContents" + currentMessage.MessageID)">
+							@Html.Raw(currentMessage.MessageTextAsHTML)
+							@if(currentMessage.Attachments.Count > 0)
+							{
+								<div class="bottom_aligner"></div>
+								<table class="table mb0 mt0 table-condensed">
+									<caption class="attachments-caption"><span>Attachments</span></caption>
+									<thead>
+									<tr>
+										<th>Filename</th>
+										<th>File size</th>
+										<th>Added on</th>
+										<th>Approval</th>
+									</tr>
+									</thead>
+									<tbody>
+									@foreach(var attachment in currentMessage.Attachments)
+									{
+										<tr>
+											<td>
+												@if(attachment.Approved)
+												{
+													<a href="~/Attachment/Get/@currentMessage.MessageID/@attachment.AttachmentID" target="_blank" title="Download file '@attachment.Filename'">@attachment.Filename</a>
+												}
+												else
+												{
+													@attachment.Filename
+												}
+											</td>
+											<td>@attachment.Filesize.ToString("N0")</td>
+											<td>@attachment.AddedOn.ToString("dd-MMM-yyyy HH:mm.ss", DateTimeFormatInfo.InvariantInfo)</td>
+											<td>
+												@Html.Raw(attachment.Approved ? "Approved" : "Pending")
+											</td>
+										</tr>
+									}
+									</tbody>
+								</table>
+							}
+						</div>
+						<div class="ps-message-signature">
+							@Html.Encode(currentMessage.PostedByUser.Signature)
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+    </div>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("MarkdownEditor_JS")
+}

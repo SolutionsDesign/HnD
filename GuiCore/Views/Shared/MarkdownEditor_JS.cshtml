@@ -1,0 +1,90 @@
+﻿<script language="javascript">
+    var tbxSubject = null;
+    var tbxMessage = null;
+    if (!tbxSubject) {
+        tbxSubject = document.getElementById("SubjectEditor");
+    }
+    if (!tbxMessage) {
+        tbxMessage = document.getElementById("MessageEditor");
+    }
+    if (tbxSubject) {
+        tbxSubject.focus();
+    }
+    else {
+        if (tbxMessage) {
+            tbxMessage.focus();
+        }
+    }
+    // cludgy re-test, as we always have to set IE specific caret cruft, whatever object is focused.
+    if(tbxMessage)
+    {
+        if (typeof tbxMessage.createTextRange != 'undefined') {
+            // IE
+            tbxMessage.onkeyup = StoreCaretPosition;
+            tbxMessage.onclick = StoreCaretPosition;
+            tbxMessage.onselect = StoreCaretPosition;
+            tbxMessage.onselect();
+        }
+    }
+
+
+    // Inserts the given string sTagToInsert at the caret position in tbxMessage.
+    // Adds spaces when appropriate.
+    function InsertTagAtCarretPos(sTagToInsert) {
+        sTextToInsert = ' ' + sTagToInsert + ' ';
+        return InsertTagAroundSelection(sTagToInsert, '');
+    }
+
+
+    // Inserts the given begintag sStartTagToInsert in front of the selected text and sEndTagToInsert behind the
+    // selected text. If no text is selected, or the user uses a browser which doesn't support decent javascripting
+    // the tags are inserted at the end of the text in tbxMessage.
+    function InsertTagAroundSelection(sStartTagToInsert, sEndTagToInsert) {
+        var sSelectedText;
+        if (tbxMessage) {
+            if (typeof tbxMessage.cursorPos != 'undefined') {
+                var cursorPos = tbxMessage.cursorPos;
+                sSelectedText = cursorPos.text;
+                cursorPos.text = sStartTagToInsert + sSelectedText + sEndTagToInsert;
+            }
+            else {
+                if (typeof tbxMessage.selectionStart != 'undefined') {
+                    // remember scrollposition
+                    var scrollTop = tbxMessage.scrollTop;
+
+                    var sStart = tbxMessage.selectionStart;
+                    var sEnd = tbxMessage.selectionEnd;
+                    sSelectedText = tbxMessage.value.substring(sStart, sEnd);
+                    var newText = sStartTagToInsert + sSelectedText + sEndTagToInsert;
+                    tbxMessage.value = tbxMessage.value.substr(0, sStart) + newText + tbxMessage.value.substr(sEnd);
+                    var nStart = sStart == sEnd ? sStart + newText.length : sStart;
+                    var nEnd = sStart + newText.length;
+                    tbxMessage.setSelectionRange(nStart, nEnd);
+
+                    // reset scrollposition
+                    tbxMessage.scrollTop = scrollTop;
+                }
+                else {
+                    tbxMessage.value += sStartTagToInsert + sEndTagToInsert;
+                }
+            }
+
+            tbxMessage.focus();
+            if (typeof tbxMessage.cursorPos != 'undefined') {
+                tbxMessage.onselect();
+            }
+        }
+        return false;
+    }
+
+
+    // Stores the current caret position in a variable of tbxMessage.
+    function StoreCaretPosition() {
+        if (tbxMessage.createTextRange) {
+            this.cursorPos = document.selection.createRange().duplicate();
+        }
+    }
+</script>
+
+
+

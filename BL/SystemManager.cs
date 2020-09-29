@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -19,7 +19,16 @@
 */
 using System;
 using System.Data;
-using SD.HnD.DAL.EntityClasses;
+using System.Threading;
+using System.Threading.Tasks;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DALAdapter.HelperClasses;
+using SD.HnD.Utility;
+using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -45,23 +54,52 @@ namespace SD.HnD.BL
 		/// <returns>
 		/// true if save was succeeded, false otherwise
 		/// </returns>
-		public static bool StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers, 
-				short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch, 
-				short minimalNumberOfNonStickyVisibleThreads, bool sendReplyNotifications)
+		public static async Task<bool> StoreNewSystemSettings(int id, int newDefaultUserRoleNewUsers, int newAnonymousRole, int newUserTitleNewUsers, 
+															  short hoursThresholdForActiveThreads, short pageSizeSearchResults, short minimalNumberOfThreadsToFetch, 
+															  short minimalNumberOfNonStickyVisibleThreads, bool sendReplyNotifications)
 		{
-			// fetch the existing system data entity. 
-			SystemDataEntity systemData = new SystemDataEntity(id);
+			using(var adapter = new DataAccessAdapter())
+			{
+				// fetch the existing system data entity.
+				var q = new QueryFactory().SystemData.Where(SystemDataFields.ID.Equal(id));
+				var systemData = await adapter.FetchFirstAsync(q).ConfigureAwait(false);
+				if(systemData==null)
+				{
+					throw new InvalidOperationException("No system settings object found!");
+				}
 
-			// update its parameters. 
-			systemData.DefaultRoleNewUser = newDefaultUserRoleNewUsers;
-			systemData.AnonymousRole = newAnonymousRole;
-			systemData.DefaultUserTitleNewUser = newUserTitleNewUsers;
-			systemData.HoursThresholdForActiveThreads = hoursThresholdForActiveThreads;
-			systemData.PageSizeSearchResults = pageSizeSearchResults;
-			systemData.MinNumberOfNonStickyVisibleThreads = minimalNumberOfNonStickyVisibleThreads;
-			systemData.MinNumberOfThreadsToFetch = minimalNumberOfThreadsToFetch;
-			systemData.SendReplyNotifications = sendReplyNotifications;
-			return systemData.Save();
+				// update its parameters. 
+				systemData.DefaultRoleNewUser = newDefaultUserRoleNewUsers;
+				systemData.AnonymousRole = newAnonymousRole;
+				systemData.DefaultUserTitleNewUser = newUserTitleNewUsers;
+				systemData.HoursThresholdForActiveThreads = hoursThresholdForActiveThreads;
+				systemData.PageSizeSearchResults = pageSizeSearchResults;
+				systemData.MinNumberOfNonStickyVisibleThreads = minimalNumberOfNonStickyVisibleThreads;
+				systemData.MinNumberOfThreadsToFetch = minimalNumberOfThreadsToFetch;
+				systemData.SendReplyNotifications = sendReplyNotifications;
+				return await adapter.SaveEntityAsync(systemData).ConfigureAwait(false);
+			}
+		}
+
+
+		/// <summary>
+		/// Initializes the system, by running a stored procedure passing in the new admin password.
+		/// </summary>
+		/// <param name="newAdminPassword"></param>
+		/// <param name="emailAddress"></param>
+		/// <returns></returns>
+		public static async Task Initialize(string newAdminPassword, string emailAddress)
+		{
+			if(string.IsNullOrWhiteSpace(newAdminPassword))
+			{
+				return;
+			}
+			var passwordHashed = HnDGeneralUtils.HashPassword(newAdminPassword, performPreMD5Hashing:true);
+			using(var adapter = new DataAccessAdapter())
+			{
+				await ActionProcedures.InstallAsync(emailAddress, passwordHashed, adapter, CancellationToken.None);
+				CacheController.PurgeResultsets(CacheKeys.AnonymousUserQueryResultset);
+			}
 		}
 	}
 }

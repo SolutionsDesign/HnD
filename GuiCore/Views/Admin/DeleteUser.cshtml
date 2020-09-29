@@ -1,0 +1,61 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Classes
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.ActionWithUserSearchData
+
+@{
+	ViewBag.Title = "HnD | Admin | Delete user";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Delete User</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Delete User</h1>
+			<p>
+				Below you can delete a user. First select the user to delete using the Find User portion of the form, then you have to confirm you want to delete the user
+                selected. You can't delete yourself, Admin (UserID 1) nor the Anonymous user (UserID 0).
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm(Model.FindUserData.ActionToPostTo, "UserAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			{
+				@await Html.PartialAsync("Admin/FindUser", Model)
+				switch(Model.FindUserData.FindUserState)
+				{
+					case AdminFindUserState.FinalAction:
+						<div><p>Are you sure you want to delete user <b>@Model.FindUserData.SelectedUsers.FirstOrDefault()?.NickName</b>?</p></div>
+						<div class="mt20">
+							<button type="submit" name="submitAction" value="Delete" class="btn btn-default"> Yes </button>
+							&nbsp;&nbsp;
+							<button type="submit" name="submitAction" value="Cancel" class="btn btn-default"> No </button>
+						</div>
+						break;
+					case AdminFindUserState.PostAction:
+						<div><p>@Model.FinalActionResult</p></div>
+						break;
+				}
+			}			
+		</div>
+	</div>
+</div>

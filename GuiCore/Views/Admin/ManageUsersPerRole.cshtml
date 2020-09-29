@@ -1,0 +1,124 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Controllers
+@using SD.HnD.Gui
+@model SD.HnD.Gui.Models.Admin.UsersInRolesData
+
+@{
+	ViewBag.Title = "HnD | Admin | Manage users per role";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage Users per Role</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-12">
+			<h1 class="br-bottom mt30">Manage Users per Role</h1>
+			<p>
+				Below you can manage the users per role. After selecting a role, the current users are shown. You can then remove a user or click the 'Add' button to
+				add one or more users. For roles with potentially a lot of users, e.g. the default users role, it's not feasible to remove users from these roles. In that 
+				case, please use the <a href="~/Admin/EditUserInfo">Edit User Info</a> functionality to remove a user from one or more roles.  
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			<div class="form-group">
+				@Html.LabelFor(m => m.RoleID, "Role", new {@class = "control-label above-control"})
+				@Html.DropDownListFor(m => m.RoleID, @Model.AvailableRoles.Select(r => new SelectListItem(r.RoleDescription, r.RoleID.ToString())), 
+									  new {@class = "form-control", onchange="reloadGrid();"})
+			</div>
+		</div>
+		<div class="col-sm-12">
+			<div class="alert alert-danger hidden" role="alert" id="jsErrorMessageContainer">
+            	<span id="jsErrorMessageTitle" class="alert-title"></span>
+            	<p id="jsErrorMessageDetail"></p>
+            </div>
+			<div id="jsGrid"></div>
+		</div>	
+	</div>
+</div>
+@section scripts
+{
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+	<script>
+		var deletionFailed = false;
+		
+        $(function() {
+            $("#jsGrid").jsGrid({
+                height: "auto",
+                width: "100%",
+                
+                inserting: false,
+                editing: false,
+                sorting: true,
+                paging: true,
+                autoload: true,
+                
+                pageSize: 25,
+                pageButtonCount: 8,
+                
+                deleteConfirm: "Do you really want to remove this user from this role?",
+                
+                controller: {
+                    loadData: function(filter) {
+                    	
+                        return $.ajax({
+                            type: "GET",
+                            url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetUsersInRole/" + $("#RoleID").val(),
+                            dataType: "json",
+                            data:filter
+                        });
+                    },
+                    deleteItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/RemoveUserFromRole", {roleId: parseInt($("#RoleID").val()), userId: item.userID});
+                    }
+                },
+                fields: [
+                    { name:"userID", title: "User ID", type: "number", width: 25, editing:false, inserting:false},
+                    { name:"nickName", title: "Nick name", type: "text", width: 50 },
+                    { name:"emailAddress", title: "Email-address", type: "text", width: 100 },
+                    { name:"amountOfPostings", title: "Post count", type: "number", width:30 },
+                    { 
+                    	type: "control",                 
+                    	modeSwitchButton: false,
+                    	editButton:false,
+						headerTemplate: function() {
+						 return $("<button>").attr("type", "button").text("Add")
+								 .on("click", function () {
+									 redirectToAdd();
+								 });
+						} 
+                    }
+                ]
+            });
+                        
+			var redirectToAdd = function () 
+			{
+				window.location.replace("@ApplicationAdapter.GetVirtualRoot()Admin/AddUsersToRole/" + $("#RoleID").val());
+			}
+   		});
+        
+		function reloadGrid()
+		{
+			$("#jsGrid").jsGrid("reset");
+			$("#jsGrid").jsGrid("loadData");
+		}	
+    </script>
+}

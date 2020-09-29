@@ -1,0 +1,60 @@
+﻿@using Microsoft.Extensions.Caching.Memory
+@using SD.HnD.Gui
+@model SD.HnD.Gui.Models.ThreadsData
+@inject IMemoryCache _cache
+@{
+    ViewBag.Title = "HnD | Active Threads";
+	var systemData = await _cache.GetSystemDataAsync();
+}}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 page-header-breadcrumbs">
+            <ol class="breadcrumb plr0">
+                <li><a href="~/">Home</a></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 pt0 mt0">
+            <h2 class="br-bottom pt0 mt0">Active Threads</h2>
+            <p>
+	            The list of all active threads of the past @systemData?.HoursThresholdForActiveThreads hours.
+            </p>
+        </div>
+    </div>
+</div>
+<section class="fs mt20">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 fs-header">
+                Active threads
+            </div>
+        </div>
+		@if(Model.ThreadRows==null || Model.ThreadRows.Count <= 0)
+        {
+            <div class="row fs-row pb30">
+                <div class="col-sm-12">
+                    There are no active threads at this point.
+                </div>
+            </div>
+		}
+        else
+        {
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row fs-headingrow">
+	                    <div class="col-sm-8 col-xs-8"><span class="pl35">Thread subject</span></div>
+	                    <div class="col-sm-1 notonmobile plr10">Posts</div>
+	                    <div class="col-sm-1 notonmobile plr10">Views</div>
+	                    <div class="col-sm-2 col-xs-4 text-nowrap plr10">Last post</div>
+                    </div>
+					@await Html.PartialAsync("SimpleThreadLister", Model?.ThreadRows)
+                </div>
+            </div>
+		}
+    </div>
+</section>
+
+
+

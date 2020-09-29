@@ -1,0 +1,98 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.AddEditForumData
+
+@{
+	ViewBag.Title = "HnD | Admin | Edit forum";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Edit Forum</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Edit Forum @Model.ForumEdited.ForumName</h1>
+			<br/><br/>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm("EditForum", "ForumAdmin", new {forumId = Model.ForumEdited.ForumID}, FormMethod.Post, true, new {role = "form"}))
+			{
+				var supportQueuesSelectItems = Model.AllExistingSupportQueues.Select(q => new SelectListItem(q.QueueName, q.QueueID.ToString())).ToList();
+				supportQueuesSelectItems.Insert(0, new SelectListItem("None", "-1"));
+
+				@Html.ValidationSummary(true, "", new {@class = "text-danger"})
+				<div class="caption"><span>General information</span></div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.ForumName, "Forum name* ", new {@class = "control-label above-control"})
+					@Html.TextBoxFor(m => m.ForumEdited.ForumName, new {@class = "form-control", placeholder = " ", autofocus = "true"})
+					@Html.ValidationMessageFor(m => m.ForumEdited.ForumName, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.ForumDescription, "Description*", new {@class = "control-label above-control"})
+					@Html.TextAreaFor(m => m.ForumEdited.ForumDescription, new {@class = "form-control", placeholder = " "})
+					@Html.ValidationMessageFor(m => m.ForumEdited.ForumDescription, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.SectionID, "Section*", new {@class = "control-label above-control"})
+					@Html.DropDownListFor(m => m.ForumEdited.SectionID, @Model.AllExistingSections.Select(s => new SelectListItem(s.SectionName, s.SectionID.ToString())), new {@class = "form-control"})
+					@Html.ValidationMessageFor(m => m.ForumEdited.SectionID, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.DefaultSupportQueueID, "Default support queue", new {@class = "control-label above-control"})
+					@Html.DropDownListFor(m => m.ForumEdited.DefaultSupportQueueID, supportQueuesSelectItems, new {@class = "form-control"})
+					@Html.ValidationMessageFor(m => m.ForumEdited.DefaultSupportQueueID, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.NewThreadWelcomeText, "New thread welcome text", new {@class = "control-label above-control"})
+					@Html.TextAreaFor(m => m.ForumEdited.NewThreadWelcomeText, new {@class = "form-control", placeholder = " "})
+					@Html.ValidationMessageFor(m => m.ForumEdited.NewThreadWelcomeText, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.CheckBoxFor(m => m.ForumEdited.HasRSSFeed)&nbsp;
+					@Html.DisplayNameFor(m => m.ForumEdited.HasRSSFeed)
+					<div class="small">Be aware that an RSS feed will expose all messages of a forum. If you want to keep messages hidden, don't enable
+						this feature.</div>
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.MaxNoOfAttachmentsPerMessage, "Max # of attachments per message*", new {@class = "control-label above-control"})<br/>
+					@Html.EditorFor(m => m.ForumEdited.MaxNoOfAttachmentsPerMessage, new {htmlAttributes = new {@class = "form-control", @style = "width:75px; display:initial"}})&nbsp;
+					@Html.ValidationMessageFor(m => m.ForumEdited.MaxNoOfAttachmentsPerMessage, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.MaxAttachmentSize, "Max attachment size (in KB)*", new {@class = "control-label above-control"})<br/>
+					@Html.EditorFor(m => m.ForumEdited.MaxAttachmentSize, new {htmlAttributes = new {@class = "form-control", @style = "width:100px; display:initial"}})&nbsp;
+					@Html.ValidationMessageFor(m => m.ForumEdited.MaxAttachmentSize, "", new {@class = "text-danger"})
+				</div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.ForumEdited.OrderNo, "Sort order within section*", new {@class = "control-label above-control"})<br/>
+					@Html.EditorFor(m => m.ForumEdited.OrderNo, new {htmlAttributes = new {@class = "form-control", @style = "width:75px; display:initial"}})&nbsp;
+					@Html.ValidationMessageFor(m => m.ForumEdited.OrderNo, "", new {@class = "text-danger"})
+				</div>
+
+				<div class="mt20">
+					<button type="submit" name="submitAction" value="add" class="btn btn-default btn-primary"> Save </button>
+					&nbsp;&nbsp;&nbsp;
+					<button type="submit" name="submitAction" value="cancel" formnovalidate class="btn btn-default"> Cancel </button>
+				</div>
+			}
+		</div>
+	</div>
+</div>

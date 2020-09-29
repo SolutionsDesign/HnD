@@ -1,0 +1,70 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui.Controllers
+@model SD.HnD.Gui.Models.Admin.AddEditRoleData
+
+@{
+	ViewBag.Title = "HnD | Admin | Add role";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Add Role</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Add Role</h1>
+			<p>
+				Below you can add a new role to the system and set its system action rights and audit actions. The description you specify has to be unique. 
+				<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-8">
+			@using(Html.BeginForm("AddRole", "SecurityAdmin", null, FormMethod.Post, true, new {role = "form"}))
+			{
+				@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+				<div class="caption"><span>General information</span></div>
+				<div class="form-group">
+					@Html.LabelFor(m => m.RoleEdited.RoleDescription, "Role description* ", new {@class = "control-label above-control"})
+					@Html.TextBoxFor(m => m.RoleEdited.RoleDescription, new {@class = "form-control", placeholder = " ", autofocus = "true"})
+					@Html.ValidationMessageFor(m => m.RoleEdited.RoleDescription, "", new {@class = "text-danger"})
+				</div>
+				<div class="caption"><span>System action rights for this role</span></div>
+				<div class="form-group">
+					@foreach(var actionRight in Model.AvailableSystemRights)
+					{
+						<input name="SystemRightsSet" type="checkbox" value="@actionRight.ActionRightID"/> @actionRight.ActionRightDescription <br/>
+					}
+				</div>
+				<div class="caption"><span>Audit actions for this role</span></div>
+				<div class="form-group">
+					@foreach(var auditAction in Model.AvailableAuditActions)
+					{
+						<input name="AuditActionsSet" type="checkbox" value="@auditAction.AuditActionID"/> @auditAction.AuditActionDescription <br/>
+					}
+				</div>
+				<div class="mt20">
+					<button type="submit" name="submitAction" value="add" class="btn btn-default btn-primary"> Add </button>
+					&nbsp;&nbsp;&nbsp;
+					<button type="submit" name="submitAction" value="cancel" formnovalidate class="btn btn-default"> Cancel </button>
+				</div>
+			}
+		</div>
+	</div>
+</div>

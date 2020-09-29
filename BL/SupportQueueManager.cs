@@ -1,6 +1,6 @@
 /*
 	This file is part of HnD.
-	HnD is (c) 2002-2007 Solutions Design.
+	HnD is (c) 2002-2020 Solutions Design.
     http://www.llblgen.com
 	http://www.sd.nl
 
@@ -20,11 +20,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SD.HnD.DAL.EntityClasses;
-using SD.HnD.DAL.HelperClasses;
+using SD.HnD.DALAdapter.EntityClasses;
+using SD.HnD.DALAdapter.HelperClasses;
 using System.Data;
-using SD.HnD.DAL.CollectionClasses;
+using System.Threading.Tasks;
+using SD.HnD.DALAdapter.DatabaseSpecific;
+using SD.HnD.DALAdapter.FactoryClasses;
+using SD.HnD.DTOs.DtoClasses;
+using SD.HnD.DTOs.Persistence;
 using SD.LLBLGen.Pro.ORMSupportClasses;
+using SD.LLBLGen.Pro.QuerySpec;
+using SD.LLBLGen.Pro.QuerySpec.Adapter;
 
 namespace SD.HnD.BL
 {
@@ -36,95 +42,78 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Creates a new support queue.
 		/// </summary>
-		/// <param name="queueName">Name of the queue.</param>
-		/// <param name="queueDescription">The queue description.</param>
-		/// <param name="orderNo">The order no.</param>
-		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool CreateNewSupportQueue(string queueName, string queueDescription, short orderNo)
+		/// <param name="newDataDto">the dto with the data for the new queue</param>
+		/// <returns>the id of the new queue or 0 if failed</returns>
+		public static async Task<int> CreateNewSupportQueueAsync(SupportQueueDto newDataDto)
 		{
-			SupportQueueEntity toInsert = new SupportQueueEntity();
-			toInsert.QueueDescription = queueDescription;
-			toInsert.QueueName = queueName;
-			toInsert.OrderNo = orderNo;
-			return toInsert.Save();
+			var newSupportQueue = new SupportQueueEntity();
+			newSupportQueue.UpdateFromSupportQueue(newDataDto);
+			using(var adapter = new DataAccessAdapter())
+			{
+				var result = await adapter.SaveEntityAsync(newSupportQueue).ConfigureAwait(false);
+				return result ? newSupportQueue.QueueID : 0;
+			}
 		}
 
 
 		/// <summary>
 		/// Modifies the support queue definition data.
 		/// </summary>
-		/// <param name="queueID">The queue ID of the queue to modify the definition data of.</param>
-		/// <param name="queueName">Name of the queue.</param>
-		/// <param name="queueDescription">The queue description.</param>
-		/// <param name="orderNo">The order no.</param>
+		/// <param name="toUpdate">the dto containing the data of the support queue to update</param>
 		/// <returns>true if succeeded, false otherwise</returns>
-		public static bool ModifySupportQueue(int queueID, string queueName, string queueDescription, short orderNo)
+		public static async Task<bool> ModifySupportQueueAsync(SupportQueueDto toUpdate)
 		{
-			SupportQueueEntity toModify = SupportQueueGuiHelper.GetSupportQueue(queueID);
+			if(toUpdate == null)
+			{
+				return false;
+			}
+			var toModify = await SupportQueueGuiHelper.GetSupportQueueAsync(toUpdate.QueueID);
 			if(toModify == null)
 			{
 				// not found
 				return false;
 			}
-
-			// set the fields, if they're not changed, the field won't be updated in the db.
-			toModify.QueueName = queueName;
-			toModify.QueueDescription = queueDescription;
-			toModify.OrderNo = orderNo;
-			return toModify.Save();
+			toModify.UpdateFromSupportQueue(toUpdate);
+			using(var adapter = new DataAccessAdapter())
+			{
+				return await adapter.SaveEntityAsync(toModify).ConfigureAwait(false);
+			}
 		}
 
 
 		/// <summary>
 		/// Deletes the support queue with the ID specified.
 		/// </summary>
-		/// <param name="queueID">The queue ID of the queue to delete.</param>
+		/// <param name="queueId">The queue ID of the queue to delete.</param>
 		/// <returns>true if succeeded, false otherwise</returns>
 		/// <remarks>All threads in the queue are automatically de-queued and not in a queue anymore. The Default support queue
 		/// for forums which have this queue as the default support queue is reset to null.</remarks>
-		public static bool DeleteSupportQueue(int queueID)
+		public static async Task<bool> DeleteSupportQueueAsync(int queueId)
 		{
-			// we'll do several actions in one atomic transaction, so start a transaction first. 
-			Transaction trans = new Transaction(IsolationLevel.ReadCommitted, "DeleteSupportQ");
-
-			try
-			{
-				// first reset all the FKs in Forum to NULL if they point to this queue.
-				ForumEntity forumUpdater = new ForumEntity();
-				// set the field to NULL. This is a nullable field, so we can just set the field to 'null', thanks to nullable types.
-				forumUpdater.DefaultSupportQueueID = null;
-				// update the entities directly in the db, use a forum collection for that
-				ForumCollection forums = new ForumCollection();
-				trans.Add(forums);
-				// specify a filter that only the forums which have this queue as the default queue are updated and have their FK field set to NULL.
-				forums.UpdateMulti(forumUpdater, (ForumFields.DefaultSupportQueueID == queueID));
-
-				// delete all SupportQueueThread entities which refer to this queue. This will make all threads which are in this queue become queue-less.
-				SupportQueueThreadCollection supportQueueThreads = new SupportQueueThreadCollection();
-				trans.Add(supportQueueThreads);
-				// delete them directly from the db.
-				supportQueueThreads.DeleteMulti((SupportQueueThreadFields.QueueID == queueID));
-
-				// it's now time to delete the actual supportqueue entity.
-				SupportQueueCollection supportQueues = new SupportQueueCollection();
-				trans.Add(supportQueues);
-				// delete it directly from the db.
-				int numberOfQueuesDeleted = supportQueues.DeleteMulti((SupportQueueFields.QueueID == queueID));
-
-				// done so commit the transaction.
-				trans.Commit();
-				return (numberOfQueuesDeleted > 0);
-			}
-			catch
-			{
-				// first roll back the transaction
-				trans.Rollback();
-				// then bubble up the exception
-				throw;
-			}
-			finally
-			{
-				trans.Dispose();
+			using(var adapter = new DataAccessAdapter())
+			{ 
+				// we'll do several actions in one atomic transaction, so start a transaction first. 
+				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteSupportQ").ConfigureAwait(false);
+				try
+				{
+					// first reset all the FKs in Forum to NULL if they point to this queue.
+					await adapter.UpdateEntitiesDirectlyAsync(new ForumEntity() { DefaultSupportQueueID = null }, 
+															  new RelationPredicateBucket(ForumFields.DefaultSupportQueueID.Equal(queueId))).ConfigureAwait(false);;
+					// delete all SupportQueueThread entities which refer to this queue. This will make all threads which are in this queue become queue-less.
+					await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+															  new RelationPredicateBucket(SupportQueueThreadFields.QueueID.Equal(queueId))).ConfigureAwait(false);;
+					// it's now time to delete the actual supportqueue entity.
+					var result = await adapter.DeleteEntitiesDirectlyAsync(typeof(SupportQueueEntity), 
+																		   new RelationPredicateBucket(SupportQueueFields.QueueID.Equal(queueId))).ConfigureAwait(false);;
+					// done so commit the transaction.
+					adapter.Commit();
+					return (result > 0);
+				}
+				catch
+				{
+					adapter.Rollback();
+					throw;
+				}
 			}
 		}
 
@@ -132,112 +121,137 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Claims the thread specified for the user specified. As the thread can be in one queue at a time, it simply has to update the SupportQueueThread entity.
 		/// </summary>
-		/// <param name="userID">The user ID.</param>
-		/// <param name="threadID">The thread ID.</param>
-		public static void ClaimThread(int userID, int threadID)
+		/// <param name="userId">The user ID.</param>
+		/// <param name="threadId">The thread ID.</param>
+		public static Task ClaimThreadAsync(int userId, int threadId)
 		{
-			SupportQueueThreadEntity supportQueueThread = new SupportQueueThreadEntity();
-			supportQueueThread.FetchUsingUCThreadID(threadID);
-			if(supportQueueThread.IsNew)
-			{
-				// not found, return
-				return;
-			}
-
-			// simply overwrite an existing claim if any.
-			supportQueueThread.ClaimedByUserID = userID;
-			supportQueueThread.ClaimedOn = DateTime.Now;
-
-			// done, save it
-			supportQueueThread.Save();
+			return UpdateClaimOnThreadAsync(userId, threadId, claim: true);
 		}
-		
+
 
 		/// <summary>
 		/// Releases the claim on the thread specified. As the thread can be in one queue at a time, it simply has to update the SupportQueueThread entity.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		public static void ReleaseClaimOnThread(int threadID)
+		/// <param name="threadId">The thread ID.</param>
+		public static Task ReleaseClaimOnThreadAsync(int threadId)
 		{
-			SupportQueueThreadEntity supportQueueThread = new SupportQueueThreadEntity();
-			supportQueueThread.FetchUsingUCThreadID(threadID);
-			if(supportQueueThread.IsNew)
-			{
-				// not found, return
-				return;
-			}
-
-			// simply reset an existing claim
-			supportQueueThread.ClaimedByUserID = null;		// nullable type, so set to null.
-			supportQueueThread.ClaimedOn = null;			// nullable type, so set to null.
-
-			// done, save it
-			supportQueueThread.Save();
-		}
-		
-
-		/// <summary>
-		/// Persists the unit of work passed in with supportqueue entities. The call to this method originates from the form which manages support queues with
-		/// one LLBLGenProDataSource controls which is used to persist changes. This LLBLGenProDataSource produces a UnitOfWork when the
-		/// PerformWork event is raised and this UoW contains the changes to persist. This routine persists these changes. 
-		/// </summary>
-		/// <param name="uow">The unitofwork object which contains 1 or more changes (with standard .NET controls, this is 1) to persist.</param>
-		/// </summary>
-		public static void PersistSupportQueueUnitOfWork(UnitOfWork uow)
-		{
-			// pass a new transaction to the commit routine and auto-commit this transaction when the transaction is complete.
-			uow.Commit(new Transaction(IsolationLevel.ReadCommitted, "PersistSupportQ"), true);
+			return UpdateClaimOnThreadAsync(-1, threadId, claim: false);
 		}
 
 
 		/// <summary>
 		/// Removes the thread with the threadid specified from the queue it's in. A thread can be in a single queue, so we don't need the queueID.
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="transactionToUse">The transaction currently in progress. Can be null if no transaction is in progress.</param>
-		public static void RemoveThreadFromQueue(int threadID, Transaction transactionToUse)
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="adapter">The adapter with a live transaction. Can be null, in which case a local adapter is used.</param>
+		public static async Task RemoveThreadFromQueueAsync(int threadId, IDataAccessAdapter adapter)
 		{
-			// delete the SupportQueueThread entity for this thread directly from the db, inside the transaction specified (if applicable)
-			SupportQueueThreadCollection supportQueueThreads = new SupportQueueThreadCollection();
-			if(transactionToUse != null)
+			var localAdapter = adapter == null;
+			var adapterToUse = adapter ?? new DataAccessAdapter();
+			try
 			{
-				// there's a transaction in progress, simply add it to the transaction
-				transactionToUse.Add(supportQueueThreads);
+				// delete the SupportQueueThread entity for this thread directly from the db
+				await adapterToUse.DeleteEntitiesDirectlyAsync(typeof(SupportQueueThreadEntity), 
+															   new RelationPredicateBucket(SupportQueueThreadFields.ThreadID.Equal(threadId)))
+								  .ConfigureAwait(false);
+				// don't commit the current transaction if specified, simply return to caller.
 			}
-
-			// delete directly, using a filter on threadid
-			supportQueueThreads.DeleteMulti((SupportQueueThreadFields.ThreadID == threadID));
-
-			// don't commit the current transaction if specified, simply return to caller.
+			finally
+			{
+				if(localAdapter)
+				{
+					adapterToUse.Dispose();
+				}
+			}
 		}
 
 
 		/// <summary>
 		/// Adds the thread with the ID specified to the support queue with the ID specified
 		/// </summary>
-		/// <param name="threadID">The thread ID.</param>
-		/// <param name="queueID">The queue ID.</param>
-		/// <param name="userID">The user ID of the user causing this thread to be placed in the queue specified.</param>
-		/// <param name="transactionToUse">The transaction to use. Is not null if there's a transaction in progress.</param>
+		/// <param name="threadId">The thread ID.</param>
+		/// <param name="queueId">The queue ID.</param>
+		/// <param name="userId">The user ID of the user causing this thread to be placed in the queue specified.</param>
+		/// <param name="adapter">The live adapter with an active transaction. Can be null, in which case a local transaction is used.</param>
 		/// <remarks>first removes the thread from a queue if it's in a queue</remarks>
-		public static void AddThreadToQueue(int threadID, int queueID, int userID, Transaction transactionToUse)
+		public static async Task AddThreadToQueueAsync(int threadId, int queueId, int userId, IDataAccessAdapter adapter)
 		{
-			// first remove the thread from any queue it's in. 
-			RemoveThreadFromQueue(threadID, transactionToUse);
-
-			// then add it to the queue specified.
-			SupportQueueThreadEntity supportQueueThread = new SupportQueueThreadEntity();
-			supportQueueThread.ThreadID = threadID;
-			supportQueueThread.QueueID = queueID;
-			supportQueueThread.PlacedInQueueByUserID = userID;
-			supportQueueThread.PlacedInQueueOn = DateTime.Now;
-
-			if(transactionToUse != null)
+			var localAdapter = adapter == null;
+			var adapterToUse = adapter ?? new DataAccessAdapter();
+			try
 			{
-				// transaction in progress, add the entity to the transaction
-				transactionToUse.Add(supportQueueThread);
+				if(localAdapter)
+				{
+					await adapterToUse.StartTransactionAsync(IsolationLevel.ReadCommitted, "AddThreadToQueue").ConfigureAwait(false);
+				}
+
+				// first remove the thread from any queue it's in. 
+				await RemoveThreadFromQueueAsync(threadId, adapterToUse);
+
+				// then add it to the queue specified.
+				var supportQueueThread = new SupportQueueThreadEntity
+										 {
+											 ThreadID = threadId,
+											 QueueID = queueId,
+											 PlacedInQueueByUserID = userId,
+											 PlacedInQueueOn = DateTime.Now
+										 };
+				await adapterToUse.SaveEntityAsync(supportQueueThread).ConfigureAwait(false);
+				if(localAdapter)
+				{
+					adapterToUse.Commit();
+				}
 			}
-			supportQueueThread.Save();
+			catch
+			{
+				if(localAdapter)
+				{
+					adapterToUse.Rollback();
+				}
+				throw;
+			}
+			finally
+			{
+				if(localAdapter)
+				{
+					adapterToUse.Dispose();
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Updates the claim data on thread. 
+		/// </summary>
+		/// <param name="userId">The user identifier.</param>
+		/// <param name="threadId">The thread identifier.</param>
+		/// <param name="claim">if set to <c>true</c> a claim by userID is set on the thread, otherwise an existing claim is released.</param>
+		private static async Task UpdateClaimOnThreadAsync(int userId, int threadId, bool claim)
+		{
+			using(var adapter = new DataAccessAdapter())
+			{
+				var q = new QueryFactory().SupportQueueThread.Where(SupportQueueThreadFields.ThreadID.Equal(threadId));
+				var supportQueueThread = adapter.FetchFirst(q);
+				if(supportQueueThread == null)
+				{
+					// not found
+					return;
+				}
+				// simply overwrite an existing claim if any.
+				if(claim)
+				{
+					supportQueueThread.ClaimedByUserID = userId;
+					supportQueueThread.ClaimedOn = DateTime.Now;
+				}
+				else
+				{
+					supportQueueThread.ClaimedByUserID = null;
+					supportQueueThread.ClaimedOn = null;
+				}
+
+				// done, save it
+				await adapter.SaveEntityAsync(supportQueueThread).ConfigureAwait(false);
+			}
 		}
 	}
 }

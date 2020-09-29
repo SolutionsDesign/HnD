@@ -1,0 +1,95 @@
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using SD.HnD.Gui
+@inject IAntiforgery antiforgery
+@{
+	ViewBag.Title = "HnD | Admin | Manage Support Queues";
+}
+
+@section stylesheets
+{
+	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+}
+<div class="container">
+	<div class="row">
+		<div class="col-sm-12 page-header-breadcrumbs">
+			<ol class="breadcrumb plr0">
+				<li>
+					<a href="~/">Home</a>
+				</li>
+				<li>Admin</li>
+				<li class="active">Manage Support Queues</li>
+			</ol>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8">
+			<h1 class="br-bottom mt30">Manage Support Queues</h1>
+			<p>
+				Below you to manage support queues in the forum system: you can add new ones and edit and delete existing queues. You can only manage the 
+				support queue definitions, not their contents. If you delete a support queue, all threads inside that queue will be made queue-less. 
+			</p>
+			<p>
+				All fields are mandatory.<br/><br/>
+			</p>
+		</div>
+	</div>
+	<div class="row mb40">
+		<div class="col-sm-12">
+			<div id="jsGrid"></div>
+		</div>
+	</div>
+</div>
+
+@section scripts
+{
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+	<script>
+        $(function() {
+            $("#jsGrid").jsGrid({
+                height: "auto",
+                width: "100%",
+                
+                inserting: true,
+                editing: true,
+                sorting: true,
+                paging: false,
+                autoload: true,
+                
+                pageSize: 10,
+                pageButtonCount: 5,
+                
+                deleteConfirm: "Do you really want to delete this support queue?",
+                
+                controller: {
+                    loadData: function(filter) {
+                        return $.ajax({
+                            type: "GET",
+                            url: "@ApplicationAdapter.GetVirtualRoot()Admin/GetSupportQueues",
+                            dataType: "json",
+                            data:filter
+                        });
+                    },
+                    insertItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/InsertSupportQueue", item);
+                    },
+                    updateItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/UpdateSupportQueue", item);
+                    },
+                    deleteItem: function(item) {
+                        return performAjaxMethodCallWithData("@ApplicationAdapter.GetVirtualRoot()Admin/DeleteSupportQueue/" + item.queueID, {});
+                    }
+                },
+                fields: [
+                    { name:"queueID", title: "ID", type: "number", width: 25, editing:false, inserting:false},
+                    { name:"queueName", title: "Name", type: "text", width: 70 },
+                    { name:"queueDescription", title: "Description", type: "text", width: 200 },
+                    { name:"orderNo", title: "Order", type: "number", width:30 },
+                    { type: "control" }
+                ]
+            });
+        });
+    </script>
+}

@@ -1,0 +1,24 @@
+﻿@using Microsoft.Extensions.Caching.Memory
+@using SD.HnD.Gui
+@model SD.HnD.BL.TypedDataClasses.AggregatedThreadRow
+@inject IMemoryCache _cache
+@{
+	var systemData = await _cache.GetSystemDataAsync();
+    var pageSize = systemData.MinNumberOfThreadsToFetch;
+}
+
+@if((pageSize>0) && (Model.NumberOfMessages > pageSize))
+{
+	var numberOfPages = (Model.NumberOfMessages / pageSize) + 1;
+	<div class="pull-right">
+		@for(int i = 1; i <= numberOfPages; i++)
+		{
+			<a href="~/Thread/@Model.ThreadID/@i">@i</a>
+			if(i < numberOfPages)
+			{
+				@Html.Raw(", ")
+			}
+			@Html.Raw("&nbsp;")
+		}
+	</div>
+}
