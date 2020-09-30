@@ -26,6 +26,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using System.Xml;
 using MailKit.Security;
 using MarkdownDeep;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
@@ -227,7 +228,9 @@ namespace SD.HnD.Utility
 			using(var smtpClient = new MailKit.Net.Smtp.SmtpClient())
 			{
 				smtpClient.ServerCertificateValidationCallback = (s, c, h, e) => true;
-				await smtpClient.ConnectAsync(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")), SecureSocketOptions.StartTls).ConfigureAwait(false);
+				bool useTls = XmlConvert.ToBoolean(emailData.GetValue("smtpEnableSsl"));
+				var secureSocketOptions = useTls ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
+				await smtpClient.ConnectAsync(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")), secureSocketOptions).ConfigureAwait(false);
 				await smtpClient.AuthenticateAsync(emailData.GetValue("smtpUserName"), emailData.GetValue("smtpPassword")).ConfigureAwait(false);
 				await smtpClient.SendAsync(messageToSend).ConfigureAwait(false);
 				await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
