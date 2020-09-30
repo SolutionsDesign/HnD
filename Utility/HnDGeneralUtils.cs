@@ -216,13 +216,24 @@ namespace SD.HnD.Utility
 		{
 			string defaultToMailAddress = emailData.GetValue("defaultToEmailAddress") ?? String.Empty;
 			var messageToSend = new MimeMessage();
-			messageToSend.To.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, defaultToMailAddress));
 			messageToSend.From.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, fromAddress));
 			messageToSend.Subject = subject;
 			messageToSend.Body = new TextPart(TextFormat.Plain) {Text = message};
-			for(int i = 0; i < toEmailAddresses.Length; i++)
+			if(toEmailAddresses==null || toEmailAddresses.Length <= 0)
 			{
-				messageToSend.Bcc.Add(new MailboxAddress(string.Empty, toEmailAddresses[i]));
+				return false;
+			}
+			if(toEmailAddresses.Length > 1)
+			{
+				messageToSend.To.Add(new MailboxAddress(emailData.GetValue("siteName") ?? string.Empty, defaultToMailAddress));
+				for(int i = 0; i < toEmailAddresses.Length; i++)
+				{
+					messageToSend.Bcc.Add(new MailboxAddress(string.Empty, toEmailAddresses[i]));
+				}
+			}
+			else
+			{
+				messageToSend.To.Add(new MailboxAddress(string.Empty, toEmailAddresses[0]));
 			}
 
 			using(var smtpClient = new MailKit.Net.Smtp.SmtpClient())
@@ -231,7 +242,11 @@ namespace SD.HnD.Utility
 				bool useTls = XmlConvert.ToBoolean(emailData.GetValue("smtpEnableSsl"));
 				var secureSocketOptions = useTls ? SecureSocketOptions.StartTls : SecureSocketOptions.Auto;
 				await smtpClient.ConnectAsync(emailData.GetValue("smtpHost"), int.Parse(emailData.GetValue("smtpPort")), secureSocketOptions).ConfigureAwait(false);
-				await smtpClient.AuthenticateAsync(emailData.GetValue("smtpUserName"), emailData.GetValue("smtpPassword")).ConfigureAwait(false);
+				var userName = emailData.GetValue("smtpUserName");
+				if(!string.IsNullOrWhiteSpace(userName))
+				{
+					await smtpClient.AuthenticateAsync(userName, emailData.GetValue("smtpPassword")).ConfigureAwait(false);
+				}
 				await smtpClient.SendAsync(messageToSend).ConfigureAwait(false);
 				await smtpClient.DisconnectAsync(true).ConfigureAwait(false);
 			}
