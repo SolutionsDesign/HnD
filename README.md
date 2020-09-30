@@ -5,7 +5,7 @@ HnD is a Customer Support system, integrating helpdesk features and forums, and 
 
 HnD stands for Help and Discuss and starting with v3, it is running on .Net core 3.1+ with 100% LLBLGen Pro code. It offers site owners a flexible and fast customer support system with, among other features: email notification, attachments, secure forums so only the topicstarter and people with a given action right can see / access the thread, search etc. etc. It's open source and you can download it for free.
 
-To see HnD  in action, go to [https://www.llblgen.com/tinyforum](http://www.llblgen.com/tinyforum) (this site will be migrated to v3 a.s.a.p.)
+To see HnD  in action, go to [https://www.llblgen.com/tinyforum](http://www.llblgen.com/tinyforum)
 
 ## Requirements 
 * Asp.net core MVC 3.1+
@@ -51,7 +51,7 @@ The `appsettings.json` file has two parts which are important, the `HnD` part an
 #### HnD section
 
 - **VirtualRoot**. This is the path fragment between the domain name and the root of the HnD site. If you host the HnD site on its own (sub)domain, this should be `/`. If you
-host HnD on a subapplication within a website, e.g. `Forums` (example.dom/Forums), set VirtualRoot to `Forums/`.
+host HnD on a subapplication within a website, e.g. `forums` (example.com/forums), set VirtualRoot to `/forums`. **Important**: url's are case sensitive. To avoid problems, use a lower case value, as the jquery ajax calls in the admin section might otherwise not work as it won't send the authentication cookie. 
 - **DefaultFromEmailAddress**. The default email address which is used as 'from' address in all emails HnD sends. 
 - **DefaultToEmailAddress**. The default email address which is used as 'to' address in all emails HnD sends, if multiple recipients are receiving the email (e.g. new 
 message notifications), as these recipients are specified as Bcc recipients. 
