@@ -106,7 +106,7 @@ namespace SD.HnD.Gui.Controllers
 								  ForumName = forum.ForumName,
 								  SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
 								  ThreadSubject = thread.Subject,
-								  PageNo = pageNo,
+								  PageNo = (pageNo < 1 ? 1 : pageNo),
 							  };
 			return View(messageData);
 		}

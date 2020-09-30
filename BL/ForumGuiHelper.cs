@@ -73,12 +73,17 @@ namespace SD.HnD.BL
 			// create a query which always fetches the sticky threads, and besides those the threads which are visible to the user. 
 			// then sort the sticky threads at the top and page through the resultset.
 			var qf = new QueryFactory();
+			var offsetStart = pageSize * (pageNumber - 1);
+			if(offsetStart < 0)
+			{
+				offsetStart = 0;
+			}
 			var q = qf.Create()
 					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
 					  .Where(ThreadFields.ForumID.Equal(forumId))
 					  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
 					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
-					  .Offset(pageSize * (pageNumber - 1)) // skip the pages we don't need.
+					  .Offset(offsetStart) // skip the pages we don't need.
 					  .Limit(pageSize + 1); // fetch 1 row extra, which we can use to determine whether there are more pages left.
 
 			// if the user can't view threads started by others, filter out threads started by users different from userID. Otherwise just filter on forumid and stickyness.

@@ -60,7 +60,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var pageNoToUse = pageNo >= 0 ? pageNo : 1;
+			var pageNoToUse = pageNo > 0 ? pageNo : 1;
 			var systemData = await _cache.GetSystemDataAsync();
 			var pageSize = systemData.MinNumberOfThreadsToFetch;
 			var threadRows = await ForumGuiHelper.GetAllThreadsInForumAggregatedDataAsync(forumId, pageNoToUse, pageSize,

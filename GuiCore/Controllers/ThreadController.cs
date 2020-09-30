@@ -216,11 +216,6 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var userID = this.HttpContext.Session.GetUserID();
-			if(!this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
-			{
-				return Json(new {success = false});
-			}
-
 			bool currentState = await UserGuiHelper.CheckIfThreadIsAlreadyBookmarkedAsync(userID, id);
 			if(currentState)
 			{
@@ -247,11 +242,6 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			var userID = this.HttpContext.Session.GetUserID();
-			if(!this.HttpContext.Session.HasSystemActionRight(ActionRights.SystemWideThreadManagement))
-			{
-				return Json(new {success = false});
-			}
-
 			var currentState = await UserGuiHelper.CheckIfThreadIsAlreadySubscribedAsync(userID, id);
 			if(currentState)
 			{
