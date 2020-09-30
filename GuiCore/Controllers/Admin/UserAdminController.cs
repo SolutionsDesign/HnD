@@ -134,6 +134,7 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			data.UserTitles = await UserGuiHelper.GetAllUserTitlesAsync();
+			data.Roles = await SecurityGuiHelper.GetAllRolesAsync();
 
 			if(!ModelState.IsValid)
 			{
