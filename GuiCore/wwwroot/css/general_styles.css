@@ -78,6 +78,10 @@ h3 {
     margin: 20px 0 5px 0;
 }
 
+h3.footer-title {
+	margin: 0;
+}
+
 h4, h5, h6 {
 	letter-spacing: normal;
 	margin: 10px 0 3px 0;
