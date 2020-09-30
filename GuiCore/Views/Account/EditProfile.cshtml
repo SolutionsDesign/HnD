@@ -64,7 +64,7 @@
 					</div>
 					<div class="form-group">
 						@Html.LabelFor(m => m.DateOfBirth, "Date of birth", new {@class = "control-label above-control"})
-						@Html.TextBoxFor(m => m.DateOfBirth, "{0:dd/MM/yyyy}", new {@class = "form-control", placeholder = " dd/mm/yyyy"})
+						@Html.TextBoxFor(m => m.DateOfBirth, "{0:dd-MMM-yyyy}", new {@class = "form-control", placeholder = " dd-MMM-yyyy"})
 						@Html.ValidationMessageFor(m => m.DateOfBirth, "", new {@class = "text-danger"})
 					</div>
 					<div class="form-group">
@@ -120,7 +120,7 @@
                 $('#DateOfBirth').datepicker({
                     changeMonth: true,
                     changeYear: true,
-                    format: "dd/mm/yyyy"
+                    format: "dd-M-yyyy"
                 });
             });
 </script>
