@@ -16,7 +16,7 @@
 			@foreach(var forumItem in Model.ForumItems)
 			{
 				var postingDate = String.Format("{0:R}", forumItem.PostingDate.AddHours(-2));
-				var linkString = linkBase + string.Format("Message/{0}/{1}", forumItem.ThreadID, forumItem.MessageID);
+				var linkString = linkBase + string.Format("Thread/{0}#{1}", forumItem.ThreadID, forumItem.MessageID);
 				<item>
 					<title>@forumItem.Subject by @forumItem.NickName</title>
 					<description>@forumItem.MessageTextAsHTML</description>
