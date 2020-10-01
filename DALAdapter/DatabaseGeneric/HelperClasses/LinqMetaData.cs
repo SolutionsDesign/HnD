@@ -86,6 +86,8 @@ namespace SD.HnD.DALAdapter.Linq
 					return this.SystemData;
 				case SD.HnD.DALAdapter.EntityType.ThreadEntity:
 					return this.Thread;
+				case SD.HnD.DALAdapter.EntityType.ThreadStatisticsEntity:
+					return this.ThreadStatistics;
 				case SD.HnD.DALAdapter.EntityType.ThreadSubscriptionEntity:
 					return this.ThreadSubscription;
 				case SD.HnD.DALAdapter.EntityType.UserEntity:
@@ -168,6 +170,9 @@ namespace SD.HnD.DALAdapter.Linq
 		
 		/// <summary>returns the datasource to use in a Linq query when targeting ThreadEntity instances in the database.</summary>
 		public DataSource2<ThreadEntity> Thread {	get { return new DataSource2<ThreadEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
+		
+		/// <summary>returns the datasource to use in a Linq query when targeting ThreadStatisticsEntity instances in the database.</summary>
+		public DataSource2<ThreadStatisticsEntity> ThreadStatistics {	get { return new DataSource2<ThreadStatisticsEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }
 		
 		/// <summary>returns the datasource to use in a Linq query when targeting ThreadSubscriptionEntity instances in the database.</summary>
 		public DataSource2<ThreadSubscriptionEntity> ThreadSubscription {	get { return new DataSource2<ThreadSubscriptionEntity>(this.AdapterToUse, new ElementCreator(), this.CustomFunctionMappings, this.ContextToUse); } }

@@ -13,9 +13,11 @@ namespace SD.HnD.DALAdapter.TypedListClasses
 	/// <remarks>This class is a result class for a query, which is produced with the method <see cref="SD.HnD.DALAdapter.FactoryClasses.QueryFactory.GetSearchResultTypedList"/>.
 	/// Contains the following entity definition(s):
 	/// Entity: Forum. <br/>
+	/// Entity: Message.  Aliassed as: LastMessage <br/>
 	/// Entity: Message. <br/>
 	/// Entity: Section. <br/>
 	/// Entity: Thread. <br/>
+	/// Entity: ThreadStatistics. <br/>
 	/// </remarks>
 	[Serializable]
 	public partial class SearchResultRow 
@@ -36,8 +38,8 @@ namespace SD.HnD.DALAdapter.TypedListClasses
 		public System.String ForumName { get; set; }
 		/// <summary>Gets or sets the SectionName field. Mapped onto 'Section.SectionName'</summary>
 		public System.String SectionName { get; set; }
-		/// <summary>Gets or sets the ThreadLastPostingDate field. Mapped onto 'Thread.ThreadLastPostingDate'</summary>
-		public Nullable<System.DateTime> ThreadLastPostingDate { get; set; }
+		/// <summary>Gets or sets the ThreadLastPostingDate field. Mapped onto 'LastMessage.PostingDate'</summary>
+		public System.DateTime ThreadLastPostingDate { get; set; }
 	}
 }
 

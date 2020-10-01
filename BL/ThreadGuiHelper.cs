@@ -143,9 +143,9 @@ namespace SD.HnD.BL
 					  .Where(ThreadFields.ForumID.In(accessableForums)
 										 .And(ThreadFields.IsClosed.Equal(false))
 										 .And(ThreadFields.MarkedAsDone.Equal(false))
-										 .And(ThreadFields.ThreadLastPostingDate.GreaterEqual(DateTime.Now.AddHours((double)0 - hoursThreshold)))
+										 .And(MessageFields.PostingDate.Source("LastMessage").GreaterEqual(DateTime.Now.AddHours((double)0 - hoursThreshold)))
 										 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, userId)))
-					  .OrderBy(ThreadFields.ThreadLastPostingDate.Ascending());
+					  .OrderBy(MessageFields.PostingDate.Source("LastMessage").Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);
@@ -192,11 +192,10 @@ namespace SD.HnD.BL
 				var messages = await q.ProjectToMessageInThreadDto().ToListAsync().ConfigureAwait(false);
 
 				// update thread entity directly inside the DB with an update statement so the # of views is increased by one.
-				var updater = new ThreadEntity();
-
+				var updater = new ThreadStatisticsEntity();
 				// set the NumberOfViews field to an expression which increases it by 1
-				updater.Fields[(int)ThreadFieldIndex.NumberOfViews].ExpressionToApply = (ThreadFields.NumberOfViews + 1);
-				await adapter.UpdateEntitiesDirectlyAsync(updater, new RelationPredicateBucket(ThreadFields.ThreadID == threadId)).ConfigureAwait(false);
+				updater.Fields[(int)ThreadStatisticsFieldIndex.NumberOfViews].ExpressionToApply = (ThreadStatisticsFields.NumberOfViews + 1);
+				await adapter.UpdateEntitiesDirectlyAsync(updater, new RelationPredicateBucket(ThreadStatisticsFields.ThreadID == threadId)).ConfigureAwait(false);
 				return messages;
 			}
 		}
@@ -307,13 +306,13 @@ namespace SD.HnD.BL
 					   ThreadFields.ForumID,
 					   ThreadFields.Subject,
 					   ThreadFields.StartedByUserID.As("ThreadStartedByUserID"),
-					   ThreadFields.ThreadLastPostingDate,
 					   ThreadFields.IsSticky,
 					   ThreadFields.IsClosed,
 					   ThreadFields.MarkedAsDone,
-					   ThreadFields.NumberOfViews,
+					   ThreadStatisticsFields.NumberOfMessages,
+					   ThreadStatisticsFields.NumberOfViews,
+					   MessageFields.PostingDate.Source("LastMessage").As("ThreadLastPostingDate"),
 					   UserFields.NickName.Source("ThreadStarterUser").As("ThreadStartedByNickName"),
-					   qf.Field("NumberOfMessages").Source("LastMessage"),
 					   UserFields.UserID.Source("LastPostingUser").As("LastPostByUserID"),
 					   UserFields.NickName.Source("LastPostingUser").As("LastPostByNickName"),
 					   MessageFields.MessageID.Source("LastMessage").As("MessageIDLastPost"),
@@ -341,42 +340,13 @@ namespace SD.HnD.BL
 		/// <returns>ready to use join operand</returns>
 		internal static IJoinOperand BuildFromClauseForAllThreadsWithStats(QueryFactory qf)
 		{
+			// The older system recalculated the statistics for a set of threads on the fly. This is very bad for performance if there are a lot of 
+			// messages in the system. So we now use a threadstatistics entity which keeps track of the last post and the last post. 
 			return qf.Thread
 					 .LeftJoin(qf.User.As("ThreadStarterUser")).On(ThreadFields.StartedByUserID.Equal(UserFields.UserID.Source("ThreadStarterUser")))
-					 .InnerJoin(qf.Create("LastMessage")
-								  .Select(MessageFields.MessageID.Source("m1"), MessageFields.PostedByUserID.Source("m1"), MessageFields.ThreadID.Source("m1"),
-										  qf.Field("NumberOfMessages").Source("m2"))
-								  .From(qf.Message.As("m1")
-										  .InnerJoin(qf.Message
-													   .Select(MessageFields.ThreadID, MessageFields.MessageID.Max().As("MaxMessageID"),
-															   MessageFields.MessageID.Count().As("NumberOfMessages"))
-													   .GroupBy(MessageFields.ThreadID)
-													   .As("m2"))
-										  .On(MessageFields.MessageID.Source("m1").Equal(qf.Field("MaxMessageID").Source("m2")))))
-					 .On(ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
-					 .LeftJoin(qf.User.As("LastPostingUser"))
-					 .On(MessageFields.PostedByUserID.Source("LastMessage").Equal(UserFields.UserID.Source("LastPostingUser")));
-
-			// the LastMessage query is also doable with a scalar query sorted descending to obtain the last message, however this turns out to be slower:
-			/*
-				qf.Message.As("LastMessage")).On((ThreadFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
-					.And(MessageFields.MessageID.Source("LastMessage").Equal(
-						qf.Create()
-							.Select(MessageFields.MessageID)
-							.Where(MessageFields.ThreadID == MessageFields.ThreadID.Source("LastMessage"))
-							.Limit(1)
-							.OrderBy(MessageFields.PostingDate.Descending())
-							.ToScalar()
-							.ForceRowLimit())))		// force the row limit otherwise the scalar won't have the TOP 1, which will force
-													// the engine to remove the orderby / distinct as it otherwise fails. 
-				// another alternative, which is slightly slower than the one implemented
-					qf.Create("LastMessage")
-								.Select(MessageFields.MessageID.Source("m1"), MessageFields.PostedByUserID.Source("m1"), MessageFields.ThreadID.Source("m1"))
-								.From(qf.Message.As("m1").LeftJoin(qf.Message.As("m2"))
-										.On(MessageFields.ThreadID.Source("m1").Equal(MessageFields.ThreadID.Source("m2"))
-														.And(MessageFields.MessageID.Source("m1").LesserThan(MessageFields.MessageID.Source("m2")))))
-								.Where(MessageFields.MessageID.Source("m2").IsNull()))
-			*/
+					 .InnerJoin(qf.ThreadStatistics).On(ThreadFields.ThreadID.Equal(ThreadStatisticsFields.ThreadID))
+					 .LeftJoin(qf.Message.As("LastMessage")).On(ThreadStatisticsFields.LastMessageID.Equal(MessageFields.MessageID.Source("LastMessage")))
+					 .LeftJoin(qf.User.As("LastPostingUser")).On(MessageFields.PostedByUserID.Source("LastMessage").Equal(UserFields.UserID.Source("LastPostingUser")));
 		}
 	}
 }

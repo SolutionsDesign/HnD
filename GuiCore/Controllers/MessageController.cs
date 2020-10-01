@@ -88,7 +88,7 @@ namespace SD.HnD.Gui.Controllers
 			var messageIsFirstInThread = await ThreadGuiHelper.CheckIfMessageIsFirstInThreadAsync(thread.ThreadID, id);
 			if(!messageIsFirstInThread && this.HttpContext.Session.CanPerformForumActionRight(thread.ForumID, ActionRights.EditDeleteOtherUsersMessages))
 			{
-				await MessageManager.DeleteMessageAsync(id);
+				await MessageManager.DeleteMessageAsync(id, thread.ThreadID);
 			}
 
 			return RedirectToAction("Index", "Thread", new {threadId = thread.ThreadID, pageNo = 1});

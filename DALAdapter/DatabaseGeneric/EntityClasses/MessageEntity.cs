@@ -30,6 +30,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		private EntityCollection<AuditDataMessageRelatedEntity> _auditDataMessageRelated;
 		private ThreadEntity _thread;
 		private UserEntity _postedByUser;
+		private ThreadStatisticsEntity _threadStatistics;
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
@@ -47,6 +48,8 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			public static readonly string Attachments = "Attachments";
 			/// <summary>Member name AuditDataMessageRelated</summary>
 			public static readonly string AuditDataMessageRelated = "AuditDataMessageRelated";
+			/// <summary>Member name ThreadStatistics</summary>
+			public static readonly string ThreadStatistics = "ThreadStatistics";
 		}
 
 		/// <summary>Static meta-data storage for navigator related information</summary>
@@ -59,6 +62,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 				AddNavigatorMetaData<MessageEntity, EntityCollection<AuditDataMessageRelatedEntity>>("AuditDataMessageRelated", a => a._auditDataMessageRelated, (a, b) => a._auditDataMessageRelated = b, a => a.AuditDataMessageRelated, () => new MessageRelations().AuditDataMessageRelatedEntityUsingMessageID, typeof(AuditDataMessageRelatedEntity), (int)SD.HnD.DALAdapter.EntityType.AuditDataMessageRelatedEntity);
 				AddNavigatorMetaData<MessageEntity, ThreadEntity>("Thread", "Messages", (a, b) => a._thread = b, a => a._thread, (a, b) => a.Thread = b, SD.HnD.DALAdapter.RelationClasses.StaticMessageRelations.ThreadEntityUsingThreadIDStatic, ()=>new MessageRelations().ThreadEntityUsingThreadID, null, new int[] { (int)MessageFieldIndex.ThreadID }, null, true, (int)SD.HnD.DALAdapter.EntityType.ThreadEntity);
 				AddNavigatorMetaData<MessageEntity, UserEntity>("PostedByUser", "PostedMessages", (a, b) => a._postedByUser = b, a => a._postedByUser, (a, b) => a.PostedByUser = b, SD.HnD.DALAdapter.RelationClasses.StaticMessageRelations.UserEntityUsingPostedByUserIDStatic, ()=>new MessageRelations().UserEntityUsingPostedByUserID, null, new int[] { (int)MessageFieldIndex.PostedByUserID }, null, true, (int)SD.HnD.DALAdapter.EntityType.UserEntity);
+				AddNavigatorMetaData<MessageEntity, ThreadStatisticsEntity>("ThreadStatistics", "LastMessage", (a, b) => a._threadStatistics = b, a => a._threadStatistics, (a, b) => a.ThreadStatistics = b, SD.HnD.DALAdapter.RelationClasses.StaticMessageRelations.ThreadStatisticsEntityUsingLastMessageIDStatic, ()=>new MessageRelations().ThreadStatisticsEntityUsingLastMessageID, null, null, null, true, (int)SD.HnD.DALAdapter.EntityType.ThreadStatisticsEntity);
 			}
 		}
 
@@ -126,6 +130,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'User' to this entity.</summary>
 		/// <returns></returns>
 		public virtual IRelationPredicateBucket GetRelationInfoPostedByUser() { return CreateRelationInfoForNavigator("PostedByUser"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'ThreadStatistics' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoThreadStatistics() { return CreateRelationInfoForNavigator("ThreadStatistics"); }
 		
 		/// <inheritdoc/>
 		protected override EntityStaticMetaDataBase GetEntityStaticMetaData() {	return _staticMetaData; }
@@ -172,6 +180,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'User' for this entity.</summary>
 		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
 		public static IPrefetchPathElement2 PrefetchPathPostedByUser { get { return _staticMetaData.GetPrefetchPathElement("PostedByUser", CommonEntityBase.CreateEntityCollection<UserEntity>()); } }
+
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'ThreadStatistics' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathThreadStatistics { get { return _staticMetaData.GetPrefetchPathElement("ThreadStatistics", CommonEntityBase.CreateEntityCollection<ThreadStatisticsEntity>()); } }
 
 		/// <summary>The MessageID property of the Entity Message<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Message"."MessageID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
@@ -269,6 +281,14 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set { SetSingleRelatedEntityNavigator(value, "PostedByUser"); }
 		}
 
+		/// <summary>Gets / sets related entity of type 'ThreadStatisticsEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned.<br/><br/></summary>
+		[Browsable(true)]
+		public virtual ThreadStatisticsEntity ThreadStatistics
+		{
+			get { return _threadStatistics; }
+			set { SetSingleRelatedEntityNavigator(value, "ThreadStatistics"); }
+		}
+
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -317,6 +337,12 @@ namespace SD.HnD.DALAdapter.RelationClasses
 			get { return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToMany, "AuditDataMessageRelated", true, new[] { MessageFields.MessageID, AuditDataMessageRelatedFields.MessageID }); }
 		}
 
+		/// <summary>Returns a new IEntityRelation object, between MessageEntity and ThreadStatisticsEntity over the 1:1 relation they have, using the relation between the fields: Message.MessageID - ThreadStatistics.LastMessageID</summary>
+		public virtual IEntityRelation ThreadStatisticsEntityUsingLastMessageID
+		{
+			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToOne, "ThreadStatistics", true, new[] { MessageFields.MessageID, ThreadStatisticsFields.LastMessageID }); }
+		}
+
 		/// <summary>Returns a new IEntityRelation object, between MessageEntity and ThreadEntity over the m:1 relation they have, using the relation between the fields: Message.ThreadID - Thread.ThreadID</summary>
 		public virtual IEntityRelation ThreadEntityUsingThreadID
 		{
@@ -336,6 +362,7 @@ namespace SD.HnD.DALAdapter.RelationClasses
 	{
 		internal static readonly IEntityRelation AttachmentEntityUsingMessageIDStatic = new MessageRelations().AttachmentEntityUsingMessageID;
 		internal static readonly IEntityRelation AuditDataMessageRelatedEntityUsingMessageIDStatic = new MessageRelations().AuditDataMessageRelatedEntityUsingMessageID;
+		internal static readonly IEntityRelation ThreadStatisticsEntityUsingLastMessageIDStatic = new MessageRelations().ThreadStatisticsEntityUsingLastMessageID;
 		internal static readonly IEntityRelation ThreadEntityUsingThreadIDStatic = new MessageRelations().ThreadEntityUsingThreadID;
 		internal static readonly IEntityRelation UserEntityUsingPostedByUserIDStatic = new MessageRelations().UserEntityUsingPostedByUserID;
 

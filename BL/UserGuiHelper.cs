@@ -131,7 +131,7 @@ namespace SD.HnD.BL
 																		 .Select(MessageFields.ThreadID)
 																		 .Where(MessageFields.PostedByUserID.Equal(participantUserId))))
 										 .And(ThreadGuiHelper.CreateThreadFilter(forumsWithThreadsFromOthers, callingUserId)))
-					  .OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+					  .OrderBy(MessageFields.PostingDate.Source("LastMessage").Descending());
 			if(pageNumber <= 0)
 			{
 				// no paging
@@ -260,7 +260,7 @@ namespace SD.HnD.BL
 					  .Where(ThreadFields.ThreadID.In(qf.Create()
 														.Select(BookmarkFields.ThreadID)
 														.Where(BookmarkFields.UserID.Equal(userID))))
-					  .OrderBy(ThreadFields.ThreadLastPostingDate.Descending());
+					  .OrderBy(MessageFields.PostingDate.Source("LastMessage").Descending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);

@@ -43,14 +43,35 @@ namespace SD.HnD.BL
 		/// Deletes the given message from the database and the complete logged history.
 		/// </summary>
 		/// <param name="messageId">The ID of the message to delete</param>
+		/// <param name="threadId">The id of the thread the message is part of</param>
 		/// <returns>True if succeeded, false otherwise</returns>
-		public static async Task<bool> DeleteMessageAsync(int messageId)
+		public static async Task<bool> DeleteMessageAsync(int messageId, int threadId)
 		{
 			using(var adapter = new DataAccessAdapter())
 			{
+				// if the message was the last message in the thread, we have first to update the statistics entity with the message that's semi-last.
+				// we do that by simply fetching the last two messages of the thread. if the last message of these 2 is the one to delete, we update
+				// the statistics entity with the one that's semi-last.  
+				var qf = new QueryFactory();
+				var q = qf.Message
+						  .Where(MessageFields.ThreadID.Equal(threadId))
+						  .OrderBy(MessageFields.PostingDate.Descending())
+						  .Limit(2)
+						  .Select(() => MessageFields.MessageID.ToValue<int>());
+				var lastTwoMessageIdsInThread = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "DeleteMessage").ConfigureAwait(false);
 				try
 				{
+					var threadStatisticsUpdater = new ThreadStatisticsEntity();
+					threadStatisticsUpdater.Fields[(int)ThreadStatisticsFieldIndex.NumberOfMessages].ExpressionToApply = (ThreadStatisticsFields.NumberOfMessages - 1);
+					if(lastTwoMessageIdsInThread.Count == 2 && lastTwoMessageIdsInThread[0] == messageId)
+					{
+						// message is the last one in the thread, update statistics row with the new last one 
+						threadStatisticsUpdater.LastMessageID = lastTwoMessageIdsInThread[1];
+						await adapter.UpdateEntitiesDirectlyAsync(threadStatisticsUpdater, new RelationPredicateBucket(ThreadStatisticsFields.ThreadID.Equal(threadId)))
+									 .ConfigureAwait(false);
+					}
+									
 					await DeleteMessagesAsync(MessageFields.MessageID.Equal(messageId), adapter);
 					adapter.Commit();
 					return true;
@@ -65,16 +86,17 @@ namespace SD.HnD.BL
 
 
 		/// <summary>
-		/// Deletes all messages in threads which match the passed in filter. 
+		/// Deletes all messages in threads which match the passed in filter. This method is only useful for when a thread is deleted. 
 		/// </summary>
 		/// <param name="threadFilter">The thread filter.</param>
 		/// <param name="adapter">The adapter to use for persistence activity.</param>
-		internal static Task DeleteAllMessagesInThreadsAsync(PredicateExpression threadFilter, IDataAccessAdapter adapter)
+		/// <remarks>The caller has to have started a transaction on the passed in adapter</remarks>
+		internal static async Task DeleteAllMessagesInThreadsAsync(PredicateExpression threadFilter, IDataAccessAdapter adapter)
 		{
 			// Create the messagefilter, based on the passed in filter on threads. We do this by creating a FieldCompareSetPredicate:
 			// WHERE Message.ThreadID IN (SELECT ThreadID FROM Thread WHERE threadFilter)
 			var messageFilter = MessageFields.ThreadID.In(new QueryFactory().Create().Select(ThreadFields.ThreadID).Where(threadFilter));
-			return DeleteMessagesAsync(messageFilter, adapter);
+			await DeleteMessagesAsync(messageFilter, adapter);
 		}
 
 
@@ -94,6 +116,8 @@ namespace SD.HnD.BL
 																								  .Where(messageFilter)));
 			var messageAudits = await adapter.FetchQueryAsync(q).ConfigureAwait(false);
 			await adapter.DeleteEntityCollectionAsync(messageAudits).ConfigureAwait(false);
+
+			// Threadstatistics are already considered removed. 
 
 			// delete all attachments for this message. This can be done directly onto the db.
 			await adapter.DeleteEntitiesDirectlyAsync(typeof(AttachmentEntity),
@@ -294,6 +318,8 @@ namespace SD.HnD.BL
 		/// </summary>
 		/// <param name="threadId">The thread ID.</param>
 		/// <param name="userId">The user ID.</param>
+		/// <param name="newMessageId">The message id of the new message posted in the thread with threadid. If 0 or lower it's ignored and threadstatistics
+		/// aren't updated. This is the case for when a new thread: the first message insert already inserted a correct threadstatistics object. </param>
 		/// <param name="adapter">The adapter to use, which is assumed to have a live transaction active</param>
 		/// <param name="postingDate">The posting date.</param>
 		/// <param name="addToQueueIfRequired">if set to true, the thread will be added to the default queue of the forum the thread is in, if the forum
@@ -303,8 +329,8 @@ namespace SD.HnD.BL
 		/// Leaves the passed in transaction open, so it doesn't commit/rollback, it just performs a set of actions inside the
 		/// passed in transaction.
 		/// </remarks>
-		internal static async Task UpdateStatisticsAfterMessageInsert(int threadId, int userId, IDataAccessAdapter adapter, DateTime postingDate, bool addToQueueIfRequired,
-																	  bool subscribeToThread)
+		internal static async Task UpdateStatisticsAfterMessageInsert(int threadId, int userId, int newMessageId, IDataAccessAdapter adapter, DateTime postingDate, 
+																	  bool addToQueueIfRequired, bool subscribeToThread)
 		{
 			// user statistics
 			var userUpdater = new UserEntity();
@@ -314,11 +340,20 @@ namespace SD.HnD.BL
 			await adapter.UpdateEntitiesDirectlyAsync(userUpdater, new RelationPredicateBucket(UserFields.UserID.Equal(userId)))
 						 .ConfigureAwait(false);
 
-			// thread statistics
-			var threadUpdater = new ThreadEntity {ThreadLastPostingDate = postingDate, MarkedAsDone = false};
+			if(newMessageId > 0)
+			{
+				// thread statistics. Create a single Update query which updates the messageid and increases the number of messages value with 1
+				var threadStatisticsUpdater = new ThreadStatisticsEntity {LastMessageID = newMessageId};
+				threadStatisticsUpdater.Fields[(int)ThreadStatisticsFieldIndex.NumberOfMessages].ExpressionToApply = (ThreadStatisticsFields.NumberOfMessages + 1);
+				await adapter.UpdateEntitiesDirectlyAsync(threadStatisticsUpdater, new RelationPredicateBucket(ThreadStatisticsFields.ThreadID.Equal(threadId)))
+							 .ConfigureAwait(false);
+			}
+
+			// unmark the thread as done if it's done
+			var threadUpdater = new ThreadEntity() { MarkedAsDone = false};
 			await adapter.UpdateEntitiesDirectlyAsync(threadUpdater, new RelationPredicateBucket(ThreadFields.ThreadID.Equal(threadId)))
 						 .ConfigureAwait(false);
-
+			
 			// forum statistics. Load the forum from the DB, as we need it later on. Use a nested query to fetch the forum as we don't know the 
 			// forumID as we haven't fetched the thread
 			var qf = new QueryFactory();

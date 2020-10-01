@@ -37,5 +37,13 @@
         <Entity Name=":PasswordResetToken" X="4.187622" Y="607.997437" />
       </EntityDefinitions>
     </ModelView>
+    <ModelView Name="ThreadAndStatistics">
+      <EntityDefinitions>
+        <Entity Name=":Message" X="546.5001" Y="446.476685" />
+        <Entity Name=":User" X="-117.5" Y="47.3252563" />
+        <Entity Name=":Thread" X="273.500061" Y="94.167984" />
+        <Entity Name=":ThreadStatistics" X="552.500061" Y="-126.499969" />
+      </EntityDefinitions>
+    </ModelView>
   </ModelViews>
 </LayoutInfo>

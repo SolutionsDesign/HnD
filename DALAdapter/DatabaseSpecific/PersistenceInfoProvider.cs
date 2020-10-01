@@ -57,6 +57,7 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 			InitSupportQueueThreadEntityMappings();
 			InitSystemDataEntityMappings();
 			InitThreadEntityMappings();
+			InitThreadStatisticsEntityMappings();
 			InitThreadSubscriptionEntityMappings();
 			InitUserEntityMappings();
 			InitUserTitleEntityMappings();
@@ -274,17 +275,25 @@ namespace SD.HnD.DALAdapter.DatabaseSpecific
 		/// <summary>Inits ThreadEntity's mappings</summary>
 		private void InitThreadEntityMappings()
 		{
-			this.AddElementMapping("ThreadEntity", @"HnD", @"dbo", "Thread", 10, 0);
+			this.AddElementMapping("ThreadEntity", @"HnD", @"dbo", "Thread", 8, 0);
 			this.AddElementFieldMapping("ThreadEntity", "ThreadID", "ThreadID", false, "Int", 0, 10, 0, true, "SCOPE_IDENTITY()", null, typeof(System.Int32), 0);
 			this.AddElementFieldMapping("ThreadEntity", "ForumID", "ForumID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 1);
 			this.AddElementFieldMapping("ThreadEntity", "Subject", "Subject", false, "NVarChar", 250, 0, 0, false, "", null, typeof(System.String), 2);
 			this.AddElementFieldMapping("ThreadEntity", "StartedByUserID", "StartedByUserID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 3);
-			this.AddElementFieldMapping("ThreadEntity", "ThreadLastPostingDate", "ThreadLastPostingDate", true, "DateTime", 0, 0, 0, false, "", null, typeof(System.DateTime), 4);
-			this.AddElementFieldMapping("ThreadEntity", "IsSticky", "IsSticky", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 5);
-			this.AddElementFieldMapping("ThreadEntity", "IsClosed", "IsClosed", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 6);
-			this.AddElementFieldMapping("ThreadEntity", "MarkedAsDone", "MarkedAsDone", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 7);
-			this.AddElementFieldMapping("ThreadEntity", "NumberOfViews", "NumberOfViews", true, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 8);
-			this.AddElementFieldMapping("ThreadEntity", "Memo", "Memo", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 9);
+			this.AddElementFieldMapping("ThreadEntity", "IsSticky", "IsSticky", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 4);
+			this.AddElementFieldMapping("ThreadEntity", "IsClosed", "IsClosed", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 5);
+			this.AddElementFieldMapping("ThreadEntity", "MarkedAsDone", "MarkedAsDone", false, "Bit", 0, 0, 0, false, "", null, typeof(System.Boolean), 6);
+			this.AddElementFieldMapping("ThreadEntity", "Memo", "Memo", true, "NText", 1073741823, 0, 0, false, "", null, typeof(System.String), 7);
+		}
+
+		/// <summary>Inits ThreadStatisticsEntity's mappings</summary>
+		private void InitThreadStatisticsEntityMappings()
+		{
+			this.AddElementMapping("ThreadStatisticsEntity", @"HnD", @"dbo", "ThreadStatistics", 4, 0);
+			this.AddElementFieldMapping("ThreadStatisticsEntity", "ThreadID", "ThreadID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 0);
+			this.AddElementFieldMapping("ThreadStatisticsEntity", "LastMessageID", "LastMessageID", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 1);
+			this.AddElementFieldMapping("ThreadStatisticsEntity", "NumberOfMessages", "NumberOfMessages", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 2);
+			this.AddElementFieldMapping("ThreadStatisticsEntity", "NumberOfViews", "NumberOfViews", false, "Int", 0, 10, 0, false, "", null, typeof(System.Int32), 3);
 		}
 
 		/// <summary>Inits ThreadSubscriptionEntity's mappings</summary>

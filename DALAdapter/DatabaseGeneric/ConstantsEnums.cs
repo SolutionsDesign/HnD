@@ -152,6 +152,8 @@ namespace SD.HnD.DALAdapter
 		SystemDataEntity,
 		///<summary>Thread</summary>
 		ThreadEntity,
+		///<summary>ThreadStatistics</summary>
+		ThreadStatisticsEntity,
 		///<summary>ThreadSubscription</summary>
 		ThreadSubscriptionEntity,
 		///<summary>User</summary>

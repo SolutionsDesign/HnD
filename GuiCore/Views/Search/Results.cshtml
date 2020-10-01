@@ -70,11 +70,7 @@
 				</div>
 				@foreach(var row in Model.PageRows)
 				{
-					var lastPostingDateAsString = "Never";
-					if(row.ThreadLastPostingDate.HasValue)
-					{
-						lastPostingDateAsString = row.ThreadLastPostingDate.Value.ToString("dd-MMM-yyyy HH:mm");
-					}
+					var lastPostingDateAsString = row.ThreadLastPostingDate.ToString("dd-MMM-yyyy HH:mm");
 					<div class="row fs-row">
 						<div class="col-sm-7 col-xs-8">
 							<div class="column-fluent-no-padding">

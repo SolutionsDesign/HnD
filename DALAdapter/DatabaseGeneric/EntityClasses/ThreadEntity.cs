@@ -36,6 +36,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		private ForumEntity _forum;
 		private UserEntity _userWhoStartedThread;
 		private SupportQueueThreadEntity _supportQueueThread;
+		private ThreadStatisticsEntity _statistics;
 
 		// __LLBLGENPRO_USER_CODE_REGION_START PrivateMembers
 		// __LLBLGENPRO_USER_CODE_REGION_END
@@ -65,6 +66,8 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			public static readonly string UsersWhoSubscribedThread = "UsersWhoSubscribedThread";
 			/// <summary>Member name SupportQueueThread</summary>
 			public static readonly string SupportQueueThread = "SupportQueueThread";
+			/// <summary>Member name Statistics</summary>
+			public static readonly string Statistics = "Statistics";
 		}
 
 		/// <summary>Static meta-data storage for navigator related information</summary>
@@ -80,6 +83,7 @@ namespace SD.HnD.DALAdapter.EntityClasses
 				AddNavigatorMetaData<ThreadEntity, ForumEntity>("Forum", "Threads", (a, b) => a._forum = b, a => a._forum, (a, b) => a.Forum = b, SD.HnD.DALAdapter.RelationClasses.StaticThreadRelations.ForumEntityUsingForumIDStatic, ()=>new ThreadRelations().ForumEntityUsingForumID, null, new int[] { (int)ThreadFieldIndex.ForumID }, null, true, (int)SD.HnD.DALAdapter.EntityType.ForumEntity);
 				AddNavigatorMetaData<ThreadEntity, UserEntity>("UserWhoStartedThread", "StartedThreads", (a, b) => a._userWhoStartedThread = b, a => a._userWhoStartedThread, (a, b) => a.UserWhoStartedThread = b, SD.HnD.DALAdapter.RelationClasses.StaticThreadRelations.UserEntityUsingStartedByUserIDStatic, ()=>new ThreadRelations().UserEntityUsingStartedByUserID, null, new int[] { (int)ThreadFieldIndex.StartedByUserID }, null, true, (int)SD.HnD.DALAdapter.EntityType.UserEntity);
 				AddNavigatorMetaData<ThreadEntity, SupportQueueThreadEntity>("SupportQueueThread", "Thread", (a, b) => a._supportQueueThread = b, a => a._supportQueueThread, (a, b) => a.SupportQueueThread = b, SD.HnD.DALAdapter.RelationClasses.StaticThreadRelations.SupportQueueThreadEntityUsingThreadIDStatic, ()=>new ThreadRelations().SupportQueueThreadEntityUsingThreadID, null, null, null, true, (int)SD.HnD.DALAdapter.EntityType.SupportQueueThreadEntity);
+				AddNavigatorMetaData<ThreadEntity, ThreadStatisticsEntity>("Statistics", "Thread", (a, b) => a._statistics = b, a => a._statistics, (a, b) => a.Statistics = b, SD.HnD.DALAdapter.RelationClasses.StaticThreadRelations.ThreadStatisticsEntityUsingThreadIDStatic, ()=>new ThreadRelations().ThreadStatisticsEntityUsingThreadID, null, null, null, true, (int)SD.HnD.DALAdapter.EntityType.ThreadStatisticsEntity);
 				AddNavigatorMetaData<ThreadEntity, EntityCollection<UserEntity>>("UsersWhoBookmarkedThread", a => a._usersWhoBookmarkedThread, (a, b) => a._usersWhoBookmarkedThread = b, a => a.UsersWhoBookmarkedThread, () => new ThreadRelations().BookmarkEntityUsingThreadID, () => new BookmarkRelations().UserEntityUsingUserID, "ThreadEntity__", "Bookmark_", typeof(UserEntity), (int)SD.HnD.DALAdapter.EntityType.UserEntity);
 				AddNavigatorMetaData<ThreadEntity, EntityCollection<UserEntity>>("UsersWhoPostedInThread", a => a._usersWhoPostedInThread, (a, b) => a._usersWhoPostedInThread = b, a => a.UsersWhoPostedInThread, () => new ThreadRelations().MessageEntityUsingThreadID, () => new MessageRelations().UserEntityUsingPostedByUserID, "ThreadEntity__", "Message_", typeof(UserEntity), (int)SD.HnD.DALAdapter.EntityType.UserEntity);
 				AddNavigatorMetaData<ThreadEntity, EntityCollection<UserEntity>>("UsersWhoSubscribedThread", a => a._usersWhoSubscribedThread, (a, b) => a._usersWhoSubscribedThread = b, a => a.UsersWhoSubscribedThread, () => new ThreadRelations().ThreadSubscriptionEntityUsingThreadID, () => new ThreadSubscriptionRelations().UserEntityUsingUserID, "ThreadEntity__", "ThreadSubscription_", typeof(UserEntity), (int)SD.HnD.DALAdapter.EntityType.UserEntity);
@@ -174,6 +178,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'SupportQueueThread' to this entity.</summary>
 		/// <returns></returns>
 		public virtual IRelationPredicateBucket GetRelationInfoSupportQueueThread() { return CreateRelationInfoForNavigator("SupportQueueThread"); }
+
+		/// <summary>Creates a new IRelationPredicateBucket object which contains the predicate expression and relation collection to fetch the related entity of type 'ThreadStatistics' to this entity.</summary>
+		/// <returns></returns>
+		public virtual IRelationPredicateBucket GetRelationInfoStatistics() { return CreateRelationInfoForNavigator("Statistics"); }
 		
 		/// <inheritdoc/>
 		protected override EntityStaticMetaDataBase GetEntityStaticMetaData() {	return _staticMetaData; }
@@ -245,6 +253,10 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
 		public static IPrefetchPathElement2 PrefetchPathSupportQueueThread { get { return _staticMetaData.GetPrefetchPathElement("SupportQueueThread", CommonEntityBase.CreateEntityCollection<SupportQueueThreadEntity>()); } }
 
+		/// <summary>Creates a new PrefetchPathElement2 object which contains all the information to prefetch the related entities of type 'ThreadStatistics' for this entity.</summary>
+		/// <returns>Ready to use IPrefetchPathElement2 implementation.</returns>
+		public static IPrefetchPathElement2 PrefetchPathStatistics { get { return _staticMetaData.GetPrefetchPathElement("Statistics", CommonEntityBase.CreateEntityCollection<ThreadStatisticsEntity>()); } }
+
 		/// <summary>The ThreadID property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."ThreadID".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, true, true</remarks>
 		[Required]
@@ -282,14 +294,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set	{ SetValue((int)ThreadFieldIndex.StartedByUserID, value); }
 		}
 
-		/// <summary>The ThreadLastPostingDate property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."ThreadLastPostingDate".<br/>Table field type characteristics (type, precision, scale, length): DateTime, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.DateTime> ThreadLastPostingDate
-		{
-			get { return (Nullable<System.DateTime>)GetValue((int)ThreadFieldIndex.ThreadLastPostingDate, false); }
-			set	{ SetValue((int)ThreadFieldIndex.ThreadLastPostingDate, value); }
-		}
-
 		/// <summary>The IsSticky property of the Entity Thread<br/><br/></summary>
 		/// <remarks>Mapped on  table field: "Thread"."IsSticky".<br/>Table field type characteristics (type, precision, scale, length): Bit, 0, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): false, false, false</remarks>
 		[Required]
@@ -315,14 +319,6 @@ namespace SD.HnD.DALAdapter.EntityClasses
 		{
 			get { return (System.Boolean)GetValue((int)ThreadFieldIndex.MarkedAsDone, true); }
 			set	{ SetValue((int)ThreadFieldIndex.MarkedAsDone, value); }
-		}
-
-		/// <summary>The NumberOfViews property of the Entity Thread<br/><br/></summary>
-		/// <remarks>Mapped on  table field: "Thread"."NumberOfViews".<br/>Table field type characteristics (type, precision, scale, length): Int, 10, 0, 0.<br/>Table field behavior characteristics (is nullable, is PK, is identity): true, false, false</remarks>
-		public virtual Nullable<System.Int32> NumberOfViews
-		{
-			get { return (Nullable<System.Int32>)GetValue((int)ThreadFieldIndex.NumberOfViews, false); }
-			set	{ SetValue((int)ThreadFieldIndex.NumberOfViews, value); }
 		}
 
 		/// <summary>The Memo property of the Entity Thread<br/><br/></summary>
@@ -386,6 +382,14 @@ namespace SD.HnD.DALAdapter.EntityClasses
 			set { SetSingleRelatedEntityNavigator(value, "SupportQueueThread"); }
 		}
 
+		/// <summary>Gets / sets related entity of type 'ThreadStatisticsEntity' which has to be set using a fetch action earlier. If no related entity is set for this property, null is returned.<br/><br/></summary>
+		[Browsable(true)]
+		public virtual ThreadStatisticsEntity Statistics
+		{
+			get { return _statistics; }
+			set { SetSingleRelatedEntityNavigator(value, "Statistics"); }
+		}
+
 		// __LLBLGENPRO_USER_CODE_REGION_START CustomEntityCode
 		// __LLBLGENPRO_USER_CODE_REGION_END
 
@@ -404,16 +408,12 @@ namespace SD.HnD.DALAdapter
 		Subject,
 		///<summary>StartedByUserID. </summary>
 		StartedByUserID,
-		///<summary>ThreadLastPostingDate. </summary>
-		ThreadLastPostingDate,
 		///<summary>IsSticky. </summary>
 		IsSticky,
 		///<summary>IsClosed. </summary>
 		IsClosed,
 		///<summary>MarkedAsDone. </summary>
 		MarkedAsDone,
-		///<summary>NumberOfViews. </summary>
-		NumberOfViews,
 		///<summary>Memo. </summary>
 		Memo,
 		/// <summary></summary>
@@ -456,6 +456,12 @@ namespace SD.HnD.DALAdapter.RelationClasses
 			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToOne, "SupportQueueThread", true, new[] { ThreadFields.ThreadID, SupportQueueThreadFields.ThreadID }); }
 		}
 
+		/// <summary>Returns a new IEntityRelation object, between ThreadEntity and ThreadStatisticsEntity over the 1:1 relation they have, using the relation between the fields: Thread.ThreadID - ThreadStatistics.ThreadID</summary>
+		public virtual IEntityRelation ThreadStatisticsEntityUsingThreadID
+		{
+			get	{ return ModelInfoProviderSingleton.GetInstance().CreateRelation(RelationType.OneToOne, "Statistics", true, new[] { ThreadFields.ThreadID, ThreadStatisticsFields.ThreadID }); }
+		}
+
 		/// <summary>Returns a new IEntityRelation object, between ThreadEntity and ForumEntity over the m:1 relation they have, using the relation between the fields: Thread.ForumID - Forum.ForumID</summary>
 		public virtual IEntityRelation ForumEntityUsingForumID
 		{
@@ -478,6 +484,7 @@ namespace SD.HnD.DALAdapter.RelationClasses
 		internal static readonly IEntityRelation MessageEntityUsingThreadIDStatic = new ThreadRelations().MessageEntityUsingThreadID;
 		internal static readonly IEntityRelation ThreadSubscriptionEntityUsingThreadIDStatic = new ThreadRelations().ThreadSubscriptionEntityUsingThreadID;
 		internal static readonly IEntityRelation SupportQueueThreadEntityUsingThreadIDStatic = new ThreadRelations().SupportQueueThreadEntityUsingThreadID;
+		internal static readonly IEntityRelation ThreadStatisticsEntityUsingThreadIDStatic = new ThreadRelations().ThreadStatisticsEntityUsingThreadID;
 		internal static readonly IEntityRelation ForumEntityUsingForumIDStatic = new ThreadRelations().ForumEntityUsingForumID;
 		internal static readonly IEntityRelation UserEntityUsingStartedByUserIDStatic = new ThreadRelations().UserEntityUsingStartedByUserID;
 

@@ -180,7 +180,6 @@ namespace SD.HnD.BL
 								IsSticky = isSticky,
 								StartedByUserID = userId,
 								Subject = subject,
-								ThreadLastPostingDate = DateTime.Now
 							};
 
 			if(defaultSupportQueueId.HasValue)
@@ -205,6 +204,9 @@ namespace SD.HnD.BL
 								 PostedFromIP = userIdIPAddress,
 								 Thread = newThread
 							 };
+			
+			// Assign a new statistics entity so we can track what the last message is. 
+			newThread.Statistics = new ThreadStatisticsEntity() { LastMessage = newMessage, NumberOfMessages = 1, NumberOfViews = 1};
 
 			using(var adapter = new DataAccessAdapter())
 			{
@@ -217,8 +219,8 @@ namespace SD.HnD.BL
 					var threadId = newMessage.ThreadID;
 
 					// update thread statistics, this is the task for the message manager, and we pass the adapter so the actions will run in
-					// the same transaction.
-					await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userId, adapter, DateTime.Now, false, subscribeToThread);
+					// the same transaction. Pass -1 as newMessageId as we already have inserted this. 
+					await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userId, -1, adapter, DateTime.Now, false, subscribeToThread);
 					adapter.Commit();
 
 					return (newThread.ThreadID, messageId);

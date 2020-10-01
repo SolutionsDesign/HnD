@@ -81,7 +81,7 @@ namespace SD.HnD.BL
 			var q = qf.Create()
 					  .From(ThreadGuiHelper.BuildFromClauseForAllThreadsWithStats(qf))
 					  .Where(ThreadFields.ForumID.Equal(forumId))
-					  .OrderBy(ThreadFields.IsSticky.Descending(), ThreadFields.ThreadLastPostingDate.Descending())
+					  .OrderBy(ThreadFields.IsSticky.Descending(), MessageFields.PostingDate.Source("LastMessage").Descending())
 					  .Select<AggregatedThreadRow>(ThreadGuiHelper.BuildQueryProjectionForAllThreadsWithStats(qf).ToArray())
 					  .Offset(offsetStart) // skip the pages we don't need.
 					  .Limit(pageSize + 1); // fetch 1 row extra, which we can use to determine whether there are more pages left.

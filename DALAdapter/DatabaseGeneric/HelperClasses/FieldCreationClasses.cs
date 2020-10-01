@@ -315,18 +315,27 @@ namespace SD.HnD.DALAdapter.HelperClasses
 		public static EntityField2 Subject { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.Subject); }}
 		/// <summary>Creates a new ThreadEntity.StartedByUserID field instance</summary>
 		public static EntityField2 StartedByUserID { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.StartedByUserID); }}
-		/// <summary>Creates a new ThreadEntity.ThreadLastPostingDate field instance</summary>
-		public static EntityField2 ThreadLastPostingDate { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.ThreadLastPostingDate); }}
 		/// <summary>Creates a new ThreadEntity.IsSticky field instance</summary>
 		public static EntityField2 IsSticky { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.IsSticky); }}
 		/// <summary>Creates a new ThreadEntity.IsClosed field instance</summary>
 		public static EntityField2 IsClosed { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.IsClosed); }}
 		/// <summary>Creates a new ThreadEntity.MarkedAsDone field instance</summary>
 		public static EntityField2 MarkedAsDone { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.MarkedAsDone); }}
-		/// <summary>Creates a new ThreadEntity.NumberOfViews field instance</summary>
-		public static EntityField2 NumberOfViews { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.NumberOfViews); }}
 		/// <summary>Creates a new ThreadEntity.Memo field instance</summary>
 		public static EntityField2 Memo { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadFieldIndex.Memo); }}
+	}
+
+	/// <summary>Field Creation Class for entity ThreadStatisticsEntity</summary>
+	public partial class ThreadStatisticsFields
+	{
+		/// <summary>Creates a new ThreadStatisticsEntity.ThreadID field instance</summary>
+		public static EntityField2 ThreadID { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadStatisticsFieldIndex.ThreadID); }}
+		/// <summary>Creates a new ThreadStatisticsEntity.LastMessageID field instance</summary>
+		public static EntityField2 LastMessageID { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadStatisticsFieldIndex.LastMessageID); }}
+		/// <summary>Creates a new ThreadStatisticsEntity.NumberOfMessages field instance</summary>
+		public static EntityField2 NumberOfMessages { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadStatisticsFieldIndex.NumberOfMessages); }}
+		/// <summary>Creates a new ThreadStatisticsEntity.NumberOfViews field instance</summary>
+		public static EntityField2 NumberOfViews { get { return ModelInfoProviderSingleton.GetInstance().CreateField2(ThreadStatisticsFieldIndex.NumberOfViews); }}
 	}
 
 	/// <summary>Field Creation Class for entity ThreadSubscriptionEntity</summary>

@@ -292,10 +292,17 @@ namespace SD.HnD.BL
 		/// <param name="adapter">The adapter to use in this method, has a live transaction.</param>
 		private static async Task DeleteThreadsAsync(PredicateExpression threadFilter, IDataAccessAdapter adapter)
 		{
-			// we've to perform a set of actions in a given order to make sure we're not violating FK constraints in the DB. 
-			await MessageManager.DeleteAllMessagesInThreadsAsync(threadFilter, adapter);
-
 			var qf = new QueryFactory();
+
+			// we've to perform a set of actions in a given order to make sure we're not violating FK constraints in the DB.
+			// First thread statistics for the threads matching the specified threadfilter.
+			await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadStatisticsEntity),
+													  new RelationPredicateBucket(ThreadStatisticsFields.ThreadID.In(qf.Thread.Where(threadFilter)
+																												 .Select(ThreadFields.ThreadID))))
+						 .ConfigureAwait(false);
+
+			// then the messages, which refer to threads
+			await MessageManager.DeleteAllMessagesInThreadsAsync(threadFilter, adapter);
 
 			// delete bookmarks (if exists) of the threads to be deleted
 			await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity),
@@ -429,7 +436,7 @@ namespace SD.HnD.BL
 																						 string userIdIPAddress, bool subscribeToThread,
 																						 Dictionary<string, string> emailData, bool sendReplyNotifications)
 		{
-			var messageID = 0;
+			var messageId = 0;
 			using(var adapter = new DataAccessAdapter())
 			{
 				await adapter.StartTransactionAsync(IsolationLevel.ReadCommitted, "InsertNewMessage").ConfigureAwait(false);
@@ -445,10 +452,10 @@ namespace SD.HnD.BL
 									  ThreadID = threadId,
 									  PostedFromIP = userIdIPAddress,
 								  };
-					messageID = await adapter.SaveEntityAsync(message).ConfigureAwait(false) ? message.MessageID : 0;
-					if(messageID > 0)
+					messageId = await adapter.SaveEntityAsync(message).ConfigureAwait(false) ? message.MessageID : 0;
+					if(messageId > 0)
 					{
-						await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userId, adapter, postingDate, true, subscribeToThread);
+						await MessageManager.UpdateStatisticsAfterMessageInsert(threadId, userId, messageId, adapter, postingDate, true, subscribeToThread);
 					}
 
 					adapter.Commit();
@@ -467,7 +474,7 @@ namespace SD.HnD.BL
 				await ThreadManager.SendThreadReplyNotifications(threadId, userId, emailData).ConfigureAwait(false);
 			}
 
-			return messageID;
+			return messageId;
 		}
 	}
 }

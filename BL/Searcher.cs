@@ -273,10 +273,10 @@ namespace SD.HnD.BL
 					toReturn = ForumFields.ForumName.Descending();
 					break;
 				case SearchResultsOrderSetting.LastPostDateAscending:
-					toReturn = ThreadFields.ThreadLastPostingDate.Ascending();
+					toReturn = MessageFields.PostingDate.Source("LastMessage").Ascending(); //ThreadFields.ThreadLastPostingDate.Ascending();
 					break;
 				case SearchResultsOrderSetting.LastPostDateDescending:
-					toReturn = ThreadFields.ThreadLastPostingDate.Descending();
+					toReturn = MessageFields.PostingDate.Source("LastMessage").Descending();
 					break;
 				case SearchResultsOrderSetting.ThreadSubjectAscending:
 					toReturn = ThreadFields.Subject.Ascending();

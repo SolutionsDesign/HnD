@@ -81,6 +81,9 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 		/// <summary>Creates and returns a new EntityQuery for the Thread entity</summary>
 		public EntityQuery<ThreadEntity> Thread { get { return Create<ThreadEntity>(); } }
 
+		/// <summary>Creates and returns a new EntityQuery for the ThreadStatistics entity</summary>
+		public EntityQuery<ThreadStatisticsEntity> ThreadStatistics { get { return Create<ThreadStatisticsEntity>(); } }
+
 		/// <summary>Creates and returns a new EntityQuery for the ThreadSubscription entity</summary>
 		public EntityQuery<ThreadSubscriptionEntity> ThreadSubscription { get { return Create<ThreadSubscriptionEntity>(); } }
 
@@ -151,12 +154,14 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 									Subject = ThreadFields.Subject.ToValue<System.String>(),
 									ForumName = ForumFields.ForumName.ToValue<System.String>(),
 									SectionName = SectionFields.SectionName.ToValue<System.String>(),
-									ThreadLastPostingDate = ThreadFields.ThreadLastPostingDate.ToValue<Nullable<System.DateTime>>()
+									ThreadLastPostingDate = MessageFields.PostingDate.As("ThreadLastPostingDate").Source("LastMessage").ToValue<System.DateTime>()
 								})
 						.From(rootOfQuery
 								.InnerJoin(this.Thread).On(MessageFields.ThreadID.Equal(ThreadFields.ThreadID))
 								.InnerJoin(this.Forum).On(ThreadFields.ForumID.Equal(ForumFields.ForumID))
-								.InnerJoin(this.Section).On(ForumFields.SectionID.Equal(SectionFields.SectionID)));
+								.InnerJoin(this.ThreadStatistics).On(ThreadFields.ThreadID.Equal(ThreadStatisticsFields.ThreadID))
+								.InnerJoin(this.Section).On(ForumFields.SectionID.Equal(SectionFields.SectionID))
+								.InnerJoin(this.Message.As("LastMessage")).On(ThreadStatisticsFields.LastMessageID.Equal(MessageFields.MessageID.Source("LastMessage"))));
 		}
 
 		/// <summary>Gets the query to fetch the typed list UserProfileInfo</summary>

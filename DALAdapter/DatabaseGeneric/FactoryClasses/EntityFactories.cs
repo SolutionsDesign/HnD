@@ -276,6 +276,16 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new ThreadEntity(fields); }
 	}
 
+	/// <summary>Factory to create new, empty ThreadStatisticsEntity objects.</summary>
+	[Serializable]
+	public partial class ThreadStatisticsEntityFactory : EntityFactoryBase2<ThreadStatisticsEntity> 
+	{
+		/// <summary>CTor</summary>
+		public ThreadStatisticsEntityFactory() : base("ThreadStatisticsEntity", SD.HnD.DALAdapter.EntityType.ThreadStatisticsEntity, false) { }
+		/// <inheritdoc/>
+		protected override IEntity2 CreateImpl(IEntityFields2 fields) { return new ThreadStatisticsEntity(fields); }
+	}
+
 	/// <summary>Factory to create new, empty ThreadSubscriptionEntity objects.</summary>
 	[Serializable]
 	public partial class ThreadSubscriptionEntityFactory : EntityFactoryBase2<ThreadSubscriptionEntity> 
@@ -395,6 +405,8 @@ namespace SD.HnD.DALAdapter.FactoryClasses
 					return new SystemDataEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.ThreadEntity:
 					return new ThreadEntityFactory();
+				case SD.HnD.DALAdapter.EntityType.ThreadStatisticsEntity:
+					return new ThreadStatisticsEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.ThreadSubscriptionEntity:
 					return new ThreadSubscriptionEntityFactory();
 				case SD.HnD.DALAdapter.EntityType.UserEntity:

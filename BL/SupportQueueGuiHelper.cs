@@ -190,7 +190,7 @@ namespace SD.HnD.BL
 										   .LeftJoin(qf.User.As("ClaimedThreadUser"))
 										   .On(SupportQueueThreadFields.ClaimedByUserID.Equal(UserFields.UserID.Source("ClaimedThreadUser"))))
 					  .Where(ThreadFields.ForumID.In(accessableForums.ToArray()).And(SupportQueueThreadFields.QueueID.In(supportQueueIds)))
-					  .OrderBy(SupportQueueThreadFields.QueueID.Ascending(), ThreadFields.ThreadLastPostingDate.Ascending());
+					  .OrderBy(SupportQueueThreadFields.QueueID.Ascending(), MessageFields.PostingDate.Source("LastMessage").Ascending());
 			using(var adapter = new DataAccessAdapter())
 			{
 				return await adapter.FetchQueryAsync(q).ConfigureAwait(false);

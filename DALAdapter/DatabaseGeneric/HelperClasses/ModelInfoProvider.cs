@@ -62,6 +62,7 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			InitSupportQueueThreadEntityInfo();
 			InitSystemDataEntityInfo();
 			InitThreadEntityInfo();
+			InitThreadStatisticsEntityInfo();
 			InitThreadSubscriptionEntityInfo();
 			InitUserEntityInfo();
 			InitUserTitleEntityInfo();
@@ -288,12 +289,20 @@ namespace SD.HnD.DALAdapter.HelperClasses
 			this.AddElementFieldInfo("ThreadEntity", "ForumID", typeof(System.Int32), false, true, false, false,  (int)ThreadFieldIndex.ForumID, 0, 0, 10);
 			this.AddElementFieldInfo("ThreadEntity", "Subject", typeof(System.String), false, false, false, false,  (int)ThreadFieldIndex.Subject, 250, 0, 0);
 			this.AddElementFieldInfo("ThreadEntity", "StartedByUserID", typeof(System.Int32), false, true, false, false,  (int)ThreadFieldIndex.StartedByUserID, 0, 0, 10);
-			this.AddElementFieldInfo("ThreadEntity", "ThreadLastPostingDate", typeof(Nullable<System.DateTime>), false, false, false, true,  (int)ThreadFieldIndex.ThreadLastPostingDate, 0, 0, 0);
 			this.AddElementFieldInfo("ThreadEntity", "IsSticky", typeof(System.Boolean), false, false, false, false,  (int)ThreadFieldIndex.IsSticky, 0, 0, 0);
 			this.AddElementFieldInfo("ThreadEntity", "IsClosed", typeof(System.Boolean), false, false, false, false,  (int)ThreadFieldIndex.IsClosed, 0, 0, 0);
 			this.AddElementFieldInfo("ThreadEntity", "MarkedAsDone", typeof(System.Boolean), false, false, false, false,  (int)ThreadFieldIndex.MarkedAsDone, 0, 0, 0);
-			this.AddElementFieldInfo("ThreadEntity", "NumberOfViews", typeof(Nullable<System.Int32>), false, false, false, true,  (int)ThreadFieldIndex.NumberOfViews, 0, 0, 10);
 			this.AddElementFieldInfo("ThreadEntity", "Memo", typeof(System.String), false, false, false, true,  (int)ThreadFieldIndex.Memo, 1073741823, 0, 0);
+		}
+
+		/// <summary>Inits ThreadStatisticsEntity's info objects</summary>
+		private void InitThreadStatisticsEntityInfo()
+		{
+			this.AddFieldIndexEnumForElementName(typeof(ThreadStatisticsFieldIndex), "ThreadStatisticsEntity");
+			this.AddElementFieldInfo("ThreadStatisticsEntity", "ThreadID", typeof(System.Int32), true, true, false, false,  (int)ThreadStatisticsFieldIndex.ThreadID, 0, 0, 10);
+			this.AddElementFieldInfo("ThreadStatisticsEntity", "LastMessageID", typeof(System.Int32), false, true, false, false,  (int)ThreadStatisticsFieldIndex.LastMessageID, 0, 0, 10);
+			this.AddElementFieldInfo("ThreadStatisticsEntity", "NumberOfMessages", typeof(System.Int32), false, false, false, false,  (int)ThreadStatisticsFieldIndex.NumberOfMessages, 0, 0, 10);
+			this.AddElementFieldInfo("ThreadStatisticsEntity", "NumberOfViews", typeof(System.Int32), false, false, false, false,  (int)ThreadStatisticsFieldIndex.NumberOfViews, 0, 0, 10);
 		}
 
 		/// <summary>Inits ThreadSubscriptionEntity's info objects</summary>

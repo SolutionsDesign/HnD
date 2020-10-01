@@ -100,7 +100,7 @@
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DALAdapter" />
+        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\SolutionsDesign\HnD\DALAdapter" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
         <PlatformName Value=".NET Standard 2.0" />
@@ -118,7 +118,7 @@
     </OutputType>
     <OutputType Value="2">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\SQLScripts" />
+        <DestinationRootFolder Value="C:\MyProjects\VS.NET Projects\GitHub\SolutionsDesign\HnD\SQLScripts" />
         <FrameworkName Value="DDL SQL" />
         <LanguageName Value="SQL" />
         <PlatformName Value="RDBMS" />
@@ -428,15 +428,25 @@
       <EntityDefinition Name="Thread" ObjectID="8d072da2-085b-42a2-acf1-222d5c88fbde">
         <Fields>
           <Field Name="ForumID" Type="int" IsAutoCreated="true" FieldIndex="1" />
-          <Field Name="IsClosed" Type="bool" FieldIndex="6" />
-          <Field Name="IsSticky" Type="bool" FieldIndex="5" />
-          <Field Name="MarkedAsDone" Type="bool" FieldIndex="7" />
-          <Field Name="Memo" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="9" />
-          <Field Name="NumberOfViews" Type="int" IsOptional="true" FieldIndex="8" />
+          <Field Name="IsClosed" Type="bool" FieldIndex="5" />
+          <Field Name="IsSticky" Type="bool" FieldIndex="4" />
+          <Field Name="MarkedAsDone" Type="bool" FieldIndex="6" />
+          <Field Name="Memo" Type="string" IsOptional="true" MaxLength="1073741823" FieldIndex="7" />
           <Field Name="StartedByUserID" Type="int" IsAutoCreated="true" FieldIndex="3" />
           <Field Name="Subject" Type="string" MaxLength="250" FieldIndex="2" />
           <Field Name="ThreadID" Type="int" IsReadOnly="true" IsPrimaryKey="true" FieldIndex="0" />
-          <Field Name="ThreadLastPostingDate" Type="datetime" IsOptional="true" FieldIndex="4" />
+        </Fields>
+      </EntityDefinition>
+      <EntityDefinition Name="ThreadStatistics" ObjectID="88d250c8-d7ae-4366-9857-5af855ec1265">
+        <Fields>
+          <Field Name="LastMessageID" Type="int" IsAutoCreated="true" FieldIndex="1" />
+          <Field Name="NumberOfMessages" Type="int" FieldIndex="2">
+            <Description><![CDATA[Redundant aggregate which is used with the view of threads in a forum. By storing this here we can avoid an expensive aggregate query when viewing a page of threads in a forum.]]></Description>
+          </Field>
+          <Field Name="NumberOfViews" Type="int" FieldIndex="3">
+            <Description><![CDATA[This view was present in the Thread entity but is now refactored to this field. ]]></Description>
+          </Field>
+          <Field Name="ThreadID" Type="int" IsPrimaryKey="true" IsAutoCreated="true" FieldIndex="0" />
         </Fields>
       </EntityDefinition>
       <EntityDefinition Name="ThreadSubscription" ObjectID="e1d6aadd-de57-44c1-b3bb-ecbcad3589d8">
@@ -633,9 +643,19 @@
           <FieldFieldRelationship FkField="ForumID" PkField="ForumID" />
         </FieldRelationships>
       </NormalRelationship>
+      <NormalRelationship Name="Thread.Statistics-ThreadStatistics.Thread" Start=":Thread" End=":ThreadStatistics" StartNavigator="Statistics" EndNavigator="Thread" Type="1" StartIsPkSide="true" DeleteRuleAction="1">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="ThreadID" PkField="ThreadID" />
+        </FieldRelationships>
+      </NormalRelationship>
       <NormalRelationship Name="Thread.UserWhoStartedThread-User.StartedThreads" Start=":Thread" End=":User" StartNavigator="UserWhoStartedThread" EndNavigator="StartedThreads" Type="4">
         <FieldRelationships>
           <FieldFieldRelationship FkField="StartedByUserID" PkField="UserID" />
+        </FieldRelationships>
+      </NormalRelationship>
+      <NormalRelationship Name="ThreadStatistics.LastMessage-Message.ThreadStatistics" Start=":ThreadStatistics" End=":Message" StartNavigator="LastMessage" EndNavigator="ThreadStatistics" Type="1" StartIsOptional="true" DeleteRuleAction="1">
+        <FieldRelationships>
+          <FieldFieldRelationship FkField="LastMessageID" PkField="MessageID" />
         </FieldRelationships>
       </NormalRelationship>
       <NormalRelationship Name="ThreadSubscription.Thread-Thread.ThreadSubscription" Start=":ThreadSubscription" End=":Thread" StartNavigator="Thread" EndNavigator="ThreadSubscription" Type="4">
@@ -726,21 +746,25 @@
     <TypedListDefinition Name="SearchResult">
       <EntityAliases>
         <EntityAlias Entity=":Forum" />
+        <EntityAlias Alias="LastMessage" Entity=":Message" />
         <EntityAlias Entity=":Message" />
         <EntityAlias Entity=":Section" />
         <EntityAlias Entity=":Thread" />
+        <EntityAlias Entity=":ThreadStatistics" />
       </EntityAliases>
       <Fields>
         <Field FieldAlias="ThreadID" TargetField="Thread.ThreadID" />
         <Field FieldAlias="Subject" TargetField="Thread.Subject" />
         <Field FieldAlias="ForumName" TargetField="Forum.ForumName" />
         <Field FieldAlias="SectionName" TargetField="Section.SectionName" />
-        <Field FieldAlias="ThreadLastPostingDate" TargetField="Thread.ThreadLastPostingDate" />
+        <Field FieldAlias="ThreadLastPostingDate" Caption="PostingDate" TargetField="LastMessage.PostingDate" />
       </Fields>
       <Relationships>
         <Relationship Name="Forum.Section-Section.Forums" StartAlias="Section" EndAlias="Forum" JoinHint="1" />
         <Relationship Name="Message.Thread-Thread.Messages" StartAlias="Thread" EndAlias="Message" JoinHint="1" />
         <Relationship Name="Thread.Forum-Forum.Threads" StartAlias="Forum" EndAlias="Thread" JoinHint="1" />
+        <Relationship Name="Thread.Statistics-ThreadStatistics.Thread" StartAlias="ThreadStatistics" EndAlias="Thread" JoinHint="1" />
+        <Relationship Name="ThreadStatistics.LastMessage-Message.ThreadStatistics" StartAlias="LastMessage" EndAlias="ThreadStatistics" JoinHint="1" />
       </Relationships>
       <OutputSettingValues>
         <SettingValues>
@@ -800,7 +824,7 @@
       <Catalogs>
         <Catalog Name="HnD">
           <Schemas>
-            <Schema Name="dbo" SyncSource="3" LastSyncWithDatabase="2020-09-23T13:54:22.7216158Z" LastSyncWithModel="2020-09-23T13:54:22.7751098Z">
+            <Schema Name="dbo" SyncSource="3" LastSyncWithDatabase="2020-09-23T13:54:22.7216158Z" LastSyncWithModel="2020-10-01T09:56:55.7653759Z">
               <Tables>
                 <Table Name="ActionRight">
                   <PkConstraintName Name="TF_ActionRight_PK" />
@@ -870,11 +894,11 @@
                     <Field Name="ForumLastPostingDate" Ordinal="5" IsOptional="true" DbType="4" />
                     <Field Name="HasRSSFeed" Ordinal="6" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
                     <Field Name="DefaultSupportQueueID" Ordinal="7" IsOptional="true" DbType="8" Precision="10" />
-                    <Field Name="OrderNo" Ordinal="8" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(0)" DbType="16" Precision="5" />
-                    <Field Name="MaxAttachmentSize" Ordinal="9" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(512)" DbType="8" Precision="10" />
-                    <Field Name="MaxNoOfAttachmentsPerMessage" Ordinal="10" IsOptional="true" TrackedChanges="2" HasDefaultValue="true" DefaultValue="(1)" DbType="16" Precision="5" />
-                    <Field Name="NewThreadWelcomeText" Ordinal="11" IsOptional="true" TrackedChanges="2" DbType="11" Length="1073741823" />
-                    <Field Name="NewThreadWelcomeTextAsHTML" Ordinal="12" IsOptional="true" TrackedChanges="2" DbType="11" Length="1073741823" />
+                    <Field Name="OrderNo" Ordinal="8" HasDefaultValue="true" DefaultValue="(0)" DbType="16" Precision="5" />
+                    <Field Name="MaxAttachmentSize" Ordinal="9" IsOptional="true" HasDefaultValue="true" DefaultValue="(512)" DbType="8" Precision="10" />
+                    <Field Name="MaxNoOfAttachmentsPerMessage" Ordinal="10" IsOptional="true" HasDefaultValue="true" DefaultValue="(1)" DbType="16" Precision="5" />
+                    <Field Name="NewThreadWelcomeText" Ordinal="11" IsOptional="true" DbType="11" Length="1073741823" />
+                    <Field Name="NewThreadWelcomeTextAsHTML" Ordinal="12" IsOptional="true" DbType="11" Length="1073741823" />
                   </Fields>
                 </Table>
                 <Table Name="ForumRoleForumActionRight">
@@ -1003,13 +1027,25 @@
                     <Field Name="ForumID" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="Subject" Ordinal="3" DbType="12" Length="250" />
                     <Field Name="StartedByUserID" Ordinal="4" DbType="8" Precision="10" />
-                    <Field Name="ThreadLastPostingDate" Ordinal="5" IsOptional="true" DbType="4" />
                     <Field Name="IsSticky" Ordinal="6" DbType="2" />
                     <Field Name="IsClosed" Ordinal="7" DbType="2" />
                     <Field Name="MarkedAsDone" Ordinal="8" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
-                    <Field Name="NumberOfViews" Ordinal="9" IsOptional="true" HasDefaultValue="true" DefaultValue="(0)" DbType="8" Precision="10" />
                     <Field Name="Memo" Ordinal="10" IsOptional="true" DbType="11" Length="1073741823" />
                   </Fields>
+                </Table>
+                <Table Name="ThreadStatistics">
+                  <PkConstraintName Name="PK_c0958924ef9b7ecf06dccd2537e" />
+                  <Fields>
+                    <Field Name="ThreadID" Ordinal="1" IsPrimaryKey="true" DbType="8" Precision="10" />
+                    <Field Name="LastMessageID" Ordinal="2" DbType="8" Precision="10" />
+                    <Field Name="NumberOfMessages" Ordinal="3" DbType="8" Precision="10" />
+                    <Field Name="NumberOfViews" Ordinal="4" DbType="8" Precision="10" />
+                  </Fields>
+                  <UniqueConstraints>
+                    <UniqueConstraint Name="UC_19c59ce41b5be7a6d2c358322d4">
+                      <Field Name="LastMessageID" />
+                    </UniqueConstraint>
+                  </UniqueConstraints>
                 </Table>
                 <Table Name="ThreadSubscription">
                   <PkConstraintName Name="PK_ThreadSubscription" />
@@ -1226,6 +1262,16 @@
                 <FieldPair PkField="dbo:User:UserID" FkField="dbo:Thread:StartedByUserID" />
               </FieldPairs>
             </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="dbo:ThreadStatistics:FK_15e6b0a402d80d4e4b0df3453c5" DeleteRuleAction="1">
+              <FieldPairs>
+                <FieldPair PkField="dbo:Thread:ThreadID" FkField="dbo:ThreadStatistics:ThreadID" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
+            <ForeignKeyConstraint Name="dbo:ThreadStatistics:FK_2033ff74285bde08311a5a99ae1" DeleteRuleAction="1">
+              <FieldPairs>
+                <FieldPair PkField="dbo:Message:MessageID" FkField="dbo:ThreadStatistics:LastMessageID" />
+              </FieldPairs>
+            </ForeignKeyConstraint>
             <ForeignKeyConstraint Name="dbo:ThreadSubscription:FK_ThreadSubscription_Thread">
               <FieldPairs>
                 <FieldPair PkField="dbo:Thread:ThreadID" FkField="dbo:ThreadSubscription:ThreadID" />
@@ -1425,11 +1471,17 @@
             <FieldMapping FieldName="IsSticky" TargetFieldName="IsSticky" />
             <FieldMapping FieldName="MarkedAsDone" TargetFieldName="MarkedAsDone" />
             <FieldMapping FieldName="Memo" TargetFieldName="Memo" />
-            <FieldMapping FieldName="NumberOfViews" TargetFieldName="NumberOfViews" />
             <FieldMapping FieldName="StartedByUserID" TargetFieldName="StartedByUserID" />
             <FieldMapping FieldName="Subject" TargetFieldName="Subject" />
             <FieldMapping FieldName="ThreadID" TargetFieldName="ThreadID" SequenceToUse="SCOPE_IDENTITY()" />
-            <FieldMapping FieldName="ThreadLastPostingDate" TargetFieldName="ThreadLastPostingDate" />
+          </FieldMappings>
+        </EntityMapping>
+        <EntityMapping EntityName=":ThreadStatistics" TargetName="HnD:dbo:ThreadStatistics">
+          <FieldMappings>
+            <FieldMapping FieldName="LastMessageID" TargetFieldName="LastMessageID" />
+            <FieldMapping FieldName="NumberOfMessages" TargetFieldName="NumberOfMessages" />
+            <FieldMapping FieldName="NumberOfViews" TargetFieldName="NumberOfViews" />
+            <FieldMapping FieldName="ThreadID" TargetFieldName="ThreadID" />
           </FieldMappings>
         </EntityMapping>
         <EntityMapping EntityName=":ThreadSubscription" TargetName="HnD:dbo:ThreadSubscription">
@@ -1521,6 +1573,17 @@
       </EntityDefinitions>
       <Documentation><![CDATA[]]></Documentation>
     </ModelView>
+    <ModelView Name="ThreadAndStatistics">
+      <EntityDefinitions>
+        <Entity Name=":Message" />
+        <Entity Name=":Thread" />
+        <Entity Name=":ThreadStatistics" />
+        <Entity Name=":User" />
+      </EntityDefinitions>
+      <Documentation><![CDATA[The relationships between a thread, messages and users. 
+
+ThreadStatistics is used to avoid expensive aggregates on the message entity as this quickly degrades performance when viewing a page of threads in a forum, especially if there are a lot of messages in a forum. ]]></Documentation>
+    </ModelView>
   </ModelViews>
   <DerivedModels>
     <DerivedModel Name="DTOs" ObjectID="4996e435-4538-49b1-bf1e-9dfaeed4e342" TargetFrameworkName="DTO Class Model" UseLegacyDefaults="false">
@@ -1556,7 +1619,7 @@
       </Settings>
       <CodeGenerationCyclePreferences OutputType="3">
         <LastUsedPreferences>
-          <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\FransBouma\HnD\DTOs" />
+          <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\SolutionsDesign\HnD\DTOs" />
           <FrameworkName Value="DTO Class Model" />
           <LanguageName Value="C#" />
           <PlatformName Value=".NET Standard 2.0" />
