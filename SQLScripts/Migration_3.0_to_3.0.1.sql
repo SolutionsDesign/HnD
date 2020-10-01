@@ -95,11 +95,11 @@ SELECT
         MessageAggregate.[NumberOfMessages],
 		COALESCE(T.NumberOfViews, 0)
 FROM   (
-			SELECT	[HnD_LLBLGen].[dbo].[Message].[ThreadID],
-		            MAX([HnD_LLBLGen].[dbo].[Message].[MessageID])   AS [LastMessageID],
-					COUNT([HnD_LLBLGen].[dbo].[Message].[MessageID]) AS [NumberOfMessages]
-			FROM	[HnD_LLBLGen].[dbo].[Message]
-			GROUP  BY [HnD_LLBLGen].[dbo].[Message].[ThreadID]
+			SELECT	[Message].[ThreadID],
+		            MAX([Message].[MessageID])   AS [LastMessageID],
+					COUNT([Message].[MessageID]) AS [NumberOfMessages]
+			FROM	[Message]
+			GROUP  BY [Message].[ThreadID]
 		) AS MessageAggregate
         INNER JOIN Thread T
             ON MessageAggregate.ThreadID = T.ThreadID
