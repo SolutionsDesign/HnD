@@ -148,7 +148,8 @@
 												}
 												<li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#editThreadPropertiesModal" title="Edit thread properties">Edit thread properties</a></li>
 											</ul>
-										</div>}
+										</div>
+									}
 								</div>
 								<div class="threadtools block-rightside">
 									@{string dimmedClass = Model.Thread.MarkedAsDone ? string.Empty : "dimmed";
@@ -318,7 +319,30 @@
 				</div>
 			</div>
 		}
-
+		<div class="row mt-10">
+			<div class="col-sm-12 fs-header">
+    			<div class="container">
+					<div class="row">
+						<div class="col-sm-8 p0">
+							<div class="fs-thread-pager">@await Html.PartialAsync("MessagePager", Model)</div>
+						</div>
+						<div class="col-sm-4">
+							<div class="threadtools pull-right">
+								<div class="threadtools block-rightside">
+									@if(Model.UserMayAddNewMessages)
+									{
+										<a href="~/Message/Add/@Model.Thread.ThreadID" class="fs-tooltip" title="New post"><i class="fa fa-plus"></i></a>@Html.Raw("&nbsp;")
+									}
+									@{// leave following nbsp; in the HTML to make sure Chrome knows this div is not empty, otherwise it will show 30px extra in the header. Why? Who knows!
+									}
+									<span>&nbsp;</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 		@if(Model.NumberOfPages > 1)
 		{
 			<div class="row">
