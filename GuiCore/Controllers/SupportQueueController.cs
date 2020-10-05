@@ -165,6 +165,8 @@ namespace SD.HnD.Gui.Controllers
 				{
 					await SupportQueueManager.RemoveThreadFromQueueAsync(threadId, null);
 				}
+				// reset the cached value how much messages are in the queues. 
+				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
 			}
 
 			return RedirectToAction("Index", "Thread", new {threadId = threadId, pageNo = pageNo});
