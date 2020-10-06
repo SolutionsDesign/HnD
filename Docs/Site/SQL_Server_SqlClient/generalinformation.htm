@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>General information - HnD Model Documentation</title>
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="../css/styles/vs.css">
+    <link rel="stylesheet" href="../css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="../index.htm"><i class="fa fa-home"></i> HnD Model Documentation</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="../Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="../index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="../generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../Entitymodel.htm">Entity model</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../Derivedmodels.htm">Derived models</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../Metadata.htm">Meta data</a></span></li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../SQL_Server_SqlClient/__index.htm">SQL Server (SqlClient)</a></span></li>
+
+<li class="tocentry current"><a class="current" href="../SQL_Server_SqlClient/generalinformation.htm">General information</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#general-information">General information</a></li>
+
+<li class="tocentry"><a href="#system-sequences">System sequences</a></li>
+
+<li class="tocentry"><a href="#type-mapping-tables">Type mapping tables</a></li>
+<li class="tocentry">
+<ul class="currentrelative">
+<li class="tocentry"><a href="#db-type-to-.net-type">DB Type to .NET Type</a></li>
+
+<li class="tocentry"><a href="#db-type-to-ado.net-provider-type">DB Type to ADO.NET Provider Type</a></li>
+
+
+</ul>
+</li>
+
+<li class="tocentry"><a href="#rdbms-aspects">RDBMS aspects</a></li>
+
+
+
+</ul>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../SQL_Server_SqlClient/HnD/__index.htm">HnD</a></span>
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="../index.htm">HnD Model Documentation</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="../index.htm">Home</a></li> / <li><a href="../Metadata.htm">Meta data</a></li> / <li><a href="../SQL_Server_SqlClient/__index.htm">SQL Server (SqlClient)</a></li> / <li><a href="../SQL_Server_SqlClient/generalinformation.htm">General information</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="sql-server-sqlclient-general-information">SQL Server (SqlClient) General Information<a class="headerlink" href="#sql-server-sqlclient-general-information" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h2 id="general-information">General information<a class="headerlink" href="#general-information" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<tbody>
+<tr>
+	<td>Database type</td>
+	<td>SQL Server</td>
+</tr>
+<tr>
+	<td>ADO.NET DbProviderFactory</td>
+	<td>System.Data.SqlClient.SqlClientFactory</td>
+</tr>
+</tbody>
+</table>
+<h2 id="system-sequences">System sequences<a class="headerlink" href="#system-sequences" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<ul>
+<li><code>SCOPE_IDENTITY()</code></li>
+<li><code>@@IDENTITY</code></li>
+</ul>
+<h2 id="type-mapping-tables">Type mapping tables<a class="headerlink" href="#type-mapping-tables" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<h3 id="db-type-to-.net-type">DB Type to .NET Type<a class="headerlink" href="#db-type-to-.net-type" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>DB Type</th>
+	<th>.NET Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>BigInt</td>
+	<td>System.Int64</td>
+</tr>
+<tr>
+	<td>Binary</td>
+	<td>System.Byte[]</td>
+</tr>
+<tr>
+	<td>Bit</td>
+	<td>System.Boolean</td>
+</tr>
+<tr>
+	<td>Char</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>DateTime</td>
+	<td>System.DateTime</td>
+</tr>
+<tr>
+	<td>Decimal</td>
+	<td>System.Decimal</td>
+</tr>
+<tr>
+	<td>Float</td>
+	<td>System.Double</td>
+</tr>
+<tr>
+	<td>Image</td>
+	<td>System.Byte[]</td>
+</tr>
+<tr>
+	<td>Int</td>
+	<td>System.Int32</td>
+</tr>
+<tr>
+	<td>Money</td>
+	<td>System.Decimal</td>
+</tr>
+<tr>
+	<td>NChar</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>NText</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>NVarChar</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>Numeric</td>
+	<td>System.Decimal</td>
+</tr>
+<tr>
+	<td>Real</td>
+	<td>System.Single</td>
+</tr>
+<tr>
+	<td>SmallDateTime</td>
+	<td>System.DateTime</td>
+</tr>
+<tr>
+	<td>SmallInt</td>
+	<td>System.Int16</td>
+</tr>
+<tr>
+	<td>SmallMoney</td>
+	<td>System.Decimal</td>
+</tr>
+<tr>
+	<td>Sql_Variant</td>
+	<td>System.Object</td>
+</tr>
+<tr>
+	<td>SysName</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>Text</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>TimeStamp</td>
+	<td>System.Byte[]</td>
+</tr>
+<tr>
+	<td>TinyInt</td>
+	<td>System.Byte</td>
+</tr>
+<tr>
+	<td>VarBinary</td>
+	<td>System.Byte[]</td>
+</tr>
+<tr>
+	<td>VarChar</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>UniqueIdentifier</td>
+	<td>System.Guid</td>
+</tr>
+<tr>
+	<td>Xml</td>
+	<td>System.String</td>
+</tr>
+<tr>
+	<td>UserDefinedType</td>
+	<td>System.Object</td>
+</tr>
+<tr>
+	<td>Date</td>
+	<td>System.DateTime</td>
+</tr>
+<tr>
+	<td>DateTime2</td>
+	<td>System.DateTime</td>
+</tr>
+<tr>
+	<td>DateTimeOffset</td>
+	<td>System.DateTimeOffset</td>
+</tr>
+<tr>
+	<td>Time</td>
+	<td>System.TimeSpan</td>
+</tr>
+<tr>
+	<td>Geometry</td>
+	<td>SD.LLBLGen.Pro.DBDriverCore.SpatialGeometry</td>
+</tr>
+<tr>
+	<td>Geography</td>
+	<td>SD.LLBLGen.Pro.DBDriverCore.SpatialGeography</td>
+</tr>
+</tbody>
+</table>
+<h3 id="db-type-to-ado.net-provider-type">DB Type to ADO.NET Provider Type<a class="headerlink" href="#db-type-to-ado.net-provider-type" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>DB Type</th>
+	<th>ADO.NET Provider Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>BigInt</td>
+	<td>BigInt</td>
+</tr>
+<tr>
+	<td>Binary</td>
+	<td>Binary</td>
+</tr>
+<tr>
+	<td>Bit</td>
+	<td>Bit</td>
+</tr>
+<tr>
+	<td>Char</td>
+	<td>Char</td>
+</tr>
+<tr>
+	<td>DateTime</td>
+	<td>DateTime</td>
+</tr>
+<tr>
+	<td>Decimal</td>
+	<td>Decimal</td>
+</tr>
+<tr>
+	<td>Float</td>
+	<td>Float</td>
+</tr>
+<tr>
+	<td>Image</td>
+	<td>Image</td>
+</tr>
+<tr>
+	<td>Int</td>
+	<td>Int</td>
+</tr>
+<tr>
+	<td>Money</td>
+	<td>Money</td>
+</tr>
+<tr>
+	<td>NChar</td>
+	<td>NChar</td>
+</tr>
+<tr>
+	<td>NText</td>
+	<td>NText</td>
+</tr>
+<tr>
+	<td>NVarChar</td>
+	<td>NVarChar</td>
+</tr>
+<tr>
+	<td>Numeric</td>
+	<td>Decimal</td>
+</tr>
+<tr>
+	<td>Real</td>
+	<td>Real</td>
+</tr>
+<tr>
+	<td>SmallDateTime</td>
+	<td>SmallDateTime</td>
+</tr>
+<tr>
+	<td>SmallInt</td>
+	<td>SmallInt</td>
+</tr>
+<tr>
+	<td>SmallMoney</td>
+	<td>SmallMoney</td>
+</tr>
+<tr>
+	<td>Sql_Variant</td>
+	<td>Variant</td>
+</tr>
+<tr>
+	<td>SysName</td>
+	<td>VarChar</td>
+</tr>
+<tr>
+	<td>Text</td>
+	<td>Text</td>
+</tr>
+<tr>
+	<td>TimeStamp</td>
+	<td>Timestamp</td>
+</tr>
+<tr>
+	<td>TinyInt</td>
+	<td>TinyInt</td>
+</tr>
+<tr>
+	<td>VarBinary</td>
+	<td>VarBinary</td>
+</tr>
+<tr>
+	<td>VarChar</td>
+	<td>VarChar</td>
+</tr>
+<tr>
+	<td>UniqueIdentifier</td>
+	<td>UniqueIdentifier</td>
+</tr>
+<tr>
+	<td>Xml</td>
+	<td>Xml</td>
+</tr>
+<tr>
+	<td>UserDefinedType</td>
+	<td>Udt</td>
+</tr>
+<tr>
+	<td>Date</td>
+	<td>Date</td>
+</tr>
+<tr>
+	<td>DateTime2</td>
+	<td>DateTime2</td>
+</tr>
+<tr>
+	<td>DateTimeOffset</td>
+	<td>DateTimeOffset</td>
+</tr>
+<tr>
+	<td>Time</td>
+	<td>Time</td>
+</tr>
+<tr>
+	<td>Geometry</td>
+	<td>Udt</td>
+</tr>
+<tr>
+	<td>Geography</td>
+	<td>Udt</td>
+</tr>
+</tbody>
+</table>
+<h2 id="rdbms-aspects">RDBMS aspects<a class="headerlink" href="#rdbms-aspects" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<ul>
+<li>Auto generate identity fields</li>
+<li>Uses sequences for identity field values</li>
+<li>Central unit is catalog</li>
+<li>Supports multiple central units per project</li>
+<li>Supports foreign key constraints</li>
+<li>Supports multiple schemas per central unit</li>
+<li>Supports schema only resultset retrieval</li>
+<li>Supports natural character specific types</li>
+<li>Supports delete rules</li>
+<li>Supports update rules</li>
+</ul>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+HnD Model Documentation. &copy;2020 FB
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="../js/jquery-2.1.1.min.js"></script>
+    <script src="../js/modernizr-2.8.3.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../js/theme.js"></script>
+
+</body>
+</html>

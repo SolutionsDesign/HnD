@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attachment - HnD Model Documentation</title>
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/styles/vs.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="../../../index.htm"><i class="fa fa-home"></i> HnD Model Documentation</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="../../../Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="../../../index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="../../../generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../Entitymodel.htm">Entity model</a></span></li>
+<li class="tocentry"><a href="../../../EntityModel/generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../EntityModel/_DefaultGroup/Entities/__index.htm">Entities</a></span></li>
+
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/ActionRight.htm">ActionRight</a>
+</li>
+<li class="tocentry current"><a class="current" href="../../../EntityModel/_DefaultGroup/Entities/Attachment.htm">Attachment</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#inheritance-hierarchy">Inheritance hierarchy</a></li>
+
+<li class="tocentry"><a href="#relationships">Relationships</a></li>
+
+<li class="tocentry"><a href="#fields">Fields</a></li>
+<li class="tocentry">
+<ul class="currentrelative">
+<li class="tocentry"><a href="#unique-constraints">Unique Constraints</a></li>
+
+<li class="tocentry"><a href="#fields-mapped-onto-related-fields">Fields mapped onto related fields</a></li>
+
+
+</ul>
+</li>
+
+<li class="tocentry"><a href="#mappings">Mappings</a></li>
+
+<li class="tocentry"><a href="#code-generation-information">Code generation information</a></li>
+<li class="tocentry">
+<ul class="currentrelative">
+<li class="tocentry"><a href="#setting-values">Setting values</a></li>
+
+<li class="tocentry"><a href="#attribute-definitions-per-element">Attribute definitions per element</a></li>
+
+<li class="tocentry"><a href="#additional-interface-definitions-per-element">Additional interface definitions per element</a></li>
+
+<li class="tocentry"><a href="#additional-namespace-definitions-per-element">Additional namespace definitions per element</a></li>
+
+
+</ul>
+</li>
+
+
+
+</ul>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/AuditAction.htm">AuditAction</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/AuditDataCore.htm">AuditDataCore</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/AuditDataMessageRelated.htm">AuditDataMessageRelated</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/AuditDataThreadRelated.htm">AuditDataThreadRelated</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Bookmark.htm">Bookmark</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Forum.htm">Forum</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/ForumRoleForumActionRight.htm">ForumRoleForumActionRight</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/IPBan.htm">IPBan</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Message.htm">Message</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/PasswordResetToken.htm">PasswordResetToken</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Role.htm">Role</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/RoleAuditAction.htm">RoleAuditAction</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/RoleSystemActionRight.htm">RoleSystemActionRight</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/RoleUser.htm">RoleUser</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Section.htm">Section</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/SupportQueue.htm">SupportQueue</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/SupportQueueThread.htm">SupportQueueThread</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/SystemData.htm">SystemData</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/Thread.htm">Thread</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/ThreadStatistics.htm">ThreadStatistics</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/ThreadSubscription.htm">ThreadSubscription</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/User.htm">User</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/Entities/UserTitle.htm">UserTitle</a>
+</li>
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../EntityModel/_DefaultGroup/TypedLists/__index.htm">Typed lists</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../EntityModel/_DefaultGroup/SPCalls/__index.htm">Stored procedure calls</a></span>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Derivedmodels.htm">Derived models</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Metadata.htm">Meta data</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="../../../index.htm">HnD Model Documentation</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="../../../index.htm">Home</a></li> / <li><a href="../../../Entitymodel.htm">Entity model</a></li> / <li><a href="../../../EntityModel/_DefaultGroup/Entities/__index.htm">Entities</a></li> / <li><a href="../../../EntityModel/_DefaultGroup/Entities/Attachment.htm">Attachment</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="attachment">Attachment<a class="headerlink" href="#attachment" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h2 id="inheritance-hierarchy">Inheritance hierarchy<a class="headerlink" href="#inheritance-hierarchy" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<tbody>
+<tr>
+	<td>Hierarchy type</td>
+	<td>None</td>
+</tr>
+<tr>
+	<td>Is abstract</td>
+	<td>False</td>
+</tr>
+</tbody>
+</table>
+<h2 id="relationships">Relationships<a class="headerlink" href="#relationships" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The Attachment entity is part of the following relationships </p>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Related Entity</th>
+	<th>Full description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Message.htm">Message</a></td>
+	<td>Attachment.BelongsToMessage - Message.Attachments (m:1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fields">Fields<a class="headerlink" href="#fields" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The following fields are defined in the Attachment entity </p>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Name</th>
+	<th>Type</th>
+	<th>Is PK</th>
+	<th>Is FK</th>
+	<th>Optional</th>
+	<th>Read-only</th>
+	<th>Max. length</th>
+	<th>Precision</th>
+	<th>Scale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>AttachmentID</td>
+	<td><code>int (System.Int32)</code></td>
+	<td>Yes</td>
+	<td></td>
+	<td></td>
+	<td>Yes</td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>MessageID</td>
+	<td><code>int (System.Int32)</code></td>
+	<td></td>
+	<td>Yes</td>
+	<td></td>
+	<td></td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>Filename</td>
+	<td><code>string (System.String)</code></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>255</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>Approved</td>
+	<td><code>bool (System.Boolean)</code></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>Filecontents</td>
+	<td><code>byte[] (System.Byte[])</code></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>2147483647</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>Filesize</td>
+	<td><code>int (System.Int32)</code></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+<tr>
+	<td>AddedOn</td>
+	<td><code>datetime (System.DateTime)</code></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+</tr>
+</tbody>
+</table>
+<h3 id="unique-constraints">Unique Constraints<a class="headerlink" href="#unique-constraints" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+<h3 id="fields-mapped-onto-related-fields">Fields mapped onto related fields<a class="headerlink" href="#fields-mapped-onto-related-fields" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+<h2 id="mappings">Mappings<a class="headerlink" href="#mappings" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<h4 id="hnd.dbo.attachment-sql-server-sqlclient"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Attachment.htm">HnD.dbo.Attachment</a> (SQL Server (SqlClient))<a class="headerlink" href="#hnd.dbo.attachment-sql-server-sqlclient" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Aspect</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Type of target</td>
+	<td>Table</td>
+</tr>
+<tr>
+	<td>Actions allowed</td>
+	<td>Create / Retrieve / Update / Delete</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Entity Field</th>
+	<th>Target field</th>
+	<th>Nullable</th>
+	<th>Type</th>
+	<th>Length</th>
+	<th>Precision</th>
+	<th>Scale</th>
+	<th>Sequence</th>
+	<th>Type converter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>AddedOn</td>
+	<td>AddedOn</td>
+	<td></td>
+	<td>datetime</td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>Approved</td>
+	<td>Approved</td>
+	<td></td>
+	<td>bit</td>
+	<td>0</td>
+	<td>0</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>AttachmentID</td>
+	<td>AttachmentID</td>
+	<td></td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td>SCOPE_IDENTITY()</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Filecontents</td>
+	<td>Filecontents</td>
+	<td></td>
+	<td>image</td>
+	<td>2147483647</td>
+	<td>0</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>Filename</td>
+	<td>Filename</td>
+	<td></td>
+	<td>nvarchar</td>
+	<td>255</td>
+	<td>0</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>Filesize</td>
+	<td>Filesize</td>
+	<td></td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>MessageID</td>
+	<td>MessageID</td>
+	<td></td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="code-generation-information">Code generation information<a class="headerlink" href="#code-generation-information" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<h3 id="setting-values">Setting values<a class="headerlink" href="#setting-values" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<h4 id="attachment-entity">Attachment (Entity)<a class="headerlink" href="#attachment-entity" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Entity base class name</td>
+	<td><code>CommonEntityBase</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="addedon-normalfield">AddedOn (NormalField)<a class="headerlink" href="#addedon-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="approved-normalfield">Approved (NormalField)<a class="headerlink" href="#approved-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="attachmentid-normalfield">AttachmentID (NormalField)<a class="headerlink" href="#attachmentid-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="filecontents-normalfield">Filecontents (NormalField)<a class="headerlink" href="#filecontents-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="filename-normalfield">Filename (NormalField)<a class="headerlink" href="#filename-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="filesize-normalfield">Filesize (NormalField)<a class="headerlink" href="#filesize-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="messageid-normalfield">MessageID (NormalField)<a class="headerlink" href="#messageid-normalfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+<tr>
+	<td>Field property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="belongstomessage-navigatorsinglevalue">BelongsToMessage (NavigatorSingleValue)<a class="headerlink" href="#belongstomessage-navigatorsinglevalue" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Navigator property is public</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h3 id="attribute-definitions-per-element">Attribute definitions per element<a class="headerlink" href="#attribute-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<h4 id="addedon-normalfield-1">AddedOn (NormalField)<a class="headerlink" href="#addedon-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="approved-normalfield-1">Approved (NormalField)<a class="headerlink" href="#approved-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="attachmentid-normalfield-1">AttachmentID (NormalField)<a class="headerlink" href="#attachmentid-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="filecontents-normalfield-1">Filecontents (NormalField)<a class="headerlink" href="#filecontents-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="filename-normalfield-1">Filename (NormalField)<a class="headerlink" href="#filename-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+<li><code>StringLength($length)</code></li>
+<li><code>MinLength(2)</code></li>
+</ul>
+<h4 id="filesize-normalfield-1">Filesize (NormalField)<a class="headerlink" href="#filesize-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="messageid-normalfield-1">MessageID (NormalField)<a class="headerlink" href="#messageid-normalfield-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Required</code></li>
+</ul>
+<h4 id="belongstomessage-navigatorsinglevalue-1">BelongsToMessage (NavigatorSingleValue)<a class="headerlink" href="#belongstomessage-navigatorsinglevalue-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>Browsable($true)</code></li>
+</ul>
+<h3 id="additional-interface-definitions-per-element">Additional interface definitions per element<a class="headerlink" href="#additional-interface-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+<h3 id="additional-namespace-definitions-per-element">Additional namespace definitions per element<a class="headerlink" href="#additional-namespace-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<h4 id="attachment-entity-1">Attachment (Entity)<a class="headerlink" href="#attachment-entity-1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<ul>
+<li><code>System.ComponentModel.DataAnnotations</code></li>
+</ul>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+HnD Model Documentation. &copy;2020 FB
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="../../../js/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/modernizr-2.8.3.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/theme.js"></script>
+
+</body>
+</html>

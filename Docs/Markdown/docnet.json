@@ -1,0 +1,127 @@
+﻿{
+	"Name": "HnD Model Documentation",
+	"Source": ".",
+	"Destination": "..\\Site\\",
+	"Theme": "Light",
+	"Footer" : "HnD Model Documentation. &copy;2020 FB",
+	"MaxLevelInToC": 3,
+	"Pages": 
+	{
+		"__index": "index.md",
+		"General information": "generalinformation.md",
+		"Entity model" :
+		{
+			"General information": "EntityModel\\generalinformation.md",
+			"Entities":
+			{
+				"__index" : "EntityModel\\_DefaultGroup\\Entities\\__index.md",
+				"ActionRight" : "EntityModel\\_DefaultGroup\\Entities\\ActionRight.md",
+				"Attachment" : "EntityModel\\_DefaultGroup\\Entities\\Attachment.md",
+				"AuditAction" : "EntityModel\\_DefaultGroup\\Entities\\AuditAction.md",
+				"AuditDataCore" : "EntityModel\\_DefaultGroup\\Entities\\AuditDataCore.md",
+				"AuditDataMessageRelated" : "EntityModel\\_DefaultGroup\\Entities\\AuditDataMessageRelated.md",
+				"AuditDataThreadRelated" : "EntityModel\\_DefaultGroup\\Entities\\AuditDataThreadRelated.md",
+				"Bookmark" : "EntityModel\\_DefaultGroup\\Entities\\Bookmark.md",
+				"Forum" : "EntityModel\\_DefaultGroup\\Entities\\Forum.md",
+				"ForumRoleForumActionRight" : "EntityModel\\_DefaultGroup\\Entities\\ForumRoleForumActionRight.md",
+				"IPBan" : "EntityModel\\_DefaultGroup\\Entities\\IPBan.md",
+				"Message" : "EntityModel\\_DefaultGroup\\Entities\\Message.md",
+				"PasswordResetToken" : "EntityModel\\_DefaultGroup\\Entities\\PasswordResetToken.md",
+				"Role" : "EntityModel\\_DefaultGroup\\Entities\\Role.md",
+				"RoleAuditAction" : "EntityModel\\_DefaultGroup\\Entities\\RoleAuditAction.md",
+				"RoleSystemActionRight" : "EntityModel\\_DefaultGroup\\Entities\\RoleSystemActionRight.md",
+				"RoleUser" : "EntityModel\\_DefaultGroup\\Entities\\RoleUser.md",
+				"Section" : "EntityModel\\_DefaultGroup\\Entities\\Section.md",
+				"SupportQueue" : "EntityModel\\_DefaultGroup\\Entities\\SupportQueue.md",
+				"SupportQueueThread" : "EntityModel\\_DefaultGroup\\Entities\\SupportQueueThread.md",
+				"SystemData" : "EntityModel\\_DefaultGroup\\Entities\\SystemData.md",
+				"Thread" : "EntityModel\\_DefaultGroup\\Entities\\Thread.md",
+				"ThreadStatistics" : "EntityModel\\_DefaultGroup\\Entities\\ThreadStatistics.md",
+				"ThreadSubscription" : "EntityModel\\_DefaultGroup\\Entities\\ThreadSubscription.md",
+				"User" : "EntityModel\\_DefaultGroup\\Entities\\User.md",
+				"UserTitle" : "EntityModel\\_DefaultGroup\\Entities\\UserTitle.md",
+			},
+			"Typed lists":
+			{
+				"__index" : "EntityModel\\_DefaultGroup\\TypedLists\\__index.md",
+				"ForumMessages" : "EntityModel\\_DefaultGroup\\TypedLists\\ForumMessages.md",
+				"ForumsWithSectionName" : "EntityModel\\_DefaultGroup\\TypedLists\\ForumsWithSectionName.md",
+				"SearchResult" : "EntityModel\\_DefaultGroup\\TypedLists\\SearchResult.md",
+				"UserProfileInfo" : "EntityModel\\_DefaultGroup\\TypedLists\\UserProfileInfo.md",
+			},
+			"Stored procedure calls":
+			{
+				"__index" : "EntityModel\\_DefaultGroup\\SPCalls\\__index.md",
+				"Install" : "EntityModel\\_DefaultGroup\\SPCalls\\Install.md",
+			},
+		},
+		"Derived models" :
+		{
+			"DTOs":
+			{
+				"General information" : "DTOs\\generalinformation.md",
+				"Derived elements":
+				{
+					"__index" : "DTOs\\__index.md",
+					"IPBan" : "DTOs\\IPBan.md",
+					"MessageInThread" : "DTOs\\MessageInThread.md",
+					"Role" : "DTOs\\Role.md",
+					"Section" : "DTOs\\Section.md",
+					"SupportQueue" : "DTOs\\SupportQueue.md",
+					"UserInRole" : "DTOs\\UserInRole.md",
+				},
+			},
+		},
+		"Meta data" : 
+		{
+			"SQL Server (SqlClient)" : 
+			{
+				"__index" : "SQL_Server_SqlClient\\__index.md",
+				"General information" : "SQL_Server_SqlClient\\generalinformation.md",
+				"HnD" : 
+				{
+					"__index" : "SQL_Server_SqlClient\\HnD\\__index.md",
+					"General information" : "SQL_Server_SqlClient\\HnD\\generalinformation.md",
+					"dbo":
+					{
+						"__index" : "SQL_Server_SqlClient\\HnD\\dbo\\__index.md",
+						"General information" : "SQL_Server_SqlClient\\HnD\\dbo\\generalinformation.md",
+						"Tables" :
+						{
+							"ActionRight" : "SQL_Server_SqlClient\\HnD\\dbo\\ActionRight.md",
+							"Attachment" : "SQL_Server_SqlClient\\HnD\\dbo\\Attachment.md",
+							"AuditAction" : "SQL_Server_SqlClient\\HnD\\dbo\\AuditAction.md",
+							"AuditDataCore" : "SQL_Server_SqlClient\\HnD\\dbo\\AuditDataCore.md",
+							"AuditDataMessageRelated" : "SQL_Server_SqlClient\\HnD\\dbo\\AuditDataMessageRelated.md",
+							"AuditDataThreadRelated" : "SQL_Server_SqlClient\\HnD\\dbo\\AuditDataThreadRelated.md",
+							"Bookmark" : "SQL_Server_SqlClient\\HnD\\dbo\\Bookmark.md",
+							"Forum" : "SQL_Server_SqlClient\\HnD\\dbo\\Forum.md",
+							"ForumRoleForumActionRight" : "SQL_Server_SqlClient\\HnD\\dbo\\ForumRoleForumActionRight.md",
+							"IPBan" : "SQL_Server_SqlClient\\HnD\\dbo\\IPBan.md",
+							"Message" : "SQL_Server_SqlClient\\HnD\\dbo\\Message.md",
+							"PasswordResetToken" : "SQL_Server_SqlClient\\HnD\\dbo\\PasswordResetToken.md",
+							"Role" : "SQL_Server_SqlClient\\HnD\\dbo\\Role.md",
+							"RoleAuditAction" : "SQL_Server_SqlClient\\HnD\\dbo\\RoleAuditAction.md",
+							"RoleSystemActionRight" : "SQL_Server_SqlClient\\HnD\\dbo\\RoleSystemActionRight.md",
+							"RoleUser" : "SQL_Server_SqlClient\\HnD\\dbo\\RoleUser.md",
+							"Section" : "SQL_Server_SqlClient\\HnD\\dbo\\Section.md",
+							"SupportQueue" : "SQL_Server_SqlClient\\HnD\\dbo\\SupportQueue.md",
+							"SupportQueueThread" : "SQL_Server_SqlClient\\HnD\\dbo\\SupportQueueThread.md",
+							"SystemData" : "SQL_Server_SqlClient\\HnD\\dbo\\SystemData.md",
+							"Thread" : "SQL_Server_SqlClient\\HnD\\dbo\\Thread.md",
+							"ThreadStatistics" : "SQL_Server_SqlClient\\HnD\\dbo\\ThreadStatistics.md",
+							"ThreadSubscription" : "SQL_Server_SqlClient\\HnD\\dbo\\ThreadSubscription.md",
+							"User" : "SQL_Server_SqlClient\\HnD\\dbo\\User.md",
+							"UserTitle" : "SQL_Server_SqlClient\\HnD\\dbo\\UserTitle.md",
+						},
+						"Stored procedures" :
+						{
+							"pr_Install" : "SQL_Server_SqlClient\\HnD\\dbo\\prInstall.md",
+						},
+					},
+				},
+
+			},
+		}
+	}
+}

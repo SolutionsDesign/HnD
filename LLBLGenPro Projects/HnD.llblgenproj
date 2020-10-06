@@ -100,7 +100,7 @@
   <CodeGenerationCyclePreferences>
     <OutputType Value="3">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\SolutionsDesign\HnD\DALAdapter" />
+        <DestinationRootFolder Value="..\DALAdapter" />
         <FrameworkName Value="LLBLGen Pro Runtime Framework" />
         <LanguageName Value="C#" />
         <PlatformName Value=".NET Standard 2.0" />
@@ -118,7 +118,7 @@
     </OutputType>
     <OutputType Value="2">
       <LastUsedPreferences>
-        <DestinationRootFolder Value="C:\MyProjects\VS.NET Projects\GitHub\SolutionsDesign\HnD\SQLScripts" />
+        <DestinationRootFolder Value="..\SQLScripts" />
         <FrameworkName Value="DDL SQL" />
         <LanguageName Value="SQL" />
         <PlatformName Value="RDBMS" />
@@ -157,6 +157,24 @@
       </LastUsedPreferences>
     </OutputType>
   </CodeGenerationCyclePreferences>
+  <AdditionalCodeGenerationCyclePreferences>
+    <Project>
+      <LastUsedPreferences>
+        <DestinationRootFolder Value="..\Docs" />
+        <FrameworkName Value="Project" />
+        <LanguageName Value="Markdown" />
+        <PlatformName Value="Documentation" />
+        <PresetName Value="SD.Project.Documentation" />
+        <RootNamespace Value="HnD" />
+        <TemplateGroup Value="General" />
+        <ForAdditionalCycleTask Value="true" />
+        <TemplateBindings>
+          <Binding Name="SD.Project.Documentation" />
+        </TemplateBindings>
+        <AdhocTemplateSets />
+      </LastUsedPreferences>
+    </Project>
+  </AdditionalCodeGenerationCyclePreferences>
   <OutputSettingValues>
     <SettingValues>
       <SettingValue Name="1:AdapterDbGenericProjectFileSuffix" Value="" Type="18" />
@@ -1027,10 +1045,10 @@
                     <Field Name="ForumID" Ordinal="2" DbType="8" Precision="10" />
                     <Field Name="Subject" Ordinal="3" DbType="12" Length="250" />
                     <Field Name="StartedByUserID" Ordinal="4" DbType="8" Precision="10" />
-                    <Field Name="IsSticky" Ordinal="6" DbType="2" />
-                    <Field Name="IsClosed" Ordinal="7" DbType="2" />
-                    <Field Name="MarkedAsDone" Ordinal="8" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
-                    <Field Name="Memo" Ordinal="10" IsOptional="true" DbType="11" Length="1073741823" />
+                    <Field Name="IsSticky" Ordinal="5" DbType="2" />
+                    <Field Name="IsClosed" Ordinal="6" DbType="2" />
+                    <Field Name="MarkedAsDone" Ordinal="7" HasDefaultValue="true" DefaultValue="(1)" DbType="2" />
+                    <Field Name="Memo" Ordinal="8" IsOptional="true" DbType="11" Length="1073741823" />
                   </Fields>
                 </Table>
                 <Table Name="ThreadStatistics">
@@ -1619,7 +1637,7 @@ ThreadStatistics is used to avoid expensive aggregates on the message entity as 
       </Settings>
       <CodeGenerationCyclePreferences OutputType="3">
         <LastUsedPreferences>
-          <DestinationRootFolder Value="C:\Myprojects\VS.NET Projects\Github\SolutionsDesign\HnD\DTOs" />
+          <DestinationRootFolder Value="..\DTOs" />
           <FrameworkName Value="DTO Class Model" />
           <LanguageName Value="C#" />
           <PlatformName Value=".NET Standard 2.0" />

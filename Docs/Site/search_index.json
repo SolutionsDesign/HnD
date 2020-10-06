@@ -1,0 +1,412 @@
+{
+  "docs": [
+    {
+      "location": "generalinformation.htm",
+      "breadcrumbs": "Home / General information",
+      "keywords": "0 06 1 2020 25 4 6 7 As based C calls Class creator data derived Derived DTO DTOs elements entities Entity FB file framework Framework from function functions General generated Generated GitHub Group grouping groups HnD information Information is lists LLBLGen LLBLGenPro llblgenproj mechanism Meta Model MyProjects name NET Number Oct of on Pro procedure procedures project Project Projects RTM Runtime schema schemas sequences Server SolutionsDesign SQL SqlClient Statistics stored table tables Target the This typed types usage using Using v5 value valued values version views visual VS",
+      "title": "General information"
+    },
+    {
+      "location": "EntityModel/generalinformation.htm",
+      "breadcrumbs": "Home / Entity model / General information",
+      "keywords": "0 1 2 25 4 Adapter Additional And as As Attribute backwards base Browsable C calls class code Code CommonEntityBase compatibility ComponentModel Connection ConnectionString Convert DALAdapter DataAnnotations DatabaseGeneric DatabaseSpecific date db DBSpecific default Defaults definitions Destination element emit entities entity Entity Equal factory False field Field fields FieldType file files folder framework Framework function General Generate Generated generation generic group Group grouping groups HnD in information Information Inline interface is IsFalse IsOptional key language Last Lazy length list lists LLBLGen loading Main mechanism MinLength Model name namespace Namespace Navigator NavigatorSingleValue NET Netstandard new None NormalField nullable nulled Number of output pattern per platform PocoWithQuerySpecQuery preset Presets Pro procedure project property ProviderName public reference related Required result returns root Root row Rule Runtime SD Selected Self servicing setting Setting settings specific Standard stored string String StringLength sub suffix System table Target Tdl Template time to true True type typed Typed types usage used value Value values view views visual without",
+      "title": "General information"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/ActionRight.htm",
+      "breadcrumbs": "Home / Entity model / Entities / ActionRight",
+      "keywords": "_DefaultGroup 0 1 10 2 50 abstract ActionRight ActionRightDescription ActionRightID Actions Additional allowed AppliesToForum AppliesToSystem are as Aspect AssignedSystemActionRights Attribute base bit bool Boolean class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following ForumRoleForumActionRight ForumRoleForumActionRights Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max MinLength n name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable nvarchar of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleSystemActionRight RoleSystemActionRights Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System SystemRightAssignedToRoles Table target Target the The True type Type Unique Update Value values via Yes",
+      "title": "ActionRight"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Attachment.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Attachment",
+      "keywords": "_DefaultGroup 0 1 10 2 2147483647 255 abstract Actions AddedOn Additional allowed Approved are as Aspect Attachment AttachmentID Attachments Attribute base BelongsToMessage bit bool Boolean Browsable byte Byte class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields Filecontents Filename Filesize FK following Full Generate generation hierarchy Hierarchy HnD htm image in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max Message MessageID MinLength name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable nvarchar of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The true True type Type Unique Update Value values Yes",
+      "title": "Attachment"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/AuditAction.htm",
+      "breadcrumbs": "Home / Entity model / Entities / AuditAction",
+      "keywords": "_DefaultGroup 0 1 10 2 50 abstract Actions Additional allowed are as Aspect AssignedAuditActions Attribute AuditAction AuditActionDescription AuditActionID AuditDataCore base class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max MinLength n name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable nvarchar of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleAuditAction RoleAuditActions RolesWithAuditAction Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The True type Type Unique Update Value values via Yes",
+      "title": "AuditAction"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/AuditDataCore.htm",
+      "breadcrumbs": "Home / Entity model / Entities / AuditDataCore",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute AuditAction AuditActionID AuditDataCore AuditDataID AuditedOn base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length LoggedAudits m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional p part per PK Precision property public Read related Related relationships Relationships Required Retrieve root Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique Update User UserAudited UserID Value values Yes",
+      "title": "AuditDataCore"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/AuditDataMessageRelated.htm",
+      "breadcrumbs": "Home / Entity model / Entities / AuditDataMessageRelated",
+      "keywords": "_DefaultGroup 0 1 10 a abstract Actions Additional allowed are arrow as Aspect Attribute AuditAction AuditActionID AuditDataCore AuditDataID AuditDataMessageRelated AuditedOn base br Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity fa False field Field fields Fields FK following from Full Generate generation hierarchy Hierarchy HnD href htm i in information Inheritance Inherited int Int32 interface is Is length Length LoggedAudits m mapped Mappings Max Message MessageID name Name namespace Navigator NavigatorSingleValue nbsp None NormalField nullable Nullable of only onto Optional p part per PK Precision property public Read related Related relationships Relationships Required Retrieve root Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique up Update User UserAudited UserID Value values Yes",
+      "title": "AuditDataMessageRelated"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/AuditDataThreadRelated.htm",
+      "breadcrumbs": "Home / Entity model / Entities / AuditDataThreadRelated",
+      "keywords": "_DefaultGroup 0 1 10 a abstract Actions Additional allowed are arrow as Aspect Attribute AuditAction AuditActionID AuditDataCore AuditDataID AuditDataThreadRelated AuditedOn base br Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity fa False field Field fields Fields FK following from Full Generate generation hierarchy Hierarchy HnD href htm i in information Inheritance Inherited int Int32 interface is Is length Length LoggedAudits m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue nbsp None NormalField nullable Nullable of only onto Optional p part per PK Precision property public Read related Related relationships Relationships Required Retrieve root Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The Thread ThreadID true True type Type Unique up Update User UserAudited UserID Value values Yes",
+      "title": "AuditDataThreadRelated"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Bookmark.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Bookmark",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Bookmark Bookmarks Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision PresentInBookmarks property public Read related Related relationships Relationships Required Retrieve Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The Thread ThreadID true True type Type Unique Update User UserID Value values Yes",
+      "title": "Bookmark"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Forum.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Forum",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 250 5 50 abstract Actions Additional allowed are as Aspect Attribute base bit bool Boolean Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo DefaultForForums DefaultSupportQueue DefaultSupportQueueID defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Forum ForumDescription ForumID ForumLastPostingDate ForumName ForumRoleForumActionRight ForumRoleForumActionRights Forums Full Generate generation HasRSSFeed hierarchy Hierarchy HnD htm in information Inheritance int Int16 Int32 interface is Is length Length m mapped Mappings Max MaxAttachmentSize MaxNoOfAttachmentsPerMessage MinLength n name Name namespace Navigator NavigatorCollection NavigatorSingleValue NewThreadWelcomeText NewThreadWelcomeTextAsHTML None NormalField ntext nullable Nullable nvarchar of only onto Optional OrderNo part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Section SectionID Sequence Server Setting short smallint SQL SQL_Server_SqlClient SqlClient StartedThreadsInForums string String StringLength SupportQueue System Table target Target the The Thread Threads true True type Type Unique Update User UsersWhoStartedThreads Value values via Yes",
+      "title": "Forum"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/ForumRoleForumActionRight.htm",
+      "breadcrumbs": "Home / Entity model / Entities / ForumRoleForumActionRight",
+      "keywords": "_DefaultGroup 0 1 10 abstract ActionRight ActionRightID Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Forum ForumID ForumRoleForumActionRight ForumRoleForumActionRights Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleID Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique Update Value values Yes",
+      "title": "ForumRoleForumActionRight"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/IPBan.htm",
+      "breadcrumbs": "Home / Entity model / Entities / IPBan",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 3 abstract Actions Additional allowed are as Aspect Attribute base Browsable byte Byte class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface IPBan IPBanID IPBanSetByUserID IPBanSetOn IPBansSet IPSegment1 IPSegment2 IPSegment3 IPSegment4 is Is length Length m mapped Mapped Mappings Max MinLength name Name namespace Navigator NavigatorSingleValue NickName None NormalField ntext nullable Nullable of only onto Optional part per PK Precision property public Range Read Reason related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server SetByUser SetByUserNickName Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The tinyint true True type Type Unique Update User Value values Yes",
+      "title": "IPBan"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Message.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Message",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 25 8 abstract Actions Additional allowed are as Aspect Attachment Attachments Attribute AuditDataMessageRelated base BelongsToMessage Browsable byte Byte ChangeTrackerStamp class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is LastMessage length Length m mapped Mappings Max Message MessageID Messages MessageText MessageTextAsHTML MinLength name Name namespace Navigator NavigatorCollection NavigatorSingleValue None NormalField ntext nullable Nullable of only onto Optional part per PK PostedByUser PostedByUserID PostedFromIP PostedMessages PostingDate Precision property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The Thread ThreadID ThreadStatistics timestamp true True type Type Unique Update User Value values varchar Yes",
+      "title": "Message"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/PasswordResetToken.htm",
+      "breadcrumbs": "Home / Entity model / Entities / PasswordResetToken",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation guid Guid hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part PasswordResetRequestedOn PasswordResetToken per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique uniqueidentifier Update User UserID Value values Yes",
+      "title": "PasswordResetToken"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Role.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Role",
+      "keywords": "_DefaultGroup 0 1 10 2 50 abstract ActionRight Actions Additional allowed are as Aspect AssignedAuditActions AssignedSystemActionRights Attribute AuditAction base class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following ForumRoleForumActionRight ForumRoleForumActionRights Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max MinLength n name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable nvarchar of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleAuditAction RoleDescription RoleForAnonymous RoleForNewUser RoleID Roles RolesWithAuditAction RoleSystemActionRight RoleSystemActionRights RoleUser Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System SystemData SystemDataAnonymousRole SystemDataDefaultRoleNewUser SystemRightAssignedToRoles Table target Target the The True type Type Unique Update User Users Value values via Yes",
+      "title": "Role"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/RoleAuditAction.htm",
+      "breadcrumbs": "Home / Entity model / Entities / RoleAuditAction",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute AuditAction AuditActionID base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleAuditAction RoleAuditActions RoleID Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique Update Value values Yes",
+      "title": "RoleAuditAction"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/RoleSystemActionRight.htm",
+      "breadcrumbs": "Home / Entity model / Entities / RoleSystemActionRight",
+      "keywords": "_DefaultGroup 0 1 10 abstract ActionRight ActionRightID Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleID RoleSystemActionRight RoleSystemActionRights Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique Update Value values Yes",
+      "title": "RoleSystemActionRight"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/RoleUser.htm",
+      "breadcrumbs": "Home / Entity model / Entities / RoleUser",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Role RoleID RoleUser Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The true True type Type Unique Update User UserID Value values Yes",
+      "title": "RoleUser"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Section.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Section",
+      "keywords": "_DefaultGroup 0 1 10 2 250 5 50 abstract Actions Additional allowed are as Aspect Attribute base class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Forum Forums Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int16 Int32 interface is Is length Length m mapped Mappings Max MinLength name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable nvarchar of only onto Optional OrderNo part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Section SectionDescription SectionID SectionName Sequence Server Setting short smallint SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The True type Type Unique Update Value values Yes",
+      "title": "Section"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/SupportQueue.htm",
+      "breadcrumbs": "Home / Entity model / Entities / SupportQueue",
+      "keywords": "_DefaultGroup 0 1 10 2 250 5 50 abstract Actions Additional allowed are as Aspect Attribute base class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo DefaultForForums DefaultSupportQueue defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Forum Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int16 Int32 interface is Is length Length m mapped Mappings Max MinLength name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable nvarchar of only onto Optional OrderNo part per PK Precision property public QueueDescription QueueID QueueName Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server Setting short smallint SQL SQL_Server_SqlClient SqlClient string String StringLength SupportQueue SupportQueueThread SupportQueueThreads System Table target Target the The True type Type Unique Update Value values Yes",
+      "title": "SupportQueue"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/SupportQueueThread.htm",
+      "breadcrumbs": "Home / Entity model / Entities / SupportQueueThread",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Browsable ClaimedByUser ClaimedByUserID ClaimedOn class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations datetime DateTime dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK PlacedInQueueByUser PlacedInQueueByUserID PlacedInQueueOn Precision property public QueueID Read related Related relationships Relationships Required Retrieve Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient SupportQueue SupportQueueThread SupportQueueThreads SupportQueueThreadsClaimed SupportQueueThreadsPlaced System Table target Target the The Thread ThreadID true True type Type Unique Update User Value values Yes",
+      "title": "SupportQueueThread"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/SystemData.htm",
+      "breadcrumbs": "Home / Entity model / Entities / SystemData",
+      "keywords": "_DefaultGroup 0 1 10 1000 2 5 abstract Actions Additional allowed AnonymousRole are as Aspect Attribute base bit bool Boolean Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo DefaultRoleNewUser DefaultUserTitleNewUser defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD HoursThresholdForActiveThreads htm ID in information Inheritance int Int16 Int32 interface is Is length Length m mapped Mappings Max MinNumberOfNonStickyVisibleThreads MinNumberOfThreadsToFetch name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional PageSizeSearchResults part per PK Precision property public Range Read related Related relationships Relationships Required Retrieve Role RoleForAnonymous RoleForNewUser Scale SCOPE_IDENTITY SendReplyNotifications Sequence Server Setting short smallint SQL SQL_Server_SqlClient SqlClient System SystemData SystemDataAnonymousRole SystemDataDefaultRoleNewUser Table target Target the The true True type Type Unique Update Value values Yes",
+      "title": "SystemData"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/Thread.htm",
+      "breadcrumbs": "Home / Entity model / Entities / Thread",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 250 abstract Actions Additional allowed are as Aspect Attribute AuditDataThreadRelated base bit Bookmark bool Boolean Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Forum ForumID Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is IsClosed IsSticky length Length m mapped Mappings MarkedAsDone Max Memo Message Messages MinLength n name Name namespace Navigator NavigatorCollection NavigatorSingleValue None NormalField ntext nullable Nullable nvarchar of only onto Optional part per PK PostedMessagesInThreads Precision PresentInBookmarks property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient StartedByUserID StartedThreads Statistics string String StringLength Subject SupportQueueThread System Table target Target the The Thread ThreadCollectionViaThreadSubscription ThreadID Threads ThreadsInBookmarks ThreadStatistics ThreadSubscription true True type Type Unique Update User UsersWhoBookmarkedThread UsersWhoPostedInThread UsersWhoSubscribedThread UserWhoStartedThread Value values via Yes",
+      "title": "Thread"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/ThreadStatistics.htm",
+      "breadcrumbs": "Home / Entity model / Entities / ThreadStatistics",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is LastMessage LastMessageID length Length mapped Mappings Max Message name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable NumberOfMessages NumberOfViews of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient Statistics System Table target Target the The Thread ThreadID ThreadStatistics true True type Type Unique Update Value values Yes",
+      "title": "ThreadStatistics"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/ThreadSubscription.htm",
+      "breadcrumbs": "Home / Entity model / Entities / ThreadSubscription",
+      "keywords": "_DefaultGroup 0 1 10 abstract Actions Additional allowed are as Aspect Attribute base Browsable class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max name Name namespace Navigator NavigatorSingleValue None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale Sequence Server Setting SQL SQL_Server_SqlClient SqlClient System Table target Target the The Thread ThreadID ThreadSubscription true True type Type Unique Update User UserID Value values Yes",
+      "title": "ThreadSubscription"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/User.htm",
+      "breadcrumbs": "Home / Entity model / Entities / User",
+      "keywords": "_DefaultGroup 0 1 10 100 128 2 20 200 25 250 5 abstract Actions Additional allowed AmountOfPostings are as Aspect at Attribute AuditDataCore AutoSubscribeToThread base bit Bookmark Bookmarks bool Boolean Browsable ClaimedByUser class Code CommonEntityBase ComponentModel constraints Constraints converter Create DataAnnotations DateOfBirth datetime DateTime dbo DefaultNumberOfMessagesPerPage defined definitions Delete description element EmailAddress EmailAddressIsPublic Entities entity Entity False field Field fields Fields FK following Forum Full Generate generation hierarchy Hierarchy HnD htm IconURL in information Inheritance int Int16 Int32 interface IPBan IPBansSet IPNumber is Is IsBanned JoinDate LastVisitedDate length Length level Location LoggedAudits m mapped Mappings Max Message MinLength n name Name namespace Navigator NavigatorCollection NavigatorSingleValue NickName None NormalField nullable Nullable nvarchar Occupation of only onto Optional part Password PasswordResetToken per PK PlacedInQueueByUser PostedByUser PostedMessages PostedMessagesInThreads Precision property public Read related Related relationships Relationships Required Retrieve Role Roles RoleUser Scale SCOPE_IDENTITY Sequence Server SetByUser Setting short Signature smallint SQL SQL_Server_SqlClient SqlClient StartedThreads StartedThreadsInForums string String StringLength SupportQueueThread SupportQueueThreadsClaimed SupportQueueThreadsPlaced System Table target Target TFUserNickNameU2 the The Thread ThreadCollectionViaThreadSubscription ThreadsInBookmarks ThreadSubscription true True type Type unique Unique Update User UserAudited UserID Users UsersWhoBookmarkedThread UsersWhoPostedInThread UsersWhoStartedThreads UsersWhoSubscribedThread UserTitle UserTitleID UserWhoStartedThread Value values varchar via Website Yes",
+      "title": "User"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/Entities/UserTitle.htm",
+      "breadcrumbs": "Home / Entity model / Entities / UserTitle",
+      "keywords": "_DefaultGroup 0 1 10 2 50 abstract Actions Additional allowed are as Aspect Attribute base class Code CommonEntityBase ComponentModel Constraints converter Create DataAnnotations dbo defined definitions Delete description element Entities entity Entity False field Field fields Fields FK following Full Generate generation hierarchy Hierarchy HnD htm in information Inheritance int Int32 interface is Is length Length m mapped Mappings Max MinLength name Name namespace Navigator NavigatorCollection None NormalField nullable Nullable of only onto Optional part per PK Precision property public Read related Related relationships Relationships Required Retrieve Scale SCOPE_IDENTITY Sequence Server Setting SQL SQL_Server_SqlClient SqlClient string String StringLength System Table target Target the The True type Type Unique Update User Users UserTitle UserTitleDescription UserTitleID Value values varchar Yes",
+      "title": "UserTitle"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/TypedLists/ForumMessages.htm",
+      "breadcrumbs": "Home / Entity model / Typed lists / ForumMessages",
+      "keywords": "_DefaultGroup 1 Additional alias Alias Aliased are as Attribute base based bool Boolean Caption class Code contained datetime DateTime defined definitions description element EmailAddress EmailAddressIsPublic entities Entities Entity Field fields Fields following Forum ForumMessages Full Generate generation htm in information Inner int Int32 interface is Join list m Mapped Message MessageID MessageText MessageTextAsHTML name Name namespace NickName None nullable on Output per PocoWithQuerySpecQuery PostingDate relationships Relationships row Setting string String Subject System the The this Thread ThreadID True type Type typed Typed TypedList TypedListField User Value values",
+      "title": "ForumMessages"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/TypedLists/ForumsWithSectionName.htm",
+      "breadcrumbs": "Home / Entity model / Typed lists / ForumsWithSectionName",
+      "keywords": "_DefaultGroup 1 Additional alias Alias Aliased are as Attribute base based Caption class Code contained defined definitions description element entities Entities Entity Field fields Fields following Forum ForumDescription ForumID ForumName ForumOrderNo ForumsWithSectionName Full Generate generation htm in information Inner int Int16 Int32 interface is Join list m Mapped name Name namespace None nullable on OrderNo Output per PocoWithQuerySpecQuery relationships Relationships row Section SectionID SectionName Setting short string String System the The this True type Type typed Typed TypedList TypedListField Value values",
+      "title": "ForumsWithSectionName"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/TypedLists/SearchResult.htm",
+      "breadcrumbs": "Home / Entity model / Typed lists / SearchResult",
+      "keywords": "_DefaultGroup 1 Additional alias Alias Aliased are as Attribute base based Caption class Code contained datetime DateTime defined definitions description element entities Entities Entity Field fields Fields following Forum ForumName Full Generate generation htm in information Inner int Int32 interface is Join LastMessage list m Mapped Message name Name namespace None nullable on Output per PocoWithQuerySpecQuery PostingDate relationships Relationships row SearchResult Section SectionName Setting string String Subject System the The this Thread ThreadID ThreadLastPostingDate ThreadStatistics True type Type typed Typed TypedList TypedListField Value values",
+      "title": "SearchResult"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/TypedLists/UserProfileInfo.htm",
+      "breadcrumbs": "Home / Entity model / Typed lists / UserProfileInfo",
+      "keywords": "_DefaultGroup 1 Additional alias Alias Aliased AmountOfPostings are as Attribute base based bool Boolean Caption class Code contained DateOfBirth datetime DateTime defined definitions description element EmailAddress EmailAddressIsPublic entities Entities Entity Field fields Fields following Full Generate generation htm IconURL in information Inner int Int32 interface IPNumber is IsBanned Join JoinDate LastVisitedDate list Location m Mapped name Name namespace NickName None nullable Occupation on Output per PocoWithQuerySpecQuery relationships Relationships row Setting Signature string String System the The this True type Type typed Typed TypedList TypedListField User UserID UserProfileInfo UserTitle UserTitleDescription Value values Website",
+      "title": "UserProfileInfo"
+    },
+    {
+      "location": "EntityModel/_DefaultGroup/SPCalls/Install.htm",
+      "breadcrumbs": "Home / Entity model / Stored procedure calls / Install",
+      "keywords": "0 128 150 Additional AdminEmailAddress AdminPasswordHashed are Attribute call Code converter dbo defined definitions Direction element following for generation HnD htm information Input Install interface length Length Mappings Max Name namespace No None Nullable nvarchar of Optional parameter Parameter parameters Parameters per pr_Install Precision prInstall procedure sAdminEmailAddress sAdminPasswordHashed Scale Server Setting settings SQL SQL_Server_SqlClient SqlClient stored Stored string String System target Target the The Type values",
+      "title": "Install"
+    },
+    {
+      "location": "DTOs/generalinformation.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / General information",
+      "keywords": "0 1024 2 6 Additional And Attribute base C class Class code Code ComponentModel DataAnnotations default Defaults definitions derived DerivedElementFieldScalar Destination DTO DTOClasses DTOs element elements Embedded Equal folder framework General generation group HnD information Information interface IsFalse language Last length LesserEqual Model name namespace Namespace NET None Number of per platform preset project ReadWriteDTOs related Required root Root RootDerivedElement Rule SD Selected setting Setting settings SourceFieldIsOptional SourceFieldLength SourceFieldType Standard string String StringLength System Target Template used Value values",
+      "title": "General information"
+    },
+    {
+      "location": "DTOs/IPBan.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / IPBan",
+      "keywords": "_DefaultGroup 0px 25px byte Byte datetime DateTime derived Derived DTOs element Element Entities entity EntityModel Field FK from General htm Information int Int32 IPBan IPBanID IPBanSetByUserID IPBanSetOn IPSegment1 IPSegment2 IPSegment3 IPSegment4 is Kind left nbsp NickName padding Range Reason SetByUser SetByUserNickName shape Source span string String style System the The Type User",
+      "title": "IPBan"
+    },
+    {
+      "location": "DTOs/MessageInThread.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / MessageInThread",
+      "keywords": "_DefaultGroup 0px 25px 50px 75px AddedOn AmountOfPostings Approved Attachment AttachmentID Attachments bool Boolean datetime DateTime derived Derived DTOs element Element elements Embedded Entities entity EntityModel Field Filename Filesize FK from General htm IconURL Information int Int32 is JoinDate Kind left Location Message MessageID MessageInThread MessageTextAsHTML nbsp NickName of padding PostedByUser PostedFromIP PostingDate Set shape Signature Single Source span string String style System the The ThreadID Type User UserID UserTitle UserTitleDescription",
+      "title": "MessageInThread"
+    },
+    {
+      "location": "DTOs/Role.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / Role",
+      "keywords": "_DefaultGroup 0px 25px derived Derived DTOs element Element Entities entity EntityModel Field from General htm Information int Int32 is Kind left nbsp padding Role RoleDescription RoleID shape Source span string String style System the The Type",
+      "title": "Role"
+    },
+    {
+      "location": "DTOs/Section.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / Section",
+      "keywords": "_DefaultGroup 0px 25px derived Derived DTOs element Element Entities entity EntityModel Field from General htm Information int Int16 Int32 is Kind left nbsp OrderNo padding Section SectionDescription SectionID SectionName shape short Source span string String style System the The Type",
+      "title": "Section"
+    },
+    {
+      "location": "DTOs/SupportQueue.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / SupportQueue",
+      "keywords": "_DefaultGroup 0px 25px derived Derived DTOs element Element Entities entity EntityModel Field from General htm Information int Int16 Int32 is Kind left nbsp OrderNo padding QueueDescription QueueID QueueName shape short Source span string String style SupportQueue System the The Type",
+      "title": "SupportQueue"
+    },
+    {
+      "location": "DTOs/UserInRole.htm",
+      "breadcrumbs": "Home / Derived models / DTOs / Derived elements / UserInRole",
+      "keywords": "_DefaultGroup 0px 25px AmountOfPostings derived Derived DTOs element Element EmailAddress Entities entity EntityModel Field from General htm Information int Int32 is Kind left nbsp NickName padding shape Source span string String style System the The Type User UserID UserInRole",
+      "title": "UserInRole"
+    },
+    {
+      "location": "SQL_Server_SqlClient/generalinformation.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / General information",
+      "keywords": "ADO aspects Auto BigInt Binary Bit Boolean Byte catalog central Central Char character constraints Data Database Date DateTime DateTime2 DateTimeOffset DB DBDriverCore DbProviderFactory Decimal delete Double field fields Float for foreign General generate Geography Geometry Guid identity IDENTITY Image information Information Int Int16 Int32 Int64 is key LLBLGen mapping Money multiple natural NChar NET NText Numeric NVarChar Object only per Pro project Provider RDBMS Real resultset retrieval rules schema schemas SCOPE_IDENTITY SD sequences Server Single SmallDateTime SmallInt SmallMoney SpatialGeography SpatialGeometry specific SQL Sql_Variant SqlClient SqlClientFactory String Supports SysName System tables Text Time TimeSpan Timestamp TimeStamp TinyInt to type Type types Udt UniqueIdentifier unit units update UserDefinedType Uses values VarBinary VarChar Variant Xml",
+      "title": "General information"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/generalinformation.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / General information",
+      "keywords": "0 09 1 13 2020 22 23 25 54 55 56 database functions General HnD information Information Last Mixed model Number October of procedures schema schemas September sequences source Statistics stored sync Sync table tables Thursday UTC valued views Wednesday with",
+      "title": "General information"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/generalinformation.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / General information",
+      "keywords": "0 09 1 13 2020 22 23 25 54 55 56 database dbo functions General information Information Last Mixed model Number October of procedures schema September sequences source Statistics stored sync Sync table tables Thursday UTC valued views Wednesday with",
+      "title": "General information"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/ActionRight.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / ActionRight",
+      "keywords": "_DefaultGroup 0 1 10 2 3 4 50 ActionRight ActionRightDescription ActionRightID AppliesToForum AppliesToSystem bit Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable nvarchar on Ordinal PK Precision Scale sequence table this type value Yes",
+      "title": "ActionRight"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Attachment.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Attachment",
+      "keywords": "_DefaultGroup 0 1 10 2 2147483647 255 3 4 5 6 7 AddedOn Approved Aspect Attachment AttachmentID bit Computed constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields Filecontents Filename Filesize FK FK_Attachment_Message Foreign htm Identity image int Is key Length mapped Message MessageID Model name Native NoAction Nullable nvarchar on Ordinal PK Precision Primary rule Scale sequence table this type Update value Value Yes",
+      "title": "Attachment"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/AuditAction.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / AuditAction",
+      "keywords": "_DefaultGroup 0 1 10 2 50 AuditAction AuditActionDescription AuditActionID Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable nvarchar on Ordinal PK Precision Scale sequence table this type value Yes",
+      "title": "AuditAction"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/AuditDataCore.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / AuditDataCore",
+      "keywords": "_DefaultGroup 0 1 10 2 3 4 Aspect AuditAction AuditActionID AuditDataCore AuditDataID AuditedOn Computed constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary rule Scale sequence table TF_AuditDataCore_TF_AuditAction_FK1 TF_User_TF_AuditDataCore_FK1 this type Update User UserID value Value Yes",
+      "title": "AuditDataCore"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/AuditDataMessageRelated.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / AuditDataMessageRelated",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect AuditDataCore AuditDataID AuditDataMessageRelated Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Message MessageID Model name Native NoAction Nullable on Ordinal PK Precision Primary rule Scale sequence table TF_AuditDataMessageRelated_TF_AuditDataCore_FK1 TF_AuditDataMessageRelated_TF_Message_FK1 this type Update value Value Yes",
+      "title": "AuditDataMessageRelated"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/AuditDataThreadRelated.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / AuditDataThreadRelated",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect AuditDataCore AuditDataID AuditDataThreadRelated Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary rule Scale sequence table TF_AuditDataThreadRelated_TF_AuditDataCore_FK1 TF_AuditDataThreadRelated_TF_Thread_FK1 this Thread ThreadID type Update value Value Yes",
+      "title": "AuditDataThreadRelated"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Bookmark.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Bookmark",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect Bookmark Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary rule Scale sequence table TF_Thread_TF_Bookmark_FK TF_User_TF_Bookmark_FK this Thread ThreadID type Update User UserID value Value Yes",
+      "title": "Bookmark"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Forum.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Forum",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 11 12 2 250 3 4 5 50 512 6 7 8 9 Aspect bit Computed constraints datetime dbo Default DefaultSupportQueueID Delete Element elements Entities Entity EntityModel field Field Fields FK FK_Forum_SupportQueue Foreign Forum ForumDescription ForumID ForumLastPostingDate ForumName HasRSSFeed htm Identity int Is key Length mapped MaxAttachmentSize MaxNoOfAttachmentsPerMessage Model name Native NewThreadWelcomeText NewThreadWelcomeTextAsHTML NoAction ntext Nullable nvarchar on OrderNo Ordinal PK Precision Primary QueueID rule Scale Section SectionID sequence smallint SupportQueue table TF_Section_TF_Forum_FK1 this type Update value Value Yes",
+      "title": "Forum"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/ForumRoleForumActionRight.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / ForumRoleForumActionRight",
+      "keywords": "_DefaultGroup 0 1 10 2 3 ActionRight ActionRightID Aspect Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign Forum ForumID ForumRoleForumActionRight htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary Role RoleID rule Scale sequence table TF_ActionRight_TF_ForumRoleForumActionRight_FK1 TF_Forum_TF_ForumRoleActionRight_FK1 TF_Role_TF_ForumRoleActionRight_FK1 this type Update value Value Yes",
+      "title": "ForumRoleForumActionRight"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/IPBan.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / IPBan",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 3 4 5 6 7 8 9 Aspect Computed constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK FK_TF_IPBan_TF_User Foreign getdate htm Identity int IPBan IPBanID IPBanSetByUserID IPBanSetOn IPSegment1 IPSegment2 IPSegment3 IPSegment4 Is key Length mapped Model name Native NoAction ntext Nullable on Ordinal PK Precision Primary Range Reason rule Scale sequence table this tinyint type Update User UserID value Value Yes",
+      "title": "IPBan"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Message.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Message",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 25 3 4 5 6 7 8 Aspect ChangeTrackerStamp Computed constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Message MessageID MessageText MessageTextAsHTML Model name Native NoAction ntext Nullable on Ordinal PK PostedByUserID PostedFromIP PostingDate Precision Primary rule Scale sequence table TF_Thread_TF_Message_FK1 TF_User_TF_Message_FK1 this Thread ThreadID timestamp type Update User UserID value Value varchar Yes",
+      "title": "Message"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/PasswordResetToken.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / PasswordResetToken",
+      "keywords": "_DefaultGroup 0 1 10 2 3 Aspect Cascade Computed constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK FK_9f1eaa94f1fb774bb77aad91f5d Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PasswordResetRequestedOn PasswordResetToken PK Precision Primary rule Scale sequence table this type uniqueidentifier Update User UserID value Value Yes",
+      "title": "PasswordResetToken"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Role.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Role",
+      "keywords": "_DefaultGroup 0 1 10 2 50 Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable nvarchar on Ordinal PK Precision Role RoleDescription RoleID Scale sequence table this type value Yes",
+      "title": "Role"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/RoleAuditAction.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / RoleAuditAction",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect AuditAction AuditActionID Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary Role RoleAuditAction RoleID rule Scale sequence table TF_AuditAction_TF_RoleAuditAction_FK1 TF_Role_TF_RoleAuditAction_FK1 this type Update value Value Yes",
+      "title": "RoleAuditAction"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/RoleSystemActionRight.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / RoleSystemActionRight",
+      "keywords": "_DefaultGroup 0 1 10 2 ActionRight ActionRightID Aspect Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary Role RoleID RoleSystemActionRight rule Scale sequence table TF_ActionRight_TF_RoleSystemActionRight_FK1 TF_Role_TF_RoleSystemActionRight_FK1 this type Update value Value Yes",
+      "title": "RoleSystemActionRight"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/RoleUser.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / RoleUser",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary Role RoleID RoleUser rule Scale sequence table TF_Role_TF_RoleUser_FK1 TF_User_TF_RoleUser_FK1 this type Update User UserID value Value Yes",
+      "title": "RoleUser"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Section.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Section",
+      "keywords": "_DefaultGroup 0 1 10 2 250 3 4 5 50 Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable nvarchar on OrderNo Ordinal PK Precision Scale Section SectionDescription SectionID SectionName sequence smallint table this type value Yes",
+      "title": "Section"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/SupportQueue.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / SupportQueue",
+      "keywords": "_DefaultGroup 0 1 10 2 250 3 4 5 50 Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable nvarchar on OrderNo Ordinal PK Precision QueueDescription QueueID QueueName Scale sequence smallint SupportQueue table this type value Yes",
+      "title": "SupportQueue"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/SupportQueueThread.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / SupportQueueThread",
+      "keywords": "_DefaultGroup 0 1 10 2 3 4 5 6 Aspect ClaimedByUserID ClaimedOn Computed Constraint constraints datetime dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK FK_SupportQueueThread_SupportQueue FK_SupportQueueThread_Thread FK_SupportQueueThread_User FK_SupportQueueThread_User1 Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK PlacedInQueueByUserID PlacedInQueueOn Precision Primary QueueID rule Scale sequence SupportQueue SupportQueueThread table this Thread ThreadID type UC_SupportQueueThread_ThreadID Unique Update User UserID value Value Yes",
+      "title": "SupportQueueThread"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/SystemData.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / SystemData",
+      "keywords": "_DefaultGroup 0 1 10 2 25 3 4 48 5 50 6 7 8 9 AnonymousRole Aspect bit Computed constraints dbo Default DefaultRoleNewUser DefaultUserTitleNewUser Delete Element elements Entities Entity EntityModel field Field Fields FK FK_TF_SystemData_TF_Role FK_TF_SystemData_TF_Role1 Foreign HoursThresholdForActiveThreads htm ID Identity int Is key Length mapped MinNumberOfNonStickyVisibleThreads MinNumberOfThreadsToFetch Model name Native NoAction Nullable on Ordinal PageSizeSearchResults PK Precision Primary Role RoleID rule Scale SendReplyNotifications sequence smallint SystemData table this type Update value Value Yes",
+      "title": "SystemData"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/Thread.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / Thread",
+      "keywords": "_DefaultGroup 0 1 10 1073741823 2 250 3 4 5 6 7 8 Aspect bit Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK Foreign Forum ForumID htm Identity int Is IsClosed IsSticky key Length mapped MarkedAsDone Memo Model name Native NoAction ntext Nullable nvarchar on Ordinal PK Precision Primary rule Scale sequence StartedByUserID Subject table TF_Forum_TF_Thread_FK1 TF_User_TF_Thread_FK1 this Thread ThreadID type Update User UserID value Value Yes",
+      "title": "Thread"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/ThreadStatistics.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / ThreadStatistics",
+      "keywords": "_DefaultGroup 0 1 10 2 3 4 Aspect Cascade Computed Constraint constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK FK_15e6b0a402d80d4e4b0df3453c5 FK_2033ff74285bde08311a5a99ae1 Foreign htm Identity int Is key LastMessageID Length mapped Message MessageID Model name Native NoAction Nullable NumberOfMessages NumberOfViews on Ordinal PK Precision Primary rule Scale sequence table this Thread ThreadID ThreadStatistics type UC_19c59ce41b5be7a6d2c358322d4 Unique Update value Value Yes",
+      "title": "ThreadStatistics"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/ThreadSubscription.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / ThreadSubscription",
+      "keywords": "_DefaultGroup 0 1 10 2 Aspect Computed constraints dbo Default Delete Element elements Entities Entity EntityModel field Field Fields FK FK_ThreadSubscription_Thread FK_ThreadSubscription_User Foreign htm Identity int Is key Length mapped Model name Native NoAction Nullable on Ordinal PK Precision Primary rule Scale sequence table this Thread ThreadID ThreadSubscription type Update User UserID value Value Yes",
+      "title": "ThreadSubscription"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/User.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / User",
+      "keywords": "_DefaultGroup 0 1 10 100 11 12 128 13 14 15 16 17 18 19 2 20 200 25 250 3 4 5 6 7 8 9 AmountOfPostings Aspect AutoSubscribeToThread bit Computed Constraint constraints DateOfBirth datetime dbo Default DefaultNumberOfMessagesPerPage Delete Element elements EmailAddress EmailAddressIsPublic Entities Entity EntityModel field Field Fields FK Foreign getdate htm IconURL Identity int IPNumber Is IsBanned JoinDate key LastVisitedDate Length Location mapped Model name Native NickName NoAction Nullable nvarchar Occupation on Ordinal Password PK Precision Primary rule Scale sequence Signature smallint table TF_User_NickName_U2 TF_UserTitle_TF_User_FK1 this type Unique Update User UserID UserTitle UserTitleID value Value varchar Website Yes",
+      "title": "User"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/UserTitle.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Tables / UserTitle",
+      "keywords": "_DefaultGroup 0 1 10 2 50 Computed Default Element elements Entities Entity EntityModel Field Fields FK htm Identity int Is Length mapped Model name Native Nullable on Ordinal PK Precision Scale sequence table this type UserTitle UserTitleDescription UserTitleID value varchar Yes",
+      "title": "UserTitle"
+    },
+    {
+      "location": "SQL_Server_SqlClient/HnD/dbo/prInstall.htm",
+      "breadcrumbs": "Home / Meta data / SQL Server (SqlClient) / HnD / dbo / Stored procedures / pr_Install",
+      "keywords": "_DefaultGroup 0 1 128 150 2 Call Direction Element elements EntityModel htm Input Install Is Length mapped Model name Native nvarchar on Ordinal Parameter Parameters pr_Install Precision procedure Procedure result sAdminEmailAddress sAdminPasswordHashed Scale set SPCalls stored Stored this type",
+      "title": "pr_Install"
+    }
+  ]
+}

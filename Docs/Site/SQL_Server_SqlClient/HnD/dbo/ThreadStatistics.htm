@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ThreadStatistics - HnD Model Documentation</title>
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/styles/vs.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="../../../index.htm"><i class="fa fa-home"></i> HnD Model Documentation</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="../../../Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="../../../index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="../../../generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Entitymodel.htm">Entity model</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Derivedmodels.htm">Derived models</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../Metadata.htm">Meta data</a></span></li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../SQL_Server_SqlClient/__index.htm">SQL Server (SqlClient)</a></span></li>
+
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../SQL_Server_SqlClient/HnD/__index.htm">HnD</a></span></li>
+
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../SQL_Server_SqlClient/HnD/dbo/__index.htm">dbo</a></span></li>
+
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../SQL_Server_SqlClient/HnD/dboTables.htm">Tables</a></span></li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/ActionRight.htm">ActionRight</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Attachment.htm">Attachment</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/AuditAction.htm">AuditAction</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/AuditDataCore.htm">AuditDataCore</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/AuditDataMessageRelated.htm">AuditDataMessageRelated</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/AuditDataThreadRelated.htm">AuditDataThreadRelated</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Bookmark.htm">Bookmark</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Forum.htm">Forum</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/ForumRoleForumActionRight.htm">ForumRoleForumActionRight</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/IPBan.htm">IPBan</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Message.htm">Message</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/PasswordResetToken.htm">PasswordResetToken</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Role.htm">Role</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/RoleAuditAction.htm">RoleAuditAction</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/RoleSystemActionRight.htm">RoleSystemActionRight</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/RoleUser.htm">RoleUser</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Section.htm">Section</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/SupportQueue.htm">SupportQueue</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/SupportQueueThread.htm">SupportQueueThread</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/SystemData.htm">SystemData</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/Thread.htm">Thread</a>
+</li>
+<li class="tocentry current"><a class="current" href="../../../SQL_Server_SqlClient/HnD/dbo/ThreadStatistics.htm">ThreadStatistics</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#fields">Fields</a></li>
+
+<li class="tocentry"><a href="#foreign-key-constraints">Foreign key constraints</a></li>
+
+<li class="tocentry"><a href="#unique-constraints">Unique constraints</a></li>
+
+<li class="tocentry"><a href="#model-elements-mapped-on-this-table">Model elements mapped on this table</a></li>
+
+
+
+</ul>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/ThreadSubscription.htm">ThreadSubscription</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/User.htm">User</a>
+</li>
+<li class="tocentry"><a href="../../../SQL_Server_SqlClient/HnD/dbo/UserTitle.htm">UserTitle</a>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../SQL_Server_SqlClient/HnD/dboStoredprocedures.htm">Stored procedures</a></span>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="../../../index.htm">HnD Model Documentation</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="../../../index.htm">Home</a></li> / <li><a href="../../../Metadata.htm">Meta data</a></li> / <li><a href="../../../SQL_Server_SqlClient/__index.htm">SQL Server (SqlClient)</a></li> / <li><a href="../../../SQL_Server_SqlClient/HnD/__index.htm">HnD</a></li> / <li><a href="../../../SQL_Server_SqlClient/HnD/dbo/__index.htm">dbo</a></li> / <li><a href="../../../SQL_Server_SqlClient/HnD/dboTables.htm">Tables</a></li> / <li><a href="../../../SQL_Server_SqlClient/HnD/dbo/ThreadStatistics.htm">ThreadStatistics</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="threadstatistics">ThreadStatistics<a class="headerlink" href="#threadstatistics" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h2 id="fields">Fields<a class="headerlink" href="#fields" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Field name</th>
+	<th>Ordinal</th>
+	<th>Native type</th>
+	<th>Length</th>
+	<th>Precision</th>
+	<th>Scale</th>
+	<th>Is Nullable</th>
+	<th>Is PK</th>
+	<th>Is FK</th>
+	<th>Is Identity</th>
+	<th>Is Computed</th>
+	<th>Default value</th>
+	<th>Default sequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>ThreadID</td>
+	<td>1</td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td>Yes</td>
+	<td>Yes</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>LastMessageID</td>
+	<td>2</td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+	<td>Yes</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>NumberOfMessages</td>
+	<td>3</td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<tr>
+	<td>NumberOfViews</td>
+	<td>4</td>
+	<td>int</td>
+	<td>0</td>
+	<td>10</td>
+	<td>0</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="foreign-key-constraints">Foreign key constraints<a class="headerlink" href="#foreign-key-constraints" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<h4 id="fk_15e6b0a402d80d4e4b0df3453c5">FK_15e6b0a402d80d4e4b0df3453c5<a class="headerlink" href="#fk_15e6b0a402d80d4e4b0df3453c5" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Aspect</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Primary key table</td>
+	<td><a href="../dbo/Thread.htm">dbo.Thread</a></td>
+</tr>
+<tr>
+	<td>Delete rule</td>
+	<td>Cascade</td>
+</tr>
+<tr>
+	<td>Update rule</td>
+	<td>NoAction</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Foreign key field</th>
+	<th>Primary key field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>ThreadID</td>
+	<td>dbo.Thread.ThreadID</td>
+</tr>
+</tbody>
+</table>
+<h4 id="fk_2033ff74285bde08311a5a99ae1">FK_2033ff74285bde08311a5a99ae1<a class="headerlink" href="#fk_2033ff74285bde08311a5a99ae1" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Aspect</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Primary key table</td>
+	<td><a href="../dbo/Message.htm">dbo.Message</a></td>
+</tr>
+<tr>
+	<td>Delete rule</td>
+	<td>Cascade</td>
+</tr>
+<tr>
+	<td>Update rule</td>
+	<td>NoAction</td>
+</tr>
+</tbody>
+</table>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Foreign key field</th>
+	<th>Primary key field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>LastMessageID</td>
+	<td>dbo.Message.MessageID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unique-constraints">Unique constraints<a class="headerlink" href="#unique-constraints" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Constraint name</th>
+	<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>UC_19c59ce41b5be7a6d2c358322d4</td>
+	<td>LastMessageID</td>
+</tr>
+</tbody>
+</table>
+<h2 id="model-elements-mapped-on-this-table">Model elements mapped on this table<a class="headerlink" href="#model-elements-mapped-on-this-table" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Model Element</th>
+	<th>Element type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><a href="../../../EntityModel/_DefaultGroup/Entities/ThreadStatistics.htm">ThreadStatistics</a></td>
+	<td>Entity</td>
+</tr>
+</tbody>
+</table>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+HnD Model Documentation. &copy;2020 FB
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="../../../js/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/modernizr-2.8.3.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/theme.js"></script>
+
+</body>
+</html>

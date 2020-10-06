@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SearchResult - HnD Model Documentation</title>
+    <link rel="shortcut icon" href="../../../favicon.ico">
+    <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/theme_colors.css" type="text/css" />
+    <link rel="stylesheet" href="../../../css/styles/vs.css">
+    <link rel="stylesheet" href="../../../css/font-awesome.4.5.0.min.css">
+</head>
+<body role="document">
+    <div class="grid-for-nav">
+        <nav data-toggle="nav-shift" class="nav-side stickynav">
+            <div class="side-nav-search">
+                <a href="../../../index.htm"><i class="fa fa-home"></i> HnD Model Documentation</a>
+                <div role="search">
+                    <form id="search-form" class="form" action="../../../Docnet_search.htm" method="get">
+                        <input type="text" name="q" placeholder="Search docs" />
+                    </form>
+                </div>
+            </div>
+            <div class="menu menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+<ul>
+<li class="tocentry"><a href="../../../index.htm">Home</a>
+</li>
+
+<li class="tocentry"><a href="../../../generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../Entitymodel.htm">Entity model</a></span></li>
+<li class="tocentry"><a href="../../../EntityModel/generalinformation.htm">General information</a>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../EntityModel/_DefaultGroup/Entities/__index.htm">Entities</a></span>
+</li>
+<li class="tocentry">
+<ul>
+<li><span class="navigationgroup"><i class="fa fa-caret-down"></i> <a href="../../../EntityModel/_DefaultGroup/TypedLists/__index.htm">Typed lists</a></span></li>
+
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/TypedLists/ForumMessages.htm">ForumMessages</a>
+</li>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/TypedLists/ForumsWithSectionName.htm">ForumsWithSectionName</a>
+</li>
+<li class="tocentry current"><a class="current" href="../../../EntityModel/_DefaultGroup/TypedLists/SearchResult.htm">SearchResult</a>
+<ul class="currentrelative">
+<li class="tocentry"><a href="#aliased-entities-contained-in-this-typed-list">Aliased entities contained in this typed list</a></li>
+
+<li class="tocentry"><a href="#relationships">Relationships</a></li>
+
+<li class="tocentry"><a href="#fields">Fields</a></li>
+
+<li class="tocentry"><a href="#code-generation-information">Code generation information</a></li>
+<li class="tocentry">
+<ul class="currentrelative">
+<li class="tocentry"><a href="#setting-values">Setting values</a></li>
+
+<li class="tocentry"><a href="#attribute-definitions-per-element">Attribute definitions per element</a></li>
+
+<li class="tocentry"><a href="#additional-interface-definitions-per-element">Additional interface definitions per element</a></li>
+
+<li class="tocentry"><a href="#additional-namespace-definitions-per-element">Additional namespace definitions per element</a></li>
+
+
+</ul>
+</li>
+
+
+
+</ul>
+<li class="tocentry"><a href="../../../EntityModel/_DefaultGroup/TypedLists/UserProfileInfo.htm">UserProfileInfo</a>
+</li>
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../EntityModel/_DefaultGroup/SPCalls/__index.htm">Stored procedure calls</a></span>
+</li>
+
+</ul>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Derivedmodels.htm">Derived models</a></span>
+</li>
+<li class="tocentry">
+<span class="navigationgroup"><i class="fa fa-caret-right"></i> <a href="../../../Metadata.htm">Meta data</a></span>
+</li>
+</ul>
+				<div class="toc-footer">
+					<span class="text-small">
+						<hr/>
+						<a href="https://github.com/FransBouma/DocNet" target="_blank">Made with <i class="fa fa-github"></i> DocNet</a>
+					</span>
+				</div>	
+			</div>
+            &nbsp;
+        </nav>
+        <section data-toggle="nav-shift" class="nav-content-wrap">
+            <nav class="nav-top" role="navigation" aria-label="top navigation">
+                <i data-toggle="nav-top" class="fa fa-bars"></i>
+                <a href="../../../index.htm">HnD Model Documentation</a>
+            </nav>
+            <div class="nav-content">
+                <div role="navigation" aria-label="breadcrumbs navigation">
+                    <div class="breadcrumbs">
+<ul><li><a href="../../../index.htm">Home</a></li> / <li><a href="../../../Entitymodel.htm">Entity model</a></li> / <li><a href="../../../EntityModel/_DefaultGroup/TypedLists/__index.htm">Typed lists</a></li> / <li><a href="../../../EntityModel/_DefaultGroup/TypedLists/SearchResult.htm">SearchResult</a></li></ul>
+					
+                    </div>
+                    <hr />
+                </div>
+                <div role="main">
+                    <div class="section">
+<h1 id="searchresult">SearchResult<a class="headerlink" href="#searchresult" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h1>
+<h2 id="aliased-entities-contained-in-this-typed-list">Aliased entities contained in this typed list<a class="headerlink" href="#aliased-entities-contained-in-this-typed-list" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Entity</th>
+	<th>Alias</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Forum.htm">Forum</a></td>
+	<td></td>
+</tr>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Message.htm">Message</a></td>
+	<td>LastMessage</td>
+</tr>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Message.htm">Message</a></td>
+	<td></td>
+</tr>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Section.htm">Section</a></td>
+	<td></td>
+</tr>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/Thread.htm">Thread</a></td>
+	<td></td>
+</tr>
+<tr>
+	<td><a href="../../_DefaultGroup/Entities/ThreadStatistics.htm">ThreadStatistics</a></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="relationships">Relationships<a class="headerlink" href="#relationships" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The relationships the typed list SearchResult is based on</p>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Full description</th>
+	<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Message - Inner Join - Thread (m:1)</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>Thread - Inner Join - Forum (m:1)</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>Thread - Inner Join - ThreadStatistics (1:1)</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>Forum - Inner Join - Section (m:1)</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>ThreadStatistics - Inner Join - LastMessage (1:1)</td>
+	<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h2 id="fields">Fields<a class="headerlink" href="#fields" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<p>The following fields are defined in the SearchResult typed list</p>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Field alias</th>
+	<th>Caption</th>
+	<th>Mapped Field Name</th>
+	<th>Field Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>ThreadID</td>
+	<td>ThreadID</td>
+	<td><a href="../../_DefaultGroup/Entities/Thread.htm#fields">Thread.ThreadID</a></td>
+	<td>int (System.Int32)</td>
+</tr>
+<tr>
+	<td>Subject</td>
+	<td>Subject</td>
+	<td><a href="../../_DefaultGroup/Entities/Thread.htm#fields">Thread.Subject</a></td>
+	<td>string (System.String)</td>
+</tr>
+<tr>
+	<td>ForumName</td>
+	<td>ForumName</td>
+	<td><a href="../../_DefaultGroup/Entities/Forum.htm#fields">Forum.ForumName</a></td>
+	<td>string (System.String)</td>
+</tr>
+<tr>
+	<td>SectionName</td>
+	<td>SectionName</td>
+	<td><a href="../../_DefaultGroup/Entities/Section.htm#fields">Section.SectionName</a></td>
+	<td>string (System.String)</td>
+</tr>
+<tr>
+	<td>ThreadLastPostingDate</td>
+	<td>PostingDate</td>
+	<td><a href="../../_DefaultGroup/Entities/Message.htm#fields">LastMessage.PostingDate</a></td>
+	<td>datetime (System.DateTime)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="code-generation-information">Code generation information<a class="headerlink" href="#code-generation-information" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h2>
+<h3 id="setting-values">Setting values<a class="headerlink" href="#setting-values" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<h4 id="searchresult-typedlist">SearchResult (TypedList)<a class="headerlink" href="#searchresult-typedlist" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Typed list row base class name</td>
+	<td></td>
+</tr>
+<tr>
+	<td>Output type</td>
+	<td>PocoWithQuerySpecQuery</td>
+</tr>
+</tbody>
+</table>
+<h4 id="forumname-typedlistfield">ForumName (TypedListField)<a class="headerlink" href="#forumname-typedlistfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sectionname-typedlistfield">SectionName (TypedListField)<a class="headerlink" href="#sectionname-typedlistfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="subject-typedlistfield">Subject (TypedListField)<a class="headerlink" href="#subject-typedlistfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="threadid-typedlistfield">ThreadID (TypedListField)<a class="headerlink" href="#threadid-typedlistfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h4 id="threadlastpostingdate-typedlistfield">ThreadLastPostingDate (TypedListField)<a class="headerlink" href="#threadlastpostingdate-typedlistfield" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h4>
+<table class="table table-bordered-all table-responsive">
+<thead>
+<tr>
+	<th>Setting name</th>
+	<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>Generate as nullable type</td>
+	<td>True</td>
+</tr>
+</tbody>
+</table>
+<h3 id="attribute-definitions-per-element">Attribute definitions per element<a class="headerlink" href="#attribute-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+<h3 id="additional-interface-definitions-per-element">Additional interface definitions per element<a class="headerlink" href="#additional-interface-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+<h3 id="additional-namespace-definitions-per-element">Additional namespace definitions per element<a class="headerlink" href="#additional-namespace-definitions-per-element" title="Permalink to this headline"><i class="fa fa-link" aria-hidden="true"></i></a></h3>
+<p>None.</p>
+
+                    </div>
+                </div>
+                <footer>
+                    <hr />
+                    <div role="contentinfo">
+HnD Model Documentation. &copy;2020 FB
+                    </div>
+                </footer>
+            </div>
+        </section>
+    </div>
+    <script src="../../../js/jquery-2.1.1.min.js"></script>
+    <script src="../../../js/modernizr-2.8.3.min.js"></script>
+    <script src="../../../js/highlight.pack.js"></script>
+    <script src="../../../js/theme.js"></script>
+
+</body>
+</html>
