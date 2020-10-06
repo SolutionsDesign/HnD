@@ -3,9 +3,9 @@ HnD
 
 HnD is a Customer Support system, integrating helpdesk features and forums, and was built as an example of what you can do with LLBLGen Pro.
 
-HnD stands for Help and Discuss and starting with v3, it is running on .Net core 3.1+ with 100% LLBLGen Pro code. It offers site owners a flexible and fast customer support system with, among other features: email notification, attachments, secure forums so only the topicstarter and people with a given action right can see / access the thread, search etc. etc. It's open source and you can download it for free.
+HnD stands for Help and Discuss and starting with v3, it is running on .Net core 3.1+ and uses LLBLGen Pro for its data-access and also model management. It offers site owners a flexible and fast customer support system with, among other features: email notification, attachments, secure forums so only the topicstarter and people with a given action right can see / access the thread, search etc. etc. It's open source and you can download it for free.
 
-To see HnD  in action, go to [https://www.llblgen.com/tinyforum](http://www.llblgen.com/tinyforum)
+To see HnD  in action, go to the LLBLGen Pro support system: [https://www.llblgen.com/tinyforum](http://www.llblgen.com/tinyforum)
 
 ## Requirements 
 * Asp.net core MVC 3.1+
