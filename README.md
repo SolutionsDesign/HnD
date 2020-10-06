@@ -34,6 +34,11 @@ role management, mass emailing of groups and users by the administrator and many
 * Complete control of fonts and colours with cascading style sheets (CSS).
 * Responsive design
 
+## Documentation
+The Docs folder contains the generated model documentation in markdown format (and generated html output) which is generated using LLBLGen Pro's documentation generation feature.
+It gives insight in how the entity model and derived models relate to each other, detailed per field information and e.g. which mappings are present. For development a valuable
+resource. 
+
 ## Installation
 The installation of HnD v3 contains several steps, these are described below
 
