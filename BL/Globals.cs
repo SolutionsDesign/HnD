@@ -34,11 +34,11 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "05-oct-2020";
+		public static readonly string Build = "11-oct-2020";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
-		public static readonly string ReleaseType = "Beta";
+		public static readonly string ReleaseType = "RTM";
 		/// <summary>
 		/// The UserID to deny login rights, since this is the Anonymous Coward user, which is
 		/// used for non-logged in users.
