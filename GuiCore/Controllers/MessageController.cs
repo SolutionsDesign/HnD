@@ -191,6 +191,7 @@ namespace SD.HnD.Gui.Controllers
 								  ThreadSubject = thread.Subject,
 								  PageNo = 1,
 								  LastMessageInThread = await ThreadGuiHelper.GetLastMessageInThreadDtoAsync(threadId),
+								  PreviewTextAsHtml = string.Empty,
 							  };
 			return View(messageData);
 		}
@@ -203,7 +204,7 @@ namespace SD.HnD.Gui.Controllers
 											MessageData messageData, string submitButton,
 											int threadId = 0)
 		{
-			if(submitButton != "Post")
+			if(submitButton != "Post" && submitButton!= "Preview")
 			{
 				return threadId <= 0 ? RedirectToAction("Index", "Home") : RedirectToAction("Index", "Thread", new {threadId = threadId});
 			}
@@ -220,23 +221,49 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			int newMessageId = 0;
-			if(submitButton == "Post")
+			switch(submitButton)
 			{
-				// allowed, proceed
-				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
-																			ApplicationAdapter.GetSmileyMappings());
-				var systemData = await _cache.GetSystemDataAsync();
-				var remoteIPAddress = HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress);
-				newMessageId = await ThreadManager.CreateNewMessageInThreadAsync(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml,
-																				 remoteIPAddress, messageData.Subscribe,
-																				 ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.ThreadUpdatedNotification),
-																				 systemData.SendReplyNotifications);
-				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
-				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
+				case "Post":
 				{
-					await SecurityManager.AuditNewMessageAsync(this.HttpContext.Session.GetUserID(), newMessageId);
+					// allowed, proceed
+					// parse message text to html
+					var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																				ApplicationAdapter.GetSmileyMappings());
+					var systemData = await _cache.GetSystemDataAsync();
+					var remoteIPAddress = HnDGeneralUtils.GetRemoteIPAddressAsIP4String(this.HttpContext.Connection.RemoteIpAddress);
+					newMessageId = await ThreadManager.CreateNewMessageInThreadAsync(threadId, this.HttpContext.Session.GetUserID(), messageData.MessageText, messageAsHtml,
+																					 remoteIPAddress, messageData.Subscribe,
+																					 ApplicationAdapter.GetEmailData(this.Request.Host.Host, EmailTemplate.ThreadUpdatedNotification),
+																					 systemData.SendReplyNotifications);
+					ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
+					if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewMessage))
+					{
+						await SecurityManager.AuditNewMessageAsync(this.HttpContext.Session.GetUserID(), newMessageId);
+					}
+
+					break;
 				}
+				case "Preview":
+					var forum = await _cache.GetForumAsync(thread.ForumID);
+					if(forum == null)
+					{
+						return RedirectToAction("Index", "Home");
+					}
+					var newMessageData = new MessageData()
+										 {
+											 MessageText = messageData.MessageText,
+											 CurrentUserID = this.HttpContext.Session.GetUserID(),
+											 ForumID = thread.ForumID,
+											 ThreadID = thread.ThreadID,
+											 ForumName = forum.ForumName,
+											 SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
+											 ThreadSubject = thread.Subject,
+											 PageNo = 1,
+											 LastMessageInThread = await ThreadGuiHelper.GetLastMessageInThreadDtoAsync(threadId),
+											 PreviewTextAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																										 ApplicationAdapter.GetSmileyMappings()),
+										 };
+					return View(newMessageData);
 			}
 
 			return await CalculateRedirectToMessageAsync(thread.ThreadID, newMessageId);
@@ -260,17 +287,43 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			if(submitButton == "Post")
+			switch(submitButton)
 			{
-				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
-																			ApplicationAdapter.GetSmileyMappings());
-				await MessageManager.UpdateEditedMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
-															  this.Request.Host.Host, string.Empty);
-				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
+				case "Post":
 				{
-					await SecurityManager.AuditAlteredMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID);
+					// parse message text to html
+					var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																				ApplicationAdapter.GetSmileyMappings());
+					await MessageManager.UpdateEditedMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID, messageData.MessageText, messageAsHtml,
+																  this.Request.Host.Host, string.Empty);
+					if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditAlteredMessage))
+					{
+						await SecurityManager.AuditAlteredMessageAsync(this.HttpContext.Session.GetUserID(), message.MessageID);
+					}
+					break;
 				}
+				
+				case "Preview":
+					var thread = message.Thread;
+					var forum = await _cache.GetForumAsync(thread.ForumID);
+					if(forum == null)
+					{
+						return RedirectToAction("Index", "Home");
+					}
+					var newMessageData = new MessageData()
+										 {
+											 MessageText = messageData.MessageText,
+											 CurrentUserID = this.HttpContext.Session.GetUserID(),
+											 ForumID = thread.ForumID,
+											 ThreadID = thread.ThreadID,
+											 ForumName = forum.ForumName,
+											 SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
+											 ThreadSubject = thread.Subject,
+											 PageNo = 1,
+											 PreviewTextAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(messageData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																										 ApplicationAdapter.GetSmileyMappings()),
+										 };
+					return View(newMessageData);
 			}
 
 			return await CalculateRedirectToMessageAsync(message.ThreadID, message.MessageID);

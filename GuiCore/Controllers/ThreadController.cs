@@ -323,10 +323,9 @@ namespace SD.HnD.Gui.Controllers
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public async Task<ActionResult> Add([Bind(nameof(NewThreadData.MessageText), nameof(NewThreadData.ThreadSubject), nameof(NewThreadData.IsSticky),
-													 nameof(NewThreadData.Subscribe))]
-											NewThreadData newThreadData, string submitButton, int forumId = 0)
+											 nameof(NewThreadData.Subscribe))] NewThreadData newThreadData, string submitButton, int forumId = 0)
 		{
-			if(submitButton != "Post")
+			if(submitButton != "Post" && submitButton!="Preview")
 			{
 				// apparently canceled
 				if(forumId <= 0)
@@ -342,32 +341,53 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var (userMayAddThread, forum, userMayAddStickThread) = await PerformAddThreadSecurityChecksAsync(forumId);
+			var (userMayAddThread, forum, userMayAddStickyThread) = await PerformAddThreadSecurityChecksAsync(forumId);
 			if(!userMayAddThread)
 			{
 				return RedirectToAction("Index", "Home");
 			}
 
 			int newThreadId = 0;
-			if(submitButton == "Post")
+			switch(submitButton)
 			{
-				// allowed, proceed
-				// parse message text to html
-				var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
-																			ApplicationAdapter.GetSmileyMappings());
-				var (newThreadIdFromCall, newMessageId) = await ForumManager.CreateNewThreadInForumAsync(forumId, this.HttpContext.Session.GetUserID(),
-																										 newThreadData.ThreadSubject, newThreadData.MessageText,
-																										 messageAsHtml, userMayAddStickThread && newThreadData.IsSticky,
-																										 this.Request.Host.Host, forum.DefaultSupportQueueID,
-																										 newThreadData.Subscribe);
-				newThreadId = newThreadIdFromCall;
-				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
-				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
+				case "Post":
 				{
-					await SecurityManager.AuditNewThreadAsync(this.HttpContext.Session.GetUserID(), newThreadId);
-				}
+					// allowed, proceed
+					// parse message text to html
+					var messageAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																				ApplicationAdapter.GetSmileyMappings());
+					var (newThreadIdFromCall, newMessageId) = await ForumManager.CreateNewThreadInForumAsync(forumId, this.HttpContext.Session.GetUserID(),
+																											 newThreadData.ThreadSubject, newThreadData.MessageText,
+																											 messageAsHtml, userMayAddStickyThread && newThreadData.IsSticky,
+																											 this.Request.Host.Host, forum.DefaultSupportQueueID,
+																											 newThreadData.Subscribe);
+					newThreadId = newThreadIdFromCall;
+					ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
+					if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditNewThread))
+					{
+						await SecurityManager.AuditNewThreadAsync(this.HttpContext.Session.GetUserID(), newThreadId);
+					}
 
-				_cache.Remove(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
+					_cache.Remove(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
+					break;
+				}
+				case "Preview":
+					var newThreadDataPreview = new NewThreadData()
+										{
+											CurrentUserID = this.HttpContext.Session.GetUserID(),
+											ForumID = forumId,
+											ForumName = forum.ForumName,
+											SectionName = await _cache.GetSectionNameAsync(forum.SectionID),
+											MessageText = newThreadData.MessageText,
+											PreviewTextAsHtml = HnDGeneralUtils.TransformMarkdownToHtml(newThreadData.MessageText, ApplicationAdapter.GetEmojiFilenamesPerName(),
+																										ApplicationAdapter.GetSmileyMappings()),
+											ThreadSubject = newThreadData.ThreadSubject,
+											IsSticky = newThreadData.IsSticky && userMayAddStickyThread,
+											UserCanAddStickyThread = userMayAddStickyThread,
+											NewThreadWelcomeTextAsHTML = forum.NewThreadWelcomeTextAsHTML,
+											Subscribe = newThreadData.Subscribe,
+										};
+					return View(newThreadDataPreview);
 			}
 
 			return Redirect(this.Url.Action("Index", "Thread", new {threadId = newThreadId, pageNo = 1}));

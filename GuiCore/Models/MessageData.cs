@@ -39,5 +39,6 @@ namespace SD.HnD.Gui.Models
 		public string MessageText { get; set; }
 		public bool Subscribe { get; set; }
 		public MessageInThreadDto LastMessageInThread { get; set; }
+		public string PreviewTextAsHtml { get; set; }
 	}
 }
