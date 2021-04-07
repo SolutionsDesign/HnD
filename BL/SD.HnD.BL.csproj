@@ -6,9 +6,9 @@
         <Company>Solutions Design bv</Company>
         <Product>HnD, a .NET Forum system using LLBLGen Pro</Product>
         <Description>Business Logic Layer for HnD</Description>
-        <Copyright>(c)2002-2020 Solutions Design</Copyright>
+        <Copyright>(c)2002-2021 Solutions Design</Copyright>
         <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <FileVersion>3.0.0.0</FileVersion>
+        <FileVersion>3.0.1</FileVersion>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\DALAdapter\DatabaseGeneric\SD.HnD.DALAdapter.csproj" />
