@@ -1552,6 +1552,36 @@
     </MappingStore>
   </MappingStores>
   <ModelViews>
+    <ModelView Name="AllEntities">
+      <EntityDefinitions>
+        <Entity Name=":ActionRight" />
+        <Entity Name=":Attachment" />
+        <Entity Name=":AuditAction" />
+        <Entity Name=":AuditDataCore" />
+        <Entity Name=":AuditDataMessageRelated" />
+        <Entity Name=":AuditDataThreadRelated" />
+        <Entity Name=":Bookmark" />
+        <Entity Name=":Forum" />
+        <Entity Name=":ForumRoleForumActionRight" />
+        <Entity Name=":IPBan" />
+        <Entity Name=":Message" />
+        <Entity Name=":PasswordResetToken" />
+        <Entity Name=":Role" />
+        <Entity Name=":RoleAuditAction" />
+        <Entity Name=":RoleSystemActionRight" />
+        <Entity Name=":RoleUser" />
+        <Entity Name=":Section" />
+        <Entity Name=":SupportQueue" />
+        <Entity Name=":SupportQueueThread" />
+        <Entity Name=":SystemData" />
+        <Entity Name=":Thread" />
+        <Entity Name=":ThreadStatistics" />
+        <Entity Name=":ThreadSubscription" />
+        <Entity Name=":User" />
+        <Entity Name=":UserTitle" />
+      </EntityDefinitions>
+      <Documentation><![CDATA[]]></Documentation>
+    </ModelView>
     <ModelView Name="AuditingUser">
       <EntityDefinitions>
         <Entity Name=":AuditAction" />

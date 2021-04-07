@@ -150,6 +150,7 @@ namespace SD.HnD.Gui.Controllers
 
 			if(result)
 			{
+				_cache.Remove(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
 				return Json(new {success = true});
 			}
 
@@ -205,10 +206,15 @@ namespace SD.HnD.Gui.Controllers
 																			   ApplicationAdapter.GetSmileyMappings());
 			try
 			{
-				await ForumManager.ModifyForumAsync(forumId, data.ForumEdited.SectionID, data.ForumEdited.ForumName, data.ForumEdited.ForumDescription,
-													data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, data.ForumEdited.OrderNo,
-													data.ForumEdited.MaxAttachmentSize, data.ForumEdited.MaxNoOfAttachmentsPerMessage,
-													data.ForumEdited.NewThreadWelcomeText, welcomeMessageAsHtml);
+				var result = await ForumManager.ModifyForumAsync(forumId, data.ForumEdited.SectionID, data.ForumEdited.ForumName, data.ForumEdited.ForumDescription,
+																 data.ForumEdited.HasRSSFeed, data.ForumEdited.DefaultSupportQueueID, data.ForumEdited.OrderNo,
+																 data.ForumEdited.MaxAttachmentSize, data.ForumEdited.MaxNoOfAttachmentsPerMessage,
+																 data.ForumEdited.NewThreadWelcomeText, welcomeMessageAsHtml);
+				if(result)
+				{
+					// succeeded, we have to remove the forum from the cache so it's reloaded next time it's used
+					_cache.Remove(CacheManager.ProduceCacheKey(CacheKeys.SingleForum, forumId));
+				}
 			}
 			catch(ORMQueryExecutionException ex)
 			{

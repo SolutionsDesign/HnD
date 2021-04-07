@@ -160,7 +160,7 @@ namespace SD.HnD.Gui
 			// last element added to the chain.
 			app.UseEndpoints(endpoints => RegisterRoutes(endpoints));
 
-			// HnD one-time configuration now we now the environment.  
+			// HnD one-time configuration now we know the environment.  
 			HnDConfiguration.Current.LoadStaticData(env.WebRootPath, env.ContentRootPath);
 		}
 
