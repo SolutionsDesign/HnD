@@ -199,7 +199,13 @@ namespace SD.HnD.Gui.Controllers
 			}
 
 			int forumId = thread.ForumID;
-			await ThreadManager.DeleteThreadAsync(id);
+			var deleteResult = await ThreadManager.DeleteThreadAsync(id);
+			if(deleteResult)
+			{
+				// invalidate cached numbers. It's not known if the thread was in a support queue, so the numbers for the support queues are recalculated next time
+				// they're needed. 
+				ApplicationAdapter.InvalidateCachedNumberOfThreadsInSupportQueues();
+			}
 			return RedirectToAction("Index", "Forum", new {forumId = forumId});
 		}
 
