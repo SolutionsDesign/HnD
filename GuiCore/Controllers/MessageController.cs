@@ -302,7 +302,6 @@ namespace SD.HnD.Gui.Controllers
 					}
 					break;
 				}
-				
 				case "Preview":
 					var thread = message.Thread;
 					var forum = await _cache.GetForumAsync(thread.ForumID);
