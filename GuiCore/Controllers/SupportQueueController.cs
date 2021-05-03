@@ -95,7 +95,7 @@ namespace SD.HnD.Gui.Controllers
 				return RedirectToAction("Index", "Home");
 			}
 
-			var messageData = new MessageData()
+			var messageData = new MemoData()
 							  {
 								  MessageText = thread.Memo + string.Format("  {2}**-----------------------------------------------------------------  {2}{1} {0} wrote:** ",
 																			this.HttpContext.Session.GetUserNickName(), DateTime.Now.ToString(@"dd-MMM-yyyy HH:mm:ss"), 
@@ -115,7 +115,7 @@ namespace SD.HnD.Gui.Controllers
 		[Authorize]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public async Task<ActionResult> EditMemo([Bind("MessageText")] MessageData messageData, string submitButton, int threadId = 0, int pageNo = 1)
+		public async Task<ActionResult> EditMemo([Bind("MessageText")] MemoData messageData, string submitButton, int threadId = 0, int pageNo = 1)
 		{
 			if(!ModelState.IsValid)
 			{
@@ -128,10 +128,13 @@ namespace SD.HnD.Gui.Controllers
 				return result;
 			}
 
-			await ThreadManager.UpdateMemoAsync(thread.ThreadID, messageData.MessageText);
-			if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditEditMemo))
+			if(submitButton == "Post")
 			{
-				await SecurityManager.AuditEditMemoAsync(this.HttpContext.Session.GetUserID(), thread.ThreadID);
+				await ThreadManager.UpdateMemoAsync(thread.ThreadID, messageData.MessageText);
+				if(this.HttpContext.Session.CheckIfNeedsAuditing(AuditActions.AuditEditMemo))
+				{
+					await SecurityManager.AuditEditMemoAsync(this.HttpContext.Session.GetUserID(), thread.ThreadID);
+				}
 			}
 
 			return RedirectToAction("Index", "Thread", new {threadId = threadId, pageNo = pageNo});
