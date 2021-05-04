@@ -159,9 +159,9 @@ namespace SD.HnD.Gui.Controllers
 
 		[HttpGet]
 		[Authorize]
-		public async Task<ActionResult> AddUsersToRole(int id = 0)
+		public async Task<ActionResult> AddUsersToRole(int roleId = 0)
 		{
-			return await ActionWithUserSearch_StartAsync(async () => await CreateFilledAddUsersToRoleDataAsync(null, id), "AddUsersToRole_Find",
+			return await ActionWithUserSearch_StartAsync(async () => await CreateFilledAddUsersToRoleDataAsync(null, roleId), "AddUsersToRole_Find",
 														 "~/Views/Admin/AddUsersToRole.cshtml");
 		}
 
