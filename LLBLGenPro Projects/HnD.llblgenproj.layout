@@ -1,6 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LayoutInfo>
   <ModelViews>
+    <ModelView Name="AllEntities">
+      <EntityDefinitions>
+        <Entity Name=":ActionRight" X="1472.33618" Y="353.062317" />
+        <Entity Name=":Attachment" X="1472.33618" Y="1062.10193" />
+        <Entity Name=":AuditAction" X="716.6483" Y="529.595642" />
+        <Entity Name=":AuditDataCore" X="1849.13623" Y="988.3299" />
+        <Entity Name=":AuditDataMessageRelated" X="1472.33618" Y="1288.92712" />
+        <Entity Name=":AuditDataThreadRelated" X="1089.20325" Y="861.80365" />
+        <Entity Name=":Bookmark" X="1089.20325" Y="1291.09387" />
+        <Entity Name=":Forum" X="726.6984" Y="58.0470428" />
+        <Entity Name=":ForumRoleForumActionRight" X="1861.8031" Y="351.2869" />
+        <Entity Name=":IPBan" X="340.7567" Y="1150.14453" />
+        <Entity Name=":Message" X="1089.20325" Y="1048.26868" />
+        <Entity Name=":PasswordResetToken" X="-8.36673" Y="676.628" />
+        <Entity Name=":Role" X="1095.53687" Y="186.183365" />
+        <Entity Name=":RoleAuditAction" X="1472.33618" Y="576.887451" />
+        <Entity Name=":RoleSystemActionRight" X="1861.8031" Y="204.461655" />
+        <Entity Name=":RoleUser" X="1472.33618" Y="723.712769" />
+        <Entity Name=":Section" X="321.500031" Y="61.59073" />
+        <Entity Name=":SupportQueue" X="321.500031" Y="255.437775" />
+        <Entity Name=":SupportQueueThread" X="1095.53687" Y="333.008636" />
+        <Entity Name=":SystemData" X="1472.33618" Y="94.2370758" />
+        <Entity Name=":Thread" X="716.6483" Y="834.880249" />
+        <Entity Name=":ThreadStatistics" X="340.7567" Y="971.3194" />
+        <Entity Name=":ThreadSubscription" X="1095.53687" Y="543.833862" />
+        <Entity Name=":User" X="312.63327" Y="466.522766" />
+        <Entity Name=":UserTitle" X="-8.36673" Y="529.8028" />
+      </EntityDefinitions>
+    </ModelView>
     <ModelView Name="AuditingUser">
       <EntityDefinitions>
         <Entity Name=":AuditAction" X="643.3449" Y="449.093048" />
@@ -43,35 +72,6 @@
         <Entity Name=":User" X="-117.5" Y="47.3252563" />
         <Entity Name=":Thread" X="273.500061" Y="94.167984" />
         <Entity Name=":ThreadStatistics" X="552.500061" Y="-126.499969" />
-      </EntityDefinitions>
-    </ModelView>
-    <ModelView Name="AllEntities">
-      <EntityDefinitions>
-        <Entity Name=":ActionRight" X="1472.33618" Y="353.062317" />
-        <Entity Name=":Attachment" X="1472.33618" Y="1062.10193" />
-        <Entity Name=":AuditAction" X="716.6483" Y="529.595642" />
-        <Entity Name=":AuditDataCore" X="1849.13623" Y="988.3299" />
-        <Entity Name=":AuditDataMessageRelated" X="1472.33618" Y="1288.92712" />
-        <Entity Name=":AuditDataThreadRelated" X="1089.20325" Y="861.80365" />
-        <Entity Name=":Bookmark" X="1089.20325" Y="1291.09387" />
-        <Entity Name=":Forum" X="726.6984" Y="58.0470428" />
-        <Entity Name=":ForumRoleForumActionRight" X="1861.8031" Y="351.2869" />
-        <Entity Name=":IPBan" X="340.7567" Y="1150.14453" />
-        <Entity Name=":Message" X="1089.20325" Y="1048.26868" />
-        <Entity Name=":PasswordResetToken" X="-8.36673" Y="676.628" />
-        <Entity Name=":Role" X="1095.53687" Y="186.183365" />
-        <Entity Name=":RoleAuditAction" X="1472.33618" Y="576.887451" />
-        <Entity Name=":RoleSystemActionRight" X="1861.8031" Y="204.461655" />
-        <Entity Name=":RoleUser" X="1472.33618" Y="723.712769" />
-        <Entity Name=":Section" X="321.500031" Y="61.59073" />
-        <Entity Name=":SupportQueue" X="321.500031" Y="255.437775" />
-        <Entity Name=":SupportQueueThread" X="1095.53687" Y="333.008636" />
-        <Entity Name=":SystemData" X="1472.33618" Y="94.2370758" />
-        <Entity Name=":Thread" X="716.6483" Y="834.880249" />
-        <Entity Name=":ThreadStatistics" X="340.7567" Y="971.3194" />
-        <Entity Name=":ThreadSubscription" X="1095.53687" Y="543.833862" />
-        <Entity Name=":User" X="312.63327" Y="466.522766" />
-        <Entity Name=":UserTitle" X="-8.36673" Y="529.8028" />
       </EntityDefinitions>
     </ModelView>
   </ModelViews>

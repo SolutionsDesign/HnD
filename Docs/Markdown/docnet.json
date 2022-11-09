@@ -3,7 +3,7 @@
 	"Source": ".",
 	"Destination": "..\\Site\\",
 	"Theme": "Light",
-	"Footer" : "HnD Model Documentation. &copy;2020 FB",
+	"Footer" : "HnD Model Documentation. &copy;2022 FB",
 	"MaxLevelInToC": 3,
 	"Pages": 
 	{
