@@ -91,6 +91,8 @@ namespace SD.HnD.Gui
 			bool isLastVisitDateValid = false;
 			DateTime lastVisitDate = DateTime.Now;
 			string lastVisitDateCookieName = ApplicationAdapter.GetSiteName() + " LastVisitDate";
+			// replace spaces with '_' as per https://github.com/dotnet/aspnetcore/issues/25266
+			lastVisitDateCookieName = lastVisitDateCookieName.Replace(" ", "_");
 
 			// the last visited date is either stored in a cookie or on the server. Older versions of this forum system used cookie based last visited date storage,
 			// newer versions use server side storage in the User entity. For non-logged in users, cookie based storage is still used. 

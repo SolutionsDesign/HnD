@@ -139,6 +139,14 @@ namespace SD.HnD.Gui
 					});
 
 			app.UseRouting();
+#if DEBUG			
+			// For debugging routes, this will display which route has been chosen. 
+			app.Use(next => context =>
+							{
+								Console.WriteLine($"Found: {context.GetEndpoint()?.DisplayName}");
+								return next(context);
+							});
+#endif	
 			app.UseResponseCaching();
 			app.UseAuthentication();
 			app.UseAuthorization();
@@ -287,11 +295,11 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("ViewMyThreads", "Account/Threads/{pageNo}", new {controller = "Account", action = "Threads", pageNo = 1});
 
 			// Thread
-			routes.MapControllerRoute("ViewThread", "Thread/{threadId}/{pageNo}", new {controller = "Thread", action = "Index", pageNo = 1});
-			routes.MapControllerRoute("ToggleMarkAsDone", "Thread/ToggleMarkAsDone/{threadId}/{pageNo}", new {controller = "Thread", action = "ToggleMarkAsDone", pageNo = 1});
 			routes.MapControllerRoute("AddThread", "Thread/Add/{forumId}", new {controller = "Thread", action = "Add"});
+			routes.MapControllerRoute("ToggleMarkAsDone", "Thread/ToggleMarkAsDone/{threadId}/{pageNo}", new {controller = "Thread", action = "ToggleMarkAsDone", pageNo = 1});
 			routes.MapControllerRoute("MoveThread", "Thread/Move/{threadId}", new {controller = "Thread", action = "Move", pageNo = 1});
 			routes.MapControllerRoute("EditThreadProperties", "Thread/EditProperties/{threadId}", new {controller = "Thread", action = "EditProperties", pageNo = 1});
+			routes.MapControllerRoute("ViewThread", "Thread/{threadId}/{pageNo}", new {controller = "Thread", action = "Index", pageNo = 1});
 
 			// Forum
 			routes.MapControllerRoute("ViewForum", "Forum/{forumId}/{pageNo}", new {controller = "Forum", action = "Index", pageNo = 1});
