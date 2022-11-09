@@ -291,15 +291,16 @@ namespace SD.HnD.Gui
 
 			// Account 
 			routes.MapControllerRoute("SpecifyNewPassword", "Account/SpecifyNewPassword/{tokenId}", new {controller = "Account", action = "SpecifyNewPassword"});
-			routes.MapControllerRoute("EditProfile", "Account/Edit/", new {controller = "Account", action = "EditProfile"});
-			routes.MapControllerRoute("ViewMyThreads", "Account/Threads/{pageNo}", new {controller = "Account", action = "Threads", pageNo = 1});
+			routes.MapControllerRoute("EditProfile",        "Account/Edit/",                        new {controller = "Account", action = "EditProfile"});
+			routes.MapControllerRoute("ViewMyThreads",      "Account/Threads/{pageNo}",             new {controller = "Account", action = "Threads", pageNo = 1});
 
 			// Thread
-			routes.MapControllerRoute("AddThread", "Thread/Add/{forumId}", new {controller = "Thread", action = "Add"});
-			routes.MapControllerRoute("ToggleMarkAsDone", "Thread/ToggleMarkAsDone/{threadId}/{pageNo}", new {controller = "Thread", action = "ToggleMarkAsDone", pageNo = 1});
-			routes.MapControllerRoute("MoveThread", "Thread/Move/{threadId}", new {controller = "Thread", action = "Move", pageNo = 1});
-			routes.MapControllerRoute("EditThreadProperties", "Thread/EditProperties/{threadId}", new {controller = "Thread", action = "EditProperties", pageNo = 1});
-			routes.MapControllerRoute("ViewThread", "Thread/{threadId}/{pageNo}", new {controller = "Thread", action = "Index", pageNo = 1});
+			routes.MapControllerRoute("AddThread",            "Thread/Add/{forumId}",                        new {controller = "Thread", action = "Add"});
+			routes.MapControllerRoute("ToggleMarkAsDone",     "Thread/ToggleMarkAsDone/{threadId}/{pageNo}", new {controller = "Thread", action = "ToggleMarkAsDone", pageNo = 1});
+			routes.MapControllerRoute("MoveThread",           "Thread/Move/{threadId}",                      new {controller = "Thread", action = "Move", pageNo = 1});
+			routes.MapControllerRoute("EditThreadProperties", "Thread/EditProperties/{threadId}",            new {controller = "Thread", action = "EditProperties", pageNo = 1});
+			routes.MapControllerRoute("ActiveThreads",        "Thread/Active",                               new {controller = "Thread", action = "Active"});
+			routes.MapControllerRoute("ViewThread",           "Thread/{threadId}/{pageNo}",                  new {controller = "Thread", action = "Index", pageNo = 1});
 
 			// Forum
 			routes.MapControllerRoute("ViewForum", "Forum/{forumId}/{pageNo}", new {controller = "Forum", action = "Index", pageNo = 1});
@@ -308,27 +309,27 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("RssForum", "RssForum/{forumId}", new {controller = "RssForum", action = "Index"});
 
 			// SupportQueue
-			routes.MapControllerRoute("MoveToQueue", "SupportQueue/MoveToQueue/{threadId}/{pageNo}", new {controller = "SupportQueue", action = "MoveToQueue", pageNo = 1});
-			routes.MapControllerRoute("ClaimThread", "SupportQueue/ClaimThread/{threadId}/{pageNo}", new {controller = "SupportQueue", action = "ClaimThread", pageNo = 1});
+			routes.MapControllerRoute("MoveToQueue",   "SupportQueue/MoveToQueue/{threadId}/{pageNo}",   new {controller = "SupportQueue", action = "MoveToQueue", pageNo = 1});
+			routes.MapControllerRoute("ClaimThread",   "SupportQueue/ClaimThread/{threadId}/{pageNo}",   new {controller = "SupportQueue", action = "ClaimThread", pageNo = 1});
 			routes.MapControllerRoute("ReleaseThread", "SupportQueue/ReleaseThread/{threadId}/{pageNo}", new {controller = "SupportQueue", action = "ReleaseThread", pageNo = 1});
-			routes.MapControllerRoute("EditMemo", "SupportQueue/EditMemo/{threadId}/{pageNo}", new {controller = "SupportQueue", action = "EditMemo", pageNo = 1});
+			routes.MapControllerRoute("EditMemo",      "SupportQueue/EditMemo/{threadId}/{pageNo}",      new {controller = "SupportQueue", action = "EditMemo", pageNo = 1});
 
 			// Message
 			routes.MapControllerRoute("AddMessage", "Message/Add/{threadId}/{messageIdToQuote}", new {controller = "Message", action = "Add", messageIdToQuote = 0});
 
 			// Attachment
-			routes.MapControllerRoute("DeleteAttachment", "Attachment/Delete/{messageId}/{attachmentId}", new {controller = "Attachment", action = "Delete"});
-			routes.MapControllerRoute("ToggleApproval", "Attachment/ToggleApproval/{messageId}/{attachmentId}", new {controller = "Attachment", action = "ToggleApproval"});
-			routes.MapControllerRoute("GetAttachment", "Attachment/Get/{messageId}/{attachmentId}", new {controller = "Attachment", action = "Get"});
-			routes.MapControllerRoute("AddAttachment", "Attachment/Add/{messageId}", new {controller = "Attachment", action = "Add"});
+			routes.MapControllerRoute("DeleteAttachment", "Attachment/Delete/{messageId}/{attachmentId}",         new {controller = "Attachment", action = "Delete"});
+			routes.MapControllerRoute("ToggleApproval",   "Attachment/ToggleApproval/{messageId}/{attachmentId}", new {controller = "Attachment", action = "ToggleApproval"});
+			routes.MapControllerRoute("GetAttachment",    "Attachment/Get/{messageId}/{attachmentId}",            new {controller = "Attachment", action = "Get"});
+			routes.MapControllerRoute("AddAttachment",    "Attachment/Add/{messageId}",                           new {controller = "Attachment", action = "Add"});
 
 			// Search
-			routes.MapControllerRoute("SearchAll", "Search/SearchAll/{searchParameters}", new {controller = "Search", action = "SearchAll"});
-			routes.MapControllerRoute("SearchForum", "Search/SearchForum/{forumId}/{searchParameters}", new {controller = "Search", action = "SearchForum"});
-			routes.MapControllerRoute("SearchResults", "Search/Results/{pageNo}", new {controller = "Search", action = "Results", pageNo = 1});
-			routes.MapControllerRoute("SearchUnattended", "SearchUnattended/", new {controller = "Search", action = "SearchUnattended"});
-			routes.MapControllerRoute("SearchAdvanced", "Search/SearchAdvanced/", new {controller = "Search", action = "SearchAdvanced"});
-			routes.MapControllerRoute("SearchAdvancedUI", "Search", new {controller = "Search", action = "AdvancedSearch"});
+			routes.MapControllerRoute("SearchAll",        "Search/SearchAll/{searchParameters}",             new {controller = "Search", action = "SearchAll"});
+			routes.MapControllerRoute("SearchForum",      "Search/SearchForum/{forumId}/{searchParameters}", new {controller = "Search", action = "SearchForum"});
+			routes.MapControllerRoute("SearchResults",    "Search/Results/{pageNo}",                         new {controller = "Search", action = "Results", pageNo = 1});
+			routes.MapControllerRoute("SearchUnattended", "SearchUnattended/",                               new {controller = "Search", action = "SearchUnattended"});
+			routes.MapControllerRoute("SearchAdvanced",   "Search/SearchAdvanced/",                          new {controller = "Search", action = "SearchAdvanced"});
+			routes.MapControllerRoute("SearchAdvancedUI", "Search",                                          new {controller = "Search", action = "AdvancedSearch"});
 
 			// User
 			routes.MapControllerRoute("UserProfile", "User/{userId}", new {controller = "User", action = "ViewProfile"});
@@ -337,45 +338,45 @@ namespace SD.HnD.Gui
 			routes.MapControllerRoute("ErrorHandler", "Error/{errorCode}", new {controller = "Error", action = "HandleErrorCode"});
 
 			// Admin
-			routes.MapControllerRoute("InitializeSystem", "Admin/Init", new {controller = "SystemAdmin", action = "Init"});
-			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters", new {controller = "SystemAdmin", action = "SystemParameters"});
-			routes.MapControllerRoute("ReparseMessages", "Admin/ReparseMessages", new {controller = "SystemAdmin", action = "ReparseMessages"});
-			routes.MapControllerRoute("GetSupportQueues", "Admin/GetSupportQueues", new {controller = "SupportQueueAdmin", action = "GetSupportQueues"});
-			routes.MapControllerRoute("ManageSupportQueues", "Admin/ManageSupportQueues", new {controller = "SupportQueueAdmin", action = "ManageSupportQueues"});
-			routes.MapControllerRoute("UpdateSupportQueue", "Admin/UpdateSupportQueue", new {controller = "SupportQueueAdmin", action = "UpdateSupportQueue"});
-			routes.MapControllerRoute("InsertSupportQueue", "Admin/InsertSupportQueue", new {controller = "SupportQueueAdmin", action = "InsertSupportQueue"});
-			routes.MapControllerRoute("DeleteSupportQueue", "Admin/DeleteSupportQueue/{queueId}", new {controller = "SupportQueueAdmin", action = "DeleteSupportQueue", queueId = 0});
-			routes.MapControllerRoute("GetSections", "Admin/GetSections", new {controller = "SectionAdmin", action = "GetSections"});
-			routes.MapControllerRoute("ManageSections", "Admin/ManageSections", new {controller = "SectionAdmin", action = "ManageSections"});
-			routes.MapControllerRoute("UpdateSection", "Admin/UpdateSection", new {controller = "SectionAdmin", action = "UpdateSection"});
-			routes.MapControllerRoute("InsertSection", "Admin/InsertSection", new {controller = "SectionAdmin", action = "InsertSection"});
-			routes.MapControllerRoute("DeleteSection", "Admin/DeleteSection/{sectionId}", new {controller = "SectionAdmin", action = "DeleteSection", sectionId = 0});
-			routes.MapControllerRoute("GetForums", "Admin/GetForums", new {controller = "ForumAdmin", action = "GetForums"});
-			routes.MapControllerRoute("ManageForums", "Admin/ManageForums", new {controller = "ForumAdmin", action = "ManageForums"});
-			routes.MapControllerRoute("AddForum", "Admin/AddForum", new {controller = "ForumAdmin", action = "AddForum"});
-			routes.MapControllerRoute("EditForum", "Admin/EditForum/{forumId}", new {controller = "ForumAdmin", action = "EditForum", forumId = 0});
-			routes.MapControllerRoute("DeleteForum", "Admin/DeleteForum/{forumId}", new {controller = "ForumAdmin", action = "DeleteForum", forumId = 0});
-			routes.MapControllerRoute("BanUnbanUser", "Admin/BanUnbanUser", new {controller = "UserAdmin", action = "BanUnbanUser"});
-			routes.MapControllerRoute("DeleteUser", "Admin/DeleteUser", new {controller = "UserAdmin", action = "DeleteUser"});
-			routes.MapControllerRoute("EditUserInfo", "Admin/EditUserInfo", new {controller = "UserAdmin", action = "EditUserInfo"});
-			routes.MapControllerRoute("ShowAuditInfoUser", "Admin/ShowAuditInfoUser", new {controller = "UserAdmin", action = "ShowAuditInfoUser"});
-			routes.MapControllerRoute("GetIPBans", "Admin/GetIPBans", new {controller = "SecurityAdmin", action = "GetIPBans"});
-			routes.MapControllerRoute("ManageIPBans", "Admin/ManageIPBans", new {controller = "SecurityAdmin", action = "ManageIPBans"});
-			routes.MapControllerRoute("UpdateIPBan", "Admin/UpdateIPBan", new {controller = "SecurityAdmin", action = "UpdateIPBan"});
-			routes.MapControllerRoute("InsertIPBan", "Admin/InsertIPBan", new {controller = "SecurityAdmin", action = "InsertIPBan"});
-			routes.MapControllerRoute("DeleteIPBan", "Admin/DeleteIPBan/{ipBanId}", new {controller = "SecurityAdmin", action = "DeleteIPBan", ipBanId = 0});
-			routes.MapControllerRoute("GetRoles", "Admin/GetRoles", new {controller = "SecurityAdmin", action = "GetRoles"});
-			routes.MapControllerRoute("ManageRoles", "Admin/ManageRoles", new {controller = "SecurityAdmin", action = "ManageRoles"});
-			routes.MapControllerRoute("AddRole", "Admin/AddRole", new {controller = "SecurityAdmin", action = "AddRole"});
-			routes.MapControllerRoute("EditRole", "Admin/EditRole/{roleId}", new {controller = "SecurityAdmin", action = "EditRole", roleId = 0});
-			routes.MapControllerRoute("DeleteRole", "Admin/DeleteRole/{roleId}", new {controller = "SecurityAdmin", action = "DeleteRole", roleId = 0});
-			routes.MapControllerRoute("ManageRoleRights", "Admin/ManageRoleRights", new {controller = "SecurityAdmin", action = "ManageRoleRights"});
-			routes.MapControllerRoute("ManageRightsForForum", "Admin/ManageRightsForForum", new {controller = "SecurityAdmin", action = "ManageRightsForForum"});
-			routes.MapControllerRoute("GetActionRights", "Admin/GetActionRights", new {controller = "SecurityAdmin", action = "GetActionRights"});
-			routes.MapControllerRoute("ManageUsersPerRole", "Admin/ManageUsersPerRole", new {controller = "SecurityAdmin", action = "ManageUsersPerRole"});
-			routes.MapControllerRoute("GetUsersInRole", "Admin/GetUsersInRole/{roleId}", new {controller = "SecurityAdmin", action = "GetUsersInRole", roleId = 0});
-			routes.MapControllerRoute("RemoveUserFromRole", "Admin/RemoveUserFromRole", new {controller = "SecurityAdmin", action = "RemoveUserFromRole", roleId = 0, userId = -1});
-			routes.MapControllerRoute("AddUsersToRole", "Admin/AddUsersToRole/{roleId}", new {controller = "UserAdmin", action = "AddUsersToRole", roleId = 0});
+			routes.MapControllerRoute("InitializeSystem",     "Admin/Init",                         new {controller = "SystemAdmin", action = "Init"});
+			routes.MapControllerRoute("EditSystemParameters", "Admin/SystemParameters",             new {controller = "SystemAdmin", action = "SystemParameters"});
+			routes.MapControllerRoute("ReparseMessages",      "Admin/ReparseMessages",              new {controller = "SystemAdmin", action = "ReparseMessages"});
+			routes.MapControllerRoute("GetSupportQueues",     "Admin/GetSupportQueues",             new {controller = "SupportQueueAdmin", action = "GetSupportQueues"});
+			routes.MapControllerRoute("ManageSupportQueues",  "Admin/ManageSupportQueues",          new {controller = "SupportQueueAdmin", action = "ManageSupportQueues"});
+			routes.MapControllerRoute("UpdateSupportQueue",   "Admin/UpdateSupportQueue",           new {controller = "SupportQueueAdmin", action = "UpdateSupportQueue"});
+			routes.MapControllerRoute("InsertSupportQueue",   "Admin/InsertSupportQueue",           new {controller = "SupportQueueAdmin", action = "InsertSupportQueue"});
+			routes.MapControllerRoute("DeleteSupportQueue",   "Admin/DeleteSupportQueue/{queueId}", new {controller = "SupportQueueAdmin", action = "DeleteSupportQueue", queueId = 0});
+			routes.MapControllerRoute("GetSections",          "Admin/GetSections",                  new {controller = "SectionAdmin", action = "GetSections"});
+			routes.MapControllerRoute("ManageSections",       "Admin/ManageSections",               new {controller = "SectionAdmin", action = "ManageSections"});
+			routes.MapControllerRoute("UpdateSection",        "Admin/UpdateSection",                new {controller = "SectionAdmin", action = "UpdateSection"});
+			routes.MapControllerRoute("InsertSection",        "Admin/InsertSection",                new {controller = "SectionAdmin", action = "InsertSection"});
+			routes.MapControllerRoute("DeleteSection",        "Admin/DeleteSection/{sectionId}",    new {controller = "SectionAdmin", action = "DeleteSection", sectionId = 0});
+			routes.MapControllerRoute("GetForums",            "Admin/GetForums",                    new {controller = "ForumAdmin", action = "GetForums"});
+			routes.MapControllerRoute("ManageForums",         "Admin/ManageForums",                 new {controller = "ForumAdmin", action = "ManageForums"});
+			routes.MapControllerRoute("AddForum",             "Admin/AddForum",                     new {controller = "ForumAdmin", action = "AddForum"});
+			routes.MapControllerRoute("EditForum",            "Admin/EditForum/{forumId}",          new {controller = "ForumAdmin", action = "EditForum", forumId = 0});
+			routes.MapControllerRoute("DeleteForum",          "Admin/DeleteForum/{forumId}",        new {controller = "ForumAdmin", action = "DeleteForum", forumId = 0});
+			routes.MapControllerRoute("BanUnbanUser",         "Admin/BanUnbanUser",                 new {controller = "UserAdmin", action = "BanUnbanUser"});
+			routes.MapControllerRoute("DeleteUser",           "Admin/DeleteUser",                   new {controller = "UserAdmin", action = "DeleteUser"});
+			routes.MapControllerRoute("EditUserInfo",         "Admin/EditUserInfo",                 new {controller = "UserAdmin", action = "EditUserInfo"});
+			routes.MapControllerRoute("ShowAuditInfoUser",    "Admin/ShowAuditInfoUser",            new {controller = "UserAdmin", action = "ShowAuditInfoUser"});
+			routes.MapControllerRoute("GetIPBans",            "Admin/GetIPBans",                    new {controller = "SecurityAdmin", action = "GetIPBans"});
+			routes.MapControllerRoute("ManageIPBans",         "Admin/ManageIPBans",                 new {controller = "SecurityAdmin", action = "ManageIPBans"});
+			routes.MapControllerRoute("UpdateIPBan",          "Admin/UpdateIPBan",                  new {controller = "SecurityAdmin", action = "UpdateIPBan"});
+			routes.MapControllerRoute("InsertIPBan",          "Admin/InsertIPBan",                  new {controller = "SecurityAdmin", action = "InsertIPBan"});
+			routes.MapControllerRoute("DeleteIPBan",          "Admin/DeleteIPBan/{ipBanId}",        new {controller = "SecurityAdmin", action = "DeleteIPBan", ipBanId = 0});
+			routes.MapControllerRoute("GetRoles",             "Admin/GetRoles",                     new {controller = "SecurityAdmin", action = "GetRoles"});
+			routes.MapControllerRoute("ManageRoles",          "Admin/ManageRoles",                  new {controller = "SecurityAdmin", action = "ManageRoles"});
+			routes.MapControllerRoute("AddRole",              "Admin/AddRole",                      new {controller = "SecurityAdmin", action = "AddRole"});
+			routes.MapControllerRoute("EditRole",             "Admin/EditRole/{roleId}",            new {controller = "SecurityAdmin", action = "EditRole", roleId = 0});
+			routes.MapControllerRoute("DeleteRole",           "Admin/DeleteRole/{roleId}",          new {controller = "SecurityAdmin", action = "DeleteRole", roleId = 0});
+			routes.MapControllerRoute("ManageRoleRights",     "Admin/ManageRoleRights",             new {controller = "SecurityAdmin", action = "ManageRoleRights"});
+			routes.MapControllerRoute("ManageRightsForForum", "Admin/ManageRightsForForum",         new {controller = "SecurityAdmin", action = "ManageRightsForForum"});
+			routes.MapControllerRoute("GetActionRights",      "Admin/GetActionRights",              new {controller = "SecurityAdmin", action = "GetActionRights"});
+			routes.MapControllerRoute("ManageUsersPerRole",   "Admin/ManageUsersPerRole",           new {controller = "SecurityAdmin", action = "ManageUsersPerRole"});
+			routes.MapControllerRoute("GetUsersInRole",       "Admin/GetUsersInRole/{roleId}",      new {controller = "SecurityAdmin", action = "GetUsersInRole", roleId = 0});
+			routes.MapControllerRoute("RemoveUserFromRole",   "Admin/RemoveUserFromRole",           new {controller = "SecurityAdmin", action = "RemoveUserFromRole", roleId = 0, userId = -1});
+			routes.MapControllerRoute("AddUsersToRole",       "Admin/AddUsersToRole/{roleId}",      new {controller = "UserAdmin", action = "AddUsersToRole", roleId = 0});
 
 			// The last route, which will be used to map most routes to {controller}/{action}/{id?}.  
 			routes.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
