@@ -211,19 +211,19 @@ namespace SD.HnD.BL
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(BookmarkEntity), new RelationPredicateBucket(BookmarkFields.UserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
-					// delete all audit data
-					// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
-					// be deleted directly from the db.
-					var auditData = await adapter.FetchQueryAsync(new QueryFactory().User.Where(UserFields.UserID.Equal(userId))).ConfigureAwait(false);
-					await adapter.DeleteEntityCollectionAsync(auditData).ConfigureAwait(false);
-
-					// set IP bans set by this user to userid 0
-					var ipbanUpdater = new IPBanEntity {IPBanSetByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(ipbanUpdater, new RelationPredicateBucket(IPBanFields.IPBanSetByUserID.Equal(userId)))
+					// set all placed in queue references to userid 0, so the threads stay in the queues.
+					var supportQueueThreadUpdater = new SupportQueueThreadEntity {PlacedInQueueByUserID = 0};
+					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater,
+															  new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// delete threadsubscriptions
 					await adapter.DeleteEntitiesDirectlyAsync(typeof(ThreadSubscriptionEntity), new RelationPredicateBucket(ThreadSubscriptionFields.UserID.Equal(userId)))
+								 .ConfigureAwait(false);
+
+					// set IP bans set by this user to userid 0
+					var ipbanUpdater = new IPBanEntity {IPBanSetByUserID = 0};
+					await adapter.UpdateEntitiesDirectlyAsync(ipbanUpdater, new RelationPredicateBucket(IPBanFields.IPBanSetByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
 					// remove supportqueuethread claims
@@ -231,11 +231,11 @@ namespace SD.HnD.BL
 															  new RelationPredicateBucket(SupportQueueThreadFields.ClaimedByUserID.Equal(userId)))
 								 .ConfigureAwait(false);
 
-					// set all placed in queue references to userid 0, so the threads stay in the queues.
-					var supportQueueThreadUpdater = new SupportQueueThreadEntity {PlacedInQueueByUserID = 0};
-					await adapter.UpdateEntitiesDirectlyAsync(supportQueueThreadUpdater,
-															  new RelationPredicateBucket(SupportQueueThreadFields.PlacedInQueueByUserID.Equal(userId)))
-								 .ConfigureAwait(false);
+					// delete all audit data
+					// first fetch it, then delete all entities from the collection, as the audit data is in an inheritance hierarchy of TargetPerEntity which can't
+					// be deleted directly from the db.
+					var auditData = await adapter.FetchQueryAsync(new QueryFactory().User.Where(UserFields.UserID.Equal(userId))).ConfigureAwait(false);
+					await adapter.DeleteEntityCollectionAsync(auditData).ConfigureAwait(false);
 
 					// now delete the actual user entity
 					await adapter.DeleteEntityAsync(toDelete).ConfigureAwait(false);
