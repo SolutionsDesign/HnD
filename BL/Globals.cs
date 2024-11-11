@@ -30,11 +30,11 @@ namespace SD.HnD.BL
 		/// <summary>
 		/// Version of HnD
 		/// </summary>
-		public static readonly string Version = "3.0.5";
+		public static readonly string Version = "3.1.0";
 		/// <summary>
 		/// Build of HnD
 		/// </summary>
-		public static readonly string Build = "25-feb-2023";
+		public static readonly string Build = "11-nov-2024";
 		/// <summary>
 		/// Release type of this version
 		/// </summary>
